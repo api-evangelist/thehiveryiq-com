@@ -1,0 +1,132 @@
+generated: '2026-09-19'
+method: searched
+source: https://thehiveryiq.com/agents
+derived_from:
+- openapi/thehiveryiq-com-hivemorph-openapi.yml
+- openapi/thehiveryiq-com-hivecompute-openapi.yml
+docs:
+- https://thehiveryiq.com/agents
+- https://thehiveryiq.com/developers
+- https://thehiveryiq.com/pricing/
+- https://receipts.thehiveryiq.com/llms.txt
+- https://receipts.thehiveryiq.com/.well-known/x402.json
+summary:
+  types:
+  - none
+  - x402-payment
+  - apiKey
+  - ed25519-signed-request
+  api_key_in:
+  - header
+  oauth2_flows: []
+  openid_connect: false
+  mutual_tls: false
+  note: 'NEITHER OpenAPI declares a securitySchemes block and 0 of 937 HiveMorph operations carry a security[] requirement,
+    so derive-authentication.py has nothing to read: the entire auth model lives in operation descriptions, header
+    parameters and the docs. Reconstructed from those. The dominant model is ''no credential, pay per call'': discovery
+    and the free tier need nothing, and paid operations answer HTTP 402 with an x402 payment challenge instead of
+    401. Tenant API keys (Bearer) exist for the tenant/portal surface; operator-only admin headers appear on a few
+    dozen internal operations.'
+schemes:
+- name: none
+  type: none
+  applies_to: Discovery documents (/.well-known/*, /openapi.json, /llms.txt, /pricing, /status, /manifest, /a2a
+    GET), the free tier (POST /v1/receipt/free), receipt verification (POST /v1/receipt/verify, GET /v1/receipt/{receipt_id}),
+    x402 quotes (POST /v1/x402/quote), GET /v1/settlement/reference, GET /v1/hktn/lookup, POST /v1/delegation/check,
+    POST /v1/delegation/revoke/{jti}, MCP initialize/tools/list on both MCP hosts, HiveCompute POST /v1/compute/estimate
+    and GET /v1/compute/models
+  evidence: 'Observed live 2026-09-19: POST /v1/receipt/free -> 201 with no credential; POST /v1/x402/quote {} ->
+    200; POST /v1/compute/estimate -> 200; tools/list -> 200 on api.thehiveryiq.com/mcp and hive-mcp-gateway.onrender.com/mcp.
+    The /agents page: "Verify and quote are always free", "No API key, no signup".'
+  sources:
+  - openapi/thehiveryiq-com-hivemorph-openapi.yml
+  - openapi/thehiveryiq-com-hivecompute-openapi.yml
+- name: x402
+  type: payment-challenge
+  protocol: x402
+  applies_to: Every metered operation (receipt emit, rubric select, prospector score, rosetta normalize after the
+    first 25 free calls per agent, compute.chat, most gateway MCP tools)
+  challenge:
+    status: 402
+    receipts_host:
+      headers:
+        x-payment-required: 'true'
+      body: '{"error":"payment_required","message":"This endpoint requires a micropayment via the x402 protocol.
+        Submit payment proof via X-Payment header or POST /v1/x402/proof/submit.","payment":{"x402_version":"0.1","nonce":"<uuid>","resource":"/v1/receipt/emit","amount_usd":0.0008,"payment_endpoint":"/v1/x402/proof/submit","expires_at":<unix>,"accepts":[{"chain":"base","asset":"USDC","scheme":"exact","recipient":"0x15184bf5...436e","asset_contract":"0x833589fC...02913","decimals":6,"amount_atomic":"800"},
+        ...USDT/base, USDC+USDT/solana, USDT/ethereum]}}'
+      observed: POST /v1/receipt/emit without payment, 2026-09-19
+    hivecompute_host:
+      headers:
+        www-authenticate: x402
+        payment-required: '<base64url JSON: {"x402Version":1,"accepts":[{"scheme":"exact","network":"base","maxAmountRequired":"20000","resource":"https://api.thehiveryiq.com/v1/compute/chat/completions","payTo":"0x15184Bf5...436E","maxTimeoutSeconds":300,"asset":"0x833589fC...02913","extra":{"name":"USD
+          Coin","version":"2","assetTransferMethod":"eip3009"}}]}>'
+      observed: POST /v1/compute/chat/completions without payment, 2026-09-19
+      note: 'The two hosts speak two different x402 envelope generations (x402_version 0.1 JSON body vs x402Version
+        1 base64 PAYMENT-REQUIRED header + www-authenticate: x402).'
+  settlement:
+    submit: 'POST /v1/x402/proof/submit (operationId submit_proof_v1_x402_proof_submit_post): "Submit a payment
+      proof for a pending 402 nonce. On success, returns an access token (5-minute TTL) that can be used in the
+      X-Hive-Access header to bypass 402 for the same path."'
+    header_alternative: X-Payment header carrying the proof
+    rails: 'https://receipts.thehiveryiq.com/v1/x402/rails and /.well-known/x402.json: USDC + USDT on Base (8453),
+      USDC + USDT on Solana, USDT on Ethereum; scheme exact; EIP-3009 transferWithAuthorization on Base'
+    client_sdk: hive-rosetta (npm/PyPI 0.1.0) implements the 402 -> sign -> retry loop
+  sources:
+  - openapi/thehiveryiq-com-hivemorph-openapi.yml
+  - openapi/thehiveryiq-com-hivecompute-openapi.yml
+  - https://receipts.thehiveryiq.com/.well-known/x402.json
+- name: X-Hive-Access
+  type: apiKey
+  in: header
+  parameter: X-Hive-Access
+  applies_to: Short-lived (5-minute) access token minted by /v1/x402/proof/submit for the paid path; also a header
+    parameter on POST /v1/activation/keys
+  sources:
+  - openapi/thehiveryiq-com-hivemorph-openapi.yml
+- name: tenant API key (Bearer)
+  type: http
+  scheme: bearer
+  key_prefix: tk_live_
+  applies_to: 'Tenant / portal surface: POST /tenants/:id/receipts (documented on /developers as the "authenticated
+    tenant route"), GET /tenants/:id/evidence, wallet (/v1/wallet/register, /v1/wallet/me), designer mint, bounty
+    admin; the pricing page lists "API key auth via Bearer header" on the Builder tier'
+  evidence: 'POST /v1/portal/{tenant_id}/api-key/revoke description: ''Pass { "key": "tk_live_..." } to revoke a
+    specific key; omit to revoke all.'' The ''authorization'' header parameter is declared on 8 operations.'
+  issuance: Tenant onboarding wizard at https://thehiveryiq.com/onboard/ ; keys revocable via portal_revoke_key_v1_portal__tenant_id__api_key_revoke_post
+  sources:
+  - openapi/thehiveryiq-com-hivemorph-openapi.yml
+  - https://thehiveryiq.com/pricing/
+- name: X-Admin-Api-Key / x-admin-token / X-Hive-Trust
+  type: apiKey
+  in: header
+  parameters:
+  - X-Admin-Api-Key
+  - x-admin-token
+  - X-Hive-Trust
+  applies_to: 'Operator-only operations (x402 pricing/rails admin, evaluator start/stop, perp liquidation, dashboards,
+    site-traffic redaction): 34 header parameters across ~20 operations'
+  note: Not customer credentials; recorded so an agent does not mistake these operations for callable surface.
+  sources:
+  - openapi/thehiveryiq-com-hivemorph-openapi.yml
+- name: DID-signed request
+  type: signature
+  headers:
+  - x-hive-nonce
+  - x-hive-sig
+  algorithm: Ed25519
+  applies_to: 'POST /v1/mos/intel/register: "site-did + x-hive-nonce + x-hive-sig (ed25519)" per its description;
+    agent identity elsewhere is carried as agent_did (did:hive:...) in request bodies without signature'
+  sources:
+  - openapi/thehiveryiq-com-hivemorph-openapi.yml
+response_provenance:
+  note: 'Authentication of the SERVER to the client is a first-class feature: api.thehiveryiq.com signs every response
+    (X-Hive-Prov-Iss did:hive:hivecompute, X-Hive-Prov-Ts, X-Hive-Prov-Sig, X-Hive-Prov-Pubkey -> /v1/prov/pubkey,
+    X-Hive-Prov-Payload) and publishes a JWKS; receipts.thehiveryiq.com publishes its Ed25519 verifier key at /v1/prov/pubkey
+    and /trust.json (issuer did:hive:hivemorph, epoch 1, rotation "on-incident or annual"); passport.thehiveryiq.com
+    does the same for did:hive:hive-passport.'
+  observed: Response headers on GET https://api.thehiveryiq.com/openapi.json, 2026-09-19
+gaps:
+- No securitySchemes in either OpenAPI, so generated clients cannot attach credentials or model the 402 flow.
+- No OAuth 2.0 / OIDC anywhere (RFC 8414 / 9728 / OIDC discovery all absent on every host, including both MCP hosts).
+- 'Key lifecycle: no documented rotation for tenant keys; the security page states "no verified 90-day automatic
+  invalidation policy".'

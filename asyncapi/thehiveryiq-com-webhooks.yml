@@ -1,0 +1,69 @@
+generated: '2026-09-19'
+method: searched
+source: openapi/thehiveryiq-com-hivemorph-openapi.yml
+docs:
+- https://thehiveryiq.com/pricing/
+- https://thehiveryiq.com/security/
+asyncapi_published: false
+asyncapi_note: 'No AsyncAPI document: /asyncapi.yaml and /asyncapi.json 404 on thehiveryiq.com, and neither OpenAPI
+  declares a webhooks object or callbacks. Nothing was fabricated; this file records the webhook surface as the
+  provider documents it.'
+surface: 'Two directions, both thinly documented. INBOUND: the HiveMorph contract exposes five webhook RECEIVERS
+  (operations an external system posts to). OUTBOUND: the pricing page advertises webhook callbacks on the Team
+  tier and "Webhook notifications per receipt issued" on the Scale/A2A capacity examples, but no event catalog,
+  payload schema, signing scheme or retry policy is documented anywhere, and the security page says "No universal
+  outbound HMAC policy was verified."'
+inbound_receivers:
+- operationId: billing_square_webhook_v1_billing_square_webhook_post
+  path: POST /v1/billing/square/webhook
+  producer: Square
+  events:
+  - payment.updated
+  - invoice.payment_made
+  verification: HMAC against SQUARE_WEBHOOK_SIGNATURE_KEY (per description)
+  effect: flips tenant active
+- operationId: github_webhook_v1_github_webhook_post
+  path: POST /v1/github/webhook
+  producer: GitHub App
+  events:
+  - pull_request (opened, synchronize, reopened)
+  verification: X-Hub-Signature-256 header verified
+- operationId: post_freight_webhook_v1_law_freight_webhook_post
+  path: POST /v1/law/freight/webhook
+  producer: SMB brokers / TMS ("suitable for posting from webhook.site, Zapier, n8n")
+  events:
+  - freight exception events (canonical exception-event shape)
+  verification: not documented
+- operationId: post_insurance_webhook_v1_law_insurance_webhook_post
+  path: POST /v1/law/insurance/webhook
+  producer: MGA / non-admitted carriers
+  events:
+  - insurance exception events
+  verification: not documented
+- operationId: post_webhook_v1_tradefinance_webhook_post
+  path: POST /v1/tradefinance/webhook
+  producer: ERP / freight forwarder TMS
+  events:
+  - tracking events (canonical event shape)
+  verification: not documented
+outbound:
+  advertised: true
+  where:
+  - url: https://thehiveryiq.com/pricing/
+    quote: Team ... Webhook callbacks
+  - url: https://thehiveryiq.com/pricing/
+    quote: Webhook notifications per receipt issued
+  event_catalog:
+    published: false
+  payload_schema: null
+  signing:
+    documented: false
+    provider_statement: '"Webhook security requires delivery-path review, receiver authentication and replay tests.
+      No universal outbound HMAC policy was verified." (/security/)'
+  retries: null
+  note: An agent cannot subscribe to, verify or replay an outbound Hive webhook from public documentation; the capability
+    is a plan feature, not a documented surface.
+streaming:
+  note: 'The apex agent card declares capabilities.streaming: true, but the JSON-RPC endpoint on receipts implements
+    no A2A streaming method and the MCP servers do not serve SSE (GET /mcp returns JSON). HiveCompute chat completions
+    may stream per the OpenAI shape; not observed (paid).'

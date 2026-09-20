@@ -1,0 +1,23 @@
+generated: '2026-09-19'
+method: generated
+source: openapi/thehiveryiq-com-hivemorph-openapi.yml (every operationId verified against the served contract on
+  2026-09-19) plus the /agents and /developers pages; no provider-published skill or AGENTS.md was found (searched
+  github.com/srotzin and the apex site).
+skills:
+- file: thehiveryiq-com-free-receipt-sign-and-verify.md
+  name: thehiveryiq-com-free-receipt-sign-and-verify
+  method: generated
+  description: Sign any string with a free, unauthenticated dual-signed Hive receipt, then verify it against the
+    published key.
+  operations: 4
+- file: thehiveryiq-com-paid-receipt-x402.md
+  name: thehiveryiq-com-paid-receipt-x402
+  method: generated
+  description: Price, pay for (x402 on Base) and emit a Hive receipt at a paid profile, then verify it.
+  operations: 9
+- file: thehiveryiq-com-delegation-and-firewall-gate.md
+  name: thehiveryiq-com-delegation-and-firewall-gate
+  method: generated
+  description: Issue a scoped delegation for an agent, dry-run it against the firewall, check it before acting,
+    and revoke it.
+  operations: 7

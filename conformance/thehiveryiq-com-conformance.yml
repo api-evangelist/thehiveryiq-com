@@ -1,0 +1,176 @@
+generated: '2026-09-19'
+method: searched
+source: Live probes on 2026-09-19 of thehiveryiq.com, receipts.thehiveryiq.com, api.thehiveryiq.com, passport.thehiveryiq.com
+  and hive-mcp-gateway.onrender.com, cross-checked against the two served OpenAPI documents and the docs (/developers,
+  /agents, /security/, /compliance/, /specs/did-hive/v1/)
+standards:
+- id: openapi-3.1
+  name: OpenAPI 3.1
+  conforms: true
+  evidence: 'https://receipts.thehiveryiq.com/openapi.json declares "openapi": "3.1.0" (FastAPI-generated): 906
+    paths, 937 operations, every operation has a unique operationId, 426 component schemas, 622 operations declare
+    a 422 response. Saved to openapi/thehiveryiq-com-hivemorph-openapi.yml. Gaps: no servers[], no securitySchemes,
+    no tags[] definitions, 71 untagged operations, no examples.'
+- id: openapi-3.0
+  name: OpenAPI 3.0
+  conforms: true
+  evidence: 'https://api.thehiveryiq.com/openapi.json declares "openapi": "3.0.3", 5 paths, servers[] https://api.thehiveryiq.com,
+    info.contact Hive Civilization / steve@thehiveryiq.com, vendor extensions x-mpp and x-mpp-charge. No operationIds.
+    Saved to openapi/thehiveryiq-com-hivecompute-openapi.yml.'
+- id: json-rpc-2.0
+  name: JSON-RPC 2.0
+  conforms: true
+  evidence: POST https://receipts.thehiveryiq.com/a2a answers well-formed JSON-RPC 2.0 (id echoed, error {code -32601,
+    message, data.supported[49]}); both MCP servers answer initialize/tools/list as JSON-RPC 2.0.
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  evidence: initialize on https://api.thehiveryiq.com/mcp and https://hive-mcp-gateway.onrender.com/mcp returns
+    protocolVersion 2024-11-05 with serverInfo and capabilities; tools/list returns tools with JSON-Schema inputSchema
+    (and annotations on HiveCompute). Streamable HTTP POST; no SSE GET. resources/list -> -32601.
+- id: a2a
+  name: Agent2Agent (A2A) Agent Card
+  conforms: true
+  evidence: 'Four agent-card documents served (graded in a2a/): apex card protocolVersion 0.3.0 conformant on shape;
+    receipts card 0.2.0 conformant on shape; two flavored. The declared JSON-RPC endpoint does NOT implement A2A
+    methods (message/send, tasks/get -> -32601), so protocol-level conformance is card-only.'
+  caveat: Card conformant, endpoint not.
+- id: a2a-ap2-extension
+  name: A2A Agent Payments Protocol (AP2) extension
+  conforms: true
+  evidence: 'The hivemorph root card declares capabilities.extensions[0].uri https://a2a-extensions.dev/ap2/v1 (required:
+    true, params.protocol x402, rails_endpoint /v1/x402/rails); the catalog card lists the same URI in extensions[].'
+- id: x402
+  name: x402 HTTP payment protocol
+  conforms: true
+  evidence: 'Live 402 challenges observed on both API hosts (see authentication/): receipts host returns x-payment-required:
+    true with an x402_version 0.1 JSON envelope and a proof-submit endpoint; api host returns www-authenticate:
+    x402 plus a base64 PAYMENT-REQUIRED header whose JSON is the x402Version 1 shape (scheme exact, network base,
+    asset USDC contract 0x8335...02913, assetTransferMethod eip3009). /.well-known/x402.json and /v1/x402/rails
+    publish accepts[] for 5 chain/asset pairs.'
+- id: eip-3009
+  name: EIP-3009 transferWithAuthorization (USDC on Base)
+  conforms: true
+  evidence: PAYMENT-REQUIRED extra.assetTransferMethod "eip3009"; x402.json note "Base USDT mirrors the USDC-on-Base
+    facilitator path"; hive-rosetta SDK README "EIP-3009 on Base".
+- id: erc-681
+  name: ERC-681 payment request URI
+  conforms: true
+  evidence: POST /v1/x402/quote returns deeplink_erc681 "ethereum:0x833589fC...@8453/transfer?..."; GET /v1/settlement/reference
+    documented as "USDC-on-Base ERC-681 deep link" on /agents.
+- id: w3c-did
+  name: W3C Decentralized Identifiers (DID Core 1.0)
+  conforms: true
+  evidence: https://thehiveryiq.com/specs/did-hive/v1/ publishes a did:hive DID Method Specification (v1.0, 2026-05-07,
+    "submitted for W3C DID Method Registry", Apache-2.0, authors Steve Rotzin / Hive Civilization, Inc.) with ABNF,
+    CRUD operations and Ed25519 + ML-DSA-65 verification methods. did:hive:... identifiers appear in request bodies
+    (agent_did) and issuer fields; api.thehiveryiq.com card uses did:web:api.thehiveryiq.com.
+  caveat: Method proposal; registry acceptance not verified.
+- id: rfc9116
+  name: RFC 9116 security.txt
+  conforms: true
+  evidence: 'https://thehiveryiq.com/.well-known/security.txt: Contact, Expires (2027-05-08, < 1 year), Preferred-Languages,
+    Canonical, Policy. A second file on hive-mcp-gateway.onrender.com. Not served on receipts/api/passport (apex
+    policy covers "all subdomains").'
+- id: rfc8032-ed25519
+  name: Ed25519 (RFC 8032) signatures
+  conforms: true
+  evidence: 'Free receipt response: signatures.classical.algorithm "Ed25519", standard "RFC 8032 / FIPS 186-5";
+    JWKS OKP/Ed25519 key on api host; verifier keys published at /v1/prov/pubkey on three hosts; X-Hive-Prov-Sig
+    response signatures.'
+- id: fips-204-ml-dsa
+  name: NIST FIPS 204 ML-DSA-65 (post-quantum signatures)
+  conforms: false
+  evidence: 'Claimed and partially demonstrated, not validated: the free receipt carries an ML-DSA-65 signature
+    block and /developers states retained envelopes pass local ML-DSA-65 verification, but the same page says "Naming
+    FIPS 203 or 204 does not establish module validation" and the security page says "An algorithm label or self-test
+    is not a validation certificate"; /evidence: "CAVP self-test PASS ... formal CAVP laboratory validation is scheduled".
+    Recorded as claimed, unvalidated.'
+  claimed: true
+- id: jsonfeed-1.1
+  name: JSON Feed 1.1
+  conforms: true
+  evidence: 'https://thehiveryiq.com/feed.json declares "version": "https://jsonfeed.org/version/1.1" with 10 dated
+    items; RSS twin at /feed.xml.'
+- id: openai-chat-completions
+  name: OpenAI-compatible chat completions API shape
+  conforms: true
+  evidence: HiveCompute POST /v1/compute/chat/completions "OpenAI-compatible"; MCP compute.chat inputSchema takes
+    an OpenAI messages[] array; /sdk-quickstart/ positions @hive/inference as a one-import drop-in. Live 402 (unpaid)
+    prevented a full response-shape check.
+  caveat: Shape claimed; response body not observed (paid).
+- id: oauth2
+  name: OAuth 2.0
+  conforms: false
+  evidence: No oauth2 securityScheme, no /.well-known/oauth-authorization-server (404 on every host; catch-all body
+    on api host), no token endpoint documented.
+- id: oidc
+  name: OpenID Connect Discovery
+  conforms: false
+  evidence: /.well-known/openid-configuration 404 on apex, receipts, passport, gateway; catch-all soft-200 on api
+    host.
+- id: rfc9728
+  name: RFC 9728 OAuth Protected Resource Metadata
+  conforms: false
+  evidence: /.well-known/oauth-protected-resource absent on every host including both MCP hosts.
+- id: rfc9727
+  name: RFC 9727 API Catalog
+  conforms: false
+  evidence: /.well-known/api-catalog 404 everywhere; no APIs.json either.
+- id: rfc9457
+  name: RFC 9457 Problem Details
+  conforms: false
+  evidence: 'Errors are FastAPI-shaped {"detail": ...} (422 HTTPValidationError) and bespoke JSON (404 {"detail","hint","you_asked_for","try"...};
+    402 {"error","message","payment"}); no application/problem+json anywhere in 1,557 declared response media types.'
+- id: rfc8594
+  name: RFC 8594 Sunset header / deprecation signalling
+  conforms: false
+  evidence: 0 deprecated operations; no Sunset or Deprecation headers declared or observed; no deprecation policy
+    page.
+- id: soc2
+  name: SOC 2 (AICPA TSC 2017)
+  conforms: false
+  evidence: 'https://thehiveryiq.com/security/soc2-self-attested/ is explicitly a SELF-ATTESTED review inventory:
+    "No independent SOC 2 report or executed engagement letter was supplied in this review. Earlier target dates
+    are withdrawn pending approval." Not a certification.'
+  claimed: self-attested
+- id: iso-27001
+  name: ISO/IEC 27001:2022
+  conforms: false
+  evidence: 'https://thehiveryiq.com/security/iso-27001-self-attested/: "This is a self-maintained review inventory,
+    not an ISO certificate or independent audit." 93 Annex A control topics reviewed; no certificate.'
+  claimed: self-attested
+- id: eidas-2.0
+  name: eIDAS 2.0 qualified electronic signatures
+  conforms: false
+  evidence: Marketing claim on /legal ("QES receipts that follow eIDAS 2.0 Annex IV") with no named qualified trust
+    service provider or conformity assessment; the /trust page withdraws unsupported claims generally. Recorded
+    as claimed only.
+  claimed: true
+- id: alcoa-plus
+  name: ALCOA+ data-integrity principles (21 CFR Part 11 context)
+  conforms: false
+  evidence: 'Claimed on /legal and the compliance dashboard (alcoa-agentguard API family exists: 22 operations under
+    /v1/alcoa-agentguard); no independent evidence.'
+  claimed: true
+domain_standards:
+  note: 'REWARD-ONLY. The contract itself declares two market-specific standards for agent commerce: x402 (payment
+    challenge shape verified live on both hosts, discovery documents served) and the A2A AP2 payment extension URI
+    in the served agent cards. No SCIM/OData/OpenRTB/HL7/ISO-20022 signature is present or expected for this market.
+    The did:hive DID method specification is provider-authored, not an adopted external standard.'
+  declared:
+  - x402
+  - a2a-ap2-extension
+  - w3c-did
+  - eip-3009
+  - erc-681
+compliance_program:
+  published: true
+  url: https://thehiveryiq.com/compliance/
+  certifications: []
+  self_attestations:
+  - SOC 2 (TSC 2017) review inventory
+  - ISO 27001:2022 review inventory
+  - 'HIVECOMPLY control dashboard: 158 controls across 12 frameworks, self-scored 96.2/100, last scanned 2026-05-08'
+  note: A published compliance POSTURE with zero third-party certifications, stated in the providers own words.
+    The Compliance pointer in apis.yml points at this posture page; nothing here should be read as a certification.

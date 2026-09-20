@@ -1,0 +1,72 @@
+generated: '2026-09-19'
+method: searched
+source: https://thehiveryiq.com/terms
+derived_from: openapi/thehiveryiq-com-hivemorph-openapi.yml
+docs:
+- https://thehiveryiq.com/terms
+- https://thehiveryiq.com/status/
+- https://thehiveryiq.com/rails
+- https://receipts.thehiveryiq.com/status
+- https://receipts.thehiveryiq.com/trust.json
+versioning:
+  scheme: uri-path
+  current_version: v1
+  note: 'All 906 HiveMorph paths sit under /v1 (a few carry an embedded generation segment: /v1/portal/v2, /v1/spawn-garage/v2,
+    /v1/smsh/v1_5); HiveCompute paths are /v1/compute/*. Receipt documents carry their own receipt_schema_version
+    (r1.0.0, /developers) and profile (nano | standard | pq). Service versions: HiveMorph info.version 0.1.0 while
+    the running service reports itself as hivemorph 0.2.0 in mcp.json; HiveCompute info.version 1.0.0 while /health
+    reports 2.0.0. No written versioning policy.'
+  policy_published: false
+  spec_urls:
+  - https://receipts.thehiveryiq.com/openapi.json
+  - https://api.thehiveryiq.com/openapi.json
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  note: '0 of 937 operations carry deprecated: true; no Sunset/Deprecation headers; no deprecation page (/changelog/
+    404). The /rails page labels surfaces LIVE / PILOT / ROADMAP ("ROADMAP: not yet built, spec exists, do not call"),
+    and the receipts /status document carries a "discipline" string: "LIVE / PILOT / ROADMAP - nothing on R3-R12
+    ships as LIVE without signed responses". That is a maturity ladder, not a retirement policy.'
+sla:
+  url: https://thehiveryiq.com/terms
+  uptime_target: 99.9% (verifier endpoint) / 99.5% (routing infrastructure), monthly, "operational objectives, not
+    warranties"
+  maintenance_notice: Planned maintenance announced at least 72 hours in advance via the status page and registered
+    operator email
+  plan_tier_slas:
+    Growth: Standard SLA, 99.9% rail uptime, next-business-day support
+    Scale: Premium SLA, 99.95% rail uptime, 4-hour response
+    Enterprise: Enterprise SLA, 99.99% rail uptime, 1-hour response
+  latency_budgets:
+    source: https://receipts.thehiveryiq.com/status slo block, labelled "synthetic_target ... Advertised latency
+      budgets, not measured percentiles"
+    verify: p50 15 ms / p95 40 ms
+    quote: p50 25 ms / p95 80 ms
+    emit: p50 35 ms / p95 120 ms
+status_page:
+  url: https://thehiveryiq.com/status/
+  status: 200
+  verified: '2026-09-19'
+  type: self-hosted, "every probe row is itself an Ed25519-signed receipt", updated every 60 seconds
+  note: 'The page renders its ledger from https://passport.thehiveryiq.com/tenants/_status/recent, which returned
+    {"ok":true,"recent":[],"uptime":[]} at fetch time: the status page was live but its probe ledger was EMPTY.
+    status.thehiveryiq.com is a CNAME to status.betteruptime.com and returns 403 (not provisioned). receipts.thehiveryiq.com/status
+    returns a machine-readable JSON status (deploy commit f600665, incidents [], layers R1.. with LIVE/PILOT/ROADMAP).'
+  machine_readable: https://receipts.thehiveryiq.com/status
+  third_party_status_host:
+    url: https://status.thehiveryiq.com/
+    status: 403
+key_rotation:
+  source: https://receipts.thehiveryiq.com/trust.json
+  policy: on-incident or annual, whichever sooner
+  next_review: '2027-01-01'
+  issuer: did:hive:hivemorph, key epoch 1, valid_from 2026-01-01
+  note: Verifier-key rotation is documented; tenant API-key rotation is not ("no verified 90-day automatic invalidation
+    policy", /security/).
+changelog:
+  api_changelog: null
+  note: No API changelog. See changelog/ for the dated policy-evidence change log and product feed the provider
+    does publish.

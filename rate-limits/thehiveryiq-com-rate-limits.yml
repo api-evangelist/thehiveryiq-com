@@ -1,0 +1,91 @@
+generated: '2026-09-19'
+method: searched
+source: https://thehiveryiq.com/pricing/
+docs:
+- https://thehiveryiq.com/pricing/
+- https://thehiveryiq.com/agents
+- https://receipts.thehiveryiq.com/llms.txt
+derived_from: openapi/thehiveryiq-com-hivemorph-openapi.yml
+probed:
+  url: https://receipts.thehiveryiq.com/v1/receipt/free
+  method: POST
+  status: 201
+  fetched: '2026-09-19'
+  headers_observed:
+  - 'content-type: application/json'
+  body_quota_fields:
+    free_tier.remaining_today: 99
+    free_tier.daily_limit: 100
+limit_count: 4
+summary: 'Hive publishes quotas rather than request-rate ceilings: a per-IP daily cap on free receipts (429 on exhaustion),
+  per-agent and per-IP free-call allowances on paid paths (402 on exhaustion), and a monthly free allowance on compliance
+  ingest. No RateLimit-*, X-RateLimit-* or Retry-After header was observed on the live 201; the remaining quota
+  travels in the response body. No per-key or per-tenant request rate is documented for paid plans; the security
+  page itself says rate limiting "needs tested coverage across public demos, authenticated routes and direct service
+  origins".'
+rate_limits:
+- name: Free receipts
+  scope: per-ip
+  window: 1 day (UTC)
+  limit: 100
+  metric: receipts
+  burst: null
+  applies_to:
+  - POST /v1/receipt/free
+  - POST /v1/github/sign-diff (shares the same limiter per its description)
+  status_on_exhaustion: 429
+  headers: []
+  body_fields:
+  - free_tier.remaining_today
+  - free_tier.daily_limit
+  source: https://thehiveryiq.com/pricing/ ("100 receipts / IP / day, then 429") and the operation description ("rate-limited
+    to 100/ip/day")
+  observed: 201 response body remaining_today 99 / daily_limit 100 after one call
+  domains:
+  - receipts.thehiveryiq.com
+- name: Free intent calls
+  scope: per-agent
+  window: lifetime
+  limit: 25
+  metric: calls
+  applies_to:
+  - POST /v1/rosetta/normalize
+  - POST /v1/prospector/score
+  status_on_exhaustion: 402
+  note: '"Intent and scoring calls are free for your first 25. After that, they settle over x402-USDC on Base."
+    (/agents)'
+  domains:
+  - receipts.thehiveryiq.com
+- name: Designer chat free turns
+  scope: per-ip
+  window: 1 day (UTC)
+  limit: 2
+  metric: turns
+  applies_to:
+  - POST /v1/designer/chat
+  status_on_exhaustion: 402
+  note: '"free for the first 2 turns per ip per utc day (subject to global $2 daily ceiling). after the free quota
+    the route returns 402 with x402 envelope"; GET /v1/designer/quota exposes the days state'
+  domains:
+  - receipts.thehiveryiq.com
+- name: HiveComply free events
+  scope: per-account
+  window: 1 month
+  limit: 1000
+  metric: events
+  applies_to:
+  - POST /v1/hivecomply/event/ingest
+  - POST /v1/mcp/hivecomply (hivecomply_event_ingest tool)
+  status_on_exhaustion: 402
+  source: https://receipts.thehiveryiq.com/v1/agent/tools ("Free up to 1K events/mo")
+  domains:
+  - receipts.thehiveryiq.com
+payment_metered:
+  note: 'Beyond the free allowances, throughput is bounded by payment rather than by a rate limit: each metered
+    call is a 402 -> pay -> retry cycle with a 5-minute access token per path. The gateway MCP card adds "first
+    call free, every 6th paid call is free". HiveCompute publishes no rate limit; its 402 envelope carries maxTimeoutSeconds
+    300.'
+gaps:
+- No per-plan request-rate limits for Starter..Enterprise (only monthly receipt allowances).
+- No rate-limit response headers.
+- No documented 429 body shape.

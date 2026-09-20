@@ -1,0 +1,60 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the HiveMorph receipts API
+  version: 1.0.0
+extends: ../openapi/_original/thehiveryiq-com-hivemorph-openapi.json
+x-generated: '2026-09-19'
+x-method: derived
+x-source: Derived from the verbatim contract fetched at https://receipts.thehiveryiq.com/openapi.json plus the searched
+  artifacts in this repo. The provider's document declares no servers[], no contact, no securitySchemes and no tags[]
+  definitions; nothing here mutates the original.
+actions:
+- target: $
+  description: Add the production server the document is served from (stated as 'Base URL' in the provider's own
+    llms.txt on the same host).
+  update:
+    servers:
+    - url: https://receipts.thehiveryiq.com
+      description: 'Production (Render: hivemorph.onrender.com, behind Cloudflare)'
+- target: $.info
+  description: Provider identity and discovery links the contract omits.
+  update:
+    contact:
+      name: Hive Civilization
+      url: https://thehiveryiq.com
+      email: steve@thehiveryiq.com
+    termsOfService: https://thehiveryiq.com/terms
+    x-llms-txt: https://receipts.thehiveryiq.com/llms.txt
+    x-agent-card: https://receipts.thehiveryiq.com/.well-known/agent-card.json
+    x-mcp-manifest: https://receipts.thehiveryiq.com/.well-known/mcp.json
+    x-x402-discovery: https://receipts.thehiveryiq.com/.well-known/x402.json
+    x-a2a-endpoint: https://receipts.thehiveryiq.com/a2a
+    x-pricing-ladder: https://receipts.thehiveryiq.com/pricing
+    x-status: https://receipts.thehiveryiq.com/status
+    x-provenance-pubkey: https://receipts.thehiveryiq.com/v1/prov/pubkey
+- target: $.info
+  description: Payment and quota semantics documented outside the contract (see rate-limits/, plans/, conventions/).
+  update:
+    x-payment:
+      protocol: x402
+      challenge: 'HTTP 402 with x-payment-required: true and a JSON body carrying nonce, amount_usd, accepts[] (USDC/USDT
+        on Base, Solana, Ethereum) and payment_endpoint /v1/x402/proof/submit; a successful proof returns a 5-minute
+        X-Hive-Access token for the same path'
+    x-rate-limit:
+      free_tier: 'POST /v1/receipt/free: 100 receipts per IP per day, then HTTP 429; remaining quota is returned
+        in the response body (free_tier.remaining_today), not in headers'
+- target: $.paths['/v1/receipt/free'].post
+  description: Mark the one fully unauthenticated, unpaid write.
+  update:
+    x-auth: none
+    x-price: free (100/IP/day)
+- target: $.paths['/v1/receipt/emit'].post
+  description: Mark the paid path and its documented reversal posture.
+  update:
+    x-auth: x402
+    x-price: nano $0.0001 / standard $0.0008 / pq $0.0012 per call (GET /pricing)
+    x-reversible: false
+- target: $.paths['/v1/delegation/revoke/{jti}'].post
+  description: Flag the reversal operation for delegations.
+  update:
+    x-reverses: issue_v1_delegation_issue_post

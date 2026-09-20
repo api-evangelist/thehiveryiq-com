@@ -1,0 +1,111 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/thehiveryiq-com-hivemorph-openapi.yml
+docs: https://thehiveryiq.com/agents
+format: fastapi-detail
+summary: 'HiveMorph is a FastAPI service and its contract declares only success codes plus 422: 200 x877, 201 x59,
+  202 x1, 422 x622. No 400/401/402/403/404/429/5xx response is declared on any operation, so every error shape below
+  other than 422 was OBSERVED live (2026-09-19) rather than read from the spec. No application/problem+json anywhere.
+  Three hosts, three envelopes: receipts (FastAPI detail + bespoke 402/404), api.thehiveryiq.com (x402Version 1
+  envelope, and a catch-all that turns every 404 into a 200), passport ({ok:false,status,error}).'
+envelope:
+  schema: 'HTTPValidationError -> detail: ValidationError[] {loc[], msg, type, input?, ctx?}'
+  media_type: application/json
+  other_shapes:
+  - '{"detail": "<string>"} for 400/404 raised by handlers'
+  - '{"detail":"Not Found","hint":"unknown_path","you_asked_for":"<path>","try":[...],"docs":...,"onboard":...,"contact":...}
+    for unknown routes'
+  - '{"error":"payment_required","message":"...","payment":{...}} for 402'
+problem_types:
+- status: 400
+  title: Missing required fields
+  example: '{"detail":"receipt_id, payload_sha256, sig_b64u, ts are required"}'
+  observed: POST https://receipts.thehiveryiq.com/v1/receipt/verify with body {}
+  remediation: 'Send the documented body: the classical verify shape needs receipt_id, payload_sha256, sig_b64u,
+    ts; the envelope shape needs {"envelope": {...}}.'
+  source_operation: openapi/thehiveryiq-com-hivemorph-openapi.yml#verify_receipt_route_v1_receipt_verify_post
+- status: 400
+  title: Missing lookup key
+  example: '{"detail": ...} (38 bytes)'
+  observed: GET https://receipts.thehiveryiq.com/v1/hktn/lookup without hktn or agent_did
+  source_operation: openapi/thehiveryiq-com-hivemorph-openapi.yml#hktn_lookup_v1_hktn_lookup_get
+- status: 402
+  title: Payment required (x402)
+  example: '{"error":"payment_required","message":"This endpoint requires a micropayment via the x402 protocol.
+    Submit payment proof via X-Payment header or POST /v1/x402/proof/submit.","payment":{"x402_version":"0.1","nonce":"<uuid>","resource":"/v1/receipt/emit","amount_usd":0.0008,"payment_endpoint":"/v1/x402/proof/submit","expires_at":<unix>,"accepts":[...]}}'
+  headers:
+    x-payment-required: 'true'
+  observed: POST https://receipts.thehiveryiq.com/v1/receipt/emit without payment
+  remediation: Quote (POST /v1/x402/quote, free), pay on-chain per accepts[], submit proof to /v1/x402/proof/submit,
+    retry with the returned X-Hive-Access token within 5 minutes; or use the hive-rosetta SDK.
+  source_operation: openapi/thehiveryiq-com-hivemorph-openapi.yml#receipt_emit_v1_receipt_emit_post
+  note: Not declared in the contract; 37 operation descriptions mention 402/x402.
+- status: 402
+  title: Payment required (x402, HiveCompute envelope)
+  example: '{"x402Version":1,"accepts":[{"scheme":"exact","network":"base","maxAmountRequired":"20000","resource":"https://api.thehiveryiq.com/v1/compute/chat/completions","description":"HiveCompute
+    Inference","payTo":"0x15184Bf5...436E","maxTimeoutSeconds":300,"asset":"0x833589fC...02913","mimeType":"application/json","extra":{"name":"USD
+    Coin","version":"2","assetTransferMethod":"eip3009"}}],"error":null}'
+  headers:
+    www-authenticate: x402
+    payment-required: <base64url of the same JSON>
+  observed: POST https://api.thehiveryiq.com/v1/compute/chat/completions without payment
+  source_operation: openapi/thehiveryiq-com-hivecompute-openapi.yml#POST /v1/compute/chat/completions (declared
+    as "402 Payment required")
+- status: 404
+  title: Unknown route (receipts)
+  example: '{"detail":"Not Found","hint":"unknown_path","you_asked_for":"/v1/keys","try":["/","/health","/llms.txt","/openapi.json","/.well-known/agent.json","/.well-known/x402.json","/v1/x402/rails","/v1/x402/bogo"],"docs":"https://receipts.thehiveryiq.com/llms.txt","onboard":"https://thehiveryiq.com/onboard.html","contact":"steve@thehiveryiq.com"}'
+  observed: GET https://receipts.thehiveryiq.com/v1/keys
+  remediation: Follow the try[] / docs hints; the route list is the OpenAPI.
+- status: 404
+  title: Unknown receipt
+  example: '{"detail":"Not Found"}'
+  observed: GET https://receipts.thehiveryiq.com/v1/receipt/r_test_0_abc
+  source_operation: openapi/thehiveryiq-com-hivemorph-openapi.yml#get_receipt_v1_receipt__receipt_id__get
+- status: 404
+  title: Unknown route (passport)
+  example: '{"ok":false,"status":404,"error":"not_found","service":"hive-passport","did":"did:hive:hive-passport","requested":{"method":"GET","path":"/openapi.json"},"message":"No
+    route is registered for this method and path. This is an honest 404, not a placeholder success response.","surface_map_uri":"/","registry_manifest_uri":"/v1/registry/manifest","llms_uri":"/llms.txt"}'
+  observed: GET https://passport.thehiveryiq.com/openapi.json
+- status: 422
+  title: Request validation failed
+  schema: HTTPValidationError
+  example: '{"detail":[{"loc":["query","amount_usdc"],"msg":"Field required","type":"missing"}]}'
+  observed: GET https://receipts.thehiveryiq.com/v1/settlement/reference without amount_usdc (97 bytes)
+  declared_on: 622
+  remediation: Read detail[].loc to find the offending field; loc is [in, name] for query/path and ["body", ...]
+    for JSON bodies.
+- status: 429
+  title: Free-tier quota exhausted
+  example: (not observed; documented)
+  documented: 'Pricing page Tier 0: "100 receipts / IP / day, then 429"; OpenAPI description of POST /v1/receipt/free:
+    "rate-limited to 100/ip/day". The 201 response carries free_tier.remaining_today and free_tier.daily_limit in
+    the BODY; no Retry-After or RateLimit headers were observed.'
+  remediation: Wait for the UTC day to roll, or move to the paid path ($0.0012 USDC per receipt after free, per
+    the response body).
+  source_operation: openapi/thehiveryiq-com-hivemorph-openapi.yml#issue_free_receipt_v1_receipt_free_post
+- status: 200
+  title: SOFT 200 on api.thehiveryiq.com (anti-pattern)
+  example: '{"service":"hivecompute","message":"No closed doors, but this path is not a real endpoint. Follow the
+    breadcrumbs.","requested":"/.well-known/security.txt","discover":{...},"doctrine":"slippery-sticky: every door
+    200s, body always points home"}'
+  observed: Every unknown path on https://api.thehiveryiq.com, including nonsense paths
+  remediation: 'Clients MUST inspect the body: on this host an HTTP 200 is not evidence that a resource exists.
+    Recorded because it defeats status-code-based health and discovery checks.'
+success_shapes:
+- status: 201
+  title: Free receipt issued
+  fields:
+  - envelope
+  - receipt_id
+  - payload_hash
+  - label
+  - verify_url
+  - verify_api
+  - 'status: issued_free_tier'
+  - 'signatures {classical: Ed25519, pq: ML-DSA-65}'
+  - free_tier {remaining_today, daily_limit, upgrade_url, price_after_free}
+  - notes
+  observed: POST https://receipts.thehiveryiq.com/v1/receipt/free
+consistency_gap: The contract under-declares errors (no 4xx besides 422), so a generated client will not know about
+  402 (the primary control-flow response of a pay-per-call API), 404 or 429. Descriptions mention 402 on 37 operations,
+  but as prose.

@@ -1,0 +1,167 @@
+generated: '2026-09-19'
+method: searched
+source: https://thehiveryiq.com/agents
+derived_from: openapi/thehiveryiq-com-hivemorph-openapi.yml
+docs:
+- https://thehiveryiq.com/agents
+- https://thehiveryiq.com/developers
+- https://thehiveryiq.com/pricing/
+- https://receipts.thehiveryiq.com/llms.txt
+base_url: https://receipts.thehiveryiq.com
+media_type: application/json
+auth:
+  style: No credential for discovery and the free tier; x402 payment challenge (HTTP 402) on metered operations;
+    Bearer tenant API keys (tk_live_) on the tenant surface; operator-only admin headers on internal operations
+  detail: authentication/thehiveryiq-com-authentication.yml
+idempotency:
+  supported: true
+  coverage: partial
+  mechanism: natural-key upsert on named registration/activation operations; no Idempotency-Key header anywhere
+  header: null
+  retention: undocumented
+  scope:
+  - operation: meter_activate_v1_billing_activate_post
+    path: POST /v1/billing/activate
+    mechanism: 'natural key (activation key): "activating the same key twice returns the same account"'
+  - operation: earn_register_v1_earn_register_post
+    path: POST /v1/earn/register
+    mechanism: 'upsert: "re-registration returns the same earner with already_registered=true"'
+  - operation: orchestrate_register_v1_mining_orchestrate_register_post
+    path: POST /v1/mining/orchestrate/register
+    mechanism: '"idempotent on operator_did. upserts on re-registration"'
+  - operation: orchestrate_sites_sync_v1_mining_orchestrate_sites_sync_post
+    path: POST /v1/mining/orchestrate/sites/sync
+    mechanism: '"idempotent on (operator_did, site_id, batch_ts). re-posting the same batch returns {\"idempotent\":
+      true}"'
+  - operation: mos_register_v1_mos_intel_register_post
+    path: POST /v1/mos/intel/register
+    mechanism: '"re-registering the same site_did returns the existing record"'
+  - operation: self_tune_tick_v1_salvage_self_tune_tick_post
+    path: POST /v1/salvage/self_tune/tick
+    mechanism: '"idempotent, single-pass. cron-friendly"'
+  - operation: smsh_v1_5_warmup_v1_smsh_v1_5_warmup_post
+    path: POST /v1/smsh/v1_5/warmup
+    mechanism: '"idempotent; subsequent calls return cached status"'
+  description: 'Seven operations document idempotent semantics in their descriptions, all of them registration/activation/warm-up
+    upserts keyed on a natural identifier (operator_did, site_did, activation key, batch tuple). The mutating surface
+    is 412 operations; the core writes an agent would repeat under retry are NOT idempotent: every POST /v1/receipt/free
+    and /v1/receipt/emit mints a NEW receipt_id (observed: one free call decremented remaining_today from 100 to
+    99 and returned a fresh id), delegation issue mints a new jti per call, and x402 quotes mint a new nonce per
+    call. Replay protection on the PAYMENT side is intrinsic to x402 (each 402 nonce expires_at; on-chain EIP-3009
+    authorizations carry their own nonce), which is a different property from request idempotency.'
+  gaps:
+  - No Idempotency-Key request header on any of 412 mutating operations.
+  - 'Receipt emission (the marquee write) is not idempotent: a retried POST mints and, on the paid path, charges
+    again.'
+  - No documented retention window for the natural-key upserts.
+reversibility:
+  grade: documented
+  write_surface_note: 'Two kinds of writes: signed records (receipts, attestations, custody nodes) that are append-only
+    by design, and settlement (USDC on Base) that is on-chain and final. Neither has a reversal operation. Revocation
+    exists for delegations, tenant API keys and memory records, without any stated window.'
+  reversal_operations:
+  - reverses: issue_v1_delegation_issue_post
+    operationId: revoke_v1_delegation_revoke__jti__post
+    path: POST /v1/delegation/revoke/{jti}
+    effect: '"Marks the delegation as revoked. Verification will return verified:false and reasons:[revoked, ...].
+      Free."'
+    window: null
+    window_stated: false
+  - reverses: tenant API key issuance
+    operationId: portal_revoke_key_v1_portal__tenant_id__api_key_revoke_post
+    path: POST /v1/portal/{tenant_id}/api-key/revoke
+    effect: '"Revoke all active API keys for a tenant immediately"; pass {"key":"tk_live_..."} to revoke one'
+    window: null
+    window_stated: false
+  - reverses: memory record
+    operationId: memory_revoke_v1_memory_revoke__mid__post
+    path: POST /v1/memory/revoke/{mid}
+    window: null
+    window_stated: false
+  non_reversible:
+  - surface: Receipts (POST /v1/receipt/free, /v1/receipt/emit) and all *_attest operations
+    reason: Append-only signed records; no delete/void/amend operation exists. The providers own research paper
+      "A Refused Write Is Evidence" (https://thehiveryiq.com/papers/tamper-attempt-receipts/) frames refused mutations
+      as receipts in their own right.
+  - surface: x402 settlement (USDC/USDT on Base, Solana, Ethereum)
+    reason: On-chain transfer; no refund operation in the contract. Dispute routes exist (POST /v1/dispute/route
+      "NO automatic filing... the disputing party files directly"; POST /v1/trade/invoice/{invoice_id}/dispute;
+      W5-Refunder escrow is described on /a2a/ marketing but no refund operation is in the OpenAPI).
+  - surface: HiveCompute inference (POST /v1/compute/chat/completions)
+    reason: No cancel; billed per token after payment.
+  window_docs: null
+  note: 'Grade is "documented" (reversal paths exist for delegations/keys/memory) not "verified": no page states
+    a window inside which a reversal works, and the provider documents none for the financial writes because there
+    is none.'
+dry_run:
+  supported: true
+  mechanisms:
+  - operationId: enforce_preview_v1_firewall_enforce_preview_post
+    note: '"Dry-run firewall enforcement against any envelope"'
+  - operationId: sandbox_run_v1_firewall_sandbox_run_post
+    note: '"records nothing on any settlement layer"'
+  - operationId: receipt_emit_preflight_v1_receipt_emit_get
+    note: GET twin of the paid emit
+  - operationId: quote_v1_x402_quote_post
+    note: price a call before paying (free)
+  - path: POST https://api.thehiveryiq.com/v1/compute/estimate
+    note: token/cost estimate before inference (free)
+pagination:
+  style: offset
+  request:
+    params:
+    - name: limit
+      type: integer
+      default: 50
+      declared_on: 49
+    - name: offset
+      type: integer
+      declared_on: 19
+  response:
+    fields: 'not documented (response schemas are additionalProperties: true objects)'
+  cursor: false
+  note: List endpoints use limit/offset query parameters (plus since/since_minutes/since_ts on a few time-series
+    routes). No cursor, no total-count field is documented.
+field_expansion:
+  supported: false
+sparse_fieldsets:
+  supported: false
+metadata:
+  supported: true
+  note: ReceiptEmitReq carries a free-form metadata object; QuoteRequest carries a memo string.
+request_id_tracing:
+  request_header: X-Hive-Request-Id (declared on POST /v1/earn/register only)
+  response_headers:
+  - X-Hive-Prov-Iss
+  - X-Hive-Prov-Ts
+  - X-Hive-Prov-Sig
+  - X-Hive-Prov-Pubkey
+  - X-Hive-Prov-Payload
+  note: api.thehiveryiq.com signs every response (Ed25519 over "METHOD path body-hash ts") and exposes the headers
+    via access-control-expose-headers; the verification key is at /v1/prov/pubkey. Receipts responses carry a receipt_id
+    that doubles as the trace handle.
+versioning:
+  scheme: uri-path /v1
+  detail: lifecycle/thehiveryiq-com-lifecycle.yml
+error_envelope:
+  shape: 'FastAPI {"detail": ...} (422 HTTPValidationError; string detail on 400/404); bespoke {"error","message","payment"}
+    on 402'
+  rfc9457: false
+  detail: errors/thehiveryiq-com-problem-types.yml
+rate_limit_signaling:
+  status_on_exhaustion: 429
+  headers: []
+  body_fields:
+  - free_tier.remaining_today
+  - free_tier.daily_limit
+  note: No RateLimit-*/X-RateLimit-*/Retry-After headers were observed on the 201 free-tier response; remaining
+    quota is in the body. Paid-path exhaustion of a free quota surfaces as 402 rather than 429.
+  detail: rate-limits/thehiveryiq-com-rate-limits.yml
+payment_signaling:
+  status: 402
+  headers:
+    receipts: 'x-payment-required: true'
+    hivecompute: 'www-authenticate: x402 + PAYMENT-REQUIRED (base64)'
+  proof: X-Payment header or POST /v1/x402/proof/submit -> X-Hive-Access token (5-minute TTL)
+content_negotiation: JSON only (1,557 declared application/json media types; 2 text/plain, 1 text/html). The api
+  host llms.txt and the apex feed.json/feed.xml are the only non-JSON machine formats.

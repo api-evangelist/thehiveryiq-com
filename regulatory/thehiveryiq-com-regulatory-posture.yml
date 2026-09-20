@@ -1,0 +1,137 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: https://thehiveryiq.com/security/
+signals:
+  subprocessors:
+    url: https://thehiveryiq.com/security/
+    section: 'Sub-Processors: Where your data goes'
+    dated: '2026-09-05'
+    entries:
+    - vendor: Render
+      purpose: Typed API, countersigner, receipt/Carnac and signer compute
+      location: Oregon, United States (four services verified)
+    - vendor: Cloudflare
+      purpose: Site distribution and edge services
+      location: Global distribution; no single region verified
+    - vendor: Stripe
+      purpose: Earlier billing listing; active processing relationship not verified
+      location: Not verified
+    - vendor: Mercury
+      purpose: Earlier treasury listing; account and data scope not verified
+      location: Not verified
+    - vendor: GitHub
+      purpose: Source hosting and deployment integration
+      location: Processing/storage region not verified
+    - vendor: Supabase / other storage
+      purpose: Carnac and telemetry paths in source; AWS S3 receipt storage not verified
+      location: Not verified
+    also: Privacy policy Section 6 repeats the table (Render, Cloudflare, Base as a public ledger, Supabase/compute/email)
+      and states it "is not a complete, legally approved subprocessor register".
+    machine_readable: https://thehiveryiq.com/security/policy-evidence-2026-09-05.json (deployments[] with region
+      and evidence_type)
+    evidence:
+    - source: https://thehiveryiq.com/security/
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: Hosting locations below come from the September 5 configuration review, not vendor marketing.
+    - source: https://thehiveryiq.com/privacy
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'Section 6 Sub-processors: The hosting review identifies the locations below. It is not a complete,
+        legally approved subprocessor register.'
+    note: 'A dated table with vendor, purpose and region, plus a machine-readable evidence file: this is the substance
+      the signal requires, published with unusual candour about what is unverified. /legal/subprocessors 404s; the
+      table lives on the security page.'
+  data_subject_request:
+    url: https://thehiveryiq.com/privacy
+    section: Section 8 Your Rights
+    channel: privacy contact email published on the page (Cloudflare email-obfuscated in the HTML); DPO contact
+      also listed in Section 12
+    rights_named:
+    - access
+    - rectification
+    - erasure
+    - data portability
+    - restriction of processing
+    - objection (GDPR)
+    - know / delete / opt out of sale / non-discrimination (CCPA)
+    stated_sla: Where GDPR applies, Article 12(3) requires a response without undue delay (the page cites the statutory
+      period rather than promising its own)
+    api: null
+    evidence:
+    - source: https://thehiveryiq.com/privacy
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: To exercise rights, contact [privacy address]. Rights and exceptions depend on applicable law.
+    note: Rights, a channel and the applicable statutory deadline are stated; there is no intake form or endpoint
+      (/privacy/requests 404). The page also says the controller/processor roles and contracting entity "must be
+      verified against charter and agreement records".
+  data_residency:
+    url: https://thehiveryiq.com/security/
+    regions:
+    - us
+    stated: The four reviewed Render services run in Oregon, United States. Static distribution is global. No EU-only
+      processing or storage configuration was verified.
+    also: 'Privacy Section 7 International Transfers: "No EU-only routing or storage path was verified ... Executed
+      SCCs and transfer assessments were not supplied." Terms define a "Sovereign Path" routing configuration constraining
+      data residency to a jurisdiction, and the Sovereign pricing tier offers "in-country signers"; neither is a
+      published residency option with a region list.'
+    evidence:
+    - source: https://thehiveryiq.com/security/
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: The four reviewed Render services run in Oregon, United States. Static distribution is global. No EU-only
+        processing or storage configuration was verified.
+    - source: https://thehiveryiq.com/security/policy-evidence-2026-09-05.json
+      http_status: 200
+      fetched: '2026-09-19'
+      quote: 'claims_registry SEC-REGION approved_wording: "Four reviewed Render services run in Oregon, United
+        States. Static distribution is global, with no single region verified."'
+    note: A published processing-location statement with a named region, recorded as a single-region (US) residency
+      disclosure. It is a statement of fact about where data is processed, not a customer-selectable residency control.
+absent:
+- signal: accessibility_conformance
+  probed:
+  - url: https://thehiveryiq.com/accessibility
+    status: 404
+  - url: https://thehiveryiq.com/accessibility/
+    status: 404
+- signal: sbom
+  probed:
+  - url: https://thehiveryiq.com/security/sbom
+    status: 404
+  note: No named SBOM format anywhere on /security/.
+- signal: support_lifetime
+  note: No versioning/support-period page; /changelog/ 404.
+- signal: training_data_summary
+  note: HiveCompute routes to third-party models via OpenRouter; no training-data statement of its own.
+- signal: ai_transparency
+  probed:
+  - url: https://thehiveryiq.com/ai/transparency
+    status: 404
+  note: The company publishes interpretation rules for its receipts (llms.txt) and labels "modeled" figures, but
+    no disclosure about AI-generated content or AI interaction on its own surfaces.
+- signal: global_privacy_control
+  note: No GPC / Sec-GPC / Do Not Track statement in the privacy policy; not probed by header on purpose.
+- signal: incident_notification
+  note: 'Security page: "customer notification commitments require an approved runbook and applicable contract";
+    no SLA stated.'
+- signal: age_assurance
+  note: Privacy Section 10 says services are not directed at under-16s; that is a childrens-data statement, not
+    an age-assurance mechanism.
+- signal: notice_and_action
+  probed:
+  - url: https://thehiveryiq.com/transparency
+    status: 404
+- signal: transparency_report
+  probed:
+  - url: https://thehiveryiq.com/transparency
+    status: 404
+- signal: exit_assistance
+  note: /developers mentions GET /tenants/:id/evidence export "depend on the tenant deployment" and the JSON-RPC
+    surface has memory.export; no published exit/portability procedure. /docs/data-residency 404.
+note: Three signals carry substance (a dated subprocessor table with regions, a rights section with a channel and
+  the statutory deadline, and a named processing region); everything else is an honest absence. The providers own
+  machine-readable policy-evidence file is the best single source and is linked from both the security and privacy
+  pages.

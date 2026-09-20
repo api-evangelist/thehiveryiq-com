@@ -1,0 +1,358 @@
+generated: '2026-09-19'
+method: probed
+source: 'Live GET probes of the named /.well-known/* path list (plus /apis.json, /apis.yml, /llms.txt) on six hosts
+  on 2026-09-19: thehiveryiq.com, www.thehiveryiq.com, api.thehiveryiq.com (HiveCompute API + MCP host), receipts.thehiveryiq.com
+  (HiveMorph API + A2A host), passport.thehiveryiq.com (HKTN trust rail) and hive-mcp-gateway.onrender.com (the
+  MCP transport named by receipts.thehiveryiq.com/.well-known/mcp.json). Every row is a request that was issued;
+  every status is the one returned.'
+summary:
+  hosts_probed: 6
+  paths_probed: 102
+  documents_served: 11
+  hit_count: 11
+  path_echo_control: passed on thehiveryiq.com, receipts, passport and gateway (each returns a real 404 for a nonsense
+    path); FAILED on api.thehiveryiq.com, which returns HTTP 200 application/json for every path
+  note: 'Served documents: an RFC 9116 security.txt on the apex (Contact, Expires 2027-05-08, Canonical, Policy
+    -> /security/) and another on the MCP gateway; A2A agent cards on four hosts (graded in a2a/); a JWKS (Ed25519
+    OKP, kid hivecompute-spectral-1) on api.thehiveryiq.com; an MCP discovery manifest (/.well-known/mcp.json, non-standard
+    path) on receipts and on the gateway; an x402 payment-discovery document (/.well-known/x402.json, non-standard)
+    on receipts; and a legacy /.well-known/agent.json on receipts that is NOT an agent card (a service discovery
+    blob with docs/tools/openapi/x402 keys and no A2A fields; saved for the record, not graded). NOT served anywhere:
+    OpenID Connect discovery, RFC 8414 authorization-server metadata, RFC 9728 protected-resource metadata (including
+    on both MCP hosts, so no delegated-identity story exists for the MCP servers), RFC 9727 api-catalog, ai-plugin.json,
+    UCP/ACP, AAuth, and APIs.json in any form. SOFT-200 WARNING: api.thehiveryiq.com answers HTTP 200 application/json
+    for EVERY path, including nonsense ones, with a ~540-byte body reading ''No closed doors, but this path is not
+    a real endpoint. Follow the breadcrumbs.'' (its own doctrine string: ''slippery-sticky: every door 200s, body
+    always points home''). Every 200 on that host below that carries soft_200: true is that catch-all body, recorded
+    with NO file so it scores as the miss it is; only agent-card.json/agent.json (907-byte hivecompute document)
+    and jwks.json (147-byte key set) are real documents there. The receipts host also declares /.well-known/a2a.json
+    in its OpenAPI, but that path was not in the probe list and was not fetched.'
+hosts:
+- host: thehiveryiq.com
+  role: Website, documentation, A2A agent card host (static site, Render behind Cloudflare)
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: thehiveryiq-com-security.txt
+    note: RFC 9116. Contact mailto:security@thehiveryiq.com, Expires 2027-05-08, Preferred-Languages en, Canonical
+      self-URL, Policy https://thehiveryiq.com/security/.
+  - path: /.well-known/openid-configuration
+    status: 404
+    note: Real 10-byte text/plain 404 (negative control for the host).
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: ../a2a/thehiveryiq-com-agent-card.json
+    note: A2A card, graded conformant in a2a/. 3,362 bytes.
+  - path: /.well-known/agent.json
+    status: 200
+    file: ../a2a/thehiveryiq-com-agent-card.json
+    note: Byte-identical to agent-card.json (legacy path alias).
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/x402
+    status: 404
+  - path: /.well-known/jwks.json
+    status: 404
+  - path: /llms.txt
+    status: 200
+    file: ../llms/thehiveryiq-com-llms.txt
+    note: Served, 2,574 bytes, text/plain. Saved verbatim under llms/.
+- host: www.thehiveryiq.com
+  role: Alias; 301s every path to the apex
+  documents:
+  - path: /.well-known/security.txt
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/security.txt
+  - path: /.well-known/openid-configuration
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/openid-configuration
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/oauth-authorization-server
+  - path: /.well-known/oauth-protected-resource
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/oauth-protected-resource
+  - path: /.well-known/api-catalog
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/api-catalog
+  - path: /.well-known/api-catalog.json
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/api-catalog.json
+  - path: /.well-known/ai-plugin.json
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/ai-plugin.json
+  - path: /.well-known/ucp.json
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/ucp.json
+  - path: /.well-known/acp.json
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/acp.json
+  - path: /.well-known/aauth-resource.json
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/aauth-resource.json
+  - path: /.well-known/apis.json
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/apis.json
+  - path: /apis.json
+    status: 301
+    note: 301 -> https://thehiveryiq.com/apis.json
+  - path: /apis.yml
+    status: 301
+    note: 301 -> https://thehiveryiq.com/apis.yml
+  - path: /.well-known/agent-card.json
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/agent-card.json
+  - path: /.well-known/agent.json
+    status: 301
+    note: 301 -> https://thehiveryiq.com/.well-known/agent.json
+- host: api.thehiveryiq.com
+  role: 'HiveCompute inference API + live MCP server (Render: hivecompute-g2g7.onrender.com). CATCH-ALL HOST: every
+    path returns 200 JSON.'
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    soft_200: true
+    document: false
+    note: Catch-all body ("this path is not a real endpoint"), application/json, 553 bytes. Not a security.txt.
+      Recorded as a miss.
+  - path: /.well-known/openid-configuration
+    status: 200
+    soft_200: true
+    document: false
+    note: Catch-all body.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    soft_200: true
+    document: false
+    note: Catch-all body. No RFC 8414 metadata.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    soft_200: true
+    document: false
+    note: Catch-all body. No RFC 9728 metadata on the MCP host.
+  - path: /.well-known/api-catalog
+    status: 200
+    soft_200: true
+    document: false
+  - path: /.well-known/api-catalog.json
+    status: 200
+    soft_200: true
+    document: false
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    soft_200: true
+    document: false
+  - path: /.well-known/ucp.json
+    status: 200
+    soft_200: true
+    document: false
+  - path: /.well-known/acp.json
+    status: 200
+    soft_200: true
+    document: false
+  - path: /.well-known/aauth-resource.json
+    status: 200
+    soft_200: true
+    document: false
+  - path: /.well-known/apis.json
+    status: 200
+    soft_200: true
+    document: false
+  - path: /apis.json
+    status: 200
+    soft_200: true
+    document: false
+  - path: /apis.yml
+    status: 200
+    soft_200: true
+    document: false
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: ../a2a/thehiveryiq-com-hivecompute-agent-card.json
+    note: Real 907-byte hivecompute document (differs from the catch-all body); graded flavored in a2a/.
+  - path: /.well-known/agent.json
+    status: 200
+    file: ../a2a/thehiveryiq-com-hivecompute-agent-card.json
+    note: Same 907-byte document.
+  - path: /.well-known/jwks.json
+    status: 200
+    file: thehiveryiq-com-hivecompute-jwks.json
+    note: 'Real JWKS: one OKP/Ed25519 key, kid hivecompute-spectral-1, alg EdDSA. Pairs with /v1/prov/pubkey and
+      the X-Hive-Prov-* response-signature headers.'
+  - path: /.well-known/mcp.json
+    status: 200
+    soft_200: true
+    document: false
+    note: Catch-all body; the live MCP endpoint is /mcp (see mcp/).
+  - path: /llms.txt
+    status: 200
+    file: ../llms/thehiveryiq-com-hivecompute-llms.txt
+    note: Real text/plain llms.txt, 724 bytes. Saved under llms/.
+- host: receipts.thehiveryiq.com
+  role: 'HiveMorph receipts / commerce API (906-path OpenAPI), A2A JSON-RPC endpoint (Render: hivemorph.onrender.com).
+    Real JSON 404s.'
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    note: Real JSON 404 ("unknown_path"); the apex security policy page states scope "thehiveryiq.com and all subdomains".
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    note: Real 404.
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: ../a2a/thehiveryiq-com-receipts-agent-card.json
+    note: A2A 0.2.0 catalog card (44,068 bytes, 10 embedded cards); graded conformant on shape in a2a/.
+  - path: /.well-known/agent.json
+    status: 200
+    file: thehiveryiq-com-receipts-agent.json
+    note: 'NOT an agent card: a 5,390-byte service-discovery document (name hivemorph, docs, tools, openapi, x402,
+      capabilities[] ...) with no protocolVersion/skills/provider. Saved verbatim for the record; not graded.'
+  - path: /.well-known/mcp.json
+    status: 200
+    file: thehiveryiq-com-receipts-mcp.json
+    note: 'MCP discovery manifest (non-standard path): server hivemorph 0.2.0, transport streamable-http at https://hive-mcp-gateway.onrender.com/mcp,
+      12 declared tools each bound to a REST endpoint. See mcp/.'
+  - path: /.well-known/x402.json
+    status: 200
+    file: thehiveryiq-com-receipts-x402.json
+    note: 'x402 payment discovery (non-standard path): accepts[] for USDC/USDT on Base, Solana, Ethereum; discovery/pricing/stats
+      endpoints.'
+  - path: /llms.txt
+    status: 200
+    file: ../llms/thehiveryiq-com-receipts-llms.txt
+    note: 6,530 bytes text/plain. Saved under llms/.
+- host: passport.thehiveryiq.com
+  role: 'Hive Passport / HKTN trust rail (Render: hive-passport.onrender.com). Real JSON 404s ("This is an honest
+    404, not a placeholder success response").'
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/jwks.json
+    status: 404
+  - path: /llms.txt
+    status: 200
+    file: ../llms/thehiveryiq-com-passport-llms.txt
+    note: 4,059 bytes text/plain surface map. Saved under llms/. No OpenAPI on this host (/openapi.json 404).
+- host: hive-mcp-gateway.onrender.com
+  role: MCP gateway / registry named as the MCP transport by receipts.thehiveryiq.com/.well-known/mcp.json (provider-operated
+    Render host). Real JSON 404s.
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: thehiveryiq-com-mcp-gateway-security.txt
+    note: 'RFC 9116: Contact mailto:steve@thehiveryiq.com, Expires (generated per request, +1y), Canonical, Policy
+      https://www.thehiveryiq.com.'
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    note: 'Real 404 on the MCP host: no RFC 9728 protected-resource metadata, so no delegated identity / dynamic
+      client registration for these MCP servers.'
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: ../a2a/thehiveryiq-com-mcp-gateway-agent-card.json
+    note: 981-byte card; graded flavored (no protocolVersion) in a2a/.
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 200
+    file: thehiveryiq-com-mcp-gateway-mcp.json
+    note: Registry of 37 hive-mcp-* shim servers (each on its own onrender.com host) plus legacy in-process mounts.
+      9,192 bytes.
+  - path: /llms.txt
+    status: 404
+    note: '404.'

@@ -1,0 +1,599 @@
+generated: '2026-09-19'
+method: derived
+source: mcp/thehiveryiq-com-mcp.yml (live tools/list on two servers + the receipts mcp.json manifest) bound to openapi/thehiveryiq-com-hivemorph-openapi.yml
+  and openapi/thehiveryiq-com-hivecompute-openapi.yml
+surfaces:
+  openapi:
+  - file: openapi/thehiveryiq-com-hivemorph-openapi.yml
+    operations: 937
+    server: https://receipts.thehiveryiq.com
+  - file: openapi/thehiveryiq-com-hivecompute-openapi.yml
+    operations: 5
+    server: https://api.thehiveryiq.com
+    note: no operationIds
+  mcp:
+  - url: https://api.thehiveryiq.com/mcp
+    tools: 5
+    gated: false
+  - url: https://hive-mcp-gateway.onrender.com/mcp
+    tools: 38
+    gated: false
+  - url: https://receipts.thehiveryiq.com/.well-known/mcp.json
+    tools: 12
+    gated: false
+    note: 'manifest only: declared, not served by tools/list'
+  graphql: null
+crosswalk:
+- tool: compute.chat
+  server: hivecompute
+  category: inference
+  rest: []
+  rest_path: POST /v1/compute/chat/completions
+  binding: rest
+  confidence: high
+  note: The HiveCompute OpenAPI stub declares no operationIds, so the binding is by method+path. OpenAI-compatible
+    chat completions; paid (402 x402 challenge observed live).
+- tool: compute.estimate_cost
+  server: hivecompute
+  category: inference
+  rest: []
+  rest_path: POST /v1/compute/estimate
+  binding: rest
+  confidence: high
+  note: The HiveCompute OpenAPI stub declares no operationIds, so the binding is by method+path. Free; answered
+    200 unauthenticated.
+- tool: compute.list_models
+  server: hivecompute
+  category: inference
+  rest: []
+  rest_path: GET /v1/compute/models
+  binding: rest
+  confidence: high
+  note: The HiveCompute OpenAPI stub declares no operationIds, so the binding is by method+path. Free; 447 models
+    from the live OpenRouter registry.
+- tool: hive_verify_receipt
+  server: hivemorph-manifest
+  category: receipts
+  rest:
+  - verify_receipt_route_v1_receipt_verify_post
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: POST /v1/receipt/verify. stage=LIVE, x402_required=False.'
+- tool: hive_quote_x402
+  server: hivemorph-manifest
+  category: commerce
+  rest:
+  - quote_v1_x402_quote_post
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: POST /v1/x402/quote. stage=LIVE, x402_required=False.'
+- tool: hive_emit_receipt
+  server: hivemorph-manifest
+  category: receipts
+  rest:
+  - receipt_emit_v1_receipt_emit_post
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: POST /v1/receipt/emit. stage=LIVE, x402_required=True.'
+- tool: hive_settlement_reference
+  server: hivemorph-manifest
+  category: commerce
+  rest:
+  - settlement_reference_v1_settlement_reference_get
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: GET /v1/settlement/reference. stage=LIVE, x402_required=False.'
+- tool: hive_check_delegation
+  server: hivemorph-manifest
+  category: commerce
+  rest:
+  - delegation_check_v1_delegation_check_post
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: POST /v1/delegation/check. stage=LIVE, x402_required=False.'
+- tool: hive_lookup_hktn
+  server: hivemorph-manifest
+  category: commerce
+  rest:
+  - hktn_lookup_v1_hktn_lookup_get
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: GET /v1/hktn/lookup. stage=LIVE, x402_required=False.'
+- tool: hive_select_rubric
+  server: hivemorph-manifest
+  category: commerce
+  rest:
+  - rubric_select_v1_rubric_select_post
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: POST /v1/rubric/select. stage=LIVE, x402_required=True.'
+- tool: hive_score_counterparty
+  server: hivemorph-manifest
+  category: commerce
+  rest:
+  - prospector_score_v1_prospector_score_post
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: POST /v1/prospector/score. stage=LIVE, x402_required=True.'
+- tool: hive_normalize_intent
+  server: hivemorph-manifest
+  category: commerce
+  rest:
+  - rosetta_normalize_v1_rosetta_normalize_post
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: POST /v1/rosetta/normalize. stage=LIVE, x402_required=True.'
+- tool: hive_get_status
+  server: hivemorph-manifest
+  category: commerce
+  rest:
+  - status_json_alias_status_json_get
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: GET /status.json. stage=LIVE, x402_required=False.'
+- tool: hive_get_pricing
+  server: hivemorph-manifest
+  category: commerce
+  rest:
+  - pricing_json_alias_pricing_json_get
+  binding: rest
+  confidence: high
+  note: 'Endpoint declared by the provider''s own mcp.json: GET /pricing.json. stage=LIVE, x402_required=False.'
+- tool: evaluator__evaluator_get_fees
+  server: hive-mcp-gateway
+  category: evaluator
+  rest:
+  - get_fees_v1_evaluator_fees_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: evaluator__evaluator_submit_job
+  server: hive-mcp-gateway
+  category: evaluator
+  rest:
+  - submit_job_route_v1_evaluator_jobs_post
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: evaluator__evaluator_get_job
+  server: hive-mcp-gateway
+  category: evaluator
+  rest:
+  - get_job_route_v1_evaluator_jobs__job_id__get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: evaluator__evaluator_attest_job
+  server: hive-mcp-gateway
+  category: evaluator
+  rest:
+  - attest_job_route_v1_evaluator_jobs__job_id__attest_post
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: trade__trade_get_fees
+  server: hive-mcp-gateway
+  category: trade
+  rest:
+  - get_fees_v1_trade_fees_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: trade__trade_get_listing
+  server: hive-mcp-gateway
+  category: trade
+  rest:
+  - get_listing_v1_trade_listing_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: trade__trade_create_invoice
+  server: hive-mcp-gateway
+  category: trade
+  rest:
+  - post_invoice_v1_trade_invoice_post
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: trade__trade_get_invoice
+  server: hive-mcp-gateway
+  category: trade
+  rest:
+  - get_invoice_route_v1_trade_invoice__invoice_id__get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: trade__trade_dispute_invoice
+  server: hive-mcp-gateway
+  category: trade
+  rest:
+  - post_invoice_dispute_v1_trade_invoice__invoice_id__dispute_post
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: compute-grid__computegrid_list_agents
+  server: hive-mcp-gateway
+  category: compute-grid
+  rest:
+  - agents_v1_compute_grid_agents_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: compute-grid__computegrid_get_capacity
+  server: hive-mcp-gateway
+  category: compute-grid
+  rest:
+  - capacity_v1_compute_grid_capacity_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: compute-grid__computegrid_verify_proof
+  server: hive-mcp-gateway
+  category: compute-grid
+  rest:
+  - verify_v1_compute_grid_verify_post
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_audit_recent
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - audit_recent_v1_morph_audit_recent_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_get_identity
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - morph_identity_v1_morph_identity__mii_id__get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_list_supermodels
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - morph_supermodels_v1_morph_supermodels_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_get_supermodel
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - morph_supermodel_detail_v1_morph_supermodels__name_or_id__get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_carousel
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - morph_carousel_v1_morph_carousel_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_brood_pending_approvals
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - brood_pending_approvals_v1_morph_brood_pending_approvals_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_brood_conversion
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - brood_conversion_v1_morph_brood_conversion_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_brood_all
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - brood_list_all_v1_morph_brood_all_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_brood_conversion_leaderboard
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - brood_conversion_leaderboard_v1_morph_brood_conversion_leaderboard_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_brood_for_supermodel
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - brood_get_v1_morph_brood__supermodel__get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_spawn_monitor_scan
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - spawn_monitor_scan_v1_morph_spawn_monitor_scan_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_money_flavor_probe
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - money_flavor_probe_v1_morph_money_flavor_probe_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_money_flavor_stats
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - money_flavor_stats_v1_morph_money_flavor_stats_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: morph__morph_auto_cull_scan
+  server: hive-mcp-gateway
+  category: morph
+  rest:
+  - auto_cull_scan_v1_morph_auto_cull_scan_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: insurance-broker__insurance_products
+  server: hive-mcp-gateway
+  category: insurance-broker
+  rest:
+  - get_products_v1_insurance_products_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: insurance-broker__insurance_quote
+  server: hive-mcp-gateway
+  category: insurance-broker
+  rest:
+  - post_quote_v1_insurance_quote_post
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: insurance-broker__insurance_today
+  server: hive-mcp-gateway
+  category: insurance-broker
+  rest:
+  - get_today_v1_insurance_today_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: dispute__dispute_check
+  server: hive-mcp-gateway
+  category: dispute
+  rest:
+  - post_check_v1_dispute_check_post
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: dispute__dispute_providers
+  server: hive-mcp-gateway
+  category: dispute
+  rest:
+  - get_providers_v1_dispute_providers_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: dispute__dispute_route
+  server: hive-mcp-gateway
+  category: dispute
+  rest:
+  - post_route_v1_dispute_route_post
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: dispute__dispute_today
+  server: hive-mcp-gateway
+  category: dispute
+  rest:
+  - get_today_v1_dispute_today_get
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+- tool: audit-readiness__audit_readiness_score
+  server: hive-mcp-gateway
+  category: audit-readiness
+  rest:
+  - readiness_v1_audit_readiness_post
+  binding: rest
+  confidence: medium
+  note: 'Bound by tool-name/path semantics: the gateway mounts a proxy for the same HiveMorph family and the tool
+    description matches the operation summary. The tool''s live inputSchema (captured in mcp/thehiveryiq-com-mcp.yml)
+    is authoritative for its inputs.'
+mcp_only:
+- tool: compute.get_usage
+  server: hivecompute
+  reason: GET /v1/compute/usage/:did is listed by the API root document but absent from the served openapi.json
+    (5 paths only).
+- tool: compute.compression_stats
+  server: hivecompute
+  reason: GET /v1/compute/compression/stats is served live (171 bytes) but not in the OpenAPI stub.
+- tool: hive_create_evidence_artifact
+  server: hivemorph-manifest
+  reason: Declared stage ROADMAP; POST /v1/evidence/artifact is not in the OpenAPI.
+- tool: depin__depin_list_providers
+  server: hive-mcp-gateway
+  reason: No matching path family in the HiveMorph OpenAPI (depin has no /v1/depin routes; audit tier pricing is
+    served only by the MCP shim).
+- tool: depin__depin_create_listing
+  server: hive-mcp-gateway
+  reason: No matching path family in the HiveMorph OpenAPI (depin has no /v1/depin routes; audit tier pricing is
+    served only by the MCP shim).
+- tool: depin__depin_get_match_fee
+  server: hive-mcp-gateway
+  reason: No matching path family in the HiveMorph OpenAPI (depin has no /v1/depin routes; audit tier pricing is
+    served only by the MCP shim).
+- tool: audit-readiness__audit_get_tier_pricing
+  server: hive-mcp-gateway
+  reason: No matching path family in the HiveMorph OpenAPI (depin has no /v1/depin routes; audit tier pricing is
+    served only by the MCP shim).
+rest_only:
+  note: HiveMorph operations with no MCP tool on any probed server, grouped by first tag (top 40 families). The
+    16 in-API /.../mcp endpoints are themselves REST operations and are counted here.
+  by_tag:
+  - tag: (untagged)
+    operations: 55
+  - tag: affordances
+    operations: 28
+  - tag: salvage
+    operations: 23
+  - tag: nanoverse
+    operations: 21
+  - tag: attest
+    operations: 20
+  - tag: x402
+    operations: 18
+  - tag: law
+    operations: 18
+  - tag: trail
+    operations: 15
+  - tag: bounty
+    operations: 14
+  - tag: capitolare
+    operations: 13
+  - tag: fleet
+    operations: 12
+  - tag: basis-perp
+    operations: 12
+  - tag: tradefinance
+    operations: 12
+  - tag: deedlock
+    operations: 12
+  - tag: qvac
+    operations: 11
+  - tag: cre
+    operations: 11
+  - tag: clear
+    operations: 11
+  - tag: newsshield
+    operations: 11
+  - tag: lex-contract
+    operations: 11
+  - tag: alcoa-agentguard
+    operations: 11
+  - tag: hipaa-hive
+    operations: 11
+  - tag: stormlock
+    operations: 11
+  - tag: governance
+    operations: 10
+  - tag: a2a
+    operations: 10
+  - tag: afir-stream
+    operations: 10
+  - tag: procurelock
+    operations: 10
+  - tag: provebirth
+    operations: 10
+  - tag: vault-visits
+    operations: 9
+  - tag: site-traffic
+    operations: 9
+  - tag: r4-firewall
+    operations: 9
+  - tag: amplify
+    operations: 9
+  - tag: tradeguard
+    operations: 9
+  - tag: smsh
+    operations: 9
+  - tag: model-receipts
+    operations: 8
+  - tag: portal-spin
+    operations: 8
+  - tag: r9-accumulators
+    operations: 8
+  - tag: r10-rvc
+    operations: 8
+  - tag: compute-grid
+    operations: 8
+  - tag: earn
+    operations: 8
+  - tag: mining
+    operations: 8
+  total: 892
+coverage:
+  tools_named: 55
+  tools_bound: 48
+  mcp_only: 7
+  rest_ops_total: 942
+  rest_ops_with_tool: 48

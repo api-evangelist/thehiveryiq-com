@@ -1,0 +1,7 @@
+Contact: mailto:steve@thehiveryiq.com
+Expires: 2027-09-19T22:31:40.996Z
+Preferred-Languages: en
+Canonical: https://hive-mcp-gateway.onrender.com/.well-known/security.txt
+Policy: https://www.thehiveryiq.com
+
+# Hive Civilization · security disclosure contact

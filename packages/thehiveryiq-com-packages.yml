@@ -1,0 +1,170 @@
+generated: '2026-09-19'
+method: searched
+source: https://thehiveryiq.com/sdk-quickstart/
+docs:
+- https://thehiveryiq.com/developers
+- https://thehiveryiq.com/sdk-quickstart/
+- https://github.com/srotzin
+note: Two different SDK stories are documented and neither is on a registry except one package. /sdk-quickstart/
+  says 'npm i @hive/civ', 'npm i @hive/inference' and 'pip install hivemorph'; registry.npmjs.org returns Not found
+  for both npm names and pypi.org/pypi/hivemorph/json 404s. /developers says the Node (@hive/sdk), Python (hive-sdk)
+  and Go SDKs are PRIVATE PREVIEW and Rust (hive-sdk crate) is roadmap; none is released. The GitHub account github.com/srotzin
+  (display name 'HiveryIQ', blog www.thehiveryiq.com, 222 public repos) holds the source of several client libraries,
+  none released to npm/PyPI. The ONLY first-party package on a public registry is hive-rosetta (npm + PyPI, 0.1.0,
+  2026-04-30), an open x402 v2 client/server SDK whose opt-in 'routeInference' mode rewrites inference calls to
+  HiveCompute; it is the way an agent pays Hive's x402-metered endpoints, so it is recorded as the one official,
+  installable SDK. Every version/date pair was read from the registry metadata endpoint on 2026-09-19; null means
+  the registry answered 'not found'.
+packages:
+- language: javascript
+  name: hive-rosetta
+  registry: npm
+  official: true
+  url: https://www.npmjs.com/package/hive-rosetta
+  install: npm install hive-rosetta
+  repository: https://github.com/srotzin/hive-rosetta
+  version: 0.1.0
+  published: '2026-04-30'
+  maintainer: hivemaster
+  license: MIT
+  scope: 'x402 v2 client/server SDK (EIP-3009 on Base); routeInference: true routes OpenAI-compatible calls to HiveCompute'
+  note: The npm README badge references @hive-civilization/rosetta, which is NOT on the registry (Not found); the
+    released name is hive-rosetta.
+- language: python
+  name: hive-rosetta
+  registry: pypi
+  official: true
+  url: https://pypi.org/project/hive-rosetta/
+  install: pip install hive-rosetta
+  repository: https://github.com/srotzin/hive-rosetta
+  version: 0.1.0
+  published: '2026-04-30'
+  license: MIT
+  scope: Same wire format as the npm package; async client with eip3009_signer.
+- language: javascript
+  name: '@hive/civ'
+  registry: npm
+  official: true
+  url: https://www.npmjs.com/package/@hive/civ
+  install: npm i @hive/civ
+  version: null
+  published: null
+  note: Named on /sdk-quickstart/ (hive.emit / hive.verify / hive.profile). registry.npmjs.org/@hive%2Fciv -> {"error":"Not
+    found"} on 2026-09-19. Not installable.
+- language: javascript
+  name: '@hive/inference'
+  registry: npm
+  official: true
+  url: https://www.npmjs.com/package/@hive/inference
+  install: npm i @hive/inference
+  version: null
+  published: null
+  note: Named on /sdk-quickstart/ as an OpenAI-compatible drop-in. Not found on npm on 2026-09-19.
+- language: python
+  name: hivemorph
+  registry: pypi
+  official: true
+  url: https://pypi.org/project/hivemorph/
+  install: pip install hivemorph
+  version: null
+  published: null
+  note: Named on /sdk-quickstart/. pypi.org/pypi/hivemorph/json 404 on 2026-09-19.
+- language: javascript
+  name: '@hive/sdk'
+  registry: npm
+  official: true
+  install: null
+  version: null
+  published: null
+  note: '/developers: "package @hive/sdk - private preview - runtime Node 18+ / Deno / Bun". Not on the registry;
+    access by request.'
+- language: python
+  name: hive-sdk
+  registry: pypi
+  official: true
+  install: null
+  version: null
+  published: null
+  note: '/developers: "package hive-sdk - private preview - runtime Python 3.10+". Not on the registry. (pypi hive-py
+    0.0.7 belongs to an unrelated author and is NOT this project.)'
+- language: go
+  name: null
+  registry: go-proxy
+  official: true
+  install: null
+  version: null
+  published: null
+  note: '/developers: Go SDK "private preview for service meshes and operator-side proxies"; no module path given.'
+- language: rust
+  name: hive-sdk
+  registry: crates.io
+  official: true
+  install: null
+  version: null
+  published: null
+  note: '/developers: "crate hive-sdk - ROADMAP".'
+- language: typescript
+  name: hive-protocol-sdk
+  registry: github
+  official: true
+  url: https://github.com/srotzin/hive-protocol-sdk
+  install: null
+  version: null
+  published: null
+  note: 'Source only ("Hive Civilization SDK (TypeScript): HAHS, SpectralZK, SHOD, ViewKey"), last commit activity
+    2026-05-29. No package.json on main and nothing on npm.'
+- language: python
+  name: hive-py
+  registry: github
+  official: true
+  url: https://github.com/srotzin/hive-py
+  install: null
+  version: null
+  published: null
+  note: 'Source only ("Hive Civilization SDK (Python): HAHS receipts, SpectralZK proofs, SHOD"), last commit activity
+    2026-05-25. Not on PyPI under a first-party name.'
+- language: typescript
+  name: hive-verifier
+  registry: github
+  official: true
+  url: https://github.com/srotzin/hive-verifier
+  install: null
+  version: null
+  published: null
+  note: '"Public HAHS receipt verifier. Zero-dependency, third-party-runnable, no Hive credentials required." Source
+    only; the hosted twin is https://thehiveryiq.com/verify/.'
+- language: python
+  name: langchain-hive
+  registry: github
+  official: true
+  url: https://github.com/srotzin/langchain-hive
+  install: null
+  version: null
+  published: null
+  note: 'pyproject name langchain-hive 0.1.0 in the repo, but the PyPI package langchain-hive (0.1.1, ''Hive Intelligence
+    tools'') is a DIFFERENT publisher''s package: a name collision, not a release. Same for crewai-hive (repo 0.1.0,
+    absent from PyPI).'
+- language: javascript
+  name: hive-agent-sdk
+  registry: github
+  official: true
+  url: https://github.com/srotzin/hive-agent-sdk
+  install: null
+  version: null
+  published: null
+  note: package.json name hive-agent-sdk 1.0.0 in-repo; not on npm.
+- language: javascript
+  name: hive-mcp-* servers (37 repos)
+  registry: github
+  official: true
+  url: https://github.com/srotzin/hive-mcp-gateway
+  install: npm install && node gateway.js
+  version: null
+  published: null
+  note: MCP server sources (hive-mcp-gateway 1.2.0, @hivecivilization/hive-mcp-attest 1.0.0 with a bin, hive-civilization-mcp
+    1.0.0 with a bin, hive-mcp-receipts, hive-mcp-compute ...). None is on npm (checked hive-mcp-compute and the
+    hive-civilization namespace variants). The hosted deployments are catalogued in mcp/.
+cli:
+  present: false
+  note: No released first-party CLI. Two repos carry a bin entry (@hivecivilization/smsh-stamp-verifier 0.1.0, @hivecivilization/hive-mcp-attest)
+    but neither is on a registry, so no cli/ artifact was written.

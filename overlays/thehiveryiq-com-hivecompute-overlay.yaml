@@ -1,0 +1,38 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the HiveCompute inference API
+  version: 1.0.0
+extends: ../openapi/_original/thehiveryiq-com-hivecompute-openapi.json
+x-generated: '2026-09-19'
+x-method: derived
+x-source: Derived from the 5-path stub at https://api.thehiveryiq.com/openapi.json (self-described as an "OpenAPI
+  3.1 stub" in the host llms.txt; the document declares openapi 3.0.3) plus live probes.
+actions:
+- target: $.info
+  update:
+    x-mcp-endpoint: https://api.thehiveryiq.com/mcp
+    x-jwks: https://api.thehiveryiq.com/.well-known/jwks.json
+    x-response-signatures: Every response carries X-Hive-Prov-Iss / X-Hive-Prov-Ts / X-Hive-Prov-Sig / X-Hive-Prov-Pubkey
+      / X-Hive-Prov-Payload (Ed25519 over method+path+body-hash+ts; key at /v1/prov/pubkey)
+    x-catch-all-warning: The host returns HTTP 200 application/json for every unknown path; clients must check the
+      body for "not a real endpoint" rather than trusting status codes.
+    x-undocumented-live-paths:
+    - GET /v1/compute/usage/:did
+    - GET /v1/compute/compression/stats
+    - GET /v1/compute/benchmark
+    - POST /v1/compute/smsh/register
+    - GET /v1/compute/smsh/leaderboard
+    - GET /v1/prov/pubkey
+    - POST /mcp
+- target: $.paths['/v1/compute/chat/completions'].post
+  update:
+    x-auth: x402
+    x-observed-402:
+      headers:
+      - 'www-authenticate: x402'
+      - 'payment-required: <base64 JSON>'
+      body: '{"x402Version":1,"accepts":[{"scheme":"exact","network":"base","maxAmountRequired":"20000","payTo":"0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E","asset":"0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",...}]}'
+- target: $.paths['/v1/compute/estimate'].post
+  update:
+    x-auth: none
+    x-price: free (answered 200 unauthenticated)

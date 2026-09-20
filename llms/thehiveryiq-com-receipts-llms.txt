@@ -1,0 +1,210 @@
+# Hive Civilization — hivemorph agent API
+
+Base URL: https://receipts.thehiveryiq.com
+Docs: https://receipts.thehiveryiq.com/openapi.json
+Agent card: https://receipts.thehiveryiq.com/.well-known/agent.json
+MCP servers: https://receipts.thehiveryiq.com/.well-known/mcp.json
+Curated tools: https://receipts.thehiveryiq.com/v1/agent/tools
+
+Hive is the post-quantum receipt rail for agent-to-agent commerce. Every call returns
+a dual-signed (Ed25519 + ML-DSA-65 FIPS 204) receipt. USDC settlement on Base 8453.
+Patent Pending — HC-2026-001, HC-2026-002.
+
+## Start here — the 3 calls every agent should make
+
+### 1. Sign anything for free (no auth, no payment)
+POST /v1/receipt/free
+{
+  "payload": "<any string — hash, log line, decision, contract clause>",
+  "label": "<optional human label>"
+}
+Returns: receipt_id, dual signatures, verify_url, remaining daily quota (100/IP/day)
+
+### 2. Verify any receipt (free, offline-verifiable)
+POST /v1/receipt/verify
+{
+  "envelope": { ...receipt_envelope... }
+}
+Returns: verified:true|false, signature checks, next_best_actions
+
+### 3. Discover all tools and pricing
+GET /v1/agent/tools
+Returns: curated list of 10 tools with input schemas, pricing, and working examples
+
+---
+
+## Receipt workflows
+
+### Issue a paid receipt (ML-DSA-65 + Ed25519, Swarm-MAPET BFT)
+Via MCP: POST /v1/receipt/mcp  method: tools/call  name: receipt_issue
+Direct:  POST /v1/receipt/emit?profile=standard
+Body: { "tx_hash": "<ref>", "agent_did": "did:hive:...", "counterparty_did": "did:hive:..." }
+Cost: $0.0096 USDC on Base 8453
+
+Receipt profiles:
+  nano     — Ed25519 only, $0.0003, sub-millisecond
+  standard — Ed25519 + ML-DSA-65, $0.0096, <2s
+  pq       — Full post-quantum suite, regulated-tier delegation required
+
+### Get receipt by ID
+GET /v1/receipt/{receipt_id}
+
+### Settle via x402
+POST /v1/x402/quote   — get a signed USDC payment reference
+POST /v1/x402/redeem  — redeem after on-chain payment
+
+---
+
+## Compliance workflows (HiveComply — 11 frameworks)
+
+MCP endpoint: POST /v1/mcp/hivecomply  method: tools/call
+
+Frameworks: SOC2, ISO27001, EU_AI_ACT, GDPR, HIPAA, PCI4, SOX404, DORA, NIST_CSF_2_0, FEDRAMP, ISO_42001
+
+### Ingest a compliance event
+name: hivecomply_event_ingest
+Body: {
+  "event_type": "model_inference",
+  "framework_codes": ["EU_AI_ACT"],
+  "control_codes": ["ART13"],
+  "actor_did": "did:hive:your-agent",
+  "evidence_hash": "<sha256 of your evidence>"
+}
+Returns: dual-signed event receipt, event_id
+
+### Export an audit bundle
+name: hivecomply_bundle_export
+Body: { "framework": "SOC2", "period_start": "2026-01-01", "period_end": "2026-06-30" }
+Returns: canonical bundle with bundle_hash + dual signatures for auditors
+
+Free tier: 1,000 events/mo | Pro: $5K/mo USDC, 50K events | Enterprise: $50K/mo unlimited
+
+---
+
+## Procurement workflows (ProcureLock)
+
+MCP endpoint: POST /v1/procurelock/mcp  method: tools/call
+
+### Attest a PO state transition
+name: procurelock_po_attest
+Body: {
+  "po_number": "PO-2026-001",
+  "state": "PO_Issued",
+  "buyer_did": "did:hive:buyer",
+  "supplier_did": "did:hive:supplier",
+  "amount_usd": 50000.00,
+  "currency": "USD"
+}
+Returns: dual-signed attestation receipt, EDI output (X12/EDIFACT/cXML/SAP IDoc)
+Cost: $0.0008/event standard
+
+---
+
+## Real estate / title workflows (DeedLock)
+
+MCP endpoint: POST /v1/deedlock/mcp  method: tools/call
+
+### Attest a deed event
+name: deedlock_deed_attest
+Body: {
+  "property_id": "<APN or MLS#>",
+  "event_type": "deed_signed",
+  "notarization_type": "ron",
+  "buyer_did": "did:hive:buyer",
+  "seller_did": "did:hive:seller",
+  "closing_amount_usd": 750000.00
+}
+Returns: dual-signed ALTA/MISMO/RON-compliant receipt
+Cost: $0.0096/event
+
+---
+
+## IP / Patent / Trademark / Copyright (Hive Lex)
+
+### Patent priority timestamp
+POST /v1/prior/mcp  name: prior_issue
+Body: { "content_hash": "<sha256>", "inventor_did": "did:hive:...", "title": "..." }
+Tiers: disclosure $50, singularity $200, uspto $500
+
+### Trademark first-use attestation
+POST /v1/prior/mcp  name: mark_attest
+Body: { "mark_text": "HIVE", "owner_did": "did:hive:...", "goods_services": "..." }
+Cost: $0.0096/attestation
+
+### Copyright stamp
+POST /v1/prior/mcp  name: origin_create
+Body: { "work_hash": "<sha256>", "creator_did": "did:hive:...", "work_type": "code|writing|art|music" }
+Cost: $0.0096/stamp
+
+---
+
+## Agent identity
+
+### Register an agent DID
+POST /v1/a2a/register
+Body: { "agent_name": "my-agent-v1", "capabilities": ["receipt", "settle"] }
+Returns: did:hive:... identifier, genesis receipt, routing keys
+
+### Resolve a DID
+GET /v1/a2a/resolve/{did}
+
+---
+
+## Agent trust directory
+
+GET /v1/trust/agents
+Returns: public trust scores (PDR, MDR, ASS, DLQ composite) for all registered agents
+Filter: ?category=infrastructure|payments|compliance|legal  ?min_score=95
+
+---
+
+## x402 payment flow (for agents paying agents)
+
+1. GET /v1/x402/rails         — discover available payment rails
+2. POST /v1/x402/quote        — get signed USDC payment reference (free)
+3. Agent sends USDC on Base 8453 to the quoted address
+4. POST /v1/x402/redeem       — submit tx_hash, receive signed service receipt
+
+USDC contract on Base: 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
+Hive treasury: 0x15184bf50b3d3f52b60434f8942b7d52f2eb436e
+
+---
+
+## MCP servers — add to any MCP client
+
+| Server | Endpoint | Use |
+|--------|----------|-----|
+| hive-receipts-mcp | /v1/receipt/mcp | Sign + verify anything |
+| hive-hivecomply-mcp | /v1/mcp/hivecomply | 11-framework compliance |
+| hive-procurelock-mcp | /v1/procurelock/mcp | PO attestation + EDI |
+| hive-deedlock-mcp | /v1/deedlock/mcp | Real estate closing receipts |
+| hive-lex-mcp | /v1/prior/mcp | Patent / trademark / copyright |
+| hive-newsshield-mcp | /v1/mcp/newsshield | AI content provenance |
+| hive-stormlock-mcp | /v1/mcp/stormlock | Cyber incident audit trail |
+| hive-clear-mcp | /v1/mcp/clear | Clearing + settlement |
+
+Add to Claude Desktop:
+{
+  "mcpServers": {
+    "hive-receipts": {
+      "command": "npx",
+      "args": ["-y", "@hive/mcp-receipts"],
+      "transport": "streamable-http",
+      "url": "https://receipts.thehiveryiq.com/v1/receipt/mcp"
+    }
+  }
+}
+
+---
+
+## Rate limits and auth
+
+- /v1/receipt/free       100 receipts/IP/day, no auth
+- /v1/receipt/verify     unlimited, no auth
+- /v1/trust/agents       unlimited, no auth
+- /v1/agent/tools        unlimited, no auth
+- All paid endpoints     x402 USDC payment or Bearer API key
+
+Signup: https://thehiveryiq.com/signup/
+Pricing: https://thehiveryiq.com/pricing/
+Contact: steve@thehiveryiq.com

@@ -1,0 +1,192 @@
+generated: '2026-09-19'
+method: searched
+source: https://thehiveryiq.com/pricing/
+docs:
+- https://thehiveryiq.com/pricing/
+- https://thehiveryiq.com/pricing/enterprise/
+- https://thehiveryiq.com/agents
+- https://thehiveryiq.com/legal
+machine_readable:
+- url: https://receipts.thehiveryiq.com/pricing
+  method: probed
+  status: 200
+  note: per-receipt profile ladder
+- url: https://receipts.thehiveryiq.com/v1/x402/pricing
+  method: probed
+  status: 200
+  note: per-path x402 price rules (version 0.1.1), Tier0 permanent-free paths
+plan_count: 8
+currency: USD
+model: Platform subscription tiers with included receipt volume + per-receipt metering (x402 USDC on Base, or card/ACH/wire/Square
+  for invoiced tiers); a permanently free tier; enterprise commit ladder
+caveat: The pricing page is explicit that 'the order form is the only governing schedule' and that several published
+  rates are 'PROPOSED' or 'illustrative'. Figures below are copied as published on 2026-09-19.
+plans:
+- id: tier0-free
+  name: 'Tier 0: Free'
+  price: 0
+  currency: USD
+  period: month
+  included:
+  - 100 receipts / IP / day, then 429
+  - Ed25519; ML-DSA-65 only on separately accepted endpoints
+  - Public /v1/receipt/{id} verification
+  - No API key, no signup
+  limits:
+    receipts_per_ip_per_day: 100
+  overage: $0.0012 USDC per receipt on Base 8453 (price_after_free in the API response)
+- id: starter
+  name: Starter
+  audience: Devs and prototypes
+  price: 99
+  currency: USD
+  period: month
+  included:
+  - 20,000 receipts included
+  - Single tenant
+  - Community support
+  - Offline verifier included
+  limits:
+    receipts_per_month: 20000
+- id: team
+  name: Team
+  audience: Small teams
+  price: 299
+  currency: USD
+  period: month
+  included:
+  - 60,000 receipts included
+  - Up to 5 sub-tenants
+  - Business-hours support
+  - Webhook callbacks
+  limits:
+    receipts_per_month: 60000
+    sub_tenants: 5
+- id: growth
+  name: Growth
+  audience: Production teams
+  price: 2000
+  currency: USD
+  period: month
+  included:
+  - 400,000 receipts included
+  - Standard SLA, 99.9% rail uptime
+  - Next-business-day support
+  - Primitive uplifts billed per receipt
+  limits:
+    receipts_per_month: 400000
+  sla: 99.9%
+- id: scale
+  name: Scale
+  audience: Multi-region operators
+  price: 10000
+  currency: USD
+  period: month
+  included:
+  - 2,000,000 receipts included
+  - Premium SLA, 99.95% rail uptime
+  - 4-hour response, dedicated onboarding
+  - Sub-tenant hierarchy
+  limits:
+    receipts_per_month: 2000000
+  sla: 99.95%
+- id: enterprise
+  name: Enterprise
+  audience: Regulated volume
+  price: 50000
+  currency: USD
+  period: month
+  included:
+  - 10,000,000 receipts included
+  - Enterprise SLA, 99.99% rail uptime
+  - 1-hour response, founder-engineer pairing
+  - HSM or air-gapped key custody
+  limits:
+    receipts_per_month: 10000000
+  sla: 99.99%
+  payment_rails: Stripe (card/ACH/wire, self-serve up to $50K/month), Mercury USD wire (NET-30, W-9 on request),
+    Square invoicing (SMB, under $5K/month), USDC on Base 8453; MSA and DPA templates offered
+- id: sovereign
+  name: Sovereign
+  audience: National and frontier scale
+  price: null
+  currency: USD
+  period: custom
+  included:
+  - Receipt volume set by the deployment
+  - Sovereign SLA, dedicated infrastructure
+  - In-country signers and registry anchoring
+  - Named engineering pod
+  note: Priced per deployment; contact sales
+- id: builder-a2a
+  name: Builder (A2A capacity example)
+  price: 99
+  currency: USD
+  period: month
+  included:
+  - 10,000 receipts / mo included in commit
+  - 'Overage: $0.0010 / receipt (PQ tier)'
+  - API key auth via Bearer header
+  - Email support, response <24h
+  limits:
+    receipts_per_month: 10000
+  overage: $0.0010 per receipt
+  note: Labelled "Draft A2A capacity example ... not the Starter platform plan"; a second, larger example lists
+    $0.0009/receipt overage, webhook notifications per receipt and priority support <4h without a published monthly
+    price.
+metered_usage:
+  per_receipt_profiles:
+    source: https://receipts.thehiveryiq.com/pricing (probed)
+    nano:
+      price_usd_per_call: 0.0001
+      max_size_bytes: 600
+      retention_days: 30
+    standard:
+      price_usd_per_call: 0.0008
+      max_size_bytes: 3000
+      retention_days: 365
+      default: true
+    pq:
+      price_usd_per_call: 0.0012
+      max_size_bytes: 50000
+      retention_days: 2555
+  per_receipt_base_rates:
+    source: https://thehiveryiq.com/pricing/
+    high_volume_low_stakes: $0.005
+    mid_volume_regulated: $0.05
+    high_stakes_sovereign_defense: $0.50
+    uplifts: S2S +$0.02, QPUF +$0.05, Sovereign registry +$0.03, HiveSeal +$0.01, MiR +$0.01, Carnac +$0.01
+    document_instruments: free under 100,000 receipts/month, then $0.01, $0.005 above 1,000,000, $0.002 above 5,000,000
+      (PROPOSED)
+  agent_tiers_on_agents_page:
+    tier0_evidence: 'Free: verify only'
+    tier1_per_call: from $0.0008 / call, x402-USDC-Base, 6-second finality
+    tier2_enterprise: tenant billing, monthly envelope, >100 calls/day
+  vertical_prices:
+    hive_legal: Standard $2.00 / receipt, Counterparty $5.00 / receipt, Sovereign custom NET-30
+    a2a_legal: $5 / interaction, $7,999 / matter, $24,999 firm-wide
+    a2a_healthcare: $5 / claim, $799 / month, $7,999 / year
+    a2a_procurement: $5 / PO, $999 / month, $9,999 / year
+    a2a_real_estate: $499 / closing, $999 / month, $9,999 / year
+    swarm_receipt_mcp: $0.0096 USDC per receipt (/v1/agent/tools)
+    prediction_market_settlement: from $0.25 per settled contract
+  hivecompute:
+    unit: USDC per 1M tokens, per model (447 models, live OpenRouter registry)
+    observed_challenge: maxAmountRequired 20000 atomic USDC (0.02 USDC) per chat completion; x-mpp-charge 50000
+      in the OpenAPI
+    semantic_cache_hit: $0.05 flat
+    routing_spread: platform keeps 25% (unregistered) to 35-50% (SMSH-registered tiers) of compression savings
+enterprise_commit_ladder:
+  Starter 1M: 10% off
+  Growth 10M: 25% off
+  Scale 100M: 40% off
+  Hyperscale 500M: 50% off (floor)
+  multi_year: +5% / 24mo, +10% / 36mo
+  floor: Inference does not discount below 30%
+free_quotas:
+- Verify and quote always free
+- First 25 rosetta/prospector calls per agent free
+- 'Designer chat: 2 turns per IP per UTC day'
+- 'HiveComply: 1K events/month'
+- Discovery paths (/.well-known/*, /openapi.json, /docs, /health, /v1/x402/*, /v1/agent/tools, /v1/badge, /v1/insights,
+  /v1/trust/agents) permanently free per /v1/x402/pricing Tier0

@@ -1,0 +1,89 @@
+generated: '2026-09-19'
+method: searched
+source: https://thehiveryiq.com/agents
+docs:
+- https://thehiveryiq.com/agents
+- https://thehiveryiq.com/developers
+- https://thehiveryiq.com/verify/
+- https://thehiveryiq.com/pricing/
+summary: 'There is no separate sandbox environment and no test-mode key: the production hosts ARE the try-it surface,
+  and the provider designed a large free, unauthenticated slice of them for exactly that. What exists: (1) a free
+  tier on the real receipts API (POST /v1/receipt/free, no key, 100 per IP per day, real Ed25519 + ML-DSA-65 signatures,
+  status ''issued_free_tier''); (2) explicit no-settlement operations (POST /v1/firewall/sandbox/run ''records nothing
+  on any settlement layer'', POST /v1/firewall/enforce/preview ''Dry-run'', GET /v1/receipt/emit preflight, POST
+  /v1/compute/estimate); (3) published sample receipts (GET /v1/governance/sample-receipt, canonical valid/tampered/forged/sealed/wrong-key
+  samples in the browser verifier at /verify/); (4) free quotas on paid paths (first 25 rosetta/prospector calls
+  per agent, 2 designer turns per IP per day, 1K hivecomply events per month). Values below are the provider''s
+  published ones; nothing was invented.'
+console:
+  present: true
+  type: Swagger UI + browser verifier + try-it cards
+  urls:
+  - https://receipts.thehiveryiq.com/docs
+  - https://thehiveryiq.com/verify/
+  - https://thehiveryiq.com/agents
+  targets: Production only (the OpenAPI names no server; the try-it cards on /agents run "against a live endpoint
+    right now").
+sandbox:
+  present: false
+  separate_environment: false
+  test_mode: false
+  test_key_prefix: null
+  live_key_prefix: tk_live_
+  note: The only key prefix the contract names is tk_live_ (portal API-key revoke); no tk_test_ or equivalent is
+    documented anywhere.
+free_tier:
+  operation: POST https://receipts.thehiveryiq.com/v1/receipt/free
+  operationId: issue_free_receipt_v1_receipt_free_post
+  auth: none
+  quota: 100 receipts per IP per UTC day, then HTTP 429
+  request: '{"payload": "<any string, max 8192 chars>", "label": "<optional, max 120>"}'
+  response: '201 with receipt_id, payload_hash, verify_url (https://thehiveryiq.com/verify/?id=...), verify_api,
+    dual signatures, free_tier {remaining_today, daily_limit, upgrade_url, price_after_free: "$0.0012 USDC per receipt
+    on Base 8453"}'
+  observed: '2026-09-19'
+  note: These are REAL signed receipts on the production service, not sandbox fixtures; the provider asks for public
+    test text only ("Use public test text", "Use synthetic records only").
+no_settlement_operations:
+- operationId: sandbox_run_v1_firewall_sandbox_run_post
+  path: POST /v1/firewall/sandbox/run
+  doc: Echo-back sandbox path. Confirms the envelope authorizes the request in sandbox mode, returns a synthetic
+    result, and records nothing on any settlement layer.
+- operationId: enforce_preview_v1_firewall_enforce_preview_post
+  path: POST /v1/firewall/enforce/preview
+  doc: Dry-run firewall enforcement against any envelope
+- operationId: receipt_emit_preflight_v1_receipt_emit_get
+  path: GET /v1/receipt/emit?profile=
+  doc: Receipt Emit Preflight
+- operationId: quote_v1_x402_quote_post
+  path: POST /v1/x402/quote
+  doc: Free; returns amount, treasury, ERC-681 deep link without moving funds (observed 200 with body {})
+- path: POST https://api.thehiveryiq.com/v1/compute/estimate
+  doc: Free cost estimate before inference (observed 200 unauthenticated)
+sample_data:
+- operationId: get_sample_receipt_example_v1_governance_sample_receipt_get
+  path: GET /v1/governance/sample-receipt
+  doc: Free public sample of the AI-use receipt shape governance pilots receive. Static reference example, not a
+    live signing event.
+- url: https://thehiveryiq.com/verify/
+  doc: Browser verifier with canonical valid, tampered, forged, sealed and wrong-key sample receipts (hive-receipt-v1,
+    Ed25519); Insurance Studio v3 synthetic-package check; "Use synthetic records only".
+- operationId: route_pq_keys_sample_v1_smsh_pq_keys_sample_get
+  path: GET /v1/smsh/pq/keys/sample
+free_quotas_on_paid_paths:
+- paths:
+  - POST /v1/rosetta/normalize
+  - POST /v1/prospector/score
+  quota: first 25 calls per agent free, then x402 (/agents)
+- path: POST /v1/designer/chat
+  quota: free for the first 2 turns per IP per UTC day (global $2 daily ceiling), then 402
+- path: POST /v1/hivecomply/event/ingest
+  quota: free up to 1K events/mo (/v1/agent/tools)
+- path: hive-mcp-gateway MCP tools
+  quota: '"New agents: first call free. Loyalty: every 6th paid call is free." (gateway agent card)'
+time_simulation: false
+fixtures_or_triggers: false
+test_payment_values:
+  present: false
+  note: 'No testnet: /rails says "No mocks, no testnet pretending mainnet". The hive-rosetta SDK README mentions
+    Base Sepolia support client-side, but the Hive endpoints themselves accept Base mainnet USDC/USDT only.'

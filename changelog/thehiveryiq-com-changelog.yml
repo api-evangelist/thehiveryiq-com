@@ -1,0 +1,73 @@
+generated: '2026-09-19'
+method: searched
+source: https://thehiveryiq.com/security/policy-evidence-2026-09-05.json
+docs:
+- https://thehiveryiq.com/security/
+- https://thehiveryiq.com/privacy
+- https://thehiveryiq.com/feed.json
+title: Hive Civilization change records
+scheme: dated policy-evidence change log (JSON) + dated product announcement feed; no API changelog
+current_version: v1 (API paths); HiveMorph service 0.2.0; HiveCompute service 2.0.0; receipt schema r1.0.0
+api_changelog_published: false
+note: There is NO changelog for the API itself (/changelog/ 404; nothing in the OpenAPI, llms.txt or docs names
+  one). What Hive publishes is (a) a machine-readable "Security Policy Evidence and Change Log" (version 2026-09-05)
+  whose change_log[] records the corrections made to the security and privacy pages, (b) dated "Last updated" stamps
+  on the privacy (September 5, 2026) and terms (May 4, 2026) pages, (c) a JSON Feed of product announcements, all
+  dated 2026-05-16, and (d) a deploy commit hash in receipts.thehiveryiq.com/status. Recorded as found; an agent
+  cannot learn from any of these when an operation changed.
+entry_count: 7
+entries:
+- date: '2026-09-05'
+  version: '2026-09-05'
+  category: policy-correction
+  breaking: false
+  summary: Replaced incorrect US East (Oregon), platform-wide KMS, universal no-plaintext and no-tracking claims
+    with service-specific evidence.
+  source: https://thehiveryiq.com/security/policy-evidence-2026-09-05.json
+- date: '2026-09-05'
+  version: '2026-09-05'
+  category: policy-correction
+  breaking: false
+  summary: Preserved deletion-statement limits and earlier removal of the Article 12 seven-year default; added unapproved
+    retention inventory.
+  source: https://thehiveryiq.com/security/policy-evidence-2026-09-05.json
+- date: '2026-09-05'
+  version: '2026-09-05'
+  category: policy-correction
+  breaking: false
+  summary: Removed unsupported audit/certification dates, active continuity arrangements, insurance limits and universal
+    complete-export promises.
+  source: https://thehiveryiq.com/security/policy-evidence-2026-09-05.json
+- date: '2026-09-05'
+  version: '2026-09-05'
+  category: policy-correction
+  breaking: false
+  summary: Reconciled linked ISO/SOC inventories, including contrary KMS, PII, deletion, hybrid-signature and audit-completion
+    assertions.
+  source: https://thehiveryiq.com/security/policy-evidence-2026-09-05.json
+- date: '2026-09-05'
+  version: '2026-09-05'
+  category: policy-correction
+  breaking: false
+  summary: Preserved layout styles, artwork, fonts and scripts; updated in-scope footer and metadata wording.
+  source: https://thehiveryiq.com/security/policy-evidence-2026-09-05.json
+- date: '2026-09-05'
+  category: policy
+  breaking: false
+  summary: 'Privacy policy revised: "clarified readable-content processing, telemetry, Oregon compute, open retention
+    schedules, entity verification and transfer evidence."'
+  source: https://thehiveryiq.com/privacy
+- date: '2026-05-16'
+  category: product
+  breaking: false
+  summary: 'Product announcement feed: Settlement vertical (W5-Refunder escrow + arbitration), A2A family (Legal,
+    Healthcare, Procurement, Real Estate), Bazaar (30 SKUs), DeedLock, LEX-Contract, HivePQ, IP Intelligence, Pick
+    (25+ agent-ready endpoints), Hive Compliance.'
+  source: https://thehiveryiq.com/feed.json
+observed_deploy:
+  source: https://receipts.thehiveryiq.com/status
+  commit: f6006658aeee4208883585ab2346a6091b7fe4d7
+  note: The status document exposes the running commit; there is no history of previous commits.
+gaps:
+- No API changelog, no versioned release notes, no deprecation notices.
+- Feed items all share one timestamp (2026-05-16T01:06:12Z), so they do not date individual launches.

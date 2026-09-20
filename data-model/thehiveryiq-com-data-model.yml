@@ -1,0 +1,290 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/thehiveryiq-com-hivemorph-openapi.yml
+docs: https://thehiveryiq.com/developers
+summary: 'Derived from 426 component schemas (95 schema-to-schema $ref edges across 68 schemas) and their id-reference
+  fields. HiveMorph links entities by identifier fields rather than by nesting: the DID is the universal foreign
+  key (agent_did x25, buyer_did x14, caller_did x13, operator_did x10, counterparty_did x8, seller_did, supplier_did,
+  covered_entity_did, business_associate_did, policy_did ...), and hash chaining is the second (tx_hash x8, original_payload_hash
+  x7, parent_receipt_hash x6, event_hash, prior_attestation_id x7). Response schemas are mostly untyped (additionalProperties:
+  true), so the graph below is built from REQUEST schemas and documented responses.'
+id_style:
+  format: 'mixed: did:hive:<name> DIDs for actors; 32-hex receipt ids (observed 54c07af40d4540bba63d2b03f23c617e);
+    r_/rcp_ prefixed illustrations on /developers; jti strings for delegations; 0x... tx hashes and EVM addresses;
+    HKTN-... trust numbers'
+  prefixes_published: partially (tk_live_ for tenant keys; did:hive method spec at /specs/did-hive/v1/)
+entities:
+- name: Agent
+  description: An autonomous or human-operated caller identified by a did:hive DID; accumulates an HKTN (Hive Known
+    Traveler Number) trust record and tier (Cold/Warm/Hot/Regulated) on passport.thehiveryiq.com.
+  key: agent_did
+  schemas:
+  - ProspectorReq
+  - QuoteRequest
+  - ReceiptEmitReq
+  - IssueReq (agent_id)
+  relationships:
+  - has_many: Receipt
+    via: agent_did
+  - has_many: Delegation
+    via: agent_id
+  - has_one: HKTN record
+    via: agent_did -> GET /v1/hktn/lookup
+  - has_many: Quote
+    via: agent_did
+  - has_many: Usage record (HiveCompute)
+    via: did -> GET /v1/compute/usage/:did
+- name: Receipt
+  description: Dual-signed (Ed25519 + ML-DSA-65) record over an artifact hash at a profile (nano | standard | pq);
+    the system of record.
+  key: receipt_id
+  schemas:
+  - FreeIssueRequestBody
+  - ReceiptEmitReq
+  - VerifyRequestBody
+  - ReceiptRequest -> ChallengeStateIn, EvidenceIn, RightsStateIn
+  fields:
+  - receipt_id
+  - payload_hash / artifact_sha256
+  - artifact_type
+  - profile
+  - receipt_schema_version
+  - signatures {classical, pq}
+  - verify_url
+  - tx_hash?
+  - parent_receipt_hash?
+  relationships:
+  - belongs_to: Agent
+    via: agent_did
+  - belongs_to: Receipt (chain)
+    via: parent_receipt_hash
+  - has_one: Settlement reference
+    via: tx_hash
+  - belongs_to: Tenant
+    via: POST /tenants/:id/receipts
+- name: Delegation envelope
+  description: 'Operator-signed authorization for an agent: allowed_actions, max_spend_usdc, allowed_endpoints/counterparties/jurisdictions/surfaces,
+    max_proof_tier, ttl_seconds; verified, checked against the firewall, and revocable.'
+  key: jti
+  schemas:
+  - IssueReq
+  - hivemorph__hive_r3__routes__VerifyReq
+  - DelegationCheckReq
+  - EnforcePreviewReq
+  - FirewallEvalReq
+  relationships:
+  - belongs_to: Agent
+    via: agent_id
+  - belongs_to: Operator
+    via: operator_did
+  - has_many: Firewall decision
+    via: jti / envelope
+- name: x402 Quote / Payment
+  description: 'Priced call: amount, asset, chain, treasury, ERC-681 deep link, HKTN discount; a 402 mints a nonce
+    that a proof submission converts into a 5-minute X-Hive-Access token.'
+  key: nonce
+  schemas:
+  - QuoteRequest
+  fields:
+  - amount_usdc
+  - receipt_profile
+  - hktn_tier
+  - memo
+  - regulated_envelope_jti
+  - deeplink_erc681
+  - treasury
+  relationships:
+  - belongs_to: Agent
+    via: agent_did
+  - references: Delegation envelope
+    via: regulated_envelope_jti
+  - has_one: Access token
+    via: POST /v1/x402/proof/submit
+- name: Tenant
+  description: Billing/operator account with API keys, sub-tenants, evidence rooms and dashboards (portal, tenants/:id
+    routes).
+  key: tenant_id
+  schemas:
+  - BillingCycleBody
+  - ActivateRequest
+  relationships:
+  - has_many: API key (tk_live_)
+    via: /v1/portal/{tenant_id}/api-key
+  - has_many: Receipt
+    via: /tenants/:id/receipts
+  - has_many: Evidence export
+    via: /tenants/:id/evidence
+- name: Attestation
+  description: Domain-specific signed statements (HiveAttest C15-C20, HIPAA-Hive, LEX-Contract, DeedLock, ProcureLock,
+    TradeGuard, ALCOA-AgentGuard ...) chained by prior_attestation_id.
+  key: attestation_id
+  schemas:
+  - ActionAttestRequest
+  - BaaAttestRequest
+  - BreachNoticeAttestRequest
+  - DeedAttestRequest -> DeedEventType, NotarizationType, PropertyDescriptor, RecordingStatus
+  - POAttestRequest -> POEventType, POLineItem
+  - DraftAttestRequest / RedlineAttestRequest / SignatureAttestRequest / ExecuteAttestRequest -> ClauseHash, ContractParty
+  - AiInferenceAttestRequest -> PurposeOfUse
+  relationships:
+  - belongs_to: Attestation (chain)
+    via: prior_attestation_id
+  - belongs_to: Contract
+    via: contract_id
+  - belongs_to: Property
+    via: property_id
+  - belongs_to: Covered entity / business associate
+    via: covered_entity_did, business_associate_did
+- name: Invoice / Dispute
+  description: 'Trade-finance and freight/insurance flows: invoices between buyer_did and supplier_did, disputes
+    routed to arbitration providers (Kleros, UMA, Reality.eth) without automatic filing.'
+  key: invoice_id / dispute_id
+  relationships:
+  - belongs_to: Buyer / Supplier
+    via: buyer_did, supplier_did
+  - has_many: Dispute
+    via: POST /v1/trade/invoice/{invoice_id}/dispute
+  - references: Arbitration provider
+    via: POST /v1/dispute/route
+- name: Evaluator job
+  description: Evaluation-as-a-service job with tier, verdict and on-chain attestation.
+  key: job_id
+  relationships:
+  - has_one: Attestation
+    via: POST /v1/evaluator/jobs/{job_id}/attest
+- name: Morph supermodel / brood variant
+  description: 'Polymorphic agent runtime records: supermodels W1..W19, brood variants awaiting approval/promotion/cull,
+    Morph Identity Index (mii_id).'
+  key: variant_id / mii_id
+  relationships:
+  - belongs_to: Supermodel
+    via: supermodel
+ref_graph_sample:
+- schema: DeedAttestRequest
+  refs:
+  - DeedEventType
+  - NotarizationType
+  - PropertyDescriptor
+  - RecordingStatus
+- schema: PurityCertIssueRequest
+  refs:
+  - AxisReading
+  - Fsma204Info
+  - SubjectInfo
+- schema: ReceiptRequest
+  refs:
+  - ChallengeStateIn
+  - EvidenceIn
+  - RightsStateIn
+- schema: TransferResponse
+  refs:
+  - ComplianceBundle
+  - SettlementEnvelope
+  - TransferRequest
+- schema: AmendmentAttestRequest
+  refs:
+  - ClauseHash
+  - ContractParty
+- schema: AppealAttestRequest
+  refs:
+  - AppealLevelEnum
+  - AppealOutcomeEnum
+- schema: DraftAttestRequest
+  refs:
+  - ClauseHash
+  - ContractParty
+- schema: DropBody
+  refs:
+  - LocationBody
+  - PhysicsOverrides
+- schema: EDIParseResponse
+  refs:
+  - EDIDocumentType
+  - EDIFormat
+- schema: EDIWrapRequest
+  refs:
+  - EDIDocumentType
+  - EDIFormat
+- schema: EDIWrapResponse
+  refs:
+  - EDIDocumentType
+  - EDIFormat
+- schema: EnforceRequest
+  refs:
+  - PolicyModel
+  - SpanModel
+- schema: ExcerptIn
+  refs:
+  - EnclosingIn
+  - FragmentIn
+- schema: ExecuteAttestRequest
+  refs:
+  - ClauseHash
+  - ContractParty
+- schema: IssueRequest
+  refs:
+  - ExcerptIn
+  - SealedParentIn
+id_fields:
+- field: agent_did
+  schemas: 25
+- field: buyer_did
+  schemas: 14
+- field: caller_did
+  schemas: 13
+- field: contract_id
+  schemas: 12
+- field: attestation_id
+  schemas: 10
+- field: tenant_id
+  schemas: 10
+- field: operator_did
+  schemas: 10
+- field: property_id
+  schemas: 9
+- field: tx_hash
+  schemas: 8
+- field: covered_entity_did
+  schemas: 8
+- field: policy_did
+  schemas: 8
+- field: counterparty_did
+  schemas: 8
+- field: trial_id
+  schemas: 7
+- field: attributable_did
+  schemas: 7
+- field: original_payload_hash
+  schemas: 7
+- field: seller_did
+  schemas: 7
+- field: prior_attestation_id
+  schemas: 7
+- field: asset_id
+  schemas: 7
+- field: agent_id
+  schemas: 6
+- field: business_associate_did
+  schemas: 6
+- field: receipt_id
+  schemas: 6
+- field: cert_id
+  schemas: 6
+- field: actor_did
+  schemas: 6
+- field: event_hash
+  schemas: 6
+- field: supplier_did
+  schemas: 6
+- field: parent_receipt_hash
+  schemas: 6
+- field: session_id
+  schemas: 5
+- field: pa_id
+  schemas: 5
+- field: jti
+  schemas: 5
+- field: capture_did
+  schemas: 5
+render: null
+vocabulary: null

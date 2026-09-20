@@ -1,0 +1,404 @@
+generated: '2026-09-19'
+method: probed
+source: https://thehiveryiq.com/.well-known/agent-card.json
+card:
+  file: a2a/thehiveryiq-com-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: thehiveryiq.com
+  note: 'Served from the apex host (Cloudflare in front of a Render static site). The legacy /.well-known/agent.json
+    on the same host returns the byte-identical document (3,362 bytes, same ETag), and www.thehiveryiq.com 301s
+    both paths to the apex. The apex is NOT a catch-all: every other named /.well-known/* path (openid-configuration,
+    oauth-authorization-server, oauth-protected-resource, api-catalog, ai-plugin.json, ucp.json, acp.json, aauth-resource.json,
+    apis.json) returns a real 10-byte text/plain 404, and a nonsense GET path also 404s, so the 200 on agent-card.json
+    is a served document. Ownership is not in question: provider.organization is ''Hive Civilization'' with provider.url
+    https://thehiveryiq.com, iconUrl and documentationUrl are on the same host, the company page names Hive Civilization
+    / The Hivery / The Hivery IQ as its DBAs, and the a2aregistry.org listing that led here names the same URL.
+    This is the card the harvest was seeded from (a2aregistry.org, fetched 2026-09-19, author ''Hive Civilization'').'
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://thehiveryiq.com/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json
+  body_bytes: 3362
+  etag: W/"5973cb8e51d6667e8e7fd5b7fb2d7e30"
+  last_modified: Sat, 19 Sep 2026 17:52:48 UTC
+  body_parses_as: JSON object with AgentCard shape (name, description, url, preferredTransport, version, protocolVersion,
+    provider, iconUrl, documentationUrl, capabilities, defaultInputModes, defaultOutputModes, skills, supportsAuthenticatedExtendedCard)
+  corroborating_probes:
+  - url: https://thehiveryiq.com/.well-known/agent.json
+    http_status: 200
+    note: 'Legacy path serves the identical document (cmp: same bytes).'
+  - url: https://www.thehiveryiq.com/.well-known/agent-card.json
+    http_status: 301
+    note: Redirects to the apex.
+  - url: https://thehiveryiq.com/.well-known/openid-configuration
+    http_status: 404
+    note: 'Negative control: a real 404, so the apex is not answering 200 for every well-known path.'
+  - url: https://thehiveryiq.com/
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"tasks/get","params":{"id":"probe"}}'
+    http_status: 200
+    response: '(empty body, content-length: 0)'
+    note: 'The card''s declared url is the apex itself. The apex is a static site: a JSON-RPC POST to /, /a2a, /rpc
+      and even a nonsense path all return HTTP 200 with an EMPTY body and no content-type. That is a static host
+      swallowing POSTs, not an A2A JSON-RPC responder: no error object, no task, no method-not-found. An agent that
+      follows this card''s url cannot complete an A2A exchange there.'
+  - url: https://receipts.thehiveryiq.com/a2a
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"tasks/get","params":{"id":"probe-nonexistent"}}'
+    http_status: 200
+    response: '{"jsonrpc":"2.0","id":1,"error":{"code":-32601,"message":"method not found: tasks/get","data":{"supported":["agent.discover","agent.card","receipt.emit","receipt.verify",
+      ... 49 methods]}}}'
+    note: The provider's actual JSON-RPC agent endpoint lives on receipts.thehiveryiq.com (declared by the second
+      card below). It speaks JSON-RPC 2.0 but a PROPRIETARY 49-method vocabulary (agent.card, receipt.emit, x402.quote
+      ...); neither message/send nor tasks/get, the A2A-defined methods, is implemented (both return -32601). Real
+      endpoint, not an A2A-conformant one.
+  - url: https://a2aregistry.org
+    note: Listed as one of 415 agents on a2aregistry.org (author 'Hive Civilization', agent name 'Hive Civilization');
+      the registry was the lead, the card above was fetched from the provider's own host.
+agent_card:
+  name: Hive Civilization
+  description: Production agent civilization,  82 services, 37 MCP bee-agents, HiveAttest perimeter, real USDC settlement
+    on Base. Pre-action attestation, custody chains, signed C18 receipts. Discoverable via A2A.
+  url: https://thehiveryiq.com
+  version: 1.0.0
+  protocol_version: 0.3.0
+  preferred_transport: JSONRPC
+  provider:
+    organization: Hive Civilization
+    url: https://thehiveryiq.com
+  icon_url: https://thehiveryiq.com/assets/brand/hive-mark-512.png
+  documentation_url: https://thehiveryiq.com/#hiveattest-perimeter
+  capabilities:
+    streaming: true
+    pushNotifications: false
+    stateTransitionHistory: true
+  default_input_modes:
+  - application/json
+  - text/plain
+  default_output_modes:
+  - application/json
+  - text/plain
+  supports_authenticated_extended_card: false
+  security_schemes: null
+  security: null
+  skill_count: 6
+  skills:
+  - id: hiveattest.passport_issue
+    name: Issue Agent Passport
+    tags:
+    - attestation
+    - identity
+    - pre-action
+    input_modes:
+    - application/json
+    output_modes:
+    - application/json
+  - id: hiveattest.gate_enforce
+    name: Gate Enforcement
+    tags:
+    - attestation
+    - policy
+    - gate
+    input_modes:
+    - application/json
+    output_modes:
+    - application/json
+  - id: hiveattest.cargo_classify
+    name: Cargo Classification
+    tags:
+    - taxonomy
+    - classification
+    input_modes:
+    - application/json
+    output_modes:
+    - application/json
+  - id: hiveattest.smsh_verify
+    name: SMSH-Stamp Verification
+    tags:
+    - verification
+    - honesty
+    - smsh
+    input_modes:
+    - application/json
+    output_modes:
+    - application/json
+  - id: hivewallet.transfer
+    name: USDC Transfer with HiveDNA Receipt
+    tags:
+    - payments
+    - usdc
+    - base
+    input_modes:
+    - application/json
+    output_modes:
+    - application/json
+  - id: hivegate.onboard
+    name: Agent Onboard
+    tags:
+    - onboarding
+    - did
+    input_modes:
+    - application/json
+    output_modes:
+    - application/json
+conformance:
+  spec: A2A 1.0.0
+  grade: conformant
+  protocol_version: 0.3.0
+  preferred_transport: JSONRPC
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+  optional_fields:
+    default_input_modes: true
+    default_output_modes: true
+    preferred_transport: true
+  grade_basis: 'Graded against the A2A 1.0.0 hard checks on the 0.3-shaped card: capabilities is an OBJECT (streaming,
+    pushNotifications, stateTransitionHistory), protocolVersion is present at the top level (''0.3.0''), and skills
+    is an ARRAY of six fully-formed skill objects (id, name, description, tags, inputModes, outputModes). All three
+    optional discriminators (preferredTransport, defaultInputModes, defaultOutputModes) are declared. The shape
+    is conformant; the deviations below are about what the card points at, not how it is formed.'
+  deviations:
+  - field: url
+    observed: https://thehiveryiq.com
+    note: The declared agent URL is the marketing site, a static host that returns HTTP 200 with an empty body to
+      any POST. No JSON-RPC responder is reachable at the url the card declares; the provider's real JSON-RPC endpoint
+      is https://receipts.thehiveryiq.com/a2a, which this card does not name (no additionalInterfaces).
+  - field: securitySchemes / security
+    observed: absent
+    note: The card states no authentication. The provider's other card (receipts host) declares schemes [x402, none],
+      and the skills here (USDC transfer, passport issue) are paid, gated actions on the provider's own description,
+      so an agent cannot learn from this card how it would be authorized or charged.
+  - field: skills[]
+    observed: six skills with no securityRequirements and no examples
+    note: 'Skill ids (hiveattest.passport_issue, hivewallet.transfer, hivegate.onboard ...) do not correspond to
+      any operationId or path in the 906-path OpenAPI served on receipts.thehiveryiq.com; the receipts card''s root
+      agent (18 skills: receipt.emit.*, x402.quote, delegation.*, hktn.lookup ...) does map to the contract. The
+      apex card describes a product perimeter (HiveAttest, HiveWallet, HiveGate) rather than the callable surface.'
+  - field: description
+    observed: '"82 services, 37 MCP bee-agents, HiveAttest perimeter, real USDC settlement on Base"'
+    note: Capacity claims live in the description; only 6 skills are enumerated.
+  - field: protocolVersion
+    observed: 0.3.0
+    note: 0.3-era top-level url/preferredTransport/protocolVersion triple rather than the 1.0.0 supportedInterfaces[]
+      form. Both shapes coexist in the wild; recorded, not penalised.
+additional_cards:
+- file: a2a/thehiveryiq-com-receipts-agent-card.json
+  source: https://receipts.thehiveryiq.com/.well-known/agent-card.json
+  host: receipts.thehiveryiq.com
+  path: /.well-known/agent-card.json
+  canonical: true
+  http_status: 200
+  content_type: application/json
+  body_bytes: 44068
+  name: Hive Civilization
+  url: https://receipts.thehiveryiq.com
+  version: '0.2'
+  protocol_version: 0.2.0
+  preferred_transport: JSONRPC
+  provider:
+    organization: Hive Civilization, Inc.
+    url: https://thehiveryiq.com
+  capabilities:
+    streaming: false
+    pushNotifications: false
+    stateTransitionHistory: true
+  additional_interfaces:
+  - transport: JSONRPC
+    url: https://receipts.thehiveryiq.com/a2a/jsonrpc
+  - transport: HTTP+JSON
+    url: https://receipts.thehiveryiq.com/v1
+  authentication_extension:
+  - x402
+  - none
+  extensions:
+  - https://a2a-extensions.dev/ap2/v1
+  skill_count: 4
+  skills:
+  - hive-receipt-emit
+  - hive-receipt-verify
+  - hive-pilot-accept
+  - hive-vault-visit
+  catalog:
+    id: hivemorph-a2a-v0.2
+    count: 10
+    cards:
+    - name: HiveMorph — Root
+      url: https://receipts.thehiveryiq.com
+      skills: 18
+    - name: Hive Law — Freight Arbitrator
+      url: https://receipts.thehiveryiq.com/v1/law/freight
+      skills: 3
+    - name: Hive Law — Insurance Arbitrator
+      url: https://receipts.thehiveryiq.com/v1/law/insurance
+      skills: 3
+    - name: Hive Exchange — Agent-Asset Perpetuals (ARIS)
+      url: https://receipts.thehiveryiq.com/v1/exchange/agent_asset
+      skills: 4
+    - name: Hive Clear — x402 Multi-Rail Settlement
+      url: https://receipts.thehiveryiq.com/v1/x402
+      skills: 4
+    - name: Hive Trust — Arbitration Attestation Oracle
+      url: https://receipts.thehiveryiq.com/v1/trail
+      skills: 2
+    - name: Hive Rosetta — Cross-Lexicon Intent Normalizer
+      url: https://receipts.thehiveryiq.com
+      skills: 1
+    - name: Hive Prospector — Counterparty Trust Scorer
+      url: https://receipts.thehiveryiq.com
+      skills: 1
+    - name: Hive Receipt — Signed Settlement Receipts
+      url: https://receipts.thehiveryiq.com
+      skills: 5
+    - name: Hive HKTN — Token-Tier Discount Lookup
+      url: https://receipts.thehiveryiq.com
+      skills: 1
+  grade: conformant
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+  grade_basis: capabilities is an object, protocolVersion "0.2.0" is present, skills is an array of four. All three
+    optional discriminators present. Graded conformant on shape.
+  deviations:
+  - field: top-level
+    observed: 12 non-spec keys (did, trust_score, trust_score_basis, contact, authentication, catalog, extensions,
+      count, cards, commerce_posture, next_best_actions, note)
+    note: The document doubles as a 10-card catalog (cards[]) with per-agent cards also served at /.well-known/agents/{agent_id}/card.json.
+      A strict A2A reader sees an AgentCard with extra properties; the note field says so explicitly.
+  - field: additionalInterfaces[0].url
+    observed: https://receipts.thehiveryiq.com/a2a/jsonrpc
+    note: Returns a real JSON 404 ("unknown_path"). The live JSON-RPC responder is /a2a (one segment up), which
+      the /a2a GET descriptor names as its endpoint. The card points one path off from its own responder.
+  - field: JSON-RPC method set
+    observed: 49 proprietary methods (agent.card, receipt.emit, x402.quote, delegation.issue, firewall.evaluate
+      ...); message/send and tasks/get return -32601
+    note: The transport is JSON-RPC 2.0 but the vocabulary is not A2A's. An A2A client cannot send a message or
+      read a task here; the /a2a descriptor itself calls it a 'v0.2 transport stub' whose fee surface lives on the
+      delegated REST routes.
+  - field: protocolVersion
+    observed: 0.2.0
+    note: Pre-0.3 protocol version; version "0.2" is not semver.
+  - field: skills
+    observed: 4 at top level vs 18 on the embedded root card (hivemorph)
+    note: The per-agent root card at /.well-known/agents/hivemorph/card.json (saved as thehiveryiq-com-receipts-hivemorph-root-card.json,
+      18 skills, AP2 x402 extension declared in capabilities.extensions) is the card that actually maps onto the
+      OpenAPI operations.
+- file: a2a/thehiveryiq-com-receipts-hivemorph-root-card.json
+  source: https://receipts.thehiveryiq.com/.well-known/agents/hivemorph/card.json
+  host: receipts.thehiveryiq.com
+  path: /.well-known/agents/hivemorph/card.json
+  canonical: false
+  http_status: 200
+  content_type: application/json
+  body_bytes: 10473
+  name: HiveMorph — Root
+  url: https://receipts.thehiveryiq.com
+  version: 1.0.0
+  protocol_version: 0.2.0
+  preferred_transport: null
+  capabilities_extensions:
+  - https://a2a-extensions.dev/ap2/v1
+  skill_count: 18
+  skills:
+  - receipt.emit.nano
+  - receipt.emit.standard
+  - receipt.emit.pq
+  - receipt.verify
+  - pricing.read
+  - rubric.select
+  - delegation.issue
+  - delegation.verify
+  - delegation.revoke
+  - firewall.evaluate
+  - x402.quote
+  - settlement.reference
+  - delegation.check
+  - hktn.lookup
+  - rosetta.normalize
+  - prospector.score
+  - evidence.room
+  - pq.regulated.surface
+  grade: near-conformant
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: true
+    skills_is_array: true
+  optional_fields:
+    default_input_modes: true
+    default_output_modes: true
+    preferred_transport: false
+  grade_basis: 'Passes all three hard checks; preferredTransport is absent (near-conformant per the rubric). Declares
+    the AP2 x402 payment extension (https://a2a-extensions.dev/ap2/v1, required: true) in capabilities.extensions,
+    which is the correct 0.3-style place for it. Not the canonical path, so recorded as a supplementary card.'
+- file: a2a/thehiveryiq-com-hivecompute-agent-card.json
+  source: https://api.thehiveryiq.com/.well-known/agent-card.json
+  host: api.thehiveryiq.com
+  path: /.well-known/agent-card.json
+  canonical: true
+  http_status: 200
+  content_type: application/json; charset=utf-8
+  body_bytes: 907
+  name: hivecompute
+  url: https://api.thehiveryiq.com
+  version: 2.0.0
+  protocol_declared: A2A/0.1
+  did: did:web:api.thehiveryiq.com
+  mcp_endpoint: /mcp
+  capabilities:
+  - inference
+  - compression
+  - model-routing
+  - embeddings
+  - smsh-registration
+  grade: flavored
+  hard_checks:
+    capabilities_is_object: false
+    protocol_version_present: false
+    skills_is_array: false
+  grade_basis: 'Fails all three hard checks: capabilities is an ARRAY of strings, there is no protocolVersion (a
+    non-standard "protocol": "A2A/0.1" instead), and there is no skills array (a "tools" string list instead). It
+    is a discovery document for the HiveCompute MCP server (mcp_endpoint /mcp, jwks_endpoint) wearing the agent-card
+    path: useful for MCP discovery, not an A2A card. NOTE: this host answers HTTP 200 JSON for EVERY path ("slippery-sticky:
+    every door 200s"); this document is accepted only because its body (907 bytes, hivecompute-specific fields)
+    differs from the ~540-byte catch-all body, and the same document is served at the legacy agent.json path.'
+- file: a2a/thehiveryiq-com-mcp-gateway-agent-card.json
+  source: https://hive-mcp-gateway.onrender.com/.well-known/agent-card.json
+  host: hive-mcp-gateway.onrender.com
+  path: /.well-known/agent-card.json
+  canonical: true
+  http_status: 200
+  content_type: application/json; charset=utf-8
+  body_bytes: 981
+  name: hive-mcp-gateway
+  url: https://hive-mcp-gateway.onrender.com
+  version: 1.2.0
+  provider:
+    organization: Hive Civilization
+    url: https://www.thehiveryiq.com
+    contact: steve@thehiveryiq.com
+  capabilities:
+    streaming: false
+    pushNotifications: false
+    stateTransitionHistory: false
+  skill_count: 0
+  authentication_extension:
+  - x402
+  grade: flavored
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: false
+    skills_is_array: true
+  grade_basis: 'capabilities is an object and skills is an array (empty), but there is no protocolVersion, which
+    is a hard check: flavored. The host is the provider''s MCP gateway on Render (provider.organization ''Hive Civilization'',
+    provider.url www.thehiveryiq.com, contact steve@thehiveryiq.com; named as the MCP transport by receipts.thehiveryiq.com/.well-known/mcp.json).
+    The legacy agent.json path 404s here and a nonsense path 404s, so the 200 is a served document.'
+summary: 'Hive Civilization serves FOUR distinct agent-card documents across four hosts. Graded on the canonical
+  apex card (conformant shape, but its declared url is a static site that cannot answer JSON-RPC). The receipts
+  host card is also conformant on shape and points at a live JSON-RPC endpoint that speaks a proprietary 49-method
+  vocabulary rather than A2A''s message/send + tasks/*; the HiveCompute and MCP-gateway cards are flavored. Nothing
+  here was generated: every file under a2a/ is a verbatim fetch, and every status is the one returned on 2026-09-19.'

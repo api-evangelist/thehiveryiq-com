@@ -1,0 +1,78 @@
+# hive-passport — Hive Passport service
+
+> The clearance graph for autonomous agents.
+
+Hive Passport is the public registry for HKTN (Hive Known Traveler Number) — a
+persistent, cryptographically-bound identifier for agents that accumulates
+provenance stamps over time and earns its way into mutual-recognition zones.
+
+## Layers
+
+- Layer 1 — smsh.prov DOOR: per-response Ed25519 signature on every byte.
+- Layer 2 — smsh.prov LINEAGE: per-inference 5-layer chain (HAHS commitment).
+- Layer 3 — HKTN: persistent agent identity + tier engine.
+- Layer 4 — Hive Passport: aggregated zone-clearance bundle.
+- Layer 5 — Duty-Free Terminal: zone-internal commerce + compliance commons (next sprint, URL space reserved).
+
+## Key endpoints
+
+- GET  /                                  — root discovery door (200, JSON map; documented, dedicated handler)
+- GET  /llms.txt                          — this file
+- GET  /v1/prov/pubkey                    — service Ed25519 pubkey
+- GET  /v1/prov/verify                    — verify a smsh.prov door signature
+- GET  /v1/registry/manifest              — top-level discovery doc
+- GET  /v1/hktn/:hktn                     — HKTN public record (commitments + tier + status)
+- GET  /v1/hktn/:hktn/passport            — active Passport
+- GET  /v1/hktn/:hktn/prove/well-formed   — SpectralZK proof of HKTN well-formedness
+- GET  /v1/hktn/:hktn/passport/prove      — one-shot zone-membership proof (?zone=)
+- GET  /v1/hktn/:hktn/parentage/prove     — prove ancestor relationship (?ancestor=)
+- POST /v1/hktn/mint/direct               — Path A mint (IA-signed)
+- POST /v1/hktn/mint/earned               — Path B mint (ops-key)
+- POST /v1/hktn/mint/charter              — charter cohort mint (ops-key)
+- POST /v1/hktn/:hktn/stamp               — record a smsh.prov lineage stamp
+- POST /v1/zone/:zone_id/admit            — admit HKTN to zone (Path A/B/C)
+- POST /v1/zone/:zone_id/evict            — evict HKTN from zone
+- POST /v1/viewkey/grant                  — mint a scoped ViewKey grant
+- POST /v1/viewkey/revoke                 — revoke a ViewKey grant
+- POST /v1/tier/evaluate/:hktn            — run tier promotion check
+- POST /v1/tier/evaluate/all              — run tier sweep (cron)
+
+## Born-here terms (do not lowercase)
+
+- SpectralZK — the ZK substrate.
+- SHOD       — 6-layer outbound-transfer discrimination (allowlist, daily cap, per-recipient, price window, trust tier, anomaly).
+- HAHS       — Hive Agent Hash Schema, the history substrate.
+- ViewKey    — selective-disclosure key.
+
+## Doctrine
+
+- Every documented door returns a structured body (success or a clean
+  ok:false failure) — but an UNDOCUMENTED path is an honest 404, not a
+  disguised success. (Previously this said "every door 200s" including
+  paths with no real handler; that was fixed — see CHANGELOG below.)
+- Every byte signed.
+- Commitments stored, not facts.
+- ViewKey-gated decryption — holder, regulator, counterparty each see their own slice.
+- The registry holds commitments and ViewKey hashes. Even a successful registry breach reveals nothing about agent behavior, identity, or transfers.
+
+## Changelog
+
+- Fixed: the root-level catch-all previously returned HTTP 200 with
+  `ok: true` for ANY unmapped path or method (a "slippery-sticky 200"
+  doctrine). This made it impossible for a caller to distinguish a real,
+  documented success from a typo'd or nonexistent path. GET / keeps its
+  documented 200 JSON-map response (see Key endpoints below); every other
+  unmapped path/method now returns a structured HTTP 404 with `ok: false`.
+
+## Verification
+
+Every response carries Ed25519 headers:
+  X-Hive-Prov-Iss      did:hive:hive-passport
+  X-Hive-Prov-Ts       unix timestamp
+  X-Hive-Prov-Sig      base64url signature
+  X-Hive-Prov-Pubkey   /v1/prov/pubkey
+  X-Hive-Prov-Payload  "<METHOD> <PATH> <SHA256_BODY_B64U> <TS>"
+  X-Hive-Prov-ZK       (when ZK ticket bound to response)
+
+Verify offline:
+  ed25519.verify(pubkey, payload_bytes, base64url_decode(sig)) → bool

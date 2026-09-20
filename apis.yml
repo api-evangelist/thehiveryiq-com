@@ -1,18 +1,219 @@
 aid: thehiveryiq-com
 name: Hive Civilization
-description: 'Hive Civilization is a company surfaced via the API Evangelist harvest backlog (source:
-  a2a-registry) and added to the network as a stub for full-pipeline profiling.'
+description: 'Hive Civilization (DBAs The Hivery and The Hivery IQ; Walnut Creek, California; single-founder Wyoming
+  corporation established 2026) sells signed, independently verifiable receipts for automated and AI-agent actions:
+  every call returns a dual-signed record (Ed25519 plus ML-DSA-65) over an artifact hash, priced per receipt and
+  settled per call in USDC on Base through the x402 payment protocol, with no account required for the free tier.
+  The public surface is spread over four hosts: receipts.thehiveryiq.com serves the HiveMorph receipts and agent-commerce
+  API (a 906-path, 937-operation FastAPI OpenAPI 3.1 contract covering receipt emit/verify, x402 quotes and settlement
+  references, delegations and a firewall, HKTN trust lookups, plus dozens of vertical attestation families), a JSON-RPC
+  2.0 agent endpoint and A2A agent cards; api.thehiveryiq.com serves HiveCompute, an OpenAI-compatible, x402-metered
+  inference router with a live remote MCP server; passport.thehiveryiq.com is the HKTN trust rail; and hive-mcp-gateway.onrender.com
+  fronts 37 hive-mcp-* MCP servers. The apex publishes an A2A agent card, security.txt, llms.txt, pricing, a self-attested
+  (uncertified) SOC 2 / ISO 27001 posture and a did:hive DID method specification.'
+image: https://thehiveryiq.com/assets/brand/hive-mark-512.png
 url: https://raw.githubusercontent.com/api-evangelist/thehiveryiq-com/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:a2a-registry
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-19 (local-v3; was a2a-registry harvest stub)
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
-- Company
-apis: []
+- Agents
+- Agent Commerce
+- A2A
+- MCP
+- x402
+- Receipts
+- Digital Signatures
+- Post-Quantum Cryptography
+- Attestation
+- Decentralized Identity
+- Stablecoins
+- Inference
+- LLM Routing
+- Compliance
+- agent-native
+- United States
+tags_raw:
+- Agents
+- Agent commerce
+- A2A
+- MCP
+- x402
+- Receipts
+- Digital signatures
+- Post-quantum cryptography
+- Attestation
+- Decentralized identity
+- Stablecoins
+- Inference
+- LLM routing
+- Compliance
+- Agent-native
+- United States
+apis:
+- aid: thehiveryiq-com:hivemorph-receipts-api
+  name: Hive Receipts and Agent Commerce API (HiveMorph)
+  description: 'Pay-per-call REST API on receipts.thehiveryiq.com for signing and verifying receipts (free tier:
+    100 dual-signed receipts per IP per day with no key; paid profiles nano/standard/pq at $0.0001/$0.0008/$0.0012
+    per call), x402 quotes, multi-rail settlement references (USDC/USDT on Base, Solana, Ethereum), delegation envelopes
+    and firewall previews, HKTN trust lookups, intent normalization and scoring, and a long tail of vertical attestation
+    families (HIPAA, ALCOA, LEX-Contract, DeedLock, ProcureLock, TradeGuard, evaluator, trade finance, disputes,
+    morph runtime). 937 operations across 906 paths, OpenAPI 3.1.0 (FastAPI) at https://receipts.thehiveryiq.com/openapi.json
+    with Swagger UI at /docs; the document declares no servers[] and no securitySchemes.'
+  humanURL: https://thehiveryiq.com/developers
+  baseURL: https://receipts.thehiveryiq.com
+  tags:
+  - Receipts
+  - x402
+  - Attestation
+  - Agent Commerce
+  - Digital Signatures
+  properties:
+  - type: OpenAPI
+    url: openapi/thehiveryiq-com-hivemorph-openapi.yml
+  - type: OpenAPI
+    name: Provider-hosted OpenAPI 3.1.0
+    url: https://receipts.thehiveryiq.com/openapi.json
+  - type: Documentation
+    url: https://thehiveryiq.com/developers
+  - type: APIReference
+    url: https://receipts.thehiveryiq.com/docs
+  - type: GettingStarted
+    url: https://thehiveryiq.com/agents
+  - type: LLMsTxt
+    url: llms/thehiveryiq-com-receipts-llms.txt
+  - type: LLMsTxt
+    url: https://receipts.thehiveryiq.com/llms.txt
+  - type: Overlay
+    url: overlays/thehiveryiq-com-hivemorph-overlay.yaml
+  - type: DataModel
+    url: data-model/thehiveryiq-com-data-model.yml
+  - type: Webhooks
+    url: asyncapi/thehiveryiq-com-webhooks.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: StatusPage
+    url: https://receipts.thehiveryiq.com/status
+  - type: Authentication
+    url: authentication/thehiveryiq-com-authentication.yml
+  - type: Conventions
+    url: conventions/thehiveryiq-com-conventions.yml
+  - type: Idempotency
+    url: conventions/thehiveryiq-com-conventions.yml
+  - type: ErrorCatalog
+    url: errors/thehiveryiq-com-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/thehiveryiq-com-rate-limits.yml
+  - type: Sandbox
+    url: sandbox/thehiveryiq-com-sandbox.yml
+- aid: thehiveryiq-com:hivecompute-inference-api
+  name: HiveCompute Inference Router API
+  description: 'OpenAI-compatible inference router on api.thehiveryiq.com: chat completions, text completions and
+    embeddings across 447 models drawn live from the OpenRouter registry, with automatic context compression and
+    cheapest-adequate-model routing, priced per token in USDC and settled through x402 (a live 402 challenge with
+    www-authenticate: x402 and a PAYMENT-REQUIRED header was observed). Free endpoints: model list and cost estimate.
+    The served OpenAPI is a 5-path 3.0.3 stub without operationIds; the host signs every response with Ed25519 provenance
+    headers and publishes a JWKS, but also answers HTTP 200 JSON for every unknown path.'
+  humanURL: https://thehiveryiq.com/sdk-quickstart/
+  baseURL: https://api.thehiveryiq.com
+  tags:
+  - Inference
+  - LLM Routing
+  - x402
+  - Embeddings
+  properties:
+  - type: OpenAPI
+    url: openapi/thehiveryiq-com-hivecompute-openapi.yml
+  - type: OpenAPI
+    name: Provider-hosted OpenAPI 3.0.3 stub
+    url: https://api.thehiveryiq.com/openapi.json
+  - type: Documentation
+    url: https://thehiveryiq.com/sdk-quickstart/
+  - type: LLMsTxt
+    url: llms/thehiveryiq-com-hivecompute-llms.txt
+  - type: LLMsTxt
+    url: https://api.thehiveryiq.com/llms.txt
+  - type: Overlay
+    url: overlays/thehiveryiq-com-hivecompute-overlay.yaml
+  - type: MCPServer
+    url: mcp/thehiveryiq-com-mcp.yml
+  - type: MCPServer
+    url: https://api.thehiveryiq.com/mcp
+  - type: ToolCrosswalk
+    url: mcp/thehiveryiq-com-tool-crosswalk.yml
+  - type: Authentication
+    url: authentication/thehiveryiq-com-authentication.yml
+  - type: ErrorCatalog
+    url: errors/thehiveryiq-com-problem-types.yml
+- aid: thehiveryiq-com:hive-mcp-gateway
+  name: Hive MCP Gateway and Registry
+  description: 'Provider-operated remote MCP gateway on Render (named as the MCP transport by receipts.thehiveryiq.com/.well-known/mcp.json):
+    initialize and tools/list answer anonymously with 38 tools from eight mounted servers (evaluator, trade, depin,
+    compute-grid, morph, insurance-broker, dispute, audit-readiness) and a /.well-known/mcp.json registry of 37
+    hive-mcp-* shim servers, each on its own host, all metered per call in USDC on Base with the first call free.'
+  humanURL: https://github.com/srotzin/hive-mcp-gateway
+  baseURL: https://hive-mcp-gateway.onrender.com
+  tags:
+  - MCP
+  - Agents
+  - x402
+  properties:
+  - type: MCPServer
+    url: mcp/thehiveryiq-com-mcp.yml
+  - type: MCPServer
+    url: https://hive-mcp-gateway.onrender.com/mcp
+  - type: ToolCrosswalk
+    url: mcp/thehiveryiq-com-tool-crosswalk.yml
+  - type: Documentation
+    url: https://github.com/srotzin/hive-mcp-gateway
+  - type: SourceCode
+    url: https://github.com/srotzin/hive-mcp-gateway
+- aid: thehiveryiq-com:hive-passport-trust-rail
+  name: Hive Passport Trust Rail (HKTN)
+  description: 'The trust rail on passport.thehiveryiq.com: HKTN (Hive Known Traveler Number) registry for persistent
+    agent identity and tier, tenant onboarding and dashboards, provenance public-key distribution and offline verification,
+    and the signed probe ledger the apex status page renders. No OpenAPI is served (/openapi.json is a real 404);
+    the surface map is the host llms.txt, which lists the key endpoints.'
+  humanURL: https://thehiveryiq.com/agents
+  baseURL: https://passport.thehiveryiq.com
+  tags:
+  - Decentralized Identity
+  - Trust
+  - Agents
+  properties:
+  - type: Documentation
+    url: https://passport.thehiveryiq.com/llms.txt
+  - type: LLMsTxt
+    url: llms/thehiveryiq-com-passport-llms.txt
+  - type: LLMsTxt
+    url: https://passport.thehiveryiq.com/llms.txt
+- aid: thehiveryiq-com:hive-a2a-agent
+  name: Hive Civilization A2A Agent
+  description: 'Agent-to-agent surface: A2A agent cards on the apex (protocolVersion 0.3.0, six HiveAttest/HiveWallet/HiveGate
+    skills) and on receipts.thehiveryiq.com (0.2.0 catalog of ten per-agent cards with the AP2 x402 payment extension),
+    and a JSON-RPC 2.0 endpoint at https://receipts.thehiveryiq.com/a2a exposing 49 proprietary methods (agent.card,
+    receipt.emit, x402.quote, delegation.*, firewall.*, hktn.*). The endpoint does not implement A2A''s message/send
+    or tasks/get.'
+  humanURL: https://thehiveryiq.com/a2a/
+  baseURL: https://receipts.thehiveryiq.com/a2a
+  tags:
+  - A2A
+  - Agents
+  - Agent Commerce
+  properties:
+  - type: AgentCard
+    url: a2a/thehiveryiq-com-a2a.yml
+  - type: AgentCard
+    url: https://thehiveryiq.com/.well-known/agent-card.json
+  - type: AgentCard
+    name: Receipts host catalog card
+    url: https://receipts.thehiveryiq.com/.well-known/agent-card.json
+  - type: Documentation
+    url: https://thehiveryiq.com/a2a/
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -21,3 +222,100 @@ maintainers:
 common:
 - type: Website
   url: https://thehiveryiq.com/
+- type: DeveloperPortal
+  url: https://thehiveryiq.com/developers
+- type: Documentation
+  url: https://thehiveryiq.com/developers
+- type: APIReference
+  url: https://receipts.thehiveryiq.com/docs
+- type: GettingStarted
+  url: https://thehiveryiq.com/agents
+- type: Support
+  url: https://thehiveryiq.com/company
+- type: Leadership
+  url: https://thehiveryiq.com/company
+- type: Blog
+  url: https://thehiveryiq.com/blog/
+- type: GitHubOrganization
+  url: https://github.com/srotzin
+- type: Roadmap
+  url: https://thehiveryiq.com/rails
+- type: Pricing
+  url: https://thehiveryiq.com/pricing/
+- type: SignUp
+  url: https://thehiveryiq.com/onboard/
+- type: TermsOfService
+  url: https://thehiveryiq.com/terms
+- type: PrivacyPolicy
+  url: https://thehiveryiq.com/privacy
+- type: StatusPage
+  url: https://thehiveryiq.com/status/
+- type: Specifications
+  url: https://thehiveryiq.com/specs/did-hive/v1/
+- type: AgentCard
+  url: a2a/thehiveryiq-com-a2a.yml
+- type: MCPServer
+  url: mcp/thehiveryiq-com-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/thehiveryiq-com-tool-crosswalk.yml
+- type: LLMsTxt
+  url: llms/thehiveryiq-com-llms.txt
+- type: LLMsTxt
+  url: https://thehiveryiq.com/llms.txt
+- type: WellKnown
+  url: well-known/thehiveryiq-com-well-known.yml
+- type: SecurityTxt
+  url: well-known/thehiveryiq-com-security.txt
+- type: Security
+  url: security/thehiveryiq-com-vulnerability-disclosure.yml
+- type: VulnerabilityDisclosure
+  url: security/thehiveryiq-com-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/thehiveryiq-com-domain-security.yml
+- type: TrustCenter
+  url: security/thehiveryiq-com-trust-center.yml
+- type: Compliance
+  url: https://thehiveryiq.com/compliance/
+- type: Conformance
+  url: conformance/thehiveryiq-com-conformance.yml
+- type: Lifecycle
+  url: lifecycle/thehiveryiq-com-lifecycle.yml
+- type: ChangeLog
+  url: changelog/thehiveryiq-com-changelog.yml
+- type: Authentication
+  url: authentication/thehiveryiq-com-authentication.yml
+- type: Conventions
+  url: conventions/thehiveryiq-com-conventions.yml
+- type: Idempotency
+  url: conventions/thehiveryiq-com-conventions.yml
+- type: ErrorCatalog
+  url: errors/thehiveryiq-com-problem-types.yml
+- type: DataModel
+  url: data-model/thehiveryiq-com-data-model.yml
+- type: RateLimits
+  url: rate-limits/thehiveryiq-com-rate-limits.yml
+- type: Plans
+  url: plans/thehiveryiq-com-plans-pricing.yml
+- type: Packages
+  url: packages/thehiveryiq-com-packages.yml
+- type: SDKs
+  url: packages/thehiveryiq-com-packages.yml
+- type: Sandbox
+  url: sandbox/thehiveryiq-com-sandbox.yml
+- type: Webhooks
+  url: asyncapi/thehiveryiq-com-webhooks.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Overlay
+  url: overlays/thehiveryiq-com-hivemorph-overlay.yaml
+- type: Subprocessors
+  url: https://thehiveryiq.com/security/
+- type: DataSubjectRequest
+  url: https://thehiveryiq.com/privacy
+- type: DataResidency
+  url: https://thehiveryiq.com/security/
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 46
+  pass: local-v3
