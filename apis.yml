@@ -22,12 +22,12 @@ created: '2026-09-19'
 modified: '2026-09-19'
 tags:
 - Agents
-- Agent Commerce
+- Agentic Commerce
 - A2A
 - MCP
 - x402
 - Receipts
-- Digital Signatures
+- Digital Signature
 - Post-Quantum Cryptography
 - Attestation
 - Decentralized Identity
@@ -54,6 +54,8 @@ tags_raw:
 - Compliance
 - Agent-native
 - United States
+- Agent Commerce
+- Digital Signatures
 apis:
 - aid: thehiveryiq-com:hivemorph-receipts-api
   name: Hive Receipts and Agent Commerce API (HiveMorph)
@@ -67,6 +69,12 @@ apis:
   humanURL: https://thehiveryiq.com/developers
   baseURL: https://receipts.thehiveryiq.com
   tags:
+  - Receipts
+  - x402
+  - Attestation
+  - Agentic Commerce
+  - Digital Signature
+  tags_raw:
   - Receipts
   - x402
   - Attestation
@@ -201,6 +209,10 @@ apis:
   humanURL: https://thehiveryiq.com/a2a/
   baseURL: https://receipts.thehiveryiq.com/a2a
   tags:
+  - A2A
+  - Agents
+  - Agentic Commerce
+  tags_raw:
   - A2A
   - Agents
   - Agent Commerce
