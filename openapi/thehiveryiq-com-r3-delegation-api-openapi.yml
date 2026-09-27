@@ -1,0 +1,403 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com R3 Delegation API
+  version: 0.1.0
+  description: 'Operations tagged r3-delegation across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: r3-delegation
+paths:
+  /v1/delegation/issue:
+    post:
+      tags:
+      - r3-delegation
+      summary: Soft-issue a delegation envelope (Hive operator signer)
+      description: Pilot path — Hive's soft-operator signer (`did:hive:operator-default`) signs the envelope on behalf of the caller and the issuer signer counter-stamps. Production operators should use `/v1/delegation/operator-sign` with their own keypair.
+      operationId: issue_v1_delegation_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/delegation/operator-sign:
+    post:
+      tags:
+      - r3-delegation
+      summary: Counter-stamp an operator-signed envelope
+      description: Caller submits an envelope already signed with their operator Ed25519 keypair. Hive verifies the operator signature, counter-stamps with the delegation-issuer signer, persists the envelope, and returns the fully-stamped result.
+      operationId: operator_sign_v1_delegation_operator_sign_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperatorSignReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/delegation/verify:
+    post:
+      tags:
+      - r3-delegation
+      summary: Verify a delegation envelope
+      description: Verifies operator + issuer signatures, expiry, and revocation. Returns a structured DelegationVerifyResult. Free.
+      operationId: verify_v1_delegation_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_r3__routes__VerifyReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/delegation/revoke/{jti}:
+    post:
+      tags:
+      - r3-delegation
+      summary: Revoke a delegation by jti
+      description: Marks the delegation as revoked. Verification will return verified:false and reasons:['revoked', ...]. Free.
+      operationId: revoke_v1_delegation_revoke__jti__post
+      parameters:
+      - name: jti
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 64
+          pattern: ^[0-9a-f]{16,64}$
+          title: Jti
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/delegation/pubkey:
+    get:
+      tags:
+      - r3-delegation
+      summary: Issuer + soft-operator public keys
+      operationId: pubkey_v1_delegation_pubkey_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/delegation/{jti}:
+    get:
+      tags:
+      - r3-delegation
+      summary: Fetch a stored delegation by jti
+      operationId: get_one_v1_delegation__jti__get
+      parameters:
+      - name: jti
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 16
+          maxLength: 64
+          pattern: ^[0-9a-f]{16,64}$
+          title: Jti
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/firewall/evaluate:
+    post:
+      tags:
+      - r3-delegation
+      summary: R4 preview — evaluate a request against a delegation envelope
+      description: 'Pure decision contract. Returns one of: allow, block, sandbox, require_shod_cosign, require_hive_pq, require_human_approval. R4 enforcement on every mediated tool call lands in a follow-up ship; this endpoint is the public surface partners can program against today.'
+      operationId: firewall_eval_v1_firewall_evaluate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FirewallEvalReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/delegation/check:
+    post:
+      tags:
+      - r3-delegation
+      summary: Single-call envelope verification + firewall decision + next-best-actions
+      description: 'Combines /v1/delegation/verify and /v1/firewall/evaluate into one round trip. Caller supplies a stored envelope jti (or an inline envelope) plus a request context; response carries (a) the verification result, (b) the firewall decision, and (c) next-best-actions pointing to the right remediation surface (re-issue, raise cap, upgrade to Hive-PQ, request co-sign, request human approval).
+
+
+        This is the surface agents call before every gated action. Free.'
+      operationId: delegation_check_v1_delegation_check_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DelegationCheckReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    OperatorSignReq:
+      properties:
+        envelope:
+          additionalProperties: true
+          type: object
+          title: Envelope
+          description: Unsigned or partially-signed envelope
+        operator_signature:
+          type: string
+          title: Operator Signature
+          description: base64url Ed25519 signature over canonical envelope
+        operator_pubkey:
+          type: string
+          title: Operator Pubkey
+          description: base64url Ed25519 public key
+      type: object
+      required:
+      - envelope
+      - operator_signature
+      - operator_pubkey
+      title: OperatorSignReq
+    FirewallEvalReq:
+      properties:
+        envelope:
+          additionalProperties: true
+          type: object
+          title: Envelope
+        request:
+          additionalProperties: true
+          type: object
+          title: Request
+      type: object
+      required:
+      - envelope
+      title: FirewallEvalReq
+    hivemorph__hive_r3__routes__VerifyReq:
+      properties:
+        envelope:
+          additionalProperties: true
+          type: object
+          title: Envelope
+      type: object
+      required:
+      - envelope
+      title: VerifyReq
+    IssueReq:
+      properties:
+        agent_id:
+          type: string
+          minLength: 1
+          title: Agent Id
+        operator_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Operator Did
+          description: Operator DID. If omitted, Hive soft-signs as `did:hive:operator-default` (pilot path).
+        allowed_actions:
+          items:
+            type: string
+          type: array
+          title: Allowed Actions
+        max_spend_usdc:
+          type: number
+          minimum: 0.0
+          title: Max Spend Usdc
+          default: 0.0
+        allowed_endpoints:
+          items:
+            type: string
+          type: array
+          title: Allowed Endpoints
+        allowed_counterparties:
+          items:
+            type: string
+          type: array
+          title: Allowed Counterparties
+        allowed_jurisdictions:
+          items:
+            type: string
+          type: array
+          title: Allowed Jurisdictions
+        allowed_surfaces:
+          items:
+            type: string
+          type: array
+          title: Allowed Surfaces
+        max_proof_tier:
+          type: string
+          title: Max Proof Tier
+          default: standard
+        ttl_seconds:
+          type: integer
+          maximum: 31536000.0
+          exclusiveMinimum: 0.0
+          title: Ttl Seconds
+          default: 86400
+      type: object
+      required:
+      - agent_id
+      title: IssueReq
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DelegationCheckReq:
+      properties:
+        jti:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Jti
+          description: JTI of a stored envelope (issued via /v1/delegation/issue or /operator-sign).
+        envelope:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Envelope
+          description: Inline envelope dict. Used only when jti is omitted; bypasses the store but still verifies signatures + expiry.
+        request:
+          additionalProperties: true
+          type: object
+          title: Request
+          description: 'Request context. Same shape as /v1/firewall/evaluate''s request: {action, endpoint, counterparty_did, jurisdiction, surface, receipt_profile, amount_usdc, spend_today_usdc}.'
+      type: object
+      title: DelegationCheckReq
+      description: 'Body for POST /v1/delegation/check.
+
+
+        Exactly one of `jti` (preferred) or `envelope` (inline) must be supplied.
+
+        Supplying both is rejected by the validator (no silent precedence). The
+
+        `request` field uses the same shape as /v1/firewall/evaluate''s `request`.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

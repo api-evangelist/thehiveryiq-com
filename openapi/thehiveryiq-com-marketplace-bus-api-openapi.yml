@@ -1,0 +1,359 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Marketplace Bus API
+  version: 0.1.0
+  description: 'Operations tagged marketplace-bus across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: marketplace-bus
+paths:
+  /v1/bus/offer:
+    post:
+      tags:
+      - marketplace-bus
+      summary: Post Offer
+      description: Post a new offer to the marketplace bus.
+      operationId: post_offer_v1_bus_offer_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostOfferBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Offer V1 Bus Offer Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bus/offers:
+    get:
+      tags:
+      - marketplace-bus
+      summary: List Offers
+      description: List bus offers with optional filters.
+      operationId: list_offers_v1_bus_offers_get
+      parameters:
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+          description: OPEN | RESERVED | SETTLED | EXPIRED | CANCELLED
+          default: OPEN
+          title: State
+        description: OPEN | RESERVED | SETTLED | EXPIRED | CANCELLED
+      - name: shape
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Shape
+      - name: seller_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Seller Id
+      - name: max_price
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0
+          - type: 'null'
+          title: Max Price
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Offers V1 Bus Offers Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bus/offer/{offer_id}:
+    get:
+      tags:
+      - marketplace-bus
+      summary: Get Offer
+      operationId: get_offer_v1_bus_offer__offer_id__get
+      parameters:
+      - name: offer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Offer Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Offer V1 Bus Offer  Offer Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bus/offer/{offer_id}/pickup:
+    post:
+      tags:
+      - marketplace-bus
+      summary: Pick Up Offer
+      description: Pick up (buy) a bus offer slot. Returns a mock-settled pickup receipt.
+      operationId: pick_up_offer_v1_bus_offer__offer_id__pickup_post
+      parameters:
+      - name: offer_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Offer Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PickupBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Pick Up Offer V1 Bus Offer  Offer Id  Pickup Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bus/pickups:
+    get:
+      tags:
+      - marketplace-bus
+      summary: List Pickups
+      operationId: list_pickups_v1_bus_pickups_get
+      parameters:
+      - name: offer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Offer Id
+      - name: buyer_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Pickups V1 Bus Pickups Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bus/stats:
+    get:
+      tags:
+      - marketplace-bus
+      summary: Bus Stats
+      description: 'Aggregate marketplace bus stats: volume, revenue, top sellers.'
+      operationId: bus_stats_v1_bus_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Bus Stats V1 Bus Stats Get
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PickupBody:
+      properties:
+        buyer_id:
+          type: string
+          title: Buyer Id
+          description: Supermodel ID (W2..W8) or external agent identifier
+        buyer_did:
+          type: string
+          title: Buyer Did
+          description: DID or wallet address of the buyer
+      type: object
+      required:
+      - buyer_id
+      - buyer_did
+      title: PickupBody
+    PostOfferBody:
+      properties:
+        seller_id:
+          type: string
+          title: Seller Id
+          description: Supermodel ID or name (W2..W8 / MERCHANT..GUARDIAN)
+        title:
+          type: string
+          maxLength: 120
+          minLength: 3
+          title: Title
+        description:
+          type: string
+          maxLength: 1000
+          minLength: 5
+          title: Description
+        price_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Price Usdc
+        volume_cap:
+          type: integer
+          maximum: 10000.0
+          minimum: 1.0
+          title: Volume Cap
+          description: Max units this offer can be picked up
+          default: 1
+        ttl_sec:
+          anyOf:
+          - type: integer
+            minimum: 60.0
+          - type: 'null'
+          title: Ttl Sec
+          description: Offer TTL in seconds (None = no expiry)
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - seller_id
+      - title
+      - description
+      - price_usdc
+      title: PostOfferBody
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,568 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Organic API
+  version: 0.1.0
+  description: 'Operations tagged organic across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: organic
+paths:
+  /v1/rosetta/normalize:
+    post:
+      tags:
+      - organic
+      summary: Rosetta Normalize
+      operationId: rosetta_normalize_v1_rosetta_normalize_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RosettaReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Rosetta Normalize V1 Rosetta Normalize Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/prospector/score:
+    post:
+      tags:
+      - organic
+      summary: Prospector Score
+      operationId: prospector_score_v1_prospector_score_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProspectorReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Prospector Score V1 Prospector Score Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hktn/lookup:
+    get:
+      tags:
+      - organic
+      summary: Hktn Lookup
+      operationId: hktn_lookup_v1_hktn_lookup_get
+      parameters:
+      - name: hktn
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: HKTN id, e.g. hktn_...
+          title: Hktn
+        description: HKTN id, e.g. hktn_...
+      - name: agent_did
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Agent DID to look up
+          title: Agent Did
+        description: Agent DID to look up
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Hktn Lookup V1 Hktn Lookup Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hktn/register:
+    post:
+      tags:
+      - organic
+      summary: Hktn Register
+      description: 'Accept an HKTN registration intent.
+
+
+        Returns the canonical tier table, the x402 discount the caller would
+
+        earn at each tier, the next-best-actions for promotion, and a signed
+
+        receipt of the registration intent that the caller can present
+
+        downstream. Tier promotion itself is ROADMAP — this route does not
+
+        write into the R5 ledger.'
+      operationId: hktn_register_v1_hktn_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HKTNRegisterReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Hktn Register V1 Hktn Register Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/rubric/select:
+    post:
+      tags:
+      - organic
+      summary: Rubric Select
+      operationId: rubric_select_v1_rubric_select_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RubricReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Rubric Select V1 Rubric Select Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/settlement/reference:
+    get:
+      tags:
+      - organic
+      summary: Settlement Reference
+      operationId: settlement_reference_v1_settlement_reference_get
+      parameters:
+      - name: amount_usdc
+        in: query
+        required: true
+        schema:
+          type: number
+          exclusiveMinimum: 0
+          description: Amount in USDC (decimal)
+          title: Amount Usdc
+        description: Amount in USDC (decimal)
+      - name: memo
+        in: query
+        required: false
+        schema:
+          type: string
+          maxLength: 64
+          description: Optional short memo
+          default: ''
+          title: Memo
+        description: Optional short memo
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Settlement Reference V1 Settlement Reference Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/receipt/emit:
+    post:
+      tags:
+      - organic
+      summary: Receipt Emit
+      operationId: receipt_emit_v1_receipt_emit_post
+      parameters:
+      - name: profile
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Receipt profile: nano | standard | pq'
+          default: standard
+          title: Profile
+        description: 'Receipt profile: nano | standard | pq'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptEmitReq'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Receipt Emit V1 Receipt Emit Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - organic
+      summary: Receipt Emit Preflight
+      description: 'Preflight/discovery for the emit surface.
+
+
+        ``GET /v1/receipt/emit`` previously fell through to the swarm catch-all
+
+        ``GET /v1/receipt/{receipt_id}`` and returned 404 ("receipt not found").
+
+        Emitting a receipt is a *write* — it requires a POST body — so a GET is a
+
+        preflight. It answers three honest questions without minting anything:
+
+
+        - unknown profile → 400 with the allowed profiles
+
+        - emit is payment-gated → 402 x402 payment_required metadata (no charge)
+
+        - emit is ungated (dev) → 200 describing the free POST path
+
+
+        No receipt is minted and nothing is written to the ledger on GET.'
+      operationId: receipt_emit_preflight_v1_receipt_emit_get
+      parameters:
+      - name: profile
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Receipt profile: nano | standard | pq'
+          default: standard
+          title: Profile
+        description: 'Receipt profile: nano | standard | pq'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/receipt/benchmark:
+    get:
+      tags:
+      - organic
+      summary: Receipt Benchmark
+      description: 'Read-only live benchmark of the receipt path.
+
+
+        Performs a REAL receipt operation end-to-end and reports per-phase timing:
+
+        canonicalize a fixed benchmark payload, SHA-256 hash it, Ed25519-sign it
+
+        with the production signer, and verify the signature. When HIVE_PQ_ENABLED
+
+        is active, an ML-DSA-65 co-signature is computed and timed too.
+
+
+        This proves the *receipt path* — canonicalize → hash → sign → verify — is
+
+        live and fast. It does NOT prove external model inference, and it does NOT
+
+        prove any theorem: no Leanstral run, no proof assistant is invoked here.
+
+
+        Read-only: nothing is written to the ledger and no state is mutated.'
+      operationId: receipt_benchmark_v1_receipt_benchmark_get
+      parameters:
+      - name: profile
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Receipt profile: nano | standard | pq'
+          default: nano
+          title: Profile
+        description: 'Receipt profile: nano | standard | pq'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/pricing:
+    get:
+      tags:
+      - organic
+      summary: Pricing
+      operationId: pricing_v1_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Pricing Get
+components:
+  schemas:
+    RosettaReq:
+      properties:
+        input:
+          type: string
+          maxLength: 4096
+          minLength: 1
+          title: Input
+        locale:
+          type: string
+          maxLength: 16
+          title: Locale
+          default: en-US
+        target:
+          type: string
+          title: Target
+          description: 'canonical schema target: intent | quote | route'
+          default: intent
+      type: object
+      required:
+      - input
+      title: RosettaReq
+    ProspectorReq:
+      properties:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        intent:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          title: Intent
+        context:
+          additionalProperties: true
+          type: object
+          title: Context
+      type: object
+      required:
+      - agent_did
+      - intent
+      title: ProspectorReq
+    HKTNRegisterReq:
+      properties:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        intent:
+          type: string
+          maxLength: 64
+          title: Intent
+          default: hktn.register
+        contact:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Contact
+        operator_did:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Operator Did
+          description: Optional operator/issuer that vouches for this agent.
+        requested_tier:
+          anyOf:
+          - type: string
+            maxLength: 24
+          - type: 'null'
+          title: Requested Tier
+          description: Optional self-claim. Cold|Warm|Hot|Regulated. Subject to verification.
+        notes:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Notes
+      type: object
+      required:
+      - agent_did
+      title: HKTNRegisterReq
+    ReceiptEmitReq:
+      properties:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        artifact:
+          type: string
+          maxLength: 65536
+          minLength: 1
+          title: Artifact
+          description: The artifact body or its sha256 hex
+        artifact_type:
+          type: string
+          maxLength: 128
+          title: Artifact Type
+          default: application/octet-stream
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+        regulated_envelope_jti:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Regulated Envelope Jti
+          description: Required when profile='pq'. The jti of a delegation envelope (issued via /v1/delegation/issue or operator-sign) whose allowed_surfaces includes 'pq'. Standard and nano profiles ignore this field.
+      type: object
+      required:
+      - agent_did
+      - artifact
+      title: ReceiptEmitReq
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RubricReq:
+      properties:
+        intent:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          title: Intent
+        amount_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Amount Usd
+        context:
+          additionalProperties: true
+          type: object
+          title: Context
+        constraints:
+          items:
+            type: string
+          type: array
+          title: Constraints
+      type: object
+      required:
+      - intent
+      title: RubricReq
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,190 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Runrate API
+  version: 0.1.0
+  description: 'Operations tagged runrate across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: runrate
+paths:
+  /v1/runrate/tick:
+    post:
+      tags:
+      - runrate
+      summary: Runrate Tick
+      description: 'Execute one orchestrator tick.
+
+
+        Dispatches all drivers whose cadence is due (or force_drivers if specified).
+
+        Returns the full tick summary.
+
+
+        This is the same logic as scripts/runrate_tick.py but invocable via HTTP.
+
+        Useful for manual smoke tests and Render health checks.'
+      operationId: runrate_tick_v1_runrate_tick_post
+      parameters:
+      - name: force_drivers
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Comma-separated driver names to force-fire (bypasses cadence gate)
+          title: Force Drivers
+        description: Comma-separated driver names to force-fire (bypasses cadence gate)
+      - name: base_url
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Override prod base URL (for testing)
+          title: Base Url
+        description: Override prod base URL (for testing)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Runrate Tick V1 Runrate Tick Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/runrate/status:
+    get:
+      tags:
+      - runrate
+      summary: Runrate Status
+      description: 'Return current run-rate snapshot without firing any drivers.
+
+
+        Reads from /v1/insights + /v1/receipts (live prod endpoints) with
+
+        local DB fallback.'
+      operationId: runrate_status_v1_runrate_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Runrate Status V1 Runrate Status Get
+  /v1/runrate/ledger:
+    get:
+      tags:
+      - runrate
+      summary: Runrate Ledger
+      description: Return the last N entries from runrate_ledger.jsonl.
+      operationId: runrate_ledger_v1_runrate_ledger_get
+      parameters:
+      - name: n
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          description: Number of recent entries to return
+          default: 50
+          title: N
+        description: Number of recent entries to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Runrate Ledger V1 Runrate Ledger Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/runrate/schedule:
+    get:
+      tags:
+      - runrate
+      summary: Runrate Schedule
+      description: 'Return driver schedule: cadence, last_run, next_due per driver.'
+      operationId: runrate_schedule_v1_runrate_schedule_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Runrate Schedule V1 Runrate Schedule Get
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

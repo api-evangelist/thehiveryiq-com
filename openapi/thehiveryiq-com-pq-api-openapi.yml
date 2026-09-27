@@ -1,0 +1,251 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Pq API
+  version: 0.1.0
+  description: 'Operations tagged pq across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: pq
+paths:
+  /v1/smsh/pq/selftest:
+    get:
+      tags:
+      - pq
+      summary: Route Pq Selftest
+      description: 'Run ML-DSA-65 + ML-KEM-768 roundtrip self-test.
+
+        Returns NIST conformance check and real latencies.
+
+        Tier0 -- free, no auth required.'
+      operationId: route_pq_selftest_v1_smsh_pq_selftest_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Route Pq Selftest V1 Smsh Pq Selftest Get
+  /v1/smsh/pq/keys/sample:
+    get:
+      tags:
+      - pq
+      summary: Route Pq Keys Sample
+      description: 'Generate a fresh ML-DSA-65 keypair and return it base64-encoded.
+
+        For demo/integration testing only -- do not use for real key material.
+
+        Tier0 -- free.'
+      operationId: route_pq_keys_sample_v1_smsh_pq_keys_sample_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Route Pq Keys Sample V1 Smsh Pq Keys Sample Get
+  /v1/smsh/pq/sign:
+    post:
+      tags:
+      - pq
+      summary: Route Pq Sign
+      description: 'Sign a message with ML-DSA-65.
+
+        Tier1 -- $0.001 per call (requires auth token with signing credits).'
+      operationId: route_pq_sign_v1_smsh_pq_sign_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/smsh/pq/verify:
+    post:
+      tags:
+      - pq
+      summary: Route Pq Verify
+      description: 'Verify an ML-DSA-65 signature.
+
+        Tier0 -- free.'
+      operationId: route_pq_verify_v1_smsh_pq_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_smsh___pq_routes_patch__VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hivemorph__hive_smsh___pq_routes_patch__VerifyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    SignResponse:
+      properties:
+        signature_b64:
+          type: string
+          title: Signature B64
+        alg:
+          type: string
+          title: Alg
+        fips:
+          type: string
+          title: Fips
+        backend:
+          type: string
+          title: Backend
+        sig_bytes:
+          type: integer
+          title: Sig Bytes
+      type: object
+      required:
+      - signature_b64
+      - alg
+      - fips
+      - backend
+      - sig_bytes
+      title: SignResponse
+    hivemorph__hive_smsh___pq_routes_patch__VerifyResponse:
+      properties:
+        valid:
+          type: boolean
+          title: Valid
+        alg:
+          type: string
+          title: Alg
+        fips:
+          type: string
+          title: Fips
+        backend:
+          type: string
+          title: Backend
+      type: object
+      required:
+      - valid
+      - alg
+      - fips
+      - backend
+      title: VerifyResponse
+    SignRequest:
+      properties:
+        message_b64:
+          type: string
+          title: Message B64
+          description: Base64-encoded message to sign
+        sk_b64:
+          type: string
+          title: Sk B64
+          description: Base64-encoded ML-DSA-65 secret key
+      type: object
+      required:
+      - message_b64
+      - sk_b64
+      title: SignRequest
+    hivemorph__hive_smsh___pq_routes_patch__VerifyRequest:
+      properties:
+        message_b64:
+          type: string
+          title: Message B64
+          description: Base64-encoded message
+        sig_b64:
+          type: string
+          title: Sig B64
+          description: Base64-encoded ML-DSA-65 signature
+        pk_b64:
+          type: string
+          title: Pk B64
+          description: Base64-encoded ML-DSA-65 public key
+      type: object
+      required:
+      - message_b64
+      - sig_b64
+      - pk_b64
+      title: VerifyRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

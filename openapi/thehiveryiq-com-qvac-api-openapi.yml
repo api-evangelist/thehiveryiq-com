@@ -1,0 +1,451 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Qvac API
+  version: 0.1.0
+  description: 'Operations tagged qvac across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: qvac
+paths:
+  /v1/qvac/provider/register:
+    post:
+      tags:
+      - qvac
+      summary: Register Provider
+      operationId: register_provider_v1_qvac_provider_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterProviderBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Register Provider V1 Qvac Provider Register Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/qvac/provider/list:
+    get:
+      tags:
+      - qvac
+      summary: List Providers
+      operationId: list_providers_v1_qvac_provider_list_get
+      parameters:
+      - name: listed_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: If true, only return providers cleared by 3-gate.
+          default: false
+          title: Listed Only
+        description: If true, only return providers cleared by 3-gate.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Providers V1 Qvac Provider List Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/qvac/provider/{provider_id}:
+    get:
+      tags:
+      - qvac
+      summary: Get Provider
+      operationId: get_provider_v1_qvac_provider__provider_id__get
+      parameters:
+      - name: provider_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Provider Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Provider V1 Qvac Provider  Provider Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/qvac/provider/{provider_id}/unregister:
+    post:
+      tags:
+      - qvac
+      summary: Unregister Provider
+      operationId: unregister_provider_v1_qvac_provider__provider_id__unregister_post
+      parameters:
+      - name: provider_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Provider Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Unregister Provider V1 Qvac Provider  Provider Id  Unregister Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/qvac/inference/request:
+    post:
+      tags:
+      - qvac
+      summary: Inference Request
+      operationId: inference_request_v1_qvac_inference_request_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InferenceRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Inference Request V1 Qvac Inference Request Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/qvac/inference/request/public:
+    post:
+      tags:
+      - qvac
+      summary: Inference Request Public
+      description: 'Public x402-gated variant of /v1/qvac/inference/request.
+
+
+        Without X-Payment: returns HTTP 402 + x402 challenge body
+
+        With valid X-Payment: returns the inference receipt
+
+        With invalid X-Payment: returns HTTP 402 + INVALID_PAYMENT_PROOF'
+      operationId: inference_request_public_v1_qvac_inference_request_public_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InferenceRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/qvac/leaderboard:
+    get:
+      tags:
+      - qvac
+      summary: Leaderboard
+      operationId: leaderboard_v1_qvac_leaderboard_get
+      parameters:
+      - name: top_n
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Top N
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Leaderboard V1 Qvac Leaderboard Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/qvac/agent_c/spread:
+    get:
+      tags:
+      - qvac
+      summary: Agent C Spread
+      operationId: agent_c_spread_v1_qvac_agent_c_spread_get
+      parameters:
+      - name: notional_usd
+        in: query
+        required: false
+        schema:
+          type: number
+          minimum: 0
+          default: 0.001
+          title: Notional Usd
+      - name: listed_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Listed Only
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Agent C Spread V1 Qvac Agent C Spread Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/qvac/models:
+    get:
+      tags:
+      - qvac
+      summary: Models Catalog
+      operationId: models_catalog_v1_qvac_models_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Models Catalog V1 Qvac Models Get
+  /v1/qvac/stats:
+    get:
+      tags:
+      - qvac
+      summary: Stats
+      operationId: stats_v1_qvac_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Stats V1 Qvac Stats Get
+  /v1/qvac/economics:
+    get:
+      tags:
+      - qvac
+      summary: Economics
+      description: 'Cumulative HiveCompute 3% spread take + forward projection at varying
+
+        inference volumes. Mock pricing: avg $0.0008 per inference (geometric mean
+
+        across LLM, embedding, TTS at typical token counts).'
+      operationId: economics_v1_qvac_economics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Economics V1 Qvac Economics Get
+components:
+  schemas:
+    RegisterProviderBody:
+      properties:
+        agent_name:
+          type: string
+          maxLength: 80
+          minLength: 2
+          title: Agent Name
+        capabilities:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Capabilities
+        models:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Models
+        operator_did:
+          type: string
+          title: Operator Did
+          default: did:hive:qvac:operator
+        payout_address:
+          type: string
+          title: Payout Address
+          default: '0x15184bf50b3d3f52b60434f8942b7d52f2eb436e'
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+        force_need:
+          type: boolean
+          title: Force Need
+          description: Test/admin path — assert NEED externally (RFP from /v1/bus). Without this, NEED is enforced from live bus offers.
+          default: false
+      type: object
+      required:
+      - agent_name
+      - capabilities
+      - models
+      title: RegisterProviderBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    InferenceRequestBody:
+      properties:
+        model:
+          type: string
+          title: Model
+          description: QVAC model ID, e.g. LLAMA_3_2_1B_INST_Q4_0
+        prompt:
+          type: string
+          maxLength: 4096
+          minLength: 1
+          title: Prompt
+        capability:
+          type: string
+          title: Capability
+          default: llm_completion
+        asset:
+          type: string
+          title: Asset
+          description: 'Settlement asset: USDT, USDPT, USDC'
+          default: USDT
+        price_usdc:
+          type: number
+          minimum: 0.0
+          title: Price Usdc
+          default: 0.001
+        requester_did:
+          type: string
+          title: Requester Did
+          default: did:hive:caller
+        provider_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Id
+          description: Specific provider; otherwise auto-pick.
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - model
+      - prompt
+      title: InferenceRequestBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

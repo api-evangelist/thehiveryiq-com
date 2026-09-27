@@ -1,0 +1,207 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Subscription API
+  version: 0.1.0
+  description: 'Operations tagged subscription across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Subscription
+paths:
+  /v1/subscription/plans:
+    get:
+      tags:
+      - Subscription
+      summary: List Plans
+      description: Public plan catalog. Returns price, features, payment rails.
+      operationId: list_plans_v1_subscription_plans_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/subscription/intent:
+    post:
+      tags:
+      - Subscription
+      summary: Create Intent
+      description: 'Step 1: client picks a plan, gets payment instructions + sub_id memo.'
+      operationId: create_intent_v1_subscription_intent_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/subscription/claim:
+    post:
+      tags:
+      - Subscription
+      summary: Claim Subscription
+      description: 'Step 2: client submits tx_hash. v0.1 accepts any well-formed hash and provisions
+
+        immediately. v0.2 will verify on-chain via Base RPC.'
+      operationId: claim_subscription_v1_subscription_claim_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClaimRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/subscription/status/{sub_id}:
+    get:
+      tags:
+      - Subscription
+      summary: Subscription Status
+      description: Public status check by sub_id (api_key never returned here).
+      operationId: subscription_status_v1_subscription_status__sub_id__get
+      parameters:
+      - name: sub_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Sub Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/subscription/health:
+    get:
+      tags:
+      - Subscription
+      summary: Health
+      operationId: health_v1_subscription_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    ClaimRequest:
+      properties:
+        sub_id:
+          type: string
+          title: Sub Id
+        tx_hash:
+          type: string
+          minLength: 10
+          title: Tx Hash
+      type: object
+      required:
+      - sub_id
+      - tx_hash
+      title: ClaimRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    IntentRequest:
+      properties:
+        plan:
+          type: string
+          title: Plan
+          description: dev-pack or saas-pro
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: for receipt + provisioning notification
+      type: object
+      required:
+      - plan
+      title: IntentRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

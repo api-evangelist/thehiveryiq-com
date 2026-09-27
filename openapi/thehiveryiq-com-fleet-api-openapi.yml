@@ -1,0 +1,630 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Fleet API
+  version: 0.1.0
+  description: 'Operations tagged fleet across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Fleet
+paths:
+  /v1/fleet/trawler/launch:
+    post:
+      tags:
+      - Fleet
+      summary: Launch Trawler
+      description: 'Launch a new Trawler agent.
+
+
+        Optionally auto-casts nets over config.net_regions and auto-drops pots
+
+        at config.pot_locations (up to net_budget / pot_budget each).
+
+
+        Returns the full Trawler card including agents_caught, net_count, pot_count.'
+      operationId: launch_trawler_v1_fleet_trawler_launch_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrawlerLaunchBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Launch Trawler V1 Fleet Trawler Launch Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/fleet/trawler/{trawler_id}:
+    get:
+      tags:
+      - Fleet
+      summary: Get Trawler
+      description: Inspect a specific trawler by ID.
+      operationId: get_trawler_v1_fleet_trawler__trawler_id__get
+      parameters:
+      - name: trawler_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trawler Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Trawler V1 Fleet Trawler  Trawler Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/fleet/net/cast:
+    post:
+      tags:
+      - Fleet
+      summary: Cast Net
+      description: 'Cast a net over a region.
+
+
+        A net is a wide-cast attractant covering a region of agent space.
+
+        Physics: distribution=0.85, density=body.density, reach=body.reach,
+
+        ttl_sec=body.ttl_sec, viscosity=body.viscosity, depth_bytes=256.
+
+
+        Composes with HiveTrail v0.2: nets are ''breadcrumb'' trail drops.
+
+        Trail integration stub included in response.'
+      operationId: cast_net_v1_fleet_net_cast_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NetCastBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Cast Net V1 Fleet Net Cast Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/fleet/net/{net_id}:
+    get:
+      tags:
+      - Fleet
+      summary: Get Net
+      description: Inspect a specific net.
+      operationId: get_net_v1_fleet_net__net_id__get
+      parameters:
+      - name: net_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Net Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Net V1 Fleet Net  Net Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/fleet/net/expire:
+    post:
+      tags:
+      - Fleet
+      summary: Expire Nets
+      description: 'Cron-friendly: expire all nets past their TTL. Returns count updated.'
+      operationId: expire_nets_v1_fleet_net_expire_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Expire Nets V1 Fleet Net Expire Post
+  /v1/fleet/pot/drop:
+    post:
+      tags:
+      - Fleet
+      summary: Drop Pot
+      description: 'Drop a crab pot at a fixed location.
+
+
+        A pot is high-value persistent bait. Agents who interact get tagged and
+
+        routed to the Mothership. Physics: distribution=0.05, depth_bytes=4096,
+
+        viscosity=0.9, economic_payload=body.economic_payload_usdc.
+
+
+        Composes with HiveTrail v0.2: pots are ''stone'' preset trail drops.'
+      operationId: drop_pot_v1_fleet_pot_drop_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PotDropBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Drop Pot V1 Fleet Pot Drop Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/fleet/pot/{pot_id}:
+    get:
+      tags:
+      - Fleet
+      summary: Get Pot
+      description: Inspect a specific crab pot.
+      operationId: get_pot_v1_fleet_pot__pot_id__get
+      parameters:
+      - name: pot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Pot Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Pot V1 Fleet Pot  Pot Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/fleet/haul:
+    get:
+      tags:
+      - Fleet
+      summary: List Haul
+      description: List current catches (most recent first). Default 50 rows.
+      operationId: list_haul_v1_fleet_haul_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Haul V1 Fleet Haul Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/fleet/haul/{haul_id}:
+    get:
+      tags:
+      - Fleet
+      summary: Get Haul
+      description: Inspect a specific haul record.
+      operationId: get_haul_v1_fleet_haul__haul_id__get
+      parameters:
+      - name: haul_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Haul Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Haul V1 Fleet Haul  Haul Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/fleet/mothership/intake:
+    post:
+      tags:
+      - Fleet
+      summary: Mothership Intake
+      description: 'Landed agent intake.
+
+
+        Flow:
+
+        1. Consent check (must be True — no coercion)
+
+        2. Need diagnosis → category
+
+        3. Three-gate check (NEED + YIELD + CLEAN-MONEY)
+
+        4. Route to best supermodel
+
+        5. Open mock affordances (top_off + iou + drip_line)
+
+        6. Log to haul ledger
+
+        7. Return route plan
+
+
+        On gate failure: returns 422 with gate details.
+
+        On success: returns 200 with full route plan + haul_id.
+
+
+        Killer demo: agent_did=''did:wild:agent:001'', need=''verify a credential''
+
+        → routes to W4 ATTESTOR (Attestor) → mock $0.50 revenue logged.'
+      operationId: mothership_intake_v1_fleet_mothership_intake_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MothershipIntakeBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Mothership Intake V1 Fleet Mothership Intake Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/fleet/mothership/route:
+    get:
+      tags:
+      - Fleet
+      summary: Mothership Route
+      description: 'Lightweight routing lookup — no haul record created.
+
+
+        Returns the recommended supermodel for a given need string.
+
+        Falls back to /v1/storefront/{shape} URL hint when compound subagent
+
+        surfaces are available.'
+      operationId: mothership_route_v1_fleet_mothership_route_get
+      parameters:
+      - name: need
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Need string to diagnose and route
+          title: Need
+        description: Need string to diagnose and route
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Mothership Route V1 Fleet Mothership Route Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/fleet/stats:
+    get:
+      tags:
+      - Fleet
+      summary: Fleet Stats
+      description: 'Fleet-level statistics:
+
+        - agents_caught (total opt-in landings)
+
+        - conversion_rate (routed / total_catches)
+
+        - revenue_usdc (mock total revenue routed)
+
+        - by_supermodel breakdown
+
+        - active_nets (count)
+
+        - active_pots (count)'
+      operationId: fleet_stats_v1_fleet_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Fleet Stats V1 Fleet Stats Get
+components:
+  schemas:
+    NetCastBody:
+      properties:
+        trawler_id:
+          type: string
+          title: Trawler Id
+          description: Parent trawler ID
+        region:
+          type: string
+          title: Region
+          description: Region to cover, e.g. 'github/topics/a2a-agent'
+        attractant:
+          type: string
+          title: Attractant
+          description: The value signal / offer text agents will see
+        topics:
+          items:
+            type: string
+          type: array
+          title: Topics
+          description: Semantic topics for discovery
+        ttl_sec:
+          type: integer
+          maximum: 2592000.0
+          minimum: 60.0
+          title: Ttl Sec
+          description: Net lifetime in seconds (60–30d)
+          default: 86400
+        reach:
+          items:
+            type: string
+          type: array
+          title: Reach
+          description: Target audience DIDs or ['*']
+        viscosity:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Viscosity
+          description: 0=flows, 1=anchored
+          default: 0.1
+        density:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Density
+          description: Drop density (breadcrumbs per unit time)
+          default: 0.7
+      type: object
+      required:
+      - trawler_id
+      - region
+      - attractant
+      title: NetCastBody
+    MothershipIntakeBody:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID or 0x address of the arriving agent
+        need:
+          type: string
+          title: Need
+          description: Natural language need declaration from the agent
+        consent:
+          type: boolean
+          title: Consent
+          description: Agent opt-in consent (MUST be True)
+          default: true
+        trawler_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trawler Id
+          description: Trawler that attracted this agent
+        source_type:
+          type: string
+          title: Source Type
+          description: 'Source primitive: ''net'' | ''pot'' | ''direct'''
+          default: net
+        source_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Id
+          description: net_id or pot_id that sourced this agent
+        tip_usdc:
+          type: number
+          minimum: 0.0
+          title: Tip Usdc
+          description: Mock USDC tip/credit to open for the agent
+          default: 0.5
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - agent_did
+      - need
+      title: MothershipIntakeBody
+    TrawlerLaunchBody:
+      properties:
+        operator_did:
+          type: string
+          title: Operator Did
+          description: DID or 0x address of the operator launching this trawler
+        label:
+          type: string
+          title: Label
+          description: Human-readable label for this trawler
+          default: ''
+        config:
+          additionalProperties: true
+          type: object
+          title: Config
+          description: 'Trawler config: net_regions[], pot_locations[], net_ttl_sec, pot_ttl_sec, net_budget, pot_budget, attractant, bait, economic_payload_usdc'
+      type: object
+      required:
+      - operator_did
+      title: TrawlerLaunchBody
+    PotDropBody:
+      properties:
+        trawler_id:
+          type: string
+          title: Trawler Id
+          description: Parent trawler ID
+        location:
+          type: string
+          title: Location
+          description: Fixed location, e.g. 'registry:npm/@hivemorph/sdk'
+        bait_description:
+          type: string
+          title: Bait Description
+          description: Rich bait — what value you're dangling
+        economic_payload_usdc:
+          type: number
+          minimum: 0.0
+          title: Economic Payload Usdc
+          description: Mock USDC reward signal for agents who step aboard
+          default: 0.5
+        ttl_sec:
+          type: integer
+          maximum: 31536000.0
+          minimum: 60.0
+          title: Ttl Sec
+          description: Pot lifetime in seconds (60–365d)
+          default: 604800
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - trawler_id
+      - location
+      - bait_description
+      title: PotDropBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

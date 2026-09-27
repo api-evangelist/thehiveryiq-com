@@ -1,0 +1,176 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Topoff Router API
+  version: 0.1.0
+  description: 'Operations tagged topoff-router across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: topoff-router
+paths:
+  /v1/topoff/auto:
+    post:
+      tags:
+      - topoff-router
+      summary: Auto Topoff All
+      description: 'Check all hot supermodels and issue mock top-off affordances for those below threshold.
+
+        MOCK-ONLY. No signing, no treasury dispatch. Cron-safe.'
+      operationId: auto_topoff_all_v1_topoff_auto_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Auto Topoff All V1 Topoff Auto Post
+  /v1/topoff/auto/{supermodel_id}:
+    post:
+      tags:
+      - topoff-router
+      summary: Auto Topoff One
+      description: Check and auto-top-off a specific supermodel. MOCK-ONLY.
+      operationId: auto_topoff_one_v1_topoff_auto__supermodel_id__post
+      parameters:
+      - name: supermodel_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Auto Topoff One V1 Topoff Auto  Supermodel Id  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/topoff/status:
+    get:
+      tags:
+      - topoff-router
+      summary: Topoff Status
+      description: Simulated balance status for all hot supermodels.
+      operationId: topoff_status_v1_topoff_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Topoff Status V1 Topoff Status Get
+  /v1/topoff/history:
+    get:
+      tags:
+      - topoff-router
+      summary: Topoff History
+      operationId: topoff_history_v1_topoff_history_get
+      parameters:
+      - name: supermodel_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Supermodel Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Topoff History V1 Topoff History Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

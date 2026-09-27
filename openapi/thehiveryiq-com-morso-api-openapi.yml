@@ -1,0 +1,368 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Morso API
+  version: 0.1.0
+  description: 'Operations tagged morso across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: morso
+paths:
+  /v1/morso/health:
+    get:
+      tags:
+      - morso
+      summary: Morso Health
+      operationId: morso_health_v1_morso_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Morso Health V1 Morso Health Get
+  /v1/morso/issue:
+    post:
+      tags:
+      - morso
+      summary: Morso Issue
+      operationId: morso_issue_v1_morso_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Morso Issue V1 Morso Issue Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/morso/receipt:
+    post:
+      tags:
+      - morso
+      summary: Morso Receipt
+      operationId: morso_receipt_v1_morso_receipt_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Morso Receipt V1 Morso Receipt Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/morso/verify:
+    post:
+      tags:
+      - morso
+      summary: Morso Verify
+      operationId: morso_verify_v1_morso_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_morso__routes__VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Morso Verify V1 Morso Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/morso/classify:
+    post:
+      tags:
+      - morso
+      summary: Morso Classify
+      description: Classify an excerpt without issuing a signed receipt (preview only).
+      operationId: morso_classify_v1_morso_classify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_morso__routes__ClassifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Morso Classify V1 Morso Classify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/morso/examples:
+    get:
+      tags:
+      - morso
+      summary: Morso Examples
+      operationId: morso_examples_v1_morso_examples_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Morso Examples V1 Morso Examples Get
+components:
+  schemas:
+    hivemorph__hive_morso__routes__VerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: A full MoRSo receipt object
+      type: object
+      required:
+      - receipt
+      title: VerifyRequest
+    FragmentIn:
+      properties:
+        start:
+          type: number
+          title: Start
+          description: Fragment start on the parent timeline
+        end:
+          type: number
+          title: End
+          description: Fragment end on the parent timeline
+        order:
+          type: integer
+          title: Order
+          description: Presentation order of this fragment in the excerpt
+          default: 0
+      type: object
+      required:
+      - start
+      - end
+      title: FragmentIn
+    SealedParentIn:
+      properties:
+        content_commitment:
+          type: string
+          title: Content Commitment
+          description: Fingerprint of the parent media (Hive never sees content)
+          default: ''
+        boundaries:
+          items:
+            $ref: '#/components/schemas/BoundaryIn'
+          type: array
+          title: Boundaries
+          description: Boundary map sealed at capture
+        origin_attestation:
+          type: string
+          title: Origin Attestation
+          description: Origin attestation string sealed at capture
+          default: ''
+        capture_meta:
+          type: string
+          title: Capture Meta
+          description: Capture metadata sealed at capture
+          default: ''
+        extent:
+          type: number
+          title: Extent
+          description: Total extent (seconds/units) of the parent
+          default: 0
+      type: object
+      title: SealedParentIn
+    EnclosingIn:
+      properties:
+        units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Units
+          description: Total units in the enclosing container
+        covered_units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Covered Units
+          description: Units the excerpt covers
+        unit:
+          type: string
+          title: Unit
+          default: units
+        container:
+          type: string
+          title: Container
+          default: record
+        contiguous:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Contiguous
+      type: object
+      title: EnclosingIn
+    BoundaryIn:
+      properties:
+        kind:
+          type: string
+          title: Kind
+          description: Boundary kind, e.g. answer_start, answer_end, question_start
+        pos:
+          type: number
+          title: Pos
+          description: Boundary position on the sealed source timeline
+      type: object
+      required:
+      - kind
+      - pos
+      title: BoundaryIn
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    hivemorph__hive_morso__routes__ClassifyRequest:
+      properties:
+        sealed_parent:
+          $ref: '#/components/schemas/SealedParentIn'
+        excerpt:
+          $ref: '#/components/schemas/ExcerptIn'
+      type: object
+      required:
+      - sealed_parent
+      - excerpt
+      title: ClassifyRequest
+    ExcerptIn:
+      properties:
+        fragments:
+          items:
+            $ref: '#/components/schemas/FragmentIn'
+          type: array
+          title: Fragments
+          description: Excerpt fragments cut from the parent
+        enclosing:
+          anyOf:
+          - $ref: '#/components/schemas/EnclosingIn'
+          - type: 'null'
+          description: Optional enclosing-container context
+      type: object
+      title: ExcerptIn
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    IssueRequest:
+      properties:
+        parent_mor:
+          additionalProperties: true
+          type: object
+          title: Parent Mor
+          description: A full, valid parent Media Origin Receipt object
+        sealed_parent:
+          $ref: '#/components/schemas/SealedParentIn'
+          description: The parent boundary map sealed at capture
+        excerpt:
+          $ref: '#/components/schemas/ExcerptIn'
+          description: The excerpt to classify against the sealed boundaries
+        excerpt_commitment:
+          type: string
+          title: Excerpt Commitment
+          description: Optional fingerprint of the excerpt
+          default: ''
+      type: object
+      required:
+      - parent_mor
+      - sealed_parent
+      - excerpt
+      title: IssueRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

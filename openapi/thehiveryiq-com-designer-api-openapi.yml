@@ -1,0 +1,461 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Designer API
+  version: 0.1.0
+  description: 'Operations tagged designer across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: designer
+paths:
+  /v1/designer/chat:
+    post:
+      tags:
+      - designer
+      summary: Designer Chat
+      description: 'Conversational wizard turn.
+
+
+        Free for the first 2 turns per IP per UTC day (subject to global $2 daily
+
+        ceiling). After the free quota the route returns 402 with x402 envelope.'
+      operationId: designer_chat_v1_designer_chat_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DesignerChatRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DesignerChatResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/designer/mint:
+    post:
+      tags:
+      - designer
+      summary: Designer Mint
+      description: 'Persist a finalized agent. Spec must be complete.
+
+
+        NOTE: this route is x402-paid ($0.05) via the pricing table. The
+
+        payment-required middleware enforces payment before we reach this
+
+        handler. EIP-712 signature verification happens here as an
+
+        additional safety check (publisher must control the wallet they''re
+
+        claiming earnings for).'
+      operationId: designer_mint_v1_designer_mint_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_designer__routes__MintRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/agents/{slug}/chat:
+    post:
+      tags:
+      - designer
+      summary: Agent Chat
+      description: 'Live per-slug chat. Loads system_prompt + base_model from store.
+
+
+        This route is x402-paid at the per-agent price_per_call (default $0.001).
+
+        The middleware enforces payment via the pricing table; the handler
+
+        just executes the LLM call.'
+      operationId: agent_chat_v1_agents__slug__chat_post
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slug
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentChatRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Agent Chat V1 Agents  Slug  Chat Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/designer/quota:
+    get:
+      tags:
+      - designer
+      summary: Designer Quota
+      description: Public view of today's free-quota state.
+      operationId: designer_quota_v1_designer_quota_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Designer Quota V1 Designer Quota Get
+  /v1/designer/agents/{slug}:
+    get:
+      tags:
+      - designer
+      summary: Designer Agent Public
+      operationId: designer_agent_public_v1_designer_agents__slug__get
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Designer Agent Public V1 Designer Agents  Slug  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/designer/agents:
+    get:
+      tags:
+      - designer
+      summary: Designer Agents Recent
+      operationId: designer_agents_recent_v1_designer_agents_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Designer Agents Recent V1 Designer Agents Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/designer/admin/recover_mint:
+    post:
+      tags:
+      - designer
+      summary: Designer Admin Recover Mint
+      operationId: designer_admin_recover_mint_v1_designer_admin_recover_mint_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminRecoverMintRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Designer Admin Recover Mint V1 Designer Admin Recover Mint Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ChatMessage:
+      properties:
+        role:
+          type: string
+          title: Role
+          description: '''user'' or ''assistant'''
+        content:
+          type: string
+          title: Content
+      type: object
+      required:
+      - role
+      - content
+      title: ChatMessage
+    DesignerChatResponse:
+      properties:
+        assistant_message:
+          type: string
+          title: Assistant Message
+        spec_patch:
+          additionalProperties: true
+          type: object
+          title: Spec Patch
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+        spec_complete:
+          type: boolean
+          title: Spec Complete
+        missing_fields:
+          items:
+            type: string
+          type: array
+          title: Missing Fields
+        free_quota:
+          additionalProperties: true
+          type: object
+          title: Free Quota
+        model:
+          type: string
+          title: Model
+        turn_id:
+          type: string
+          title: Turn Id
+      type: object
+      required:
+      - assistant_message
+      - spec_patch
+      - spec
+      - spec_complete
+      - missing_fields
+      - free_quota
+      - model
+      - turn_id
+      title: DesignerChatResponse
+    MintResponse:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        endpoint_url:
+          type: string
+          title: Endpoint Url
+        record:
+          additionalProperties: true
+          type: object
+          title: Record
+        mint_receipt_id:
+          type: string
+          title: Mint Receipt Id
+        ccacw_receipt:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ccacw Receipt
+      type: object
+      required:
+      - slug
+      - endpoint_url
+      - record
+      - mint_receipt_id
+      title: MintResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AgentChatRequest:
+      properties:
+        messages:
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+          type: array
+          maxItems: 20
+          minItems: 1
+          title: Messages
+      type: object
+      required:
+      - messages
+      title: AgentChatRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AdminRecoverMintRequest:
+      properties:
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+        publisher_address:
+          type: string
+          maxLength: 64
+          minLength: 42
+          title: Publisher Address
+        tx_hash:
+          type: string
+          title: Tx Hash
+          description: On-chain tx hash of the original payment
+        chain:
+          type: string
+          title: Chain
+          default: base
+        note:
+          type: string
+          title: Note
+          default: admin_recovered
+      type: object
+      required:
+      - spec
+      - publisher_address
+      - tx_hash
+      title: AdminRecoverMintRequest
+    hivemorph__hive_designer__routes__MintRequest:
+      properties:
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+        publisher_address:
+          type: string
+          maxLength: 64
+          minLength: 42
+          title: Publisher Address
+        eip712_signature:
+          type: string
+          minLength: 10
+          title: Eip712 Signature
+      type: object
+      required:
+      - spec
+      - publisher_address
+      - eip712_signature
+      title: MintRequest
+    DesignerChatRequest:
+      properties:
+        messages:
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+          type: array
+          maxItems: 40
+          minItems: 1
+          title: Messages
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+        step_hint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Step Hint
+          description: 'Optional: which spec field this turn is asking about.'
+      type: object
+      required:
+      - messages
+      title: DesignerChatRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

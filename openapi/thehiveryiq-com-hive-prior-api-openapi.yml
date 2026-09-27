@@ -1,0 +1,338 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Hive Prior API
+  version: 0.1.0
+  description: 'Operations tagged hive-prior across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: hive-prior
+paths:
+  /v1/prior/issue:
+    post:
+      tags:
+      - hive-prior
+      summary: Issue Prior
+      description: 'Stamp a new Patent Priority record.
+
+
+        Issues a dual-signed ML-DSA-65 + Ed25519 CBOR envelope that binds
+
+        content_hash + inventor_did + timestamp. Persists to prior_records.jsonl.'
+      operationId: issue_prior_v1_prior_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PriorIssueRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriorIssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/prior/verify/{prior_id}:
+    get:
+      tags:
+      - hive-prior
+      summary: Verify Prior
+      description: 'Return the stored Prior record and a freshly-computed dual-signature verification.
+
+        Returns 404 if the prior_id is unknown.'
+      operationId: verify_prior_v1_prior_verify__prior_id__get
+      parameters:
+      - name: prior_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Prior Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/prior/by-hash/{content_hash}:
+    get:
+      tags:
+      - hive-prior
+      summary: By Hash
+      description: 'Return all Prior records for a content hash.
+
+
+        Multiple inventors can stamp the same content hash. This endpoint proves
+
+        who stamped first by returning records in chronological order.'
+      operationId: by_hash_v1_prior_by_hash__content_hash__get
+      parameters:
+      - name: content_hash
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Content Hash
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/prior/by-inventor/{inventor_did}:
+    get:
+      tags:
+      - hive-prior
+      summary: By Inventor
+      description: 'Return paginated list of Prior records for an inventor DID.
+
+        Results are sorted newest-first.'
+      operationId: by_inventor_v1_prior_by_inventor__inventor_did__get
+      parameters:
+      - name: inventor_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Inventor Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/prior/health:
+    get:
+      tags:
+      - hive-prior
+      summary: Health
+      description: Endpoint health check + record count + write probe.
+      operationId: health_v1_prior_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/prior/leaderboard:
+    get:
+      tags:
+      - hive-prior
+      summary: Leaderboard
+      description: Top inventor DIDs by Prior receipts issued (default last 30 days).
+      operationId: leaderboard_v1_prior_leaderboard_get
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 365
+          minimum: 1
+          default: 30
+          title: Days
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PriorIssueResponse:
+      properties:
+        prior_id:
+          type: string
+          title: Prior Id
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        content_hash:
+          type: string
+          title: Content Hash
+        inventor_did:
+          type: string
+          title: Inventor Did
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        entropy_axes:
+          type: integer
+          title: Entropy Axes
+        tier:
+          type: string
+          title: Tier
+        price_usd_cents:
+          type: integer
+          title: Price Usd Cents
+      type: object
+      required:
+      - prior_id
+      - receipt_envelope
+      - content_hash
+      - inventor_did
+      - timestamp_iso
+      - entropy_axes
+      - tier
+      - price_usd_cents
+      title: PriorIssueResponse
+    PriorIssueRequest:
+      properties:
+        content_hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          pattern: ^[0-9a-fA-F]{64}$
+          title: Content Hash
+          description: SHA-256 hex digest of the disclosed invention content.
+        inventor_did:
+          type: string
+          minLength: 10
+          title: Inventor Did
+          description: Inventor DID in did:hive format.
+        title:
+          anyOf:
+          - type: string
+            maxLength: 256
+          - type: 'null'
+          title: Title
+          description: Optional human title for this disclosure.
+        classification:
+          type: string
+          enum:
+          - disclosure
+          - singularity
+          - uspto
+          title: Classification
+          description: 'Prior tier: disclosure | singularity | uspto.'
+          default: disclosure
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+          description: Free-form metadata dict.
+        uspto_application_serial:
+          anyOf:
+          - type: string
+            maxLength: 32
+          - type: 'null'
+          title: Uspto Application Serial
+          description: USPTO application serial number. Required for uspto tier to unlock USPTO filing integration.
+      type: object
+      required:
+      - content_hash
+      - inventor_did
+      title: PriorIssueRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

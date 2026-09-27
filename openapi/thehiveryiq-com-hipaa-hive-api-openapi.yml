@@ -1,0 +1,801 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Hipaa Hive API
+  version: 0.1.0
+  description: 'Operations tagged hipaa-hive across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: hipaa-hive
+paths:
+  /v1/hipaa-hive/health:
+    get:
+      tags:
+      - hipaa-hive
+      summary: Health
+      operationId: health_v1_hipaa_hive_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Hipaa Hive Health Get
+  /v1/hipaa-hive/pricing:
+    get:
+      tags:
+      - hipaa-hive
+      summary: Pricing
+      operationId: pricing_v1_hipaa_hive_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Hipaa Hive Pricing Get
+  /v1/hipaa-hive/baa_attest:
+    post:
+      tags:
+      - hipaa-hive
+      summary: Baa Attest
+      description: Record a Business Associate Agreement scope attestation.
+      operationId: baa_attest_v1_hipaa_hive_baa_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaaAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Baa Attest V1 Hipaa Hive Baa Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hipaa-hive/phi_access_attest:
+    post:
+      tags:
+      - hipaa-hive
+      summary: Phi Access Attest
+      description: Record a PHI access event.
+      operationId: phi_access_attest_v1_hipaa_hive_phi_access_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhiAccessAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Phi Access Attest V1 Hipaa Hive Phi Access Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hipaa-hive/phi_disclose_attest:
+    post:
+      tags:
+      - hipaa-hive
+      summary: Phi Disclose Attest
+      description: Record a PHI disclosure event.
+      operationId: phi_disclose_attest_v1_hipaa_hive_phi_disclose_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhiDiscloseAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Phi Disclose Attest V1 Hipaa Hive Phi Disclose Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hipaa-hive/minimum_necessary_check:
+    post:
+      tags:
+      - hipaa-hive
+      summary: Minimum Necessary Check
+      description: Run and record a minimum-necessary determination.
+      operationId: minimum_necessary_check_v1_hipaa_hive_minimum_necessary_check_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MinimumNecessaryCheckRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Minimum Necessary Check V1 Hipaa Hive Minimum Necessary Check Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hipaa-hive/ai_inference_attest:
+    post:
+      tags:
+      - hipaa-hive
+      summary: Ai Inference Attest
+      description: Record an AI agent inference event touching PHI categories.
+      operationId: ai_inference_attest_v1_hipaa_hive_ai_inference_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiInferenceAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Ai Inference Attest V1 Hipaa Hive Ai Inference Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hipaa-hive/patient_access_attest:
+    post:
+      tags:
+      - hipaa-hive
+      summary: Patient Access Attest
+      description: Record a 21st Century Cures / USCDI patient-directed access event.
+      operationId: patient_access_attest_v1_hipaa_hive_patient_access_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatientAccessAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Patient Access Attest V1 Hipaa Hive Patient Access Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hipaa-hive/breach_assessment_attest:
+    post:
+      tags:
+      - hipaa-hive
+      summary: Breach Assessment Attest
+      description: Record a 4-factor HIPAA breach risk analysis.
+      operationId: breach_assessment_attest_v1_hipaa_hive_breach_assessment_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BreachAssessmentAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Breach Assessment Attest V1 Hipaa Hive Breach Assessment Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hipaa-hive/breach_notice_attest:
+    post:
+      tags:
+      - hipaa-hive
+      summary: Breach Notice Attest
+      description: Record a 60-day HIPAA breach notification event.
+      operationId: breach_notice_attest_v1_hipaa_hive_breach_notice_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BreachNoticeAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Breach Notice Attest V1 Hipaa Hive Breach Notice Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hipaa-hive/chain_verify:
+    get:
+      tags:
+      - hipaa-hive
+      summary: Chain Verify Endpoint
+      description: Return ordered receipt chain + chain_valid bool + per-receipt sig validity.
+      operationId: chain_verify_endpoint_v1_hipaa_hive_chain_verify_get
+      parameters:
+      - name: covered_entity_did
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Covered entity DID to verify chain for
+          title: Covered Entity Did
+        description: Covered entity DID to verify chain for
+      - name: patient_did_reference
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Pseudonymous patient DID reference to verify chain for
+          title: Patient Did Reference
+        description: Pseudonymous patient DID reference to verify chain for
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Chain Verify Endpoint V1 Hipaa Hive Chain Verify Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    PatientAccessAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        patient_did_reference:
+          type: string
+          title: Patient Did Reference
+          description: Pseudonymous patient DID reference
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Minimum-necessary scope
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories accessed
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use
+          default: patient_directed
+        authorization_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization Hash
+          description: Hash of patient authorization document
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Access metadata: app_did, authorization_hash, access_type, etc.'
+      type: object
+      required:
+      - covered_entity_did
+      - patient_did_reference
+      - minimum_necessary_scope
+      title: PatientAccessAttestRequest
+      description: Record a 21st Century Cures / USCDI patient-directed access event.
+    AiInferenceAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        business_associate_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Associate Did
+          description: DID of the BA operating the AI
+        patient_did_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Patient Did Reference
+          description: Pseudonymous patient DID reference
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Minimum-necessary scope for inference
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories touched by inference
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use per 45 CFR §164.506
+        baa_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baa Reference Id
+          description: BAA reference ID
+        ai_inference_metadata:
+          additionalProperties: true
+          type: object
+          title: Ai Inference Metadata
+          description: 'AI metadata: model_did, confidence, onc_hti1_attestation, inference_hash, etc.'
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Inference event metadata
+      type: object
+      required:
+      - covered_entity_did
+      - minimum_necessary_scope
+      - purpose_of_use
+      title: AiInferenceAttestRequest
+      description: Record an AI agent inference event touching PHI categories.
+    BaaAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        business_associate_did:
+          type: string
+          title: Business Associate Did
+          description: DID of the business associate
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Minimum-necessary scope string
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories per 45 CFR §164.103
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use per 45 CFR §164.506
+        baa_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baa Reference Id
+          description: BAA document hash or reference ID
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'BAA metadata: effective_date, term_years, scope_hash, etc.'
+      type: object
+      required:
+      - covered_entity_did
+      - business_associate_did
+      - minimum_necessary_scope
+      - purpose_of_use
+      title: BaaAttestRequest
+      description: Record a Business Associate Agreement scope attestation.
+    BreachAssessmentAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        business_associate_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Associate Did
+          description: DID of BA if breach was at BA
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Scope of breach assessment
+          default: breach_assessment
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories potentially breached
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use
+          default: health_oversight
+        factor_nature_and_extent:
+          type: string
+          title: Factor Nature And Extent
+          description: Nature and extent of PHI involved (no raw PHI)
+        factor_unauthorized_person:
+          type: string
+          title: Factor Unauthorized Person
+          description: Who used/received the PHI (role/DID reference)
+        factor_acquisition_or_viewing:
+          type: boolean
+          title: Factor Acquisition Or Viewing
+          description: Was PHI actually acquired or viewed?
+        factor_mitigation:
+          type: string
+          title: Factor Mitigation
+          description: Extent to which risk has been mitigated
+        low_probability_determination:
+          type: boolean
+          title: Low Probability Determination
+          description: Low-probability-of-compromise determination
+          default: false
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Assessment metadata
+      type: object
+      required:
+      - covered_entity_did
+      - factor_nature_and_extent
+      - factor_unauthorized_person
+      - factor_acquisition_or_viewing
+      - factor_mitigation
+      title: BreachAssessmentAttestRequest
+      description: Record a 4-factor HIPAA breach risk analysis.
+    PhiDiscloseAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        business_associate_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Associate Did
+          description: DID of the recipient BA
+        patient_did_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Patient Did Reference
+          description: Pseudonymous patient DID reference
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Minimum-necessary scope string
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories per 45 CFR §164.103
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use per 45 CFR §164.506
+        baa_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baa Reference Id
+          description: BAA reference ID
+        recipient_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recipient Did
+          description: DID of the disclosure recipient
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Disclosure metadata: disclosure_hash, recipient_did, authorization_hash, etc.'
+      type: object
+      required:
+      - covered_entity_did
+      - minimum_necessary_scope
+      - purpose_of_use
+      title: PhiDiscloseAttestRequest
+      description: Record a PHI disclosure event.
+    BreachNoticeAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        business_associate_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Associate Did
+          description: DID of BA if applicable
+        patient_did_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Patient Did Reference
+          description: Pseudonymous patient DID reference
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Scope
+          default: breach_notification
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories in breach
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use
+          default: health_oversight
+        breach_assessment_receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Breach Assessment Receipt Id
+          description: Receipt ID of the breach assessment
+        notification_type:
+          type: string
+          title: Notification Type
+          description: individual | media | hhs_secretary
+          default: individual
+        days_since_discovery:
+          type: integer
+          title: Days Since Discovery
+          description: Days since breach discovery (must be <= 60 for timely)
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Notification metadata: notification_hash, media_outlet_did, etc.'
+      type: object
+      required:
+      - covered_entity_did
+      - days_since_discovery
+      title: BreachNoticeAttestRequest
+      description: Record a 60-day HIPAA breach notification event.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PurposeOfUse:
+      type: string
+      enum:
+      - treatment
+      - payment
+      - healthcare_operations
+      - patient_directed
+      - research_with_authorization
+      - public_health
+      - required_by_law
+      - health_oversight
+      - judicial_administrative
+      - law_enforcement
+      - avert_threat
+      - specialized_government
+      - workers_comp
+      title: PurposeOfUse
+    MinimumNecessaryCheckRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        patient_did_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Patient Did Reference
+          description: Pseudonymous patient DID reference
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Requested scope
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories requested
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use
+        requested_fields:
+          items:
+            type: string
+          type: array
+          title: Requested Fields
+          description: Policy-attribute names requested (no raw PHI)
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Check metadata: policy_hash, system_did, etc.'
+      type: object
+      required:
+      - covered_entity_did
+      - minimum_necessary_scope
+      - purpose_of_use
+      title: MinimumNecessaryCheckRequest
+      description: Run and record a minimum-necessary determination.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PhiAccessAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        business_associate_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Associate Did
+          description: DID of the business associate
+        patient_did_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Patient Did Reference
+          description: Pseudonymous patient DID reference
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Minimum-necessary scope string
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories per 45 CFR §164.103
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use per 45 CFR §164.506
+        baa_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baa Reference Id
+          description: BAA reference ID
+        ai_inference_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ai Inference Metadata
+          description: AI inference metadata
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Access metadata: access_hash, system_did, access_type, etc.'
+      type: object
+      required:
+      - covered_entity_did
+      - minimum_necessary_scope
+      - purpose_of_use
+      title: PhiAccessAttestRequest
+      description: Record a PHI access event.
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,809 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Salvage API
+  version: 0.1.0
+  description: 'Operations tagged salvage across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: salvage
+paths:
+  /v1/salvage/listener/observe:
+    post:
+      tags:
+      - salvage
+      summary: Listener Observe
+      description: Manually inject a signal for a transaction (testing + external feed).
+      operationId: listener_observe_v1_salvage_listener_observe_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignalBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Listener Observe V1 Salvage Listener Observe Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/listener/observe/bridge:
+    post:
+      tags:
+      - salvage
+      summary: Listener Observe Bridge
+      description: 'Shorthand: inject bridge observation via HiveGateInterceptor.'
+      operationId: listener_observe_bridge_v1_salvage_listener_observe_bridge_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BridgeObserveBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Listener Observe Bridge V1 Salvage Listener Observe Bridge Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/listener/queue:
+    get:
+      tags:
+      - salvage
+      summary: Listener Queue
+      description: Return all verified failures awaiting recovery.
+      operationId: listener_queue_v1_salvage_listener_queue_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Listener Queue V1 Salvage Listener Queue Get
+  /v1/salvage/listener/sources:
+    get:
+      tags:
+      - salvage
+      summary: Listener Sources
+      description: Return source trust registry.
+      operationId: listener_sources_v1_salvage_listener_sources_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Listener Sources V1 Salvage Listener Sources Get
+  /v1/salvage/listener/quarantine:
+    get:
+      tags:
+      - salvage
+      summary: Listener Quarantine
+      description: Return permanently quarantined signal sources.
+      operationId: listener_quarantine_v1_salvage_listener_quarantine_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Listener Quarantine V1 Salvage Listener Quarantine Get
+  /v1/salvage/recovery/file:
+    post:
+      tags:
+      - salvage
+      summary: Recovery File
+      description: 'File a recovery claim.
+
+        If claim_id param provided, validates it matches computed deterministic ID.
+
+        Uses DirectNegotiationAgent with full three-gate + compliance + escrow.'
+      operationId: recovery_file_v1_salvage_recovery_file_post
+      parameters:
+      - name: claim_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Claim Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FileClaimBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Recovery File V1 Salvage Recovery File Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/recovery/status:
+    get:
+      tags:
+      - salvage
+      summary: Recovery Status
+      description: Return current status of a claim.
+      operationId: recovery_status_v1_salvage_recovery_status_get
+      parameters:
+      - name: claim_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Claim Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Recovery Status V1 Salvage Recovery Status Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/recovery/auto:
+    post:
+      tags:
+      - salvage
+      summary: Recovery Auto
+      description: Auto-process top N verified failures from the listener queue.
+      operationId: recovery_auto_v1_salvage_recovery_auto_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoProcessBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Recovery Auto V1 Salvage Recovery Auto Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/recovery/agents:
+    get:
+      tags:
+      - salvage
+      summary: Recovery Agents
+      description: Return agent roster with bonds, clean streaks, suspension status.
+      operationId: recovery_agents_v1_salvage_recovery_agents_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Recovery Agents V1 Salvage Recovery Agents Get
+  /v1/salvage/recovery/slash:
+    post:
+      tags:
+      - salvage
+      summary: Recovery Slash
+      description: 'Manual emergency slash of an agent''s bond.
+
+        Simulates HiveLaw ruling: fraudulent claim → 100% bond slashed → suspended.'
+      operationId: recovery_slash_v1_salvage_recovery_slash_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlashBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Recovery Slash V1 Salvage Recovery Slash Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/reinforcement/risk:
+    get:
+      tags:
+      - salvage
+      summary: Reinforcement Risk
+      description: Return risk score for a specific agent/counterparty.
+      operationId: reinforcement_risk_v1_salvage_reinforcement_risk_get
+      parameters:
+      - name: agent_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Reinforcement Risk V1 Salvage Reinforcement Risk Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/reinforcement/patterns:
+    get:
+      tags:
+      - salvage
+      summary: Reinforcement Patterns
+      description: Return clustered failure patterns from the Pattern Analyzer.
+      operationId: reinforcement_patterns_v1_salvage_reinforcement_patterns_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Reinforcement Patterns V1 Salvage Reinforcement Patterns Get
+  /v1/salvage/reinforcement/run:
+    get:
+      tags:
+      - salvage
+      summary: Reinforcement Run
+      description: Run full reinforcement cycle (analyze → score → propose bonds).
+      operationId: reinforcement_run_v1_salvage_reinforcement_run_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Reinforcement Run V1 Salvage Reinforcement Run Get
+  /v1/salvage/reinforcement/bond_proposals:
+    get:
+      tags:
+      - salvage
+      summary: Bond Proposals
+      description: Return pending HiveBond adjustment proposals (awaiting human approval).
+      operationId: bond_proposals_v1_salvage_reinforcement_bond_proposals_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Bond Proposals V1 Salvage Reinforcement Bond Proposals Get
+  /v1/salvage/fleet/preset:
+    post:
+      tags:
+      - salvage
+      summary: Fleet Preset
+      description: 'Instantiate a named fleet preset.
+
+        Available: salvage_starter, salvage_standard, salvage_tier2_blocked
+
+        salvage_tier2_blocked will always error (gate: HiveLaw adoption).'
+      operationId: fleet_preset_v1_salvage_fleet_preset_post
+      parameters:
+      - name: name
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Name
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Fleet Preset V1 Salvage Fleet Preset Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/fleet/projections:
+    get:
+      tags:
+      - salvage
+      summary: Fleet Projections
+      description: 'Return projected $/day at current fleet config.
+
+        Refuses to project beyond current tier ceiling.'
+      operationId: fleet_projections_v1_salvage_fleet_projections_get
+      parameters:
+      - name: daily_volume_usd
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Daily Volume Usd
+      - name: preset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Preset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Fleet Projections V1 Salvage Fleet Projections Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/self_tune/tick:
+    post:
+      tags:
+      - salvage
+      summary: Self Tune Tick
+      description: 'Run all 3 self-tune rules once. Idempotent, single-pass. Cron-friendly.
+
+        Returns which rules fired and what changed.'
+      operationId: self_tune_tick_v1_salvage_self_tune_tick_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SelfTuneTickBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Self Tune Tick V1 Salvage Self Tune Tick Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/self_tune/state:
+    get:
+      tags:
+      - salvage
+      summary: Self Tune State
+      description: Return current fleet self-tune state and tick history.
+      operationId: self_tune_state_v1_salvage_self_tune_state_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Self Tune State V1 Salvage Self Tune State Get
+  /v1/salvage/economics:
+    get:
+      tags:
+      - salvage
+      summary: Economics
+      description: 'Live $/day, projected vs actual, tier progress, anti-bloat status.
+
+        Honest framing: Tier 1 targets $400/day. $5K/day is 12-18 months out.'
+      operationId: economics_v1_salvage_economics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Economics V1 Salvage Economics Get
+  /v1/salvage/compliance/queue:
+    get:
+      tags:
+      - salvage
+      summary: Compliance Queue
+      description: Return frozen claims awaiting human review. NEVER auto-processed.
+      operationId: compliance_queue_v1_salvage_compliance_queue_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Compliance Queue V1 Salvage Compliance Queue Get
+  /v1/salvage/compliance/review:
+    post:
+      tags:
+      - salvage
+      summary: Compliance Review
+      description: Mark a frozen claim as reviewed.
+      operationId: compliance_review_v1_salvage_compliance_review_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComplianceReviewBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Compliance Review V1 Salvage Compliance Review Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/salvage/registry:
+    get:
+      tags:
+      - salvage
+      summary: Registry
+      description: Return full claim registry (read-only). Append-only; no deletions.
+      operationId: registry_v1_salvage_registry_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Registry V1 Salvage Registry Get
+  /v1/salvage/stats:
+    get:
+      tags:
+      - salvage
+      summary: Stats
+      description: 'Total recovered, commission earned, claim count, hit rate, dead-letter count.
+
+        Includes listener, recovery, reinforcement, and compliance summaries.'
+      operationId: stats_v1_salvage_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Stats V1 Salvage Stats Get
+components:
+  schemas:
+    AutoProcessBody:
+      properties:
+        n:
+          type: integer
+          maximum: 50.0
+          minimum: 1.0
+          title: N
+          description: Max verified failures to process
+          default: 5
+        claimant_did:
+          type: string
+          title: Claimant Did
+          default: did:hive:agent-alpha
+        agent_id:
+          type: string
+          title: Agent Id
+          default: dna-001
+      type: object
+      title: AutoProcessBody
+    ComplianceReviewBody:
+      properties:
+        claim_id:
+          type: string
+          title: Claim Id
+        outcome:
+          type: string
+          title: Outcome
+          description: '''cleared'' or ''confirmed_fraud'''
+        reviewer:
+          type: string
+          title: Reviewer
+          default: human-reviewer
+      type: object
+      required:
+      - claim_id
+      - outcome
+      title: ComplianceReviewBody
+    SelfTuneTickBody:
+      properties:
+        claims_resolved_last_hour:
+          type: integer
+          minimum: 0.0
+          title: Claims Resolved Last Hour
+          default: 0
+        arb_queue_depth:
+          type: integer
+          minimum: 0.0
+          title: Arb Queue Depth
+          default: 0
+        arb_queue_normal:
+          type: integer
+          minimum: 1.0
+          title: Arb Queue Normal
+          default: 2
+        false_positive_count:
+          type: integer
+          minimum: 0.0
+          title: False Positive Count
+          default: 0
+        total_signals:
+          type: integer
+          minimum: 0.0
+          title: Total Signals
+          default: 0
+      type: object
+      title: SelfTuneTickBody
+    BridgeObserveBody:
+      properties:
+        tx_id:
+          type: string
+          title: Tx Id
+        source_chain:
+          type: string
+          title: Source Chain
+        dest_chain:
+          type: string
+          title: Dest Chain
+        source_confirmed:
+          type: boolean
+          title: Source Confirmed
+        dest_arrived:
+          type: boolean
+          title: Dest Arrived
+      type: object
+      required:
+      - tx_id
+      - source_chain
+      - dest_chain
+      - source_confirmed
+      - dest_arrived
+      title: BridgeObserveBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SignalBody:
+      properties:
+        tx_id:
+          type: string
+          title: Tx Id
+          description: Transaction hash being observed
+        source_id:
+          type: string
+          title: Source Id
+          description: Unique identifier for this signal source
+        source_type:
+          type: string
+          title: Source Type
+          description: SignalSource enum value
+        proof_type:
+          type: string
+          title: Proof Type
+          description: ProofType enum value
+        tx_status:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Tx Status
+          description: 0=reverted, 1=confirmed/sent
+        dest_confirmed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Dest Confirmed
+          description: 'Bridge: did tx arrive at destination?'
+        raw_evidence:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Raw Evidence
+          description: Any additional evidence payload
+        observer_type:
+          type: string
+          title: Observer Type
+          description: Observer type that generated this signal
+          default: hiveclear_observer
+      type: object
+      required:
+      - tx_id
+      - source_id
+      - source_type
+      - proof_type
+      title: SignalBody
+    SlashBody:
+      properties:
+        agent_id:
+          type: string
+          title: Agent Id
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - agent_id
+      - reason
+      title: SlashBody
+    FileClaimBody:
+      properties:
+        tx_id:
+          type: string
+          title: Tx Id
+        claimant_did:
+          type: string
+          title: Claimant Did
+        counterparty_did:
+          type: string
+          title: Counterparty Did
+        victim_wallet:
+          type: string
+          title: Victim Wallet
+        amount_usd:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount Usd
+        proof_type:
+          type: string
+          title: Proof Type
+          description: ProofType enum value
+          default: revert
+        agent_id:
+          type: string
+          title: Agent Id
+          default: dna-001
+        commission_rate:
+          type: number
+          maximum: 0.5
+          minimum: 0.01
+          title: Commission Rate
+          default: 0.1
+      type: object
+      required:
+      - tx_id
+      - claimant_did
+      - counterparty_did
+      - victim_wallet
+      - amount_usd
+      title: FileClaimBody
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,344 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Mos Intel API
+  version: 0.1.0
+  description: 'Operations tagged mos-intel across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: mos-intel
+paths:
+  /v1/mos/intel/register:
+    post:
+      tags:
+      - mos-intel
+      summary: Mos Register
+      description: 'Register a mining site DID.
+
+
+        Authenticates via X-Hive-Site-DID + X-Hive-Nonce + X-Hive-Sig (Ed25519).
+
+        Returns a site_id and the assigned pricing tier on first registration.
+
+        Idempotent: re-registering the same site_did returns the existing record.
+
+
+        Pricing tier: mos_intel_subscription — $10 / machine / month.
+
+        Subscription billing is recorded in v0.1 and enforced in v0.2.
+
+
+        Three gates:
+
+        NEED: Valid Ed25519 signed nonce proves DID ownership.
+
+        YIELD: Registration creates earning potential (telemetry + recommendations).
+
+        CLEAN-MONEY: DID is the billing identity; no anonymous registrations.'
+      operationId: mos_register_v1_mos_intel_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__mos__intel__RegisterRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mos/intel/telemetry:
+    post:
+      tags:
+      - mos-intel
+      summary: Mos Telemetry
+      description: 'Accept a signed telemetry push from a registered site.
+
+
+        Appends an entry to the site''s append-only NDJSON log at
+
+        /tmp/hivemorph_data/mos_telemetry/{site_did_hash}.ndjson.
+
+        Each entry includes the original site_did and the submission timestamp
+
+        so the log is auditable without additional metadata.
+
+
+        Payload fields (all optional):
+
+        hashrate_ths — total site hashrate in TH/s
+
+        health — freeform health string (e.g. "ok", "degraded")
+
+        temp_c — average worker temperature in Celsius
+
+        energy_kwh — energy consumption in kWh
+
+        workers — list of per-worker objects
+
+
+        Three gates:
+
+        NEED: Site must be registered. Ed25519 nonce required.
+
+        YIELD: Each push updates the recommendation baseline.
+
+        CLEAN-MONEY: Payload is stored as-is and signed by the site DID.
+
+        No MOS SDK calls are made (503 if called; RAILS_RULES Rule 1).'
+      operationId: mos_telemetry_v1_mos_intel_telemetry_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelemetryRequest'
+        required: true
+      responses:
+        '202':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mos/intel/recommendations/{site_did}:
+    get:
+      tags:
+      - mos-intel
+      summary: Mos Recommendations
+      description: 'Return optimization recommendations for a registered site.
+
+
+        Read-only. No commands are executed. The operator reviews and applies
+
+        suggestions manually.
+
+
+        Recommendation types:
+
+        throttle_suggestions — per-worker hashrate throttle guidance
+
+        pool_routing — pool routing suggestions (v0.1: stub)
+
+        predictive_alerts — shutdown / maintenance alerts
+
+
+        Auth: same Ed25519 signed-nonce flow as other endpoints.
+
+        The site_did in the URL path must match the X-Hive-Site-DID header.
+
+
+        Three gates:
+
+        NEED: Site must be registered and authenticated.
+
+        YIELD: Drives recurring subscription value ($10/machine/month).
+
+        CLEAN-MONEY: Read-only; no mutations.'
+      operationId: mos_recommendations_v1_mos_intel_recommendations__site_did__get
+      parameters:
+      - name: site_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Site Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mos/intel/sites:
+    get:
+      tags:
+      - mos-intel
+      summary: Mos Sites
+      description: 'Admin: list all registered sites.
+
+
+        Gated by HIVE_INTERNAL_DRIVER_KEY via X-Hive-Internal header.
+
+        This endpoint is not accessible to site operators.
+
+
+        Three gates:
+
+        NEED: Admin key required (HIVE_INTERNAL_DRIVER_KEY).
+
+        YIELD: Operational visibility for billing and capacity planning.
+
+        CLEAN-MONEY: Read-only; no mutations.'
+      operationId: mos_sites_v1_mos_intel_sites_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/mos/intel/attest/{site_did}:
+    get:
+      tags:
+      - mos-intel
+      summary: Mos Attest
+      description: 'ZK attestation stub.
+
+
+        Returns HTTP 501 Not Implemented. CLOAzK proof generation is not wired
+
+        in v0.1. Per RAILS_RULES Rule 1: no mock proofs, no fake attestations.
+
+        This endpoint exists to reserve the URL and communicate the roadmap
+
+        accurately to callers.
+
+
+        When CLOAzK is integrated in a future version, this endpoint will return
+
+        a verifiable ZK proof attesting to the site''s production history.'
+      operationId: mos_attest_v1_mos_intel_attest__site_did__get
+      parameters:
+      - name: site_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Site Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    hivemorph__mos__intel__RegisterRequest:
+      properties:
+        site_did:
+          type: string
+          maxLength: 512
+          minLength: 10
+          title: Site Did
+          description: The site DID (did:key:z6Mk... or similar).
+        operator_name:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Operator Name
+          description: Optional human-readable operator name.
+        machine_count:
+          anyOf:
+          - type: integer
+            maximum: 100000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Machine Count
+          description: Number of machines at this site. Informational in v0.1.
+      type: object
+      required:
+      - site_did
+      title: RegisterRequest
+      description: Body for POST /v1/mos/intel/register.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TelemetryRequest:
+      properties:
+        site_did:
+          type: string
+          maxLength: 512
+          minLength: 10
+          title: Site Did
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: 'Signed telemetry payload. Recommended fields: hashrate_ths (float), health (str), temp_c (float), energy_kwh (float), workers (list[dict]). All fields are optional; include what the MOS SDK exposes.'
+      type: object
+      required:
+      - site_did
+      title: TelemetryRequest
+      description: Body for POST /v1/mos/intel/telemetry.
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

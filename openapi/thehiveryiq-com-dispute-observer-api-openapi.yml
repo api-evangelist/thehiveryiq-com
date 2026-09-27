@@ -1,0 +1,229 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Dispute Observer API
+  version: 0.1.0
+  description: 'Operations tagged dispute-observer across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: dispute-observer
+paths:
+  /v1/dispute/check:
+    post:
+      tags:
+      - dispute-observer
+      summary: Post Check
+      description: 'Given counterparty address + chain, return dispute history,
+
+        active arbitration cases, and on-chain reversal flags from public
+
+        sources. Observational only.'
+      operationId: post_check_v1_dispute_check_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Check V1 Dispute Check Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/dispute/providers:
+    get:
+      tags:
+      - dispute-observer
+      summary: Get Providers
+      description: 'List available arbitration protocols (Kleros, UMA, Reality.eth)
+
+        with current case load and intake URLs.'
+      operationId: get_providers_v1_dispute_providers_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Providers V1 Dispute Providers Get
+  /v1/dispute/route:
+    post:
+      tags:
+      - dispute-observer
+      summary: Post Route
+      description: 'Rank arbitration provider options for a case. NO automatic filing.
+
+        Hive returns options + intake URLs only — the disputing party files
+
+        directly with the chosen provider.'
+      operationId: post_route_v1_dispute_route_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouteBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Route V1 Dispute Route Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/dispute/today:
+    get:
+      tags:
+      - dispute-observer
+      summary: Get Today
+      description: '24h rollup: flagged-counterparty count + top arbitration providers
+
+        by active case load.'
+      operationId: get_today_v1_dispute_today_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Today V1 Dispute Today Get
+  /v1/dispute/health:
+    get:
+      tags:
+      - dispute-observer
+      summary: Get Health
+      operationId: get_health_v1_dispute_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Health V1 Dispute Health Get
+components:
+  schemas:
+    RouteBody:
+      properties:
+        description:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Description
+          description: Free-form case description
+        amount_usd:
+          type: number
+          maximum: 1000000000.0
+          exclusiveMinimum: 0.0
+          title: Amount Usd
+          description: Disputed amount in USD
+        jurisdiction:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Jurisdiction
+          description: Optional jurisdiction preference (e.g. 'decentralized', 'optimistic', 'crowdsourced'). Used for ranking only.
+      type: object
+      required:
+      - description
+      - amount_usd
+      title: RouteBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CheckBody:
+      properties:
+        address:
+          type: string
+          title: Address
+          description: 0x-prefixed counterparty address
+        chain:
+          type: string
+          title: Chain
+          description: ethereum | base | arbitrum
+      type: object
+      required:
+      - address
+      - chain
+      title: CheckBody
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,255 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Protected Flow API
+  version: 0.1.0
+  description: 'Operations tagged protected-flow across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: protected-flow
+paths:
+  /v1/protected-flow/health:
+    get:
+      tags:
+      - protected-flow
+      summary: Protected Flow discovery — version, decision classes, policy packs, meter…
+      operationId: protected_flow_health_v1_protected_flow_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/protected-flow/assess:
+    post:
+      tags:
+      - protected-flow
+      summary: Assess an R3Pv group and return a signed decision + meter quote
+      operationId: protected_flow_assess_v1_protected_flow_assess_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/protected-flow/evidence/{group_id}/export:
+    get:
+      tags:
+      - protected-flow
+      summary: Bundle signed R3Pv vector + latest signed assessment + receipts + pubkey
+      operationId: protected_flow_evidence_export_v1_protected_flow_evidence__group_id__export_get
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Group Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AssessRequest:
+      properties:
+        group_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Group Id
+          description: Existing R3Pv group_id to assess.
+        receipts:
+          items: {}
+          type: array
+          title: Receipts
+          description: Inline receipts (used when group_id is not given).
+        receipt_ids:
+          items:
+            type: string
+          type: array
+          title: Receipt Ids
+          description: Bare receipt IDs (used when group_id is not given).
+        label:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Label
+          description: Human label for the ad-hoc group.
+        graph:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Graph
+          description: Optional R3Pv graph edges.
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+          description: Optional caller metadata.
+        policy_pack:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Policy Pack
+          description: 'Named policy pack. One of: [''default'', ''strict_bank'', ''high_risk_agent''].'
+          default: default
+        policy_overrides:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Policy Overrides
+          description: Optional overrides. Can only make policy stricter.
+        declared_exposure_usd:
+          type: number
+          minimum: 0.0
+          title: Declared Exposure Usd
+          description: Caller-declared exposure at risk (USD). Used for banded decisioning and bps meter.
+          default: 0.0
+        declared_exposure:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Declared Exposure
+          description: Alias for declared_exposure_usd (one-call convenience).
+        exposure_bps:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Exposure Bps
+          description: Optional caller-preferred basis-point rate on declared exposure (default 2.0 bps).
+        persist:
+          type: boolean
+          title: Persist
+          description: If true, persist the assessment for later evidence export.
+          default: true
+        intent:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Intent
+          description: Raw payment/economic intent, e.g. {asset, network, amount, recipient, purpose, net_moved}. Triggers one-call mode when no group_id/receipts/receipt_ids are given.
+        action:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Action
+          description: 'One-call mode: the action name for the synthesized receipt (default ''payment_intent'').'
+        external_system:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: External System
+          description: 'One-call mode: the source system, e.g. ''circle''.'
+        actor:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Actor
+          description: 'One-call mode: optional actor/agent identifiers for the synthesized receipt.'
+        evidence:
+          items: {}
+          type: array
+          title: Evidence
+          description: 'One-call mode: optional supporting artifacts; each is hashed into the receipt''s evidence_hashes.'
+        healing_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Healing State
+          description: 'One-call mode: optionally declare a valid healing_state on the synthesized receipt (signed).'
+      type: object
+      title: AssessRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

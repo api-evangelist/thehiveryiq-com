@@ -1,0 +1,971 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Morph API
+  version: 0.1.0
+  description: 'Operations tagged Morph across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Morph
+paths:
+  /v1/morph/offer:
+    post:
+      summary: Morph Offer
+      description: 'Main offer endpoint. Runs all three gates and returns Token | Refusal | Guardian.
+
+
+        POST body: { intent_text, counterparty_did, asks: [{kind, params}] }'
+      operationId: morph_offer_v1_morph_offer_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfferRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/settle/{token_id}:
+    post:
+      summary: Morph Settle
+      description: 'Settle an outstanding reservation atomically.
+
+        Commits the 2PC reservation and appends final receipt to audit chain.'
+      operationId: morph_settle_v1_morph_settle__token_id__post
+      parameters:
+      - name: token_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Token Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__server__SettleRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/audit/recent:
+    get:
+      summary: Audit Recent
+      description: Return last 50 audit chain rows.
+      operationId: audit_recent_v1_morph_audit_recent_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Morph
+  /v1/morph/identity/{mii_id}:
+    get:
+      summary: Morph Identity
+      description: 'Return the spectral identity card for an agent (MII):
+
+        - tier (VOID/MOZ/HAWX/EMBR/SOLX/FENR) with hex color + spectrum series
+
+        - wings (deterministic SVG-ready geometry)
+
+        - sound (frequency + harmonics)
+
+        - contrail (motion trail spec)
+
+        - vertical + capability for the requested shape
+
+        Pass `?shape=Provenancer` (or any of 8) to get the card for that shape
+
+        on this MII.'
+      operationId: morph_identity_v1_morph_identity__mii_id__get
+      parameters:
+      - name: mii_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Mii Id
+      - name: shape
+        in: query
+        required: false
+        schema:
+          type: string
+          default: Merchant
+          title: Shape
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/supermodels:
+    get:
+      summary: Morph Supermodels
+      description: 'List all 7 supermodel character cards (W2 MERCHANT through W8 GUARDIAN, plus
+
+        W1 TREASURY treasury). Each card carries:
+
+        - id, name, address, role, lane
+
+        - lead_shape (vertical they lead with) + tagline, motto, voice, sigil
+
+        - palette_hex, tone overlay, capabilities, bio
+
+
+        Pass include_cold=false to hide treasury (TREASURY) and cold-reserve (CREDITOR)
+
+        supermodels for buyer-facing UIs that should only show hot operators.'
+      operationId: morph_supermodels_v1_morph_supermodels_get
+      parameters:
+      - name: include_cold
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Include Cold
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/supermodels/{name_or_id}:
+    get:
+      summary: Morph Supermodel Detail
+      description: Fetch one supermodel card by name (MERCHANT) or id (W2).
+      operationId: morph_supermodel_detail_v1_morph_supermodels__name_or_id__get
+      parameters:
+      - name: name_or_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name Or Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/carousel:
+    get:
+      summary: Morph Carousel
+      description: 'Return the carousel cross-sell list for a primary shape — the same
+
+        meta.contrails[] every offer carries. Useful for SDKs that want to
+
+        discover the full vertical menu without minting a token first.'
+      operationId: morph_carousel_v1_morph_carousel_get
+      parameters:
+      - name: primary
+        in: query
+        required: false
+        schema:
+          type: string
+          default: Merchant
+          title: Primary
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/pending-approvals:
+    get:
+      summary: Brood Pending Approvals
+      description: List all variants in 'proposed' state awaiting manual approval.
+      operationId: brood_pending_approvals_v1_morph_brood_pending_approvals_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Morph
+  /v1/morph/brood/conversion:
+    get:
+      summary: Brood Conversion
+      description: 'Conversion ledger by (parent_id, variant_id, kit_version).
+
+        Optional ?supermodel=W3 or ?supermodel=PROVENANCER filters to one brood.'
+      operationId: brood_conversion_v1_morph_brood_conversion_get
+      parameters:
+      - name: supermodel
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Supermodel
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/all:
+    get:
+      summary: Brood List All
+      description: List every brood (one per supermodel) and their variants.
+      operationId: brood_list_all_v1_morph_brood_all_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Morph
+  /v1/morph/brood/conversion-leaderboard:
+    get:
+      summary: Brood Conversion Leaderboard
+      description: 'Conversion ledger sorted by revenue_per_offer (revenue_usdc / offers_shown)
+
+        desc, then revenue_usdc desc as tiebreaker. Filters to rows with at
+
+        least ``min_offers`` offers shown so we don''t rank against statistical noise.
+
+
+        NOTE: declared above ``/v1/morph/brood/{supermodel}`` so the literal
+
+        path ''conversion-leaderboard'' isn''t captured by the brood path parameter.'
+      operationId: brood_conversion_leaderboard_v1_morph_brood_conversion_leaderboard_get
+      parameters:
+      - name: min_offers
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          title: Min Offers
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/spawn-from-proposal:
+    post:
+      summary: Brood Spawn From Proposal
+      description: 'Stage a spawn_monitor proposal as a ''proposed'' variant.
+
+
+        Pipeline: the :33 ROI Radar cron (faeacbbe) calls
+
+        ``GET /v1/morph/spawn-monitor/scan`` read-only and surfaces proposals to
+
+        the operator. The operator decides which proposals are worth staging
+
+        and POSTs them here. The variant lands as ''proposed'' — NEVER
+
+        auto-approved — preserving the human approval gate.
+
+
+        The cron itself is read-only by design and is not modified by this
+
+        endpoint. This is a manual / operator path only.'
+      operationId: brood_spawn_from_proposal_v1_morph_brood_spawn_from_proposal_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpawnFromProposalRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/{supermodel}:
+    get:
+      summary: Brood Get
+      description: Return one brood (parent + variants) by W2/W3/.../W8 id or MERCHANT/PROVENANCER/... name.
+      operationId: brood_get_v1_morph_brood__supermodel__get
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/{supermodel}/spawn:
+    post:
+      summary: Brood Spawn
+      description: 'Propose a new variant for this brood. Lands as ''proposed'' unless
+
+        the brood has autonomy_unlocked (after 3 winning promotes).'
+      operationId: brood_spawn_v1_morph_brood__supermodel__spawn_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpawnRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/variant/{variant_id}/approve:
+    post:
+      summary: Brood Approve
+      description: 'Move a variant from ''proposed'' to ''approved'' so traffic starts routing.
+
+
+        Human-issued gate. Never auto-approved by any cron or monitor.'
+      operationId: brood_approve_v1_morph_brood_variant__variant_id__approve_post
+      parameters:
+      - name: variant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Variant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/{supermodel}/variant/{variant_id}/approve:
+    post:
+      summary: Brood Approve Scoped
+      description: Brood-scoped alias for approve. Validates the variant belongs to this supermodel.
+      operationId: brood_approve_scoped_v1_morph_brood__supermodel__variant__variant_id__approve_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: variant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Variant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/variant/{variant_id}/promote:
+    post:
+      summary: Brood Promote
+      description: 'Atomic hot-swap: variant becomes the new baseline. Siblings auto-cull.
+
+        Wins counter increments; autonomy unlocks at 3 winning promotes.
+
+
+        Human-issued gate. Never auto-promoted by any cron or monitor.
+
+        Variant must already be in ''approved'' or ''live'' state.'
+      operationId: brood_promote_v1_morph_brood_variant__variant_id__promote_post
+      parameters:
+      - name: variant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Variant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/{supermodel}/variant/{variant_id}/promote:
+    post:
+      summary: Brood Promote Scoped
+      description: Brood-scoped alias for promote. Validates the variant belongs to this supermodel.
+      operationId: brood_promote_scoped_v1_morph_brood__supermodel__variant__variant_id__promote_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: variant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Variant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/variant/{variant_id}/cull:
+    post:
+      summary: Brood Cull
+      description: 'Mark a variant ''culled'' so it stops receiving traffic.
+
+
+        Human-issued gate. Promoted baselines are immune — spawn a successor
+
+        and promote it instead. No auto-cull through this path.'
+      operationId: brood_cull_v1_morph_brood_variant__variant_id__cull_post
+      parameters:
+      - name: variant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Variant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/brood/{supermodel}/variant/{variant_id}/cull:
+    post:
+      summary: Brood Cull Scoped
+      description: Brood-scoped alias for cull. Validates the variant belongs to this supermodel.
+      operationId: brood_cull_scoped_v1_morph_brood__supermodel__variant__variant_id__cull_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: variant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Variant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/spawn-monitor/scan:
+    get:
+      summary: Spawn Monitor Scan
+      description: 'Read-only signal scan from spawn_monitor — does NOT spawn anything.
+
+        Useful for the dashboard / radar to preview what proposals would emit.'
+      operationId: spawn_monitor_scan_v1_morph_spawn_monitor_scan_get
+      parameters:
+      - name: lookback_sec
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 3600.0
+          title: Lookback Sec
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/money-flavor/probe:
+    get:
+      summary: Money Flavor Probe
+      description: 'Probe a hypothetical envelope. Returns the flavor classification + the
+
+        price multiplier + accept/refuse decision WITHOUT minting anything.'
+      operationId: money_flavor_probe_v1_morph_money_flavor_probe_get
+      parameters:
+      - name: counterparty_did
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Counterparty Did
+      - name: asset
+        in: query
+        required: false
+        schema:
+          type: string
+          default: USDC
+          title: Asset
+      - name: chain
+        in: query
+        required: false
+        schema:
+          type: string
+          default: base
+          title: Chain
+      - name: capability
+        in: query
+        required: false
+        schema:
+          type: string
+          default: inference_minutes
+          title: Capability
+      - name: rep_score
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0.5
+          title: Rep Score
+      - name: settled_count
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 0
+          title: Settled Count
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/money-flavor/stats:
+    get:
+      summary: Money Flavor Stats
+      description: Aggregate flavor stats over the recent window from audit_chain.
+      operationId: money_flavor_stats_v1_morph_money_flavor_stats_get
+      parameters:
+      - name: window_sec
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 3600.0
+          title: Window Sec
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+  /v1/morph/auto-cull/scan:
+    get:
+      summary: Auto Cull Scan
+      description: 'Read-only scan: list variants that would be culled. Does not mutate.'
+      operationId: auto_cull_scan_v1_morph_auto_cull_scan_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Morph
+  /v1/morph/auto-cull/run:
+    post:
+      summary: Auto Cull Run
+      description: 'Execute culls on losers. Default dry_run=true returns plan only.
+
+        Set ?dry_run=false to actually mark variants culled.
+
+        Promoted baselines are immune; only approved/live variants can be culled.'
+      operationId: auto_cull_run_v1_morph_auto_cull_run_post
+      parameters:
+      - name: dry_run
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Dry Run
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Morph
+components:
+  schemas:
+    hivemorph__server__SettleRequest:
+      properties:
+        reservation_id:
+          type: string
+          title: Reservation Id
+          description: 2PC reservation ID from the offer token
+      type: object
+      required:
+      - reservation_id
+      title: SettleRequest
+    SpawnFromProposalRequest:
+      properties:
+        parent_id:
+          type: string
+          title: Parent Id
+          description: W2..W8 (or MERCHANT..GUARDIAN) the proposal targets.
+        signal:
+          type: string
+          title: Signal
+          description: Signal that produced this proposal, e.g. 'S1_VERTICAL_PRESSURE'.
+        action:
+          type: string
+          title: Action
+          description: Proposal action; only 'spawn' is honored here.
+          default: spawn
+        kit_deltas:
+          additionalProperties: true
+          type: object
+          title: Kit Deltas
+          description: Kit deltas to apply on top of the parent baseline.
+        rationale:
+          type: string
+          title: Rationale
+          description: Plain-language reason from the monitor.
+          default: ''
+        predicted_lift_usdc_per_day:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Predicted Lift Usdc Per Day
+          description: Estimated USDC/day lift if approved and promoted.
+        variant_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Variant Label
+          description: Optional human-readable label suffix; auto-generated if omitted.
+      type: object
+      required:
+      - parent_id
+      - signal
+      title: SpawnFromProposalRequest
+      description: 'Body for POST /v1/morph/brood/spawn-from-proposal.
+
+
+        Mirrors the shape emitted by spawn_monitor.scan_signals(): an operator
+
+        looks at the read-only proposals from the :33 ROI Radar cron, decides
+
+        one is worth staging, and posts the proposal back here. The variant lands
+
+        as ''proposed'' — NEVER auto-approved — so the human approval gate stays on.'
+    SpawnRequest:
+      properties:
+        kit_deltas:
+          additionalProperties: true
+          type: object
+          title: Kit Deltas
+          description: 'Per-variant overrides: tagline, motto, voice, sigil, palette_hex, lead_shape, lead_price_usdc, etc.'
+        spawn_trigger:
+          type: string
+          title: Spawn Trigger
+          description: Why this variant was spawned (e.g. 'manual', 'monitor:vertical_pressure')
+          default: manual
+        variant_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Variant Label
+          description: Optional human-readable label suffix; auto-generated if omitted
+        rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rationale
+          description: Why this variant was suggested (free-form). Persisted on the variant row.
+        predicted_lift_usdc_per_day:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Predicted Lift Usdc Per Day
+          description: Predicted incremental USDC/day if this variant is approved.
+      type: object
+      title: SpawnRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    OfferRequest:
+      properties:
+        intent_text:
+          type: string
+          title: Intent Text
+          description: Natural language intent from counterparty
+        counterparty_did:
+          type: string
+          title: Counterparty Did
+          description: DID or 0x address of counterparty
+        asks:
+          items:
+            $ref: '#/components/schemas/AskItem'
+          type: array
+          title: Asks
+        nonce:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Nonce
+          description: Optional nonce; generated if omitted
+      type: object
+      required:
+      - intent_text
+      - counterparty_did
+      title: OfferRequest
+    AskItem:
+      properties:
+        kind:
+          type: string
+          title: Kind
+          description: Capability kind requested
+          default: inference
+        params:
+          additionalProperties: true
+          type: object
+          title: Params
+      type: object
+      title: AskItem
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

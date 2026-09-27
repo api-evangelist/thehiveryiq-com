@@ -1,0 +1,283 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Mining API
+  version: 0.1.0
+  description: 'Operations tagged mining across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Mining
+paths:
+  /v1/mining/scan:
+    get:
+      tags:
+      - Mining
+      summary: Mining Scan
+      description: 'Tier 0: list MDK workers and Hive auction offers (no fee).'
+      operationId: mining_scan_v1_mining_scan_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/mining/route:
+    post:
+      tags:
+      - Mining
+      summary: Mining Route
+      description: 'Tier 0: rank destinations for a fleet. 2% fee taken at /book, not here.'
+      operationId: mining_route_v1_mining_route_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_mining__routes__RouteRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mining/book:
+    post:
+      tags:
+      - Mining
+      summary: Mining Book
+      description: '$0.05 USDC: book hashrate. Three-gated. 2% routing fee. Real EIP-191 receipt.'
+      operationId: mining_book_v1_mining_book_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_mining__routes__BookRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mining/pnl:
+    get:
+      tags:
+      - Mining
+      summary: Mining Pnl
+      operationId: mining_pnl_v1_mining_pnl_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/mining/fee-intel:
+    get:
+      tags:
+      - Mining
+      summary: Mining Fee Intel
+      description: '$0.02 USDC: Bortlesboat fee landscape + nextblock combined.'
+      operationId: mining_fee_intel_v1_mining_fee_intel_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/mining/next-block-advice:
+    get:
+      tags:
+      - Mining
+      summary: Mining Next Block Advice
+      description: '$0.03 USDC: combine our auction state with Satoshi /ai/fees/advice.'
+      operationId: mining_next_block_advice_v1_mining_next_block_advice_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/mining/economics:
+    get:
+      tags:
+      - Mining
+      summary: Mining Economics
+      description: 'Tier 0: daily revenue + Satoshi spend. Internal monitoring.'
+      operationId: mining_economics_v1_mining_economics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/mining/payout:
+    post:
+      tags:
+      - Mining
+      summary: Mining Payout
+      description: 'Boltz reverse swap BTC → USDC on Base. 40bps Hive spread fee.
+
+
+        Tier 0 endpoint — fee is captured in the swap math, not at the gate.
+
+        Real swap or HTTP 503. We never custody BTC.'
+      operationId: mining_payout_v1_mining_payout_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayoutRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    hivemorph__hive_mining__routes__BookRequest:
+      properties:
+        worker_id:
+          type: string
+          minLength: 1
+          title: Worker Id
+        hashrate_th_s:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Hashrate Th S
+        duration_minutes:
+          type: integer
+          maximum: 43200.0
+          exclusiveMinimum: 0.0
+          title: Duration Minutes
+        payer_address:
+          type: string
+          title: Payer Address
+        settle_asset:
+          type: string
+          title: Settle Asset
+          default: USDC
+      type: object
+      required:
+      - worker_id
+      - hashrate_th_s
+      - duration_minutes
+      - payer_address
+      title: BookRequest
+    hivemorph__hive_mining__routes__RouteRequest:
+      properties:
+        energy_cost_usdc_per_kwh:
+          type: number
+          maximum: 2.0
+          exclusiveMinimum: 0.0
+          title: Energy Cost Usdc Per Kwh
+        region:
+          type: string
+          title: Region
+          default: any
+        fleet_size_th_s:
+          type: number
+          maximum: 10000000.0
+          exclusiveMinimum: 0.0
+          title: Fleet Size Th S
+      type: object
+      required:
+      - energy_cost_usdc_per_kwh
+      - fleet_size_th_s
+      title: RouteRequest
+    PayoutRequest:
+      properties:
+        btc_amount_sats:
+          type: integer
+          maximum: 2100000000000000.0
+          exclusiveMinimum: 0.0
+          title: Btc Amount Sats
+        recipient_usdc_address:
+          type: string
+          title: Recipient Usdc Address
+      type: object
+      required:
+      - btc_amount_sats
+      - recipient_usdc_address
+      title: PayoutRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

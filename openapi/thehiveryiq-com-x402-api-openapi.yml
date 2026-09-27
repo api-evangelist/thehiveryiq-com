@@ -1,0 +1,856 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com X402 API
+  version: 0.1.0
+  description: 'Operations tagged X402 across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: X402
+paths:
+  /v1/x402:
+    get:
+      summary: X402 Facilitator Metadata
+      description: 'HiveMorph x402 facilitator metadata. Lists supported settlement schemes,
+
+        chain/asset coverage, recipient EOA, and pointer to per-rail discovery.'
+      operationId: x402_facilitator_metadata_v1_x402_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - X402
+  /v1/x402/pricing:
+    get:
+      tags:
+      - X402
+      summary: Current x402 pricing table
+      description: 'Returns the full HiveMorph x402 pricing table: all monetized endpoints, their tier assignments, and per-call prices in USD. This endpoint is always free (Tier0).'
+      operationId: get_pricing_v1_x402_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/x402/stats:
+    get:
+      tags:
+      - X402
+      summary: x402 call statistics
+      description: 'Returns per-endpoint and aggregate call statistics: total calls served, 402s issued, paid passes, paid revenue, top endpoints. Revenue is real (USDC settled to treasury 0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E on Base 8453). calls_paid=0 indicates no caller has yet completed an end-to-end paid call. This endpoint is always free (Tier0). This endpoint is always free (Tier0).'
+      operationId: get_stats_v1_x402_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/x402/stats/buckets:
+    get:
+      tags:
+      - X402
+      summary: Bucketed endpoint stats (top-level + drill-down)
+      description: Rolls every per-path counter into ~11 high-level buckets (Receipts, Payments & x402, Discovery & Manifests, Compliance & Audit, Energy & Grid, Identity & Delegation, Morph & Forge, Marketplace & Trade, Vault & Anchor, Affordance & Ops, Other). Each bucket includes its endpoint_count, aggregate counters, and an `endpoints` array for drill-down. Always free (Tier0).
+      operationId: get_stats_buckets_v1_x402_stats_buckets_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/x402/proof/submit:
+    post:
+      tags:
+      - X402
+      summary: Submit a payment proof
+      description: 'Submit a payment proof for a pending 402 nonce. On success, returns an access token (5-minute TTL) that can be used in the X-Hive-Access header to bypass 402 for the same path.
+
+
+        v0.2: REAL on-chain validation — proof_validator.py executes eth_getTransactionReceipt against Base mainnet via JSON-RPC; never fails open on RPC errors. Fake tx_hash returns chain_rejected.'
+      operationId: submit_proof_v1_x402_proof_submit_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProofSubmitRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/proof/verify:
+    get:
+      tags:
+      - X402
+      summary: Verify an access token
+      description: Verify that an access token (issued by proof/submit or X-Payment) is still valid. Access tokens expire after 5 minutes.
+      operationId: verify_token_v1_x402_proof_verify_get
+      parameters:
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Access token to verify
+          title: Token
+        description: Access token to verify
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/pricing/set:
+    post:
+      tags:
+      - X402
+      summary: 'Admin: update endpoint pricing'
+      description: 'Set or update the price for a specific path. Requires ADMIN_API_KEY header matching the ADMIN_API_KEY environment variable. If ADMIN_API_KEY is not set, this endpoint returns 403 for all requests.
+
+
+        Changes are in-memory only (not persisted across restarts in v0.1).'
+      operationId: set_pricing_v1_x402_pricing_set_post
+      parameters:
+      - name: path
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: URL path to set price for
+          title: Path
+        description: URL path to set price for
+      - name: amount
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          description: New price in USD
+          title: Amount
+        description: New price in USD
+      - name: X-Admin-Api-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Api-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PricingSetRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/rails:
+    get:
+      tags:
+      - X402
+      summary: Available settlement rails
+      description: Returns the list of (chain, asset) rails Hive accepts for x402 settlement, the current default rail, and the on-chain contract / decimals metadata needed by paying agents. Always free.
+      operationId: get_rails_v1_x402_rails_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/x402/rails/select:
+    post:
+      tags:
+      - X402
+      summary: 'Admin: choose default settlement asset'
+      description: Switch the default settlement asset advertised by `/v1/x402/rails`. Affects only the `default_asset` field exposed to clients — the full `accepts[]` list in 402 responses always includes every active rail. Requires ADMIN_API_KEY header.
+      operationId: select_rail_v1_x402_rails_select_post
+      parameters:
+      - name: X-Admin-Api-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Api-Key
+      - name: X-Hive-Trust
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Hive-Trust
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RailSelectRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/stats/by-payer:
+    get:
+      tags:
+      - X402
+      summary: 'Internal: aggregated x402 stats per payer (revenue forensics)'
+      description: Top-100 payer addresses / DIDs by call volume across paid endpoints, with per-endpoint breakdown, status counts, first/last seen, and (when present) referrer DIDs. Gated by HIVE_INTERNAL_DRIVER_KEY via X-Hive-Internal header (RAILS_RULES.md Rule 8). Pure in-memory; no PII beyond payer addr / DID.
+      operationId: stats_by_payer_v1_x402_stats_by_payer_get
+      parameters:
+      - name: path
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter to a single endpoint path.
+          title: Path
+        description: Filter to a single endpoint path.
+      - name: since_minutes
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+            minimum: 0
+          - type: 'null'
+          description: Only events within the last N minutes.
+          title: Since Minutes
+        description: Only events within the last N minutes.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/today:
+    get:
+      tags:
+      - X402
+      summary: Today's UTC x402 aggregate (restart-survivable)
+      description: 'Aggregates today''s UTC quote and payment activity from the SQLite persistence layer. Survives Render restarts. Always free (Tier0). Includes barter telemetry: revenue_usd_actual vs revenue_usd_at_asking_equivalent, spread, and accepted_at_floor_pct.'
+      operationId: get_today_v1_x402_today_get
+      parameters:
+      - name: date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional UTC date in YYYY-MM-DD form. Defaults to today (UTC).
+          title: Date
+        description: Optional UTC date in YYYY-MM-DD form. Defaults to today (UTC).
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/barter:
+    get:
+      tags:
+      - X402
+      summary: Barter / counter-offer telemetry (per-path + histogram)
+      description: Per-path floor_pct, sample size, conversion-at-floor, total spread, and a demand-curve histogram of paid amounts. Always free (Tier0). This is the observability surface for the counter-offer scheme.
+      operationId: get_barter_v1_x402_barter_get
+      parameters:
+      - name: date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Optional UTC date for the histogram. Defaults to today (UTC).
+          title: Date
+        description: Optional UTC date for the histogram. Defaults to today (UTC).
+      - name: bucket_usd
+        in: query
+        required: false
+        schema:
+          type: number
+          exclusiveMinimum: 0
+          description: Histogram bucket width in USD (default $0.005).
+          default: 0.005
+          title: Bucket Usd
+        description: Histogram bucket width in USD (default $0.005).
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/failed:
+    get:
+      tags:
+      - X402
+      summary: Failed-tx recovery queue
+      description: Returns nonces that were quoted but never paid AND nonces whose proof submit failed verification, since `since` (ISO date or unix seconds). Always free (Tier0).
+      operationId: get_failed_v1_x402_failed_get
+      parameters:
+      - name: since
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: ISO timestamp (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ) or unix seconds. Defaults to the start of today (UTC).
+          title: Since
+        description: ISO timestamp (YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ) or unix seconds. Defaults to the start of today (UTC).
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/recover:
+    post:
+      tags:
+      - X402
+      summary: Manually re-verify a previously-failed proof
+      description: Re-submit a (nonce, tx_hash) pair for a previously-failed proof. Useful when an on-chain tx finally confirmed after the nonce briefly tipped into chain_rejected (insufficient confirmations, RPC flake, etc). Re-uses the standard validator path so the same replay/expiry rules apply.
+      operationId: recover_proof_v1_x402_recover_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecoverRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/bogo:
+    get:
+      tags:
+      - X402
+      summary: BOGO (first-call-free) introspection
+      description: 'Returns the BOGO redemption table: how many unique agent_dids have redeemed first-call-free across each endpoint family, plus the list of families covered. Public read — no auth.'
+      operationId: bogo_stats_v1_x402_bogo_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/x402/quote:
+    post:
+      tags:
+      - X402
+      summary: x402 atomic payment quote — LIVE, USDC on Base 8453
+      description: 'Produces a signed, machine-redeemable x402 quote for any HiveMorph surface. Real treasury. USDC on Base chain 8453. ERC-681 deeplink ready for any wallet or agent. Includes a service-signed receipt envelope verifiable against /v1/receipt/verify and /v1/prov/pubkey, plus a crypto_agility block declaring classical (Ed25519) and post-quantum-ready (ML-KEM/ML-DSA) posture.
+
+
+        Receipt-profile gating: ''pq'' requires a valid regulated-tier delegation envelope (regulated_envelope_jti). Otherwise the call returns 402 regulated_tier_required.'
+      operationId: quote_v1_x402_quote_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/client-intent:
+    get:
+      tags:
+      - X402
+      summary: Browser/wallet-consumable x402 payment intent (LIVE nonce)
+      description: 'Returns the safe, browser-consumable fields from a live x402 payment envelope: amount, asset, chain, contract, recipient, decimals, nonce, expires_at, payment_endpoint, per-chain ERC-681 deeplink, and the exact proof-submission shape. Registers a REAL redeemable nonce. profile=nano|standard (pq needs a regulated delegation envelope — use POST /v1/x402/quote for pq). Wallet-native one-click pay is supported up to the final client broadcast+proof step, which the wallet performs.'
+      operationId: client_intent_get_v1_x402_client_intent_get
+      parameters:
+      - name: profile
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 'Receipt profile: nano | standard.'
+          default: nano
+          title: Profile
+        description: 'Receipt profile: nano | standard.'
+      - name: amount_usdc
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+            maximum: 10000000.0
+            minimum: 0.0001
+          - type: 'null'
+          description: Explicit USDC amount. Overrides the profile default price.
+          title: Amount Usdc
+        description: Explicit USDC amount. Overrides the profile default price.
+      - name: endpoint_path
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          description: Optional target path to price the intent for (pricing-table lookup).
+          title: Endpoint Path
+        description: Optional target path to price the intent for (pricing-table lookup).
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - X402
+      summary: Browser/wallet-consumable x402 payment intent (LIVE nonce) — POST
+      operationId: client_intent_post_v1_x402_client_intent_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/ClientIntentRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/x402/wallet-intent:
+    get:
+      tags:
+      - X402
+      summary: Alias of GET /v1/x402/client-intent
+      operationId: wallet_intent_get_v1_x402_wallet_intent_get
+      parameters:
+      - name: profile
+        in: query
+        required: false
+        schema:
+          type: string
+          default: nano
+          title: Profile
+      - name: amount_usdc
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+            maximum: 10000000.0
+            minimum: 0.0001
+          - type: 'null'
+          title: Amount Usdc
+      - name: endpoint_path
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Endpoint Path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - X402
+      summary: Alias of POST /v1/x402/client-intent
+      operationId: wallet_intent_post_v1_x402_wallet_intent_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/ClientIntentRequest'
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    QuoteRequest:
+      properties:
+        endpoint_path:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Endpoint Path
+          description: Optional HiveMorph endpoint path the caller intends to redeem the quote for (e.g. '/v1/receipt/emit'). Used to look up the price from the x402 pricing table. Mutually exclusive with amount_usdc; if both are supplied, amount_usdc wins.
+        amount_usdc:
+          anyOf:
+          - type: number
+            maximum: 10000000.0
+            minimum: 0.0001
+          - type: 'null'
+          title: Amount Usdc
+          description: Optional explicit USDC amount. Overrides endpoint_path lookup.
+        receipt_profile:
+          type: string
+          maxLength: 16
+          title: Receipt Profile
+          description: 'Receipt profile attached to the quote: nano | standard | pq.'
+          default: standard
+        agent_did:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Agent Did
+          description: Caller agent DID. Surfaced in the receipt and audit row.
+        counterparty_did:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Counterparty Did
+          description: Optional payee/counterparty DID for two-sided settlement.
+        hktn_tier:
+          anyOf:
+          - type: string
+            maxLength: 24
+          - type: 'null'
+          title: Hktn Tier
+          description: Optional explicit HKTN reputation tier override (cold|warm|hot|regulated, or legacy bronze|silver|gold|platinum|pq_eligible). When omitted, the tier is resolved from agent_did via the R5 ledger; if neither is supplied, default is Cold.
+        memo:
+          type: string
+          maxLength: 64
+          title: Memo
+          description: Optional short memo (≤ 64 chars). Included in the quote payload and receipt hash. Not embedded in the ERC-681 deeplink — ERC-681 transfer URIs do not carry memos.
+          default: ''
+        regulated_envelope_jti:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Regulated Envelope Jti
+          description: Required when receipt_profile='pq'. The jti of a delegation envelope (issued via /v1/delegation/issue or /operator-sign) whose allowed_surfaces includes 'pq'. Caller asserts authority; this endpoint verifies it on-the-fly.
+      type: object
+      title: QuoteRequest
+      description: 'Body for POST /v1/x402/quote.
+
+
+        All fields optional — caller can ask for a generic settlement quote, or a
+
+        quote tied to a specific HiveMorph endpoint, or a quote for a specific
+
+        USDC amount. Receipt profile defaults to ''standard''.'
+    ProofSubmitRequest:
+      properties:
+        nonce:
+          type: string
+          title: Nonce
+          description: Nonce from the 402 PaymentRequired response.
+        payer:
+          type: string
+          title: Payer
+          description: On-chain address of the paying account.
+        chain:
+          type: string
+          title: Chain
+          description: '''base'' or ''solana''.'
+        tx_hash:
+          type: string
+          title: Tx Hash
+          description: On-chain transaction hash (Base) or signature (Solana). Validated against the chain via JSON-RPC — see proof_validator.py. Fake or unfound tx_hash returns chain_rejected; never fails open.
+        amount_usd:
+          type: number
+          title: Amount Usd
+          description: Claimed payment amount (informational).
+          default: 0.0
+        asset:
+          type: string
+          title: Asset
+          description: Payment asset. 'USDC' or 'USDPT'.
+          default: USDC
+      type: object
+      required:
+      - nonce
+      - payer
+      - chain
+      - tx_hash
+      title: ProofSubmitRequest
+      description: Body for POST /v1/x402/proof/submit.
+    ClientIntentRequest:
+      properties:
+        profile:
+          type: string
+          maxLength: 16
+          title: Profile
+          description: nano | standard.
+          default: nano
+        amount_usdc:
+          anyOf:
+          - type: number
+            maximum: 10000000.0
+            minimum: 0.0001
+          - type: 'null'
+          title: Amount Usdc
+        endpoint_path:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Endpoint Path
+      type: object
+      title: ClientIntentRequest
+      description: Optional body for POST /v1/x402/client-intent (and wallet-intent alias).
+    RecoverRequest:
+      properties:
+        nonce:
+          type: string
+          title: Nonce
+          description: Nonce of a previously failed proof.
+        tx_hash:
+          type: string
+          title: Tx Hash
+          description: On-chain tx hash to re-verify.
+        payer:
+          type: string
+          title: Payer
+          description: Payer address (optional; carried for audit).
+          default: ''
+        chain:
+          type: string
+          title: Chain
+          description: '''base'', ''ethereum'', or ''solana''.'
+          default: base
+        asset:
+          type: string
+          title: Asset
+          description: Asset of the original quote.
+          default: USDC
+      type: object
+      required:
+      - nonce
+      - tx_hash
+      title: RecoverRequest
+      description: Body for POST /v1/x402/recover.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PricingSetRequest:
+      properties:
+        path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Path
+          description: URL path to set price for.
+        amount:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Amount
+          description: New price in USD.
+        tier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tier
+          description: Tier label (optional; inferred from amount if omitted).
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Human-readable note.
+        asset:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asset
+          description: Optional asset filter. If provided ('USDC' or 'USDT'), updates the per-asset price for this path only — the cross-asset base price is unchanged. Useful when Tether/Circle peg spreads diverge.
+      type: object
+      title: PricingSetRequest
+      description: Body for POST /v1/x402/pricing/set (also accepts query params).
+    RailSelectRequest:
+      properties:
+        asset:
+          type: string
+          title: Asset
+          description: Default settlement asset to advertise. 'USDC' or 'USDT'.
+      type: object
+      required:
+      - asset
+      title: RailSelectRequest
+      description: Body for POST /v1/x402/rails/select.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,192 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Entropy API
+  version: 0.1.0
+  description: 'Operations tagged entropy across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: entropy
+paths:
+  /v1/entropy/pricing:
+    get:
+      tags:
+      - entropy
+      summary: Entropy-as-a-Service pricing
+      description: Returns the entropy API pricing table. Single sample is TierLite at $0.0001/sample. Bulk packs of 1000 are Tier3 at $0.05/pack (5x discount). Sovereign-tier samples (cosmic-ray + soil microbial + chlorophyll axes) require separate enrollment and pricing — contact sales@thehiveryiq.com.
+      operationId: get_pricing_v1_entropy_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/entropy/sample:
+    post:
+      tags:
+      - entropy
+      summary: Single entropy sample
+      description: Returns one cryptographically mixed entropy sample with a signed provenance receipt verifiable at /v1/receipt/verify. TierLite — $0.0001 per call when gated.
+      operationId: post_sample_v1_entropy_sample_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SampleRequest'
+              default:
+                bytes: 32
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/entropy/bulk:
+    post:
+      tags:
+      - entropy
+      summary: Bulk entropy samples
+      description: 'Returns up to 1000 entropy samples in one call, each with its own signed receipt. Tier3 — $0.05 per 1000-sample pack. Average per-sample cost: $0.00005.'
+      operationId: post_bulk_v1_entropy_bulk_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/entropy/health:
+    get:
+      tags:
+      - entropy
+      summary: Entropy pool health
+      description: Returns operational telemetry on the entropy pool. Always free.
+      operationId: get_health_v1_entropy_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    SampleRequest:
+      properties:
+        bytes:
+          type: integer
+          maximum: 64.0
+          minimum: 16.0
+          title: Bytes
+          description: Sample size in bytes (16-64)
+          default: 32
+        purpose:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Purpose
+          description: Free-form purpose tag (logged)
+      type: object
+      title: SampleRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BulkRequest:
+      properties:
+        count:
+          type: integer
+          maximum: 1000.0
+          minimum: 1.0
+          title: Count
+          description: Number of samples (1-1000)
+          default: 1000
+        bytes:
+          type: integer
+          maximum: 64.0
+          minimum: 16.0
+          title: Bytes
+          default: 32
+        purpose:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Purpose
+      type: object
+      title: BulkRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

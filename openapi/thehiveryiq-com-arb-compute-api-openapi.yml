@@ -1,0 +1,339 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Arb Compute API
+  version: 0.1.0
+  description: 'Operations tagged arb-compute across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: arb-compute
+paths:
+  /v1/arb/compute/route:
+    post:
+      tags:
+      - arb-compute
+      summary: Route a single LLM call
+      description: 'Route a single LLM call to the cheapest model that meets the quality bar.
+
+
+        - **shape**: HiveMorph shape name — determines default quality tier
+
+        - **prompt**: user message sent to the model
+
+        - **quality_tier**: optional override (T0_CHEAP, T1_STANDARD, T2_HIGH)
+
+        - **system_prompt**: optional system message
+
+
+        Returns the chosen model, LLM response, per-call cost, and savings versus
+
+        the baseline (most expensive T2 model, gpt_5_5).'
+      operationId: route_call_v1_arb_compute_route_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_arb__compute_routes__RouteRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/arb/compute/savings:
+    get:
+      tags:
+      - arb-compute
+      summary: Cumulative savings dashboard
+      description: 'Return cumulative cost-savings accounting for all calls routed through
+
+        this instance since last restart.
+
+
+        - **calls_routed**: total route attempts
+
+        - **calls_failed**: calls where all candidates were exhausted
+
+        - **total_cost_usd**: actual spend across all successful calls
+
+        - **total_savings_usd**: amount saved vs routing everything to the baseline
+
+        - **avg_cost_reduction_pct**: average percentage cost reduction
+
+        - **baseline_model**: model used as savings reference (gpt_5_5)'
+      operationId: get_savings_v1_arb_compute_savings_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SavingsResponse'
+  /v1/arb/compute/catalog:
+    get:
+      tags:
+      - arb-compute
+      summary: Model catalog with costs
+      description: 'Return the full model catalog: all models with their per-token costs,
+
+        quality tiers, providers, and blended cost per 1k tokens.
+
+
+        Also returns a `tiers` map grouping model IDs by tier, ordered cheapest first.'
+      operationId: get_catalog_v1_arb_compute_catalog_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogResponse'
+components:
+  schemas:
+    hivemorph__hive_arb__compute_routes__RouteRequest:
+      properties:
+        shape:
+          type: string
+          title: Shape
+          description: HiveMorph shape name (e.g. 'merchant', 'attestor', 'guardian')
+          examples:
+          - merchant
+        prompt:
+          type: string
+          title: Prompt
+          description: User prompt to send to the LLM
+          examples:
+          - Classify this transaction as legitimate or suspicious.
+        quality_tier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Quality Tier
+          description: 'Override quality tier: T0_CHEAP | T1_STANDARD | T2_HIGH. If omitted, inferred from shape.'
+          examples:
+          - T1_STANDARD
+        system_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: System Prompt
+          description: Optional system message prepended to the conversation
+        extra_params:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Extra Params
+          description: Additional gateway parameters (temperature, max_tokens, etc.)
+      type: object
+      required:
+      - shape
+      - prompt
+      title: RouteRequest
+    CatalogResponse:
+      properties:
+        count:
+          type: integer
+          title: Count
+        models:
+          items:
+            $ref: '#/components/schemas/ModelCatalogEntry'
+          type: array
+          title: Models
+        tiers:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+          title: Tiers
+      type: object
+      required:
+      - count
+      - models
+      - tiers
+      title: CatalogResponse
+    RouteResponse:
+      properties:
+        chosen_model:
+          type: string
+          title: Chosen Model
+        response:
+          additionalProperties: true
+          type: object
+          title: Response
+        cost_usd:
+          type: number
+          title: Cost Usd
+        savings_vs_baseline:
+          type: number
+          title: Savings Vs Baseline
+        tier:
+          type: string
+          title: Tier
+        attempts:
+          items:
+            type: string
+          type: array
+          title: Attempts
+        latency_ms:
+          type: number
+          title: Latency Ms
+        input_tokens:
+          type: integer
+          title: Input Tokens
+        output_tokens:
+          type: integer
+          title: Output Tokens
+        shape:
+          type: string
+          title: Shape
+      type: object
+      required:
+      - chosen_model
+      - response
+      - cost_usd
+      - savings_vs_baseline
+      - tier
+      - attempts
+      - latency_ms
+      - input_tokens
+      - output_tokens
+      - shape
+      title: RouteResponse
+    SavingsResponse:
+      properties:
+        calls_routed:
+          type: integer
+          title: Calls Routed
+        calls_failed:
+          type: integer
+          title: Calls Failed
+        total_cost_usd:
+          type: number
+          title: Total Cost Usd
+        total_savings_usd:
+          type: number
+          title: Total Savings Usd
+        avg_cost_reduction_pct:
+          type: number
+          title: Avg Cost Reduction Pct
+        baseline_model:
+          type: string
+          title: Baseline Model
+      type: object
+      required:
+      - calls_routed
+      - calls_failed
+      - total_cost_usd
+      - total_savings_usd
+      - avg_cost_reduction_pct
+      - baseline_model
+      title: SavingsResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ModelCatalogEntry:
+      properties:
+        model_id:
+          type: string
+          title: Model Id
+        display_name:
+          type: string
+          title: Display Name
+        quality_tier:
+          type: string
+          title: Quality Tier
+        cost_per_1k_input:
+          type: number
+          title: Cost Per 1K Input
+        cost_per_1k_output:
+          type: number
+          title: Cost Per 1K Output
+        blended_cost_per_1k:
+          type: number
+          title: Blended Cost Per 1K
+        provider:
+          type: string
+          title: Provider
+        notes:
+          type: string
+          title: Notes
+      type: object
+      required:
+      - model_id
+      - display_name
+      - quality_tier
+      - cost_per_1k_input
+      - cost_per_1k_output
+      - blended_cost_per_1k
+      - provider
+      - notes
+      title: ModelCatalogEntry
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

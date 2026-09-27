@@ -1,0 +1,391 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com R10 Rvc API
+  version: 0.1.0
+  description: 'Operations tagged r10-rvc across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: r10-rvc
+paths:
+  /v1/rvc/policy:
+    get:
+      tags:
+      - r10-rvc
+      summary: Rvc Policy
+      operationId: rvc_policy_v1_rvc_policy_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/rvc/srs:
+    get:
+      tags:
+      - r10-rvc
+      summary: Rvc Srs
+      operationId: rvc_srs_v1_rvc_srs_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/rvc/commit:
+    post:
+      tags:
+      - r10-rvc
+      summary: Rvc Commit
+      operationId: rvc_commit_v1_rvc_commit_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommitReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/rvc/open:
+    post:
+      tags:
+      - r10-rvc
+      summary: Rvc Open
+      operationId: rvc_open_v1_rvc_open_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/rvc/batch-open:
+    post:
+      tags:
+      - r10-rvc
+      summary: Rvc Batch Open
+      description: 'v0.1: produces N independent Merkle openings in one call. The §11
+
+        patent claim allows v0.2 to compress these into a single 48-byte
+
+        aggregate KZG proof. Wire shape today returns a list of openings.'
+      operationId: rvc_batch_open_v1_rvc_batch_open_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchOpenReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/rvc/verify:
+    post:
+      tags:
+      - r10-rvc
+      summary: Rvc Verify
+      description: 'Stateless verifier. Returns 200 with valid:true|false except where
+
+        the request itself is malformed:
+
+        - unknown commitment_id → 404
+
+        - rubric_root mismatch → 409 (cross-rubric replay attempt)'
+      operationId: rvc_verify_v1_rvc_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_r10__routes__VerifyReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/rvc/{commitment_id}:
+    get:
+      tags:
+      - r10-rvc
+      summary: Rvc Get
+      operationId: rvc_get_v1_rvc__commitment_id__get
+      parameters:
+      - name: commitment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 4
+          maxLength: 64
+          title: Commitment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/rvc/{commitment_id}/openings:
+    get:
+      tags:
+      - r10-rvc
+      summary: Rvc Openings
+      operationId: rvc_openings_v1_rvc__commitment_id__openings_get
+      parameters:
+      - name: commitment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 4
+          maxLength: 64
+          title: Commitment Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    BatchOpenReq:
+      properties:
+        commitment_id:
+          type: string
+          maxLength: 64
+          minLength: 4
+          title: Commitment Id
+        positions:
+          items:
+            type: string
+          type: array
+          maxItems: 4096
+          minItems: 1
+          title: Positions
+      type: object
+      required:
+      - commitment_id
+      - positions
+      title: BatchOpenReq
+    hivemorph__hive_r10__routes__VerifyReq:
+      properties:
+        commitment_id:
+          type: string
+          maxLength: 64
+          minLength: 4
+          title: Commitment Id
+        opening:
+          additionalProperties: true
+          type: object
+          title: Opening
+          description: An Opening envelope as returned by /open
+        expected_rubric_root:
+          anyOf:
+          - type: string
+            maxLength: 256
+            minLength: 4
+          - type: 'null'
+          title: Expected Rubric Root
+      type: object
+      required:
+      - commitment_id
+      - opening
+      title: VerifyReq
+    CommitReq:
+      properties:
+        rubric_root:
+          type: string
+          maxLength: 256
+          minLength: 4
+          title: Rubric Root
+        rubric_version:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Rubric Version
+        vector:
+          items:
+            $ref: '#/components/schemas/VectorEntry'
+          type: array
+          maxItems: 4096
+          minItems: 1
+          title: Vector
+        operator:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Operator
+        scored_at:
+          type: string
+          maxLength: 64
+          minLength: 10
+          title: Scored At
+      type: object
+      required:
+      - rubric_root
+      - vector
+      - operator
+      - scored_at
+      title: CommitReq
+    VectorEntry:
+      properties:
+        k:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: K
+        s:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: S
+      type: object
+      required:
+      - k
+      - s
+      title: VectorEntry
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    OpenReq:
+      properties:
+        commitment_id:
+          type: string
+          maxLength: 64
+          minLength: 4
+          title: Commitment Id
+        k:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: K
+      type: object
+      required:
+      - commitment_id
+      - k
+      title: OpenReq
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

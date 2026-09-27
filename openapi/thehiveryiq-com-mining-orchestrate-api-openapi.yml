@@ -1,0 +1,303 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Mining Orchestrate API
+  version: 0.1.0
+  description: 'Operations tagged mining-orchestrate across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: mining-orchestrate
+paths:
+  /v1/mining/orchestrate/health:
+    get:
+      tags:
+      - mining-orchestrate
+      summary: Orchestrate Health
+      description: Tier 0 — free. Capabilities & version of the MOS orchestration layer.
+      operationId: orchestrate_health_v1_mining_orchestrate_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/mining/orchestrate/register:
+    post:
+      tags:
+      - mining-orchestrate
+      summary: Orchestrate Register
+      description: 'Tier 3 $0.05 — operator registers their MOS instance.
+
+
+        Idempotent on operator_did. Upserts on re-registration.
+
+        Three gates:
+
+        NEED: Valid operator_did + EVM wallet_addr + reachable mos_endpoint scheme.
+
+        YIELD: Registration creates earning potential (immediately on /sites/sync).
+
+        CLEAN-MONEY: wallet_addr must pass EVM checksum.'
+      operationId: orchestrate_register_v1_mining_orchestrate_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_mining__orchestrate__RegisterRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mining/orchestrate/sites/sync:
+    post:
+      tags:
+      - mining-orchestrate
+      summary: Orchestrate Sites Sync
+      description: 'Tier 3 $0.05 — operator pushes site/worker telemetry batch.
+
+
+        Idempotent on (operator_did, site_id, batch_ts). Re-posting the same
+
+        batch returns {"idempotent": True} without error.'
+      operationId: orchestrate_sites_sync_v1_mining_orchestrate_sites_sync_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SiteSyncRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mining/orchestrate/sites:
+    get:
+      tags:
+      - mining-orchestrate
+      summary: Orchestrate Sites
+      description: Tier 1 $0.001 — list operator's registered sites and latest telemetry.
+      operationId: orchestrate_sites_v1_mining_orchestrate_sites_get
+      parameters:
+      - name: operator_did
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Operator Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mining/orchestrate/payouts:
+    get:
+      tags:
+      - mining-orchestrate
+      summary: Orchestrate Payouts
+      description: Tier 1 $0.001 — operator's pending USDC payout balance from earn rails ledger.
+      operationId: orchestrate_payouts_v1_mining_orchestrate_payouts_get
+      parameters:
+      - name: operator_did
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Operator Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mining/orchestrate/payouts/withdraw:
+    post:
+      tags:
+      - mining-orchestrate
+      summary: Orchestrate Payouts Withdraw
+      description: 'Tier 3 $0.05 — construct BTC→USDC payout via Boltz + earn rails sweep.
+
+
+        Constructed-only by default (EARN_SWEEP_AUTODISPATCH=false per Rule 9).
+
+        Set EARN_SWEEP_AUTODISPATCH=true to enable real Boltz broadcast.'
+      operationId: orchestrate_payouts_withdraw_v1_mining_orchestrate_payouts_withdraw_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    hivemorph__hive_mining__orchestrate__RegisterRequest:
+      properties:
+        operator_did:
+          type: string
+          maxLength: 256
+          minLength: 3
+          title: Operator Did
+        mos_endpoint:
+          type: string
+          minLength: 7
+          title: Mos Endpoint
+        sites:
+          items:
+            type: string
+          type: array
+          title: Sites
+        wallet_addr:
+          type: string
+          title: Wallet Addr
+      type: object
+      required:
+      - operator_did
+      - mos_endpoint
+      - wallet_addr
+      title: RegisterRequest
+    SiteSyncRequest:
+      properties:
+        operator_did:
+          type: string
+          maxLength: 256
+          minLength: 3
+          title: Operator Did
+        site_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Site Id
+        batch_ts:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: Batch Ts
+        telemetry:
+          additionalProperties: true
+          type: object
+          title: Telemetry
+      type: object
+      required:
+      - operator_did
+      - site_id
+      - batch_ts
+      title: SiteSyncRequest
+    WithdrawRequest:
+      properties:
+        operator_did:
+          type: string
+          maxLength: 256
+          minLength: 3
+          title: Operator Did
+        amount_usdc:
+          type: number
+          maximum: 100000.0
+          exclusiveMinimum: 0.0
+          title: Amount Usdc
+      type: object
+      required:
+      - operator_did
+      - amount_usdc
+      title: WithdrawRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

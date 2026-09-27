@@ -1,0 +1,429 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com R4 Firewall API
+  version: 0.1.0
+  description: 'Operations tagged r4-firewall across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: r4-firewall
+paths:
+  /v1/firewall/policy:
+    get:
+      tags:
+      - r4-firewall
+      summary: Firewall enforcement policy contract
+      description: Machine-readable description of how the Hive Tool Firewall behaves. Partners program against this contract and the /v1/firewall/evaluate decision shape (R3) so their delegation envelopes produce predictable enforcement.
+      operationId: policy_v1_firewall_policy_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/firewall/enforce/preview:
+    post:
+      tags:
+      - r4-firewall
+      summary: Dry-run firewall enforcement against any envelope
+      description: Same as /v1/firewall/evaluate but returns the full enforcement envelope including the HTTP status the live middleware would emit and any side-effect ticket ids that would be issued. No ticket is actually persisted — this is purely a preview path.
+      operationId: enforce_preview_v1_firewall_enforce_preview_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnforcePreviewReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/firewall/sandbox/run:
+    post:
+      tags:
+      - r4-firewall
+      summary: Run a request in sandbox (no settlement)
+      description: Echo-back sandbox path. Confirms the envelope authorizes the request in sandbox mode, returns a synthetic result, and records nothing on any settlement layer. Real handlers integrate sandbox via `request.state.firewall_sandbox` from the firewall middleware.
+      operationId: sandbox_run_v1_firewall_sandbox_run_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SandboxRunReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/firewall/cosign/challenge:
+    post:
+      tags:
+      - r4-firewall
+      summary: Create a Threshold-SHOD cosign challenge
+      operationId: cosign_create_v1_firewall_cosign_challenge_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CosignChallengeReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/firewall/cosign/challenge/{challenge_id}:
+    get:
+      tags:
+      - r4-firewall
+      summary: Fetch a cosign challenge
+      operationId: cosign_get_v1_firewall_cosign_challenge__challenge_id__get
+      parameters:
+      - name: challenge_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Challenge Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/firewall/cosign/challenge/{challenge_id}/sign:
+    post:
+      tags:
+      - r4-firewall
+      summary: Record a cosignature against a challenge
+      description: 'Records a cosignature from one of the required signers. Once the threshold is reached, the challenge is consumed and the agent may retry the original request with X-Hive-Cosign: . R11 (Threshold SHOD-PQ) ships full multi-party verification; today the signature is recorded as a placeholder for the bind.'
+      operationId: cosign_sign_v1_firewall_cosign_challenge__challenge_id__sign_post
+      parameters:
+      - name: challenge_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Challenge Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CosignSignReq'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/firewall/approval/request:
+    post:
+      tags:
+      - r4-firewall
+      summary: Create a human-approval ticket
+      operationId: approval_request_v1_firewall_approval_request_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalRequestReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/firewall/approval/{ticket_id}:
+    get:
+      tags:
+      - r4-firewall
+      summary: Fetch an approval ticket
+      operationId: approval_get_v1_firewall_approval__ticket_id__get
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Ticket Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/firewall/approval/{ticket_id}/decide:
+    post:
+      tags:
+      - r4-firewall
+      summary: Approve or deny a ticket
+      operationId: approval_decide_v1_firewall_approval__ticket_id__decide_post
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          title: Ticket Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalDecideReq'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    SandboxRunReq:
+      properties:
+        jti:
+          type: string
+          title: Jti
+        request:
+          additionalProperties: true
+          type: object
+          title: Request
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - jti
+      title: SandboxRunReq
+    EnforcePreviewReq:
+      properties:
+        jti:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Jti
+          description: If set, fetch the stored envelope by jti and evaluate against it. Otherwise pass `envelope` inline.
+        envelope:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Envelope
+        request:
+          additionalProperties: true
+          type: object
+          title: Request
+      type: object
+      title: EnforcePreviewReq
+    CosignChallengeReq:
+      properties:
+        jti:
+          type: string
+          title: Jti
+        cosigners_required:
+          items:
+            type: string
+          type: array
+          title: Cosigners Required
+        bound_violation:
+          type: string
+          title: Bound Violation
+          default: spend_cap_exceeded
+        request_summary:
+          additionalProperties: true
+          type: object
+          title: Request Summary
+        threshold:
+          type: integer
+          maximum: 7.0
+          minimum: 1.0
+          title: Threshold
+          default: 2
+        ttl_seconds:
+          type: integer
+          maximum: 3600.0
+          exclusiveMinimum: 0.0
+          title: Ttl Seconds
+          default: 300
+      type: object
+      required:
+      - jti
+      title: CosignChallengeReq
+    CosignSignReq:
+      properties:
+        signer_did:
+          type: string
+          title: Signer Did
+        signature:
+          type: string
+          title: Signature
+          description: base64url Ed25519 signature over (challenge_id || nonce). R11 ships full Threshold SHOD-PQ verification; today the signature is recorded but not cryptographically validated since R11 binds the multi-party signing protocol.
+      type: object
+      required:
+      - signer_did
+      - signature
+      title: CosignSignReq
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ApprovalRequestReq:
+      properties:
+        jti:
+          type: string
+          title: Jti
+        bound_violation:
+          type: string
+          title: Bound Violation
+          default: jurisdiction_not_allowed
+        request_summary:
+          additionalProperties: true
+          type: object
+          title: Request Summary
+        ttl_seconds:
+          type: integer
+          maximum: 2592000.0
+          exclusiveMinimum: 0.0
+          title: Ttl Seconds
+          default: 86400
+      type: object
+      required:
+      - jti
+      title: ApprovalRequestReq
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ApprovalDecideReq:
+      properties:
+        decision:
+          type: string
+          title: Decision
+          description: '''approved'' or ''denied'''
+        decided_by:
+          type: string
+          title: Decided By
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - decision
+      - decided_by
+      title: ApprovalDecideReq
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

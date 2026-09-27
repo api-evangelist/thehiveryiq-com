@@ -1,0 +1,662 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Cre API
+  version: 0.1.0
+  description: 'Operations tagged cre across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: cre
+paths:
+  /v1/cre/health:
+    get:
+      tags:
+      - cre
+      summary: Health
+      operationId: health_v1_cre_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Cre Health Get
+  /v1/cre/issue:
+    post:
+      tags:
+      - cre
+      summary: Issue
+      operationId: issue_v1_cre_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CREIssueRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CREIssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/cre/envelope/{cre_id}:
+    get:
+      tags:
+      - cre
+      summary: Envelope Get
+      operationId: envelope_get_v1_cre_envelope__cre_id__get
+      parameters:
+      - name: cre_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Cre Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Envelope Get V1 Cre Envelope  Cre Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/cre/verify:
+    post:
+      tags:
+      - cre
+      summary: Verify
+      description: 'Verify a CRE envelope.
+
+
+        The envelope can be passed in directly OR referenced by cre_id.'
+      operationId: verify_v1_cre_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Envelope
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CREVerifyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/cre/coverage:
+    get:
+      tags:
+      - cre
+      summary: Coverage
+      description: 'Per-framework coverage across all CRE envelopes ever issued.
+
+
+        For each framework, returns the % of catalog controls that have been
+
+        attested by AT LEAST ONE issued envelope. This is the live answer to
+
+        ''are you SOC 2 / HIPAA / etc. compliant'' — measured continuously
+
+        from real transactions, not from an annual audit.'
+      operationId: coverage_v1_cre_coverage_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Coverage V1 Cre Coverage Get
+  /v1/cre/tbr/manifest:
+    get:
+      tags:
+      - cre
+      summary: Tbr Manifest
+      description: 'Disclosure of the TBR cryptographic stack actually deployed.
+
+
+        Honest perf, no overclaims, explicit list of NOT-USED constructions
+
+        (organoid entropy, 2-of-3 thresholds, single-zkSNARK-replaces-frameworks).'
+      operationId: tbr_manifest_v1_cre_tbr_manifest_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Tbr Manifest V1 Cre Tbr Manifest Get
+  /v1/cre/tbr/perf:
+    get:
+      tags:
+      - cre
+      summary: Tbr Perf
+      description: 'Honest measured performance of the TBR primitives.
+
+
+        Numbers are gathered live by exercising each primitive a small number
+
+        of times. This is operational telemetry, not a benchmark publication.'
+      operationId: tbr_perf_v1_cre_tbr_perf_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Tbr Perf V1 Cre Tbr Perf Get
+  /v1/cre/tbr/kem/generate:
+    post:
+      tags:
+      - cre
+      summary: Tbr Kem Generate
+      description: 'Generate a one-shot hybrid-KEM keypair (ephemeral, server-side).
+
+
+        Returns ONLY the public key material; the corresponding secret key
+
+        is held in process memory under the returned `kem_id` and discarded
+
+        after a single decap or 5 minutes, whichever comes first.'
+      operationId: tbr_kem_generate_v1_cre_tbr_kem_generate_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Tbr Kem Generate V1 Cre Tbr Kem Generate Post
+  /v1/cre/tbr/kem/selftest:
+    get:
+      tags:
+      - cre
+      summary: Tbr Kem Selftest
+      description: 'Self-test of the hybrid-KEM combiner.
+
+
+        Generates a keypair, encapsulates, decapsulates, asserts the two
+
+        derived shared secrets match, and reports honest timing. Does not
+
+        persist any keys.'
+      operationId: tbr_kem_selftest_v1_cre_tbr_kem_selftest_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Tbr Kem Selftest V1 Cre Tbr Kem Selftest Get
+  /v1/cre/tbr/entropy/health:
+    get:
+      tags:
+      - cre
+      summary: Tbr Entropy Health
+      description: Operational entropy health telemetry (NOT a FIPS 140-3 claim).
+      operationId: tbr_entropy_health_v1_cre_tbr_entropy_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Tbr Entropy Health V1 Cre Tbr Entropy Health Get
+  /v1/cre/manifesto:
+    get:
+      tags:
+      - cre
+      summary: Manifesto
+      operationId: manifesto_v1_cre_manifesto_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CREManifesto'
+components:
+  schemas:
+    CREEnvelope:
+      properties:
+        cre_id:
+          type: string
+          title: Cre Id
+        txn_type:
+          type: string
+          title: Txn Type
+        txn_id:
+          type: string
+          title: Txn Id
+        actor:
+          type: string
+          title: Actor
+        counterparty:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Counterparty
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+        payload_hash:
+          type: string
+          title: Payload Hash
+        jurisdictions:
+          items:
+            type: string
+          type: array
+          title: Jurisdictions
+        canonical_hash:
+          type: string
+          title: Canonical Hash
+        ed25519_sig:
+          type: string
+          title: Ed25519 Sig
+        ed25519_pub:
+          type: string
+          title: Ed25519 Pub
+        mldsa65_sig:
+          type: string
+          title: Mldsa65 Sig
+        mldsa65_pub_fingerprint:
+          type: string
+          title: Mldsa65 Pub Fingerprint
+        cascade:
+          additionalProperties: true
+          type: object
+          title: Cascade
+        key_epoch:
+          type: string
+          title: Key Epoch
+          default: ''
+        mmr:
+          additionalProperties: true
+          type: object
+          title: Mmr
+        triad:
+          additionalProperties: true
+          type: object
+          title: Triad
+        issued_at:
+          type: string
+          title: Issued At
+        issuer:
+          type: string
+          title: Issuer
+          default: hive-civilization
+        controls:
+          items:
+            type: string
+          type: array
+          title: Controls
+        control_audits:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Control Audits
+        frameworks_attested:
+          items:
+            type: string
+          type: array
+          title: Frameworks Attested
+        coverage_pct:
+          additionalProperties:
+            type: number
+          type: object
+          title: Coverage Pct
+        machine_verified_count:
+          type: integer
+          title: Machine Verified Count
+        self_attested_count:
+          type: integer
+          title: Self Attested Count
+        verifier_url:
+          type: string
+          title: Verifier Url
+          default: https://thehiveryiq.com/verify/
+        spec_url:
+          type: string
+          title: Spec Url
+          default: https://thehiveryiq.com/cre/
+      type: object
+      required:
+      - cre_id
+      - txn_type
+      - txn_id
+      - actor
+      - payload_hash
+      - canonical_hash
+      - ed25519_sig
+      - ed25519_pub
+      - mldsa65_sig
+      - mldsa65_pub_fingerprint
+      - issued_at
+      - controls
+      - control_audits
+      - frameworks_attested
+      - coverage_pct
+      - machine_verified_count
+      - self_attested_count
+      title: CREEnvelope
+      description: Full CRE envelope — what auditors ingest.
+    CREIssueResponse:
+      properties:
+        cre_id:
+          type: string
+          title: Cre Id
+        envelope:
+          $ref: '#/components/schemas/CREEnvelope'
+        elapsed_ms:
+          type: number
+          title: Elapsed Ms
+      type: object
+      required:
+      - cre_id
+      - envelope
+      - elapsed_ms
+      title: CREIssueResponse
+    CREManifesto:
+      properties:
+        title:
+          type: string
+          title: Title
+          default: The Compliance Receipt Envelope (CRE) Standard v1.0
+        thesis:
+          type: string
+          title: Thesis
+          default: Compliance is not a workflow. It is a side effect of transacting. Every SOC 2 / ISO 27001 / HIPAA / GDPR / EU AI Act control is reducible to a tuple of fields on a cryptographically-signed envelope. If the envelope validates, the control is machine-attested.
+        standards_replaced:
+          items:
+            type: string
+          type: array
+          title: Standards Replaced
+          default:
+          - SOC 2 Type II annual audit (replaced by per-transaction CRE)
+          - ISO 27001 surveillance audits (replaced by continuous CRE coverage)
+          - HIPAA log-review burden (replaced by CRE audit trail)
+          - 21 CFR Part 11 e-signature (replaced by ML-DSA-65 dual-sig)
+          - Business Associate Agreements (replaced by CRE flow-down)
+          - GDPR Article 30 records (replaced by CRE export)
+        standards_extended:
+          items:
+            type: string
+          type: array
+          title: Standards Extended
+          default:
+          - EU AI Act high-risk attestation (CRE = perpetual conformity record)
+          - NIS2 incident reporting (CRE.404.a auto-fires)
+          - DORA ICT third-party register (CRE flow-down satisfies)
+          - eIDAS2 qualified signature (ML-DSA-65 satisfies QES requirements)
+        key_properties:
+          items:
+            type: string
+          type: array
+          title: Key Properties
+          default:
+          - Offline-verifiable — auditor verifies without calling Hive
+          - Post-quantum — ML-DSA-65 (FIPS 204) signed
+          - Cross-framework — one envelope satisfies up to 13 frameworks
+          - Continuous — every transaction is its own audit
+          - Tamper-evident — SHA3-256 canonical hash binds all fields
+          - Privacy-preserving — only hashes are envelope-resident
+      type: object
+      title: CREManifesto
+      description: The doctrine in machine-readable form.
+    CREIssueRequest:
+      properties:
+        txn_type:
+          type: string
+          title: Txn Type
+          description: One of TRANSACTION_TYPES
+          examples:
+          - settlement
+          - diagnosis
+          - prior_auth
+        txn_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Txn Id
+          description: External txn id; auto-generated if absent
+        actor:
+          type: string
+          title: Actor
+          description: DID or stable identifier of the initiating party
+          examples:
+          - did:hive:patient:alice
+          - '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+        counterparty:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Counterparty
+          description: DID or stable identifier of the receiving party
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: Domain-specific transaction body. NEVER include PHI/PII in plaintext; use a hash of the underlying record.
+        payload_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payload Hash
+          description: SHA3-256 of the underlying record if PHI/PII is sealed elsewhere
+        jurisdictions:
+          items:
+            type: string
+          type: array
+          title: Jurisdictions
+          description: ISO 3166-1 alpha-2 codes that govern this transaction
+          examples:
+          - - US-CA
+          - - DE
+            - EU
+          - - US
+            - EU
+            - SG
+        controls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Controls
+          description: Explicit control IDs to attest. If None, auto-selected from DEFAULT_CONTROL_BUNDLE[txn_type].
+        extra_frameworks:
+          items:
+            type: string
+          type: array
+          title: Extra Frameworks
+          description: Additional frameworks to claim attestation against
+      type: object
+      required:
+      - txn_type
+      - actor
+      title: CREIssueRequest
+      description: Issue a Compliance Receipt Envelope for any transaction.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CREVerifyResponse:
+      properties:
+        cre_id:
+          type: string
+          title: Cre Id
+        valid:
+          type: boolean
+          title: Valid
+        canonical_hash_match:
+          type: boolean
+          title: Canonical Hash Match
+        ed25519_valid:
+          type: boolean
+          title: Ed25519 Valid
+        mldsa65_valid:
+          type: boolean
+          title: Mldsa65 Valid
+        cascade_valid:
+          type: boolean
+          title: Cascade Valid
+          default: false
+        cascade_channels_checked:
+          type: integer
+          title: Cascade Channels Checked
+          default: 0
+        mmr_inclusion_valid:
+          type: boolean
+          title: Mmr Inclusion Valid
+          default: false
+        triad_present:
+          type: boolean
+          title: Triad Present
+          default: false
+        triad_valid:
+          type: boolean
+          title: Triad Valid
+          default: false
+        triad_pillars_passed:
+          type: integer
+          title: Triad Pillars Passed
+          default: 0
+        slhdsa_valid:
+          type: boolean
+          title: Slhdsa Valid
+          default: false
+        key_epoch:
+          type: string
+          title: Key Epoch
+          default: ''
+        controls_attested:
+          type: integer
+          title: Controls Attested
+        frameworks_attested:
+          items:
+            type: string
+          type: array
+          title: Frameworks Attested
+        coverage_pct:
+          additionalProperties:
+            type: number
+          type: object
+          title: Coverage Pct
+        issued_at:
+          type: string
+          title: Issued At
+        age_seconds:
+          type: number
+          title: Age Seconds
+        notes:
+          items:
+            type: string
+          type: array
+          title: Notes
+      type: object
+      required:
+      - cre_id
+      - valid
+      - canonical_hash_match
+      - ed25519_valid
+      - mldsa65_valid
+      - controls_attested
+      - frameworks_attested
+      - coverage_pct
+      - issued_at
+      - age_seconds
+      title: CREVerifyResponse
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,453 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Hivecomply API
+  version: 0.1.0
+  description: 'Operations tagged hivecomply across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: hivecomply
+paths:
+  /v1/hivecomply/health:
+    get:
+      tags:
+      - hivecomply
+      summary: Health
+      operationId: health_v1_hivecomply_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Hivecomply Health Get
+  /v1/hivecomply/pricing:
+    get:
+      tags:
+      - hivecomply
+      summary: Pricing
+      operationId: pricing_v1_hivecomply_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Hivecomply Pricing Get
+  /v1/hivecomply/framework/map:
+    get:
+      tags:
+      - hivecomply
+      summary: Framework Map
+      description: Return all 11 framework profiles with their controls.
+      operationId: framework_map_v1_hivecomply_framework_map_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Framework Map V1 Hivecomply Framework Map Get
+  /v1/hivecomply/control/status:
+    get:
+      tags:
+      - hivecomply
+      summary: Control Status Endpoint
+      description: Return event counts and last_event_at for a specific control.
+      operationId: control_status_endpoint_v1_hivecomply_control_status_get
+      parameters:
+      - name: framework
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Framework code, e.g. SOC2
+          title: Framework
+        description: Framework code, e.g. SOC2
+      - name: control
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Control code, e.g. CC6.1
+          title: Control
+        description: Control code, e.g. CC6.1
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Control Status Endpoint V1 Hivecomply Control Status Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hivecomply/event/ingest:
+    post:
+      tags:
+      - hivecomply
+      summary: Event Ingest
+      description: Ingest a compliance event and return a dual-signed receipt.
+      operationId: event_ingest_v1_hivecomply_event_ingest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComplianceEventIngestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Event Ingest V1 Hivecomply Event Ingest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hivecomply/evidence/query:
+    post:
+      tags:
+      - hivecomply
+      summary: Evidence Query
+      description: Query compliance events by framework, control, and time period.
+      operationId: evidence_query_v1_hivecomply_evidence_query_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvidenceQueryRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Evidence Query V1 Hivecomply Evidence Query Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hivecomply/bundle/export:
+    post:
+      tags:
+      - hivecomply
+      summary: Bundle Export
+      description: Export a canonical evidence bundle with bundle_hash + dual signatures.
+      operationId: bundle_export_v1_hivecomply_bundle_export_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EvidenceBundleExportRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Bundle Export V1 Hivecomply Bundle Export Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hivecomply/bundle/verify:
+    post:
+      tags:
+      - hivecomply
+      summary: Bundle Verify
+      description: Verify a canonical evidence bundle offline.
+      operationId: bundle_verify_v1_hivecomply_bundle_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BundleVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Bundle Verify V1 Hivecomply Bundle Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    BundleVerifyRequest:
+      properties:
+        bundle_id:
+          type: string
+          title: Bundle Id
+        bundle_hash:
+          type: string
+          title: Bundle Hash
+        event_count:
+          type: integer
+          title: Event Count
+        events:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Events
+        created_at:
+          type: string
+          title: Created At
+        ed25519_signature:
+          type: string
+          title: Ed25519 Signature
+        mldsa65_signature:
+          type: string
+          title: Mldsa65 Signature
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        framework:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Framework
+        control:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Control
+        period_start:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period Start
+        period_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period End
+      type: object
+      required:
+      - bundle_id
+      - bundle_hash
+      - event_count
+      - events
+      - created_at
+      - ed25519_signature
+      - mldsa65_signature
+      - receipt_envelope
+      title: BundleVerifyRequest
+      description: Request to verify a canonical evidence bundle offline.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EvidenceQueryRequest:
+      properties:
+        framework:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Framework
+          description: Framework code filter, e.g. 'SOC2'
+        control:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Control
+          description: Control code filter, e.g. 'CC6.1'
+        period_start:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period Start
+          description: ISO 8601 UTC start timestamp (inclusive)
+        period_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period End
+          description: ISO 8601 UTC end timestamp (inclusive)
+        limit:
+          type: integer
+          maximum: 1000.0
+          minimum: 1.0
+          title: Limit
+          default: 100
+        offset:
+          type: integer
+          minimum: 0.0
+          title: Offset
+          default: 0
+      type: object
+      title: EvidenceQueryRequest
+      description: Query parameters for evidence retrieval.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ComplianceEventIngestRequest:
+      properties:
+        event_type:
+          type: string
+          title: Event Type
+          description: 'Event category: logical_access, config_change, data_export, model_inference, key_rotation, policy_update, audit_log, incident_report, access_review, data_deletion'
+        framework_codes:
+          items:
+            type: string
+          type: array
+          title: Framework Codes
+          description: Framework codes, e.g. ['SOC2', 'ISO27001', 'PCI4']
+        control_codes:
+          items:
+            type: string
+          type: array
+          title: Control Codes
+          description: Control codes, e.g. ['CC6.1', 'A.9.4.1', '10.2.1']
+        actor_did:
+          type: string
+          title: Actor Did
+          description: DID of the actor performing the action
+        evidence_hash:
+          type: string
+          title: Evidence Hash
+          description: sha256 hex of the canonical evidence payload
+        subject_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subject Did
+          description: DID of the resource/subject being acted on (optional)
+        prior_event_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prior Event Id
+          description: UUID of the prior event in the chain (optional)
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - event_type
+      - framework_codes
+      - control_codes
+      - actor_did
+      - evidence_hash
+      title: ComplianceEventIngestRequest
+      description: Request to ingest a compliance event.
+    EvidenceBundleExportRequest:
+      properties:
+        framework:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Framework
+          description: Framework code filter
+        control:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Control
+          description: Control code filter
+        period_start:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period Start
+          description: ISO 8601 UTC start timestamp
+        period_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period End
+          description: ISO 8601 UTC end timestamp
+      type: object
+      title: EvidenceBundleExportRequest
+      description: Request to export a canonical evidence bundle.
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

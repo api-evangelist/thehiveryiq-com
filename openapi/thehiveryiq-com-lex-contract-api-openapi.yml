@@ -1,0 +1,602 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Lex Contract API
+  version: 0.1.0
+  description: 'Operations tagged lex-contract across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: lex-contract
+paths:
+  /v1/lex-contract/health:
+    get:
+      tags:
+      - lex-contract
+      summary: Health
+      operationId: health_v1_lex_contract_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Lex Contract Health Get
+  /v1/lex-contract/pricing:
+    get:
+      tags:
+      - lex-contract
+      summary: Pricing
+      operationId: pricing_v1_lex_contract_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Lex Contract Pricing Get
+  /v1/lex-contract/draft_attest:
+    post:
+      tags:
+      - lex-contract
+      summary: Draft Attest
+      description: Record a contract draft creation event.
+      operationId: draft_attest_v1_lex_contract_draft_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DraftAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Draft Attest V1 Lex Contract Draft Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/lex-contract/redline_attest:
+    post:
+      tags:
+      - lex-contract
+      summary: Redline Attest
+      description: Record a redline/markup event on a contract.
+      operationId: redline_attest_v1_lex_contract_redline_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RedlineAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Redline Attest V1 Lex Contract Redline Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/lex-contract/signature_attest:
+    post:
+      tags:
+      - lex-contract
+      summary: Signature Attest
+      description: Record a single-party signature event.
+      operationId: signature_attest_v1_lex_contract_signature_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignatureAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Signature Attest V1 Lex Contract Signature Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/lex-contract/execute_attest:
+    post:
+      tags:
+      - lex-contract
+      summary: Execute Attest
+      description: Record full execution — all parties signed.
+      operationId: execute_attest_v1_lex_contract_execute_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Execute Attest V1 Lex Contract Execute Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/lex-contract/amendment_attest:
+    post:
+      tags:
+      - lex-contract
+      summary: Amendment Attest
+      description: Record a contract amendment.
+      operationId: amendment_attest_v1_lex_contract_amendment_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmendmentAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Amendment Attest V1 Lex Contract Amendment Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/lex-contract/notice_attest:
+    post:
+      tags:
+      - lex-contract
+      summary: Notice Attest
+      description: Record a formal notice (breach, termination intent, renewal opt-in/out).
+      operationId: notice_attest_v1_lex_contract_notice_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NoticeAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Notice Attest V1 Lex Contract Notice Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/lex-contract/termination_attest:
+    post:
+      tags:
+      - lex-contract
+      summary: Termination Attest
+      description: Record contract termination.
+      operationId: termination_attest_v1_lex_contract_termination_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TerminationAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Termination Attest V1 Lex Contract Termination Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/lex-contract/chain_verify:
+    get:
+      tags:
+      - lex-contract
+      summary: Chain Verify Endpoint
+      description: Return ordered receipt chain + chain_valid bool + per-receipt sig validity.
+      operationId: chain_verify_endpoint_v1_lex_contract_chain_verify_get
+      parameters:
+      - name: contract_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Contract ID to verify chain for
+          title: Contract Id
+        description: Contract ID to verify chain for
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Chain Verify Endpoint V1 Lex Contract Chain Verify Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/lex-contract/contract_get:
+    get:
+      tags:
+      - lex-contract
+      summary: Contract Get
+      description: Return full contract object with all lifecycle events.
+      operationId: contract_get_v1_lex_contract_contract_get_get
+      parameters:
+      - name: contract_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Contract ID to retrieve
+          title: Contract Id
+        description: Contract ID to retrieve
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Contract Get V1 Lex Contract Contract Get Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AmendmentAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID being amended
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+          description: Amended clause hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Amendment metadata: amendment_number, amendment_summary, effective_date, etc.'
+      type: object
+      required:
+      - contract_id
+      title: AmendmentAttestRequest
+      description: Record a contract amendment.
+    ClauseHash:
+      properties:
+        clause_id:
+          type: string
+          title: Clause Id
+          description: Clause identifier (e.g. '3.1', 'indemnity', 'ip_ownership')
+        hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          title: Hash
+          description: sha256 hex of the canonical clause text
+      type: object
+      required:
+      - clause_id
+      - hash
+      title: ClauseHash
+      description: sha256 hash of a contract clause for tamper-evidence.
+    ContractParty:
+      properties:
+        did:
+          type: string
+          title: Did
+          description: DID of the party (e.g. did:hive:org:acme)
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Human-readable name of the party
+        role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Role
+          description: 'Party role: buyer, seller, licensor, licensee, service_provider, client, other'
+      type: object
+      required:
+      - did
+      title: ContractParty
+      description: A party to the contract with a DID.
+    NoticeAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID notice is issued against
+        notice_type:
+          type: string
+          title: Notice Type
+          description: 'Type of notice: breach, termination_intent, renewal_opt_in, renewal_opt_out, cure, other'
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Notice metadata: notice_hash, delivery_method, cure_deadline, etc.'
+      type: object
+      required:
+      - contract_id
+      - notice_type
+      title: NoticeAttestRequest
+      description: Record a formal notice (breach, termination intent, renewal opt-in/out).
+    TerminationAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID being terminated
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Termination metadata: termination_reason, effective_date, for_cause, etc.'
+      type: object
+      required:
+      - contract_id
+      title: TerminationAttestRequest
+      description: Record contract termination.
+    DraftAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Unique contract identifier (UUID or client-assigned)
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+          description: Contracting parties with DIDs
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+          description: Clause tamper-evidence hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Arbitrary event metadata (title, jurisdiction, governing_law, etc.)
+      type: object
+      required:
+      - contract_id
+      - parties
+      title: DraftAttestRequest
+      description: Record a contract draft creation event.
+    RedlineAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID being redlined
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+          description: Updated clause hashes after redline
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Redline metadata: redliner_did, change_summary, version_label, etc.'
+      type: object
+      required:
+      - contract_id
+      title: RedlineAttestRequest
+      description: Record a redline/markup event on a contract.
+    SignatureAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID being signed
+        signer_did:
+          type: string
+          title: Signer Did
+          description: DID of the party signing
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Signature metadata: signature_method, signature_hash, timestamp, etc.'
+      type: object
+      required:
+      - contract_id
+      - signer_did
+      title: SignatureAttestRequest
+      description: Record a single-party signature event.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ExecuteAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID being executed
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+          description: All executing parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Execution metadata: effective_date, governing_law, signature_page_hash, etc.'
+      type: object
+      required:
+      - contract_id
+      - parties
+      title: ExecuteAttestRequest
+      description: Record full execution (all parties signed).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

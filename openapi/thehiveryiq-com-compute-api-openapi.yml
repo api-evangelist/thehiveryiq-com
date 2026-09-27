@@ -1,0 +1,115 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Compute API
+  version: 1.0.0
+  contact:
+    name: Hive Civilization
+    url: https://thehiveryiq.com
+    email: steve@thehiveryiq.com
+  description: 'Operations tagged Compute across 2 of this provider''s published API definitions: thehiveryiq-com-hivecompute-openapi.json, thehiveryiq-com-hivecompute-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.thehiveryiq.com
+tags:
+- name: Compute
+paths:
+  /v1/compute/chat/completions:
+    post:
+      summary: Chat completions (OpenAI-compatible)
+      x-mpp-charge:
+        amount: '50000'
+        intent: charge
+      responses:
+        '200':
+          description: Completion response
+        '402':
+          description: Payment required — x402 or MPP
+      tags:
+      - Compute
+      operationId: postV1ComputeChatCompletions
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.thehiveryiq.com
+  /v1/compute/completions:
+    post:
+      summary: Text completions
+      x-mpp-charge:
+        amount: '50000'
+        intent: charge
+      responses:
+        '200':
+          description: Completion response
+        '402':
+          description: Payment required
+      tags:
+      - Compute
+      operationId: postV1ComputeCompletions
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.thehiveryiq.com
+  /v1/compute/embeddings:
+    post:
+      summary: Embeddings
+      x-mpp-charge:
+        amount: '50000'
+        intent: charge
+      responses:
+        '200':
+          description: Embedding vectors
+        '402':
+          description: Payment required
+      tags:
+      - Compute
+      operationId: postV1ComputeEmbeddings
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.thehiveryiq.com
+  /v1/compute/models:
+    get:
+      summary: List available models
+      responses:
+        '200':
+          description: Model list
+      tags:
+      - Compute
+      operationId: getV1ComputeModels
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.thehiveryiq.com
+  /v1/compute/estimate:
+    post:
+      summary: Estimate inference cost
+      responses:
+        '200':
+          description: Cost estimate
+      tags:
+      - Compute
+      operationId: postV1ComputeEstimate
+      x-operation-id-source: derived
+    servers:
+    - url: https://api.thehiveryiq.com
+x-refined-from:
+- thehiveryiq-com-hivecompute-openapi.json
+- thehiveryiq-com-hivecompute-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

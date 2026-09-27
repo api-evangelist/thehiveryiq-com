@@ -1,0 +1,265 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Forge API
+  version: 0.1.0
+  description: 'Operations tagged forge across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: forge
+paths:
+  /v1/forge/agent/qvac_provider/list:
+    post:
+      tags:
+      - forge
+      summary: List Qvac Provider
+      operationId: list_qvac_provider_v1_forge_agent_qvac_provider_list_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response List Qvac Provider V1 Forge Agent Qvac Provider List Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/forge/agents:
+    get:
+      tags:
+      - forge
+      summary: Get Agents
+      operationId: get_agents_v1_forge_agents_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Agents V1 Forge Agents Get
+  /v1/forge/agent/qvac_provider:
+    get:
+      tags:
+      - forge
+      summary: Get Qvac Provider
+      operationId: get_qvac_provider_v1_forge_agent_qvac_provider_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Qvac Provider V1 Forge Agent Qvac Provider Get
+  /v1/forge/agent/qvac_provider/invoke:
+    post:
+      tags:
+      - forge
+      summary: Invoke Qvac Provider
+      operationId: invoke_qvac_provider_v1_forge_agent_qvac_provider_invoke_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvokeBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Invoke Qvac Provider V1 Forge Agent Qvac Provider Invoke Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/forge/agent/qvac_provider/invoke/public:
+    post:
+      tags:
+      - forge
+      summary: Invoke Qvac Provider Public
+      description: 'Public x402-gated forge invoke.
+
+
+        Without X-Payment: HTTP 402 + x402 challenge body
+
+        With valid X-Payment: runs three-gate + qvac inference and returns
+
+        the same response shape as the non-/public route
+
+        With invalid X-Payment: HTTP 402 + INVALID_PAYMENT_PROOF'
+      operationId: invoke_qvac_provider_public_v1_forge_agent_qvac_provider_invoke_public_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvokeBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/forge/agent/qvac_provider/economics:
+    get:
+      tags:
+      - forge
+      summary: Economics Qvac Provider
+      operationId: economics_qvac_provider_v1_forge_agent_qvac_provider_economics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Economics Qvac Provider V1 Forge Agent Qvac Provider Economics Get
+components:
+  schemas:
+    ListBody:
+      properties:
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      title: ListBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    InvokeBody:
+      properties:
+        model:
+          type: string
+          title: Model
+          default: LLAMA_3_2_1B_INST_Q4_0
+        prompt:
+          type: string
+          maxLength: 4096
+          minLength: 1
+          title: Prompt
+          default: forge invoke ping
+        capability:
+          type: string
+          title: Capability
+          default: llm_completion
+        settle_currency:
+          type: string
+          title: Settle Currency
+          description: USDT or USDC
+          default: USDT
+        price_usdc:
+          type: number
+          minimum: 0.0
+          title: Price Usdc
+          default: 0.0008
+        requester_did:
+          type: string
+          title: Requester Did
+          default: did:hive:forge:caller
+        payout_address:
+          type: string
+          title: Payout Address
+          default: '0x15184bf50b3d3f52b60434f8942b7d52f2eb436e'
+        provider_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider Id
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+        force_need:
+          type: boolean
+          title: Force Need
+          description: Test path — assert NEED externally. Without this, NEED is checked from the live qvac leaderboard.
+          default: false
+      type: object
+      title: InvokeBody
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

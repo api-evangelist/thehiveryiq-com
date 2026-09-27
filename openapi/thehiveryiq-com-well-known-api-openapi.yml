@@ -1,0 +1,122 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com .well Known API
+  version: 0.1.0
+  description: 'Operations tagged .well Known across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: .well Known
+paths:
+  /.well-known/agent.json:
+    get:
+      summary: Well Known Agent Json
+      description: 'A2A discovery manifest — sister to /.well-known/agent-card.json.
+
+
+        llmstxt-convention crawlers + some A2A clients look for /.well-known/agent.json
+
+        as the canonical discovery URL. Mirrors agent-card.json with the lean fields.'
+      operationId: well_known_agent_json__well_known_agent_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - .well Known
+  /.well-known/x402.json:
+    get:
+      summary: Well Known X402
+      description: Auto-generated x402 directory entry (mirrors /v1/x402/rails).
+      operationId: well_known_x402__well_known_x402_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - .well Known
+  /.well-known/x402:
+    get:
+      summary: Well Known X402 Alias
+      operationId: well_known_x402_alias__well_known_x402_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - .well Known
+  /.well-known/did.json:
+    get:
+      summary: Well Known Did Json
+      description: 'Resolve did:hive:hivemorph as a W3C DID document.
+
+
+        Returns a DID Document conforming to https://www.w3.org/TR/did-core/ with
+
+        one Ed25519 verificationMethod (the Hive root signing key) plus service
+
+        endpoints for receipt verification, x402 settlement, and MCP discovery.'
+      operationId: well_known_did_json__well_known_did_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - .well Known
+  /.well-known/mcp.json:
+    get:
+      summary: Well Known Mcp Json
+      description: 'MCP server descriptor for HiveMorph.
+
+
+        Lists the public Hive tool catalog (rosetta, prospector, rubric, settlement,
+
+        receipt, hktn-lookup) with the streamable-http transport endpoint. Per the
+
+        MCP 2024-11-05 spec, this is the canonical discovery URL agent clients
+
+        look for at /.well-known/mcp.json.'
+      operationId: well_known_mcp_json__well_known_mcp_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - .well Known
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,655 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Stormlock API
+  version: 0.1.0
+  description: 'Operations tagged stormlock across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: stormlock
+paths:
+  /v1/stormlock/health:
+    get:
+      tags:
+      - stormlock
+      summary: Health
+      operationId: health_v1_stormlock_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Stormlock Health Get
+  /v1/stormlock/pricing:
+    get:
+      tags:
+      - stormlock
+      summary: Pricing
+      operationId: pricing_v1_stormlock_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Stormlock Pricing Get
+  /v1/stormlock/bind_attest:
+    post:
+      tags:
+      - stormlock
+      summary: Bind Attest
+      description: Record a policy bind event.
+      operationId: bind_attest_v1_stormlock_bind_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BindAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Bind Attest V1 Stormlock Bind Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/stormlock/oracle_subscribe:
+    post:
+      tags:
+      - stormlock
+      summary: Oracle Subscribe
+      description: Register an oracle for a policy.
+      operationId: oracle_subscribe_v1_stormlock_oracle_subscribe_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OracleSubscribeRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Oracle Subscribe V1 Stormlock Oracle Subscribe Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/stormlock/oracle_reading_attest:
+    post:
+      tags:
+      - stormlock
+      summary: Oracle Reading Attest
+      description: Record a single oracle reading.
+      operationId: oracle_reading_attest_v1_stormlock_oracle_reading_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OracleReadingAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Oracle Reading Attest V1 Stormlock Oracle Reading Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/stormlock/trigger_eval_attest:
+    post:
+      tags:
+      - stormlock
+      summary: Trigger Eval Attest
+      description: Evaluate threshold against oracle reading and record result.
+      operationId: trigger_eval_attest_v1_stormlock_trigger_eval_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerEvalAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Trigger Eval Attest V1 Stormlock Trigger Eval Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/stormlock/loss_calc_attest:
+    post:
+      tags:
+      - stormlock
+      summary: Loss Calc Attest
+      description: Record loss calculation and payout amount.
+      operationId: loss_calc_attest_v1_stormlock_loss_calc_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LossCalcAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Loss Calc Attest V1 Stormlock Loss Calc Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/stormlock/payout_auth_attest:
+    post:
+      tags:
+      - stormlock
+      summary: Payout Auth Attest
+      description: Record payout authorization (treasury sub-account).
+      operationId: payout_auth_attest_v1_stormlock_payout_auth_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayoutAuthAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Payout Auth Attest V1 Stormlock Payout Auth Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/stormlock/reinsurance_settle_attest:
+    post:
+      tags:
+      - stormlock
+      summary: Reinsurance Settle Attest
+      description: Record reinsurance settle leg.
+      operationId: reinsurance_settle_attest_v1_stormlock_reinsurance_settle_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReinsuranceSettleAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Reinsurance Settle Attest V1 Stormlock Reinsurance Settle Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/stormlock/dispute_attest:
+    post:
+      tags:
+      - stormlock
+      summary: Dispute Attest
+      description: Record a dispute opened.
+      operationId: dispute_attest_v1_stormlock_dispute_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisputeAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Dispute Attest V1 Stormlock Dispute Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/stormlock/chain_verify:
+    get:
+      tags:
+      - stormlock
+      summary: Chain Verify Endpoint
+      description: Return ordered receipt chain + chain_valid bool + per-receipt sig validity.
+      operationId: chain_verify_endpoint_v1_stormlock_chain_verify_get
+      parameters:
+      - name: policy_did
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Policy DID to verify chain for
+          title: Policy Did
+        description: Policy DID to verify chain for
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Chain Verify Endpoint V1 Stormlock Chain Verify Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    PerilClass:
+      type: string
+      enum:
+      - hurricane
+      - earthquake
+      - wildfire
+      - flood
+      - hailstorm
+      - tornado
+      - extratropical_cyclone
+      - drought
+      - freeze
+      title: PerilClass
+    DisputeAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy under dispute
+        disputing_party_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Disputing Party Did
+          description: DID of the disputing party
+        dispute_grounds:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dispute Grounds
+          description: Grounds for dispute
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Dispute metadata
+      type: object
+      required:
+      - policy_did
+      title: DisputeAttestRequest
+      description: Record a dispute opened.
+    TriggerEvalAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        oracle_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Oracle Did
+          description: DID of the oracle
+        oracle_reading_payload:
+          additionalProperties: true
+          type: object
+          title: Oracle Reading Payload
+          description: Oracle reading payload to evaluate
+        threshold_spec:
+          additionalProperties: true
+          type: object
+          title: Threshold Spec
+          description: Threshold specification to evaluate against
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Additional evaluation metadata
+      type: object
+      required:
+      - policy_did
+      - oracle_reading_payload
+      - threshold_spec
+      title: TriggerEvalAttestRequest
+      description: Evaluate threshold against oracle reading and record result.
+    PayoutAuthAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        cedent_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cedent Did
+          description: DID of the cedent receiving payout
+        payout_amount_usdc:
+          anyOf:
+          - type: number
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          title: Payout Amount Usdc
+          description: Authorized payout amount in USDC
+        treasury_sub_account:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Treasury Sub Account
+          description: Treasury sub-account address
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Authorization metadata
+      type: object
+      required:
+      - policy_did
+      - payout_amount_usdc
+      title: PayoutAuthAttestRequest
+      description: Record payout authorization (treasury sub-account).
+    BindAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the parametric policy being bound
+        cedent_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cedent Did
+          description: DID of the cedent
+        carrier_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Carrier Did
+          description: DID of the carrier
+        reinsurer_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reinsurer Did
+          description: DID of the reinsurer
+        peril_class:
+          $ref: '#/components/schemas/PerilClass'
+          description: Peril class
+        threshold_spec:
+          additionalProperties: true
+          type: object
+          title: Threshold Spec
+          description: 'Threshold specification: {metric, operator, value, station_id, duration_min}'
+        bound_notional_usdc:
+          anyOf:
+          - type: number
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Bound Notional Usdc
+          description: Bound notional in USDC
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Additional bind metadata
+      type: object
+      required:
+      - policy_did
+      - peril_class
+      - threshold_spec
+      title: BindAttestRequest
+      description: Record a policy bind event.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    OracleReadingAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        oracle_did:
+          type: string
+          title: Oracle Did
+          description: DID of the oracle
+        oracle_reading_payload:
+          additionalProperties: true
+          type: object
+          title: Oracle Reading Payload
+          description: 'Raw oracle reading payload: {windspeed_kmh:185, ts:''...'', station_id:''WMO_722023''}'
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Additional reading metadata
+      type: object
+      required:
+      - policy_did
+      - oracle_did
+      - oracle_reading_payload
+      title: OracleReadingAttestRequest
+      description: Record a single oracle reading.
+    OracleSubscribeRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        oracle_did:
+          type: string
+          title: Oracle Did
+          description: DID of the oracle being registered
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Oracle subscription metadata
+      type: object
+      required:
+      - policy_did
+      - oracle_did
+      title: OracleSubscribeRequest
+      description: Register an oracle for a policy.
+    ReinsuranceSettleAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        reinsurer_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reinsurer Did
+          description: DID of the reinsurer
+        carrier_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Carrier Did
+          description: DID of the carrier
+        settle_amount_usdc:
+          anyOf:
+          - type: number
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Settle Amount Usdc
+          description: Settlement amount in USDC
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Settlement leg metadata
+      type: object
+      required:
+      - policy_did
+      title: ReinsuranceSettleAttestRequest
+      description: Record reinsurance settle leg.
+    LossCalcAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        oracle_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Oracle Did
+          description: DID of the oracle
+        trigger_result:
+          type: boolean
+          title: Trigger Result
+          description: Must be True to proceed with loss calc
+        payout_amount_usdc:
+          anyOf:
+          - type: number
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          title: Payout Amount Usdc
+          description: Calculated payout in USDC
+        bound_notional_usdc:
+          anyOf:
+          - type: number
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Bound Notional Usdc
+          description: Bound notional in USDC
+        loss_calc_result:
+          additionalProperties: true
+          type: object
+          title: Loss Calc Result
+          description: 'Loss calc result: {payout_amount_usdc, calc_method, audit_trail}'
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Additional loss calc metadata
+      type: object
+      required:
+      - policy_did
+      - trigger_result
+      - payout_amount_usdc
+      - loss_calc_result
+      title: LossCalcAttestRequest
+      description: Record loss calculation and payout amount.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

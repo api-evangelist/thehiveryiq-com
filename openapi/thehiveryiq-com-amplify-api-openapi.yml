@@ -1,0 +1,588 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Amplify API
+  version: 0.1.0
+  description: 'Operations tagged amplify across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: amplify
+paths:
+  /v1/amplify/call:
+    post:
+      tags:
+      - amplify
+      summary: Call
+      operationId: call_v1_amplify_call_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CallBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Call V1 Amplify Call Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/amplify/corpus/append:
+    post:
+      tags:
+      - amplify
+      summary: Corpus Append
+      operationId: corpus_append_v1_amplify_corpus_append_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppendBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Corpus Append V1 Amplify Corpus Append Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/amplify/corpus/retrieve:
+    get:
+      tags:
+      - amplify
+      summary: Corpus Retrieve
+      operationId: corpus_retrieve_v1_amplify_corpus_retrieve_get
+      parameters:
+      - name: tenant_did
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Tenant Did
+      - name: query
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Query
+      - name: k
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 5
+          title: K
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Corpus Retrieve V1 Amplify Corpus Retrieve Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/amplify/corpus/stats:
+    get:
+      tags:
+      - amplify
+      summary: Corpus Stats
+      operationId: corpus_stats_v1_amplify_corpus_stats_get
+      parameters:
+      - name: tenant_did
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tenant Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Corpus Stats V1 Amplify Corpus Stats Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/amplify/sign:
+    post:
+      tags:
+      - amplify
+      summary: Amplify Sign
+      description: 'Split mode. Customer ran the LLM on their side.
+
+        We receive (tenant_did, prompt, response), COMPILE + COMPRESS + AMPLIFY + CERT.
+
+
+        The widget transmits only the response + the raw prompt (we re-hash and
+
+        re-compress server-side so customers see the exact token savings they would
+
+        get if they re-issued the LLM call against the compressed prompt).
+
+
+        Customer''s LLM API key never leaves their network. We bind everything into
+
+        one ML-DSA-65 certificate.'
+      operationId: amplify_sign_v1_amplify_sign_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Amplify Sign V1 Amplify Sign Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/amplify/verify:
+    post:
+      tags:
+      - amplify
+      summary: Amplify Verify
+      description: 'Public verification. Anyone with the certificate can confirm:
+
+        (a) signature is valid under our pubkey
+
+        (b) response_sha256 + prompt_hash bind to the supplied prompt/response'
+      operationId: amplify_verify_v1_amplify_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Amplify Verify V1 Amplify Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/amplify/wrap-receipt:
+    post:
+      tags:
+      - amplify
+      summary: Wrap Receipt
+      description: 'Upgrade any existing vertical receipt into a CCACW signed cert.
+
+
+        Additive: the caller''s original receipt is returned unchanged; the new
+
+        `ccacw_receipt` field is appended. No vertical needs to change its
+
+        route shape — they call this once and re-emit the result.'
+      operationId: wrap_receipt_v1_amplify_wrap_receipt_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WrapReceiptBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Wrap Receipt V1 Amplify Wrap Receipt Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/amplify/selftest:
+    get:
+      tags:
+      - amplify
+      summary: Selftest
+      description: No LLM call. Verifies COMPILE → COMPRESS → SIGN locally.
+      operationId: selftest_v1_amplify_selftest_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Selftest V1 Amplify Selftest Get
+  /v1/amplify/bench:
+    get:
+      tags:
+      - amplify
+      summary: Bench
+      description: 'Side-by-side: raw hivecompute call vs full AMPLIFY loop.
+
+        Returns hard numbers: token reduction, latency delta, cost delta.'
+      operationId: bench_v1_amplify_bench_get
+      parameters:
+      - name: prompt
+        in: query
+        required: false
+        schema:
+          type: string
+          default: Summarize the key indemnity considerations for a SaaS vendor master agreement covering data breach, IP infringement, third-party services, and limitation of liability.
+          title: Prompt
+      - name: tenant_did
+        in: query
+        required: false
+        schema:
+          type: string
+          default: did:hive:bench
+          title: Tenant Did
+      - name: model
+        in: query
+        required: false
+        schema:
+          type: string
+          default: gpt-4o-mini
+          title: Model
+      - name: max_tokens
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 256
+          title: Max Tokens
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Bench V1 Amplify Bench Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    WrapReceiptBody:
+      properties:
+        vertical:
+          type: string
+          maxLength: 64
+          minLength: 2
+          title: Vertical
+          description: vertical id, e.g. lex-contract, alcoa-agentguard, hipaa-hive
+        event_type:
+          type: string
+          maxLength: 128
+          minLength: 2
+          title: Event Type
+          description: e.g. draft_attest, dosing_attest, consent_attest
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: the original attest input
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: the original attest output
+        tenant_did:
+          type: string
+          maxLength: 256
+          minLength: 3
+          title: Tenant Did
+        counterparty_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Counterparty Did
+        price_atomic:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Price Atomic
+        partner_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Partner Id
+      type: object
+      required:
+      - vertical
+      - event_type
+      - payload
+      - receipt
+      - tenant_did
+      title: WrapReceiptBody
+      description: 'Universal CCACW wrapper. Lets any vertical (LEX, ALCOA, HIPAA, etc.)
+
+        take its existing attest payload and upgrade it into a CCACW-signed
+
+        receipt with ML-DSA-65 + partner_id attribution + dual-DID binding.
+
+
+        The original attest payload is hashed into prompt_hash; the existing
+
+        receipt is signed as the response. Verticals keep their formats and
+
+        gain CCACW provability in one POST.'
+    CallBody:
+      properties:
+        prompt:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Prompt
+        tenant_did:
+          type: string
+          maxLength: 256
+          minLength: 3
+          title: Tenant Did
+        model:
+          type: string
+          title: Model
+          default: gpt-4o-mini
+        smsh_mode:
+          type: string
+          title: Smsh Mode
+          default: smsh-std
+        max_tokens:
+          type: integer
+          title: Max Tokens
+          default: 512
+        temperature:
+          type: number
+          title: Temperature
+          default: 0.2
+        skip_writeback:
+          type: boolean
+          title: Skip Writeback
+          default: false
+      type: object
+      required:
+      - prompt
+      - tenant_did
+      title: CallBody
+    AppendBody:
+      properties:
+        tenant_did:
+          type: string
+          title: Tenant Did
+        kind:
+          type: string
+          pattern: ^(response|fact|pattern)$
+          title: Kind
+        content:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Content
+        meta:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Meta
+      type: object
+      required:
+      - tenant_did
+      - kind
+      - content
+      title: AppendBody
+    VerifyBody:
+      properties:
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+        signature_b64:
+          type: string
+          minLength: 8
+          title: Signature B64
+        pubkey_b64:
+          type: string
+          minLength: 8
+          title: Pubkey B64
+        prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prompt
+        response:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response
+      type: object
+      required:
+      - payload
+      - signature_b64
+      - pubkey_b64
+      title: VerifyBody
+    SignBody:
+      properties:
+        tenant_did:
+          type: string
+          maxLength: 256
+          minLength: 3
+          title: Tenant Did
+        prompt:
+          type: string
+          maxLength: 64000
+          minLength: 1
+          title: Prompt
+        response:
+          type: string
+          maxLength: 200000
+          minLength: 1
+          title: Response
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+        amplify:
+          type: boolean
+          title: Amplify
+          default: true
+        skip_writeback:
+          type: boolean
+          title: Skip Writeback
+          default: false
+        partner_id:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Partner Id
+        counterparty_did:
+          anyOf:
+          - type: string
+            maxLength: 256
+          - type: 'null'
+          title: Counterparty Did
+        price_atomic:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Price Atomic
+      type: object
+      required:
+      - tenant_did
+      - prompt
+      - response
+      title: SignBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

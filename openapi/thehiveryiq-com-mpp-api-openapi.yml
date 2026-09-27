@@ -1,0 +1,240 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Mpp API
+  version: 0.1.0
+  description: 'Operations tagged mpp across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: mpp
+paths:
+  /v1/receipt/mpp/health:
+    get:
+      tags:
+      - mpp
+      summary: Mpp Health
+      description: Healthcheck — safe to call publicly. Reveals config state.
+      operationId: mpp_health_v1_receipt_mpp_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Mpp Health V1 Receipt Mpp Health Get
+  /v1/receipt/mpp:
+    post:
+      tags:
+      - mpp
+      summary: Mint Via Mpp
+      description: 'Mint a Hive PQ receipt, gated by MPP HTTP 402 over Stripe.
+
+
+        Returns 402 + WWW-Authenticate on first call (no credential).
+
+        Returns 200 + receipt body + Payment-Receipt header on success.
+
+        Returns 503 if MPP is not yet configured (gracefully directs to x402).'
+      operationId: mint_via_mpp_v1_receipt_mpp_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptMintBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/receipt/mpp/spt:
+    post:
+      tags:
+      - mpp
+      summary: Create Spt
+      description: 'Stripe Shared Payment Token proxy.
+
+
+        The pympp client calls this with a payment method ID and challenge details.
+
+        We hit Stripe''s test-helper SPT endpoint using our server-side secret key.
+
+        In production replace `test_helpers/shared_payment/granted_tokens` with
+
+        the real SPT endpoint once Stripe lifts the test-helper gate.'
+      operationId: create_spt_v1_receipt_mpp_spt_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SPTBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /.well-known/mpp.json:
+    get:
+      tags:
+      - mpp
+      summary: Mpp Discovery
+      description: 'Serve the MPP service discovery manifest.
+
+
+        Format: matches https://mpp.tempo.xyz/schemas/discovery.schema.json (v1).
+
+        Lets MPPScan + any compliant aggregator auto-discover Hive without a PR.'
+      operationId: mpp_discovery__well_known_mpp_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Mpp Discovery  Well Known Mpp Json Get
+components:
+  schemas:
+    ReceiptMintBody:
+      properties:
+        payload:
+          type: string
+          maxLength: 1000000
+          minLength: 1
+          title: Payload
+          description: The payload to anchor in the receipt.
+        label:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Label
+          description: Optional human label.
+        profile:
+          type: string
+          title: Profile
+          description: 'Receipt profile: nano, standard, or pq.'
+          default: pq
+        tag:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Tag
+          description: Bounty/attribution tag (bounty_xxxx).
+      type: object
+      required:
+      - payload
+      title: ReceiptMintBody
+      description: Body for /v1/receipt/mpp — same shape as existing /v1/receipt/free.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SPTBody:
+      properties:
+        paymentMethod:
+          type: string
+          title: Paymentmethod
+        networkId:
+          type: string
+          title: Networkid
+        currency:
+          type: string
+          title: Currency
+        amount:
+          type: integer
+          title: Amount
+        expiresAt:
+          type: integer
+          title: Expiresat
+        externalId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Externalid
+      type: object
+      required:
+      - paymentMethod
+      - networkId
+      - currency
+      - amount
+      - expiresAt
+      title: SPTBody
+      description: Body for /v1/receipt/mpp/spt — Stripe SPT creation proxy.
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

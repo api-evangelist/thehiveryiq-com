@@ -1,0 +1,325 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Xcalibur API
+  version: 0.1.0
+  description: 'Operations tagged xcalibur across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: xcalibur
+paths:
+  /v1/xcalibur/echo/v2/compress:
+    post:
+      tags:
+      - xcalibur
+      summary: Compress
+      operationId: compress_v1_xcalibur_echo_v2_compress_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompressV2Request'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Compress V1 Xcalibur Echo V2 Compress Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/xcalibur/echo/v2/health:
+    get:
+      tags:
+      - xcalibur
+      summary: Health
+      operationId: health_v1_xcalibur_echo_v2_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Xcalibur Echo V2 Health Get
+  /v1/xcalibur/membrane/v2/classify:
+    post:
+      tags:
+      - xcalibur
+      summary: Classify
+      description: 'Classify a text as SAFE or UNSAFE using the MEMBRANE v2 ensemble.
+
+
+        Returns a signed receipt with:
+
+        - verdict: SAFE | UNSAFE
+
+        - candidate_scores: per-model score
+
+        - final_score: weighted ensemble score
+
+        - receipt_id, timestamp, input_hash, signature'
+      operationId: classify_v1_xcalibur_membrane_v2_classify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__xcalibur__membrane_v2_routes__ClassifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Classify V1 Xcalibur Membrane V2 Classify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/xcalibur/membrane/v2/health:
+    get:
+      tags:
+      - xcalibur
+      summary: Health
+      description: Health check — does not load models.
+      operationId: health_v1_xcalibur_membrane_v2_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Xcalibur Membrane V2 Health Get
+  /v1/xcalibur/verify/v2/attest:
+    post:
+      tags:
+      - xcalibur
+      summary: Attest
+      description: 'Corpus-attestation ensemble endpoint.
+
+
+        Validates Merkle membership + external PQ signature + runs cross-family
+
+        ensemble (ML-DSA-65 reference, ML-DSA-65 deterministic, SLH-DSA-SHA2-128s,
+
+        Ed25519). Returns signed XCALIBUR VERIFY v2 receipt.
+
+
+        Verdict PASS requires unanimity across all ensemble candidates.'
+      operationId: attest_v1_xcalibur_verify_v2_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__xcalibur__verify_v2_routes__AttestRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Attest V1 Xcalibur Verify V2 Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/xcalibur/verify/v2/health:
+    get:
+      tags:
+      - xcalibur
+      summary: Health
+      description: Health check — does not load heavy PQ libraries.
+      operationId: health_v1_xcalibur_verify_v2_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Xcalibur Verify V2 Health Get
+components:
+  schemas:
+    hivemorph__xcalibur__verify_v2_routes__AttestRequest:
+      properties:
+        chunk:
+          type: string
+          minLength: 1
+          title: Chunk
+          description: The data chunk to attest, as a UTF-8 string (hex-encode binary).
+        corpus_root:
+          type: string
+          title: Corpus Root
+          description: Expected Merkle root (hex) of the corpus.
+        expected_path:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type: array
+          title: Expected Path
+          description: 'Merkle inclusion path. Each element: {"sibling": "<hex>", "position": "left"|"right"}. Empty list means leaf IS the root (single-element corpus).'
+        signature_hex:
+          type: string
+          title: Signature Hex
+          description: Signer's PQ signature over chunk (hex).
+        signer_pubkey_hex:
+          type: string
+          title: Signer Pubkey Hex
+          description: Signer's PQ public key (hex).
+        alg:
+          type: string
+          title: Alg
+          description: 'PQ signature algorithm used by signer. Default: ML-DSA-65.'
+          default: ML-DSA-65
+        run_slhdsa:
+          type: boolean
+          title: Run Slhdsa
+          description: Include SLH-DSA cross-family witness in ensemble (slower but stronger).
+          default: true
+      type: object
+      required:
+      - chunk
+      - corpus_root
+      - signature_hex
+      - signer_pubkey_hex
+      title: AttestRequest
+    CompressV2Request:
+      properties:
+        prompt:
+          type: string
+          minLength: 1
+          title: Prompt
+        task_query:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Query
+          description: Output-conditioned hint, e.g. 'Summarize this report.' Defaults to a generic summarize prompt if omitted.
+        target_ratio:
+          type: number
+          exclusiveMaximum: 1.0
+          exclusiveMinimum: 0.0
+          title: Target Ratio
+          description: Compressed length ≤ target_ratio × original (0.5 = 2x compression).
+          default: 0.5
+        min_preservation:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Min Preservation
+          description: Reject candidates scoring below this oracle threshold; the selector picks best regardless and flags if below.
+          default: 0.0
+      type: object
+      required:
+      - prompt
+      title: CompressV2Request
+    hivemorph__xcalibur__membrane_v2_routes__ClassifyRequest:
+      properties:
+        text:
+          type: string
+          minLength: 1
+          title: Text
+          description: Text to classify for safety/injection
+        threshold:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Threshold
+          description: Decision threshold for unsafe classification (default 0.5)
+          default: 0.5
+        weights:
+          anyOf:
+          - additionalProperties:
+              type: number
+            type: object
+          - type: 'null'
+          title: Weights
+          description: 'Per-candidate weights (must sum to ~1.0). Keys: toxic_bert, deberta_pi, membrane_v1, keyword_heuristic. Uses calibrated defaults if omitted.'
+      type: object
+      required:
+      - text
+      title: ClassifyRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

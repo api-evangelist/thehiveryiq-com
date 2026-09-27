@@ -1,0 +1,860 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Procurelock API
+  version: 0.1.0
+  description: 'Operations tagged Procurelock across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Procurelock
+paths:
+  /v1/procurelock/mcp:
+    get:
+      summary: Procurelock Mcp Meta
+      operationId: procurelock_mcp_meta_v1_procurelock_mcp_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Procurelock
+    post:
+      summary: Procurelock Mcp
+      operationId: procurelock_mcp_v1_procurelock_mcp_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Procurelock
+  /v1/procurelock/health:
+    get:
+      tags:
+      - Procurelock
+      summary: Health
+      operationId: health_v1_procurelock_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Procurelock Health Get
+  /v1/procurelock/pricing:
+    get:
+      tags:
+      - Procurelock
+      summary: Pricing
+      operationId: pricing_v1_procurelock_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Procurelock Pricing Get
+  /v1/procurelock/po_attest:
+    post:
+      tags:
+      - Procurelock
+      summary: Po Attest
+      operationId: po_attest_v1_procurelock_po_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/POAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/POAttestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/procurelock/po_get/{attestation_id}:
+    get:
+      tags:
+      - Procurelock
+      summary: Po Get
+      operationId: po_get_v1_procurelock_po_get__attestation_id__get
+      parameters:
+      - name: attestation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Attestation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Po Get V1 Procurelock Po Get  Attestation Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/procurelock/po_verify/{attestation_id}:
+    get:
+      tags:
+      - Procurelock
+      summary: Po Verify
+      operationId: po_verify_v1_procurelock_po_verify__attestation_id__get
+      parameters:
+      - name: attestation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Attestation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/POVerifyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/procurelock/delivery_attest:
+    post:
+      tags:
+      - Procurelock
+      summary: Delivery Attest
+      operationId: delivery_attest_v1_procurelock_delivery_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliveryAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryAttestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/procurelock/match_verify:
+    post:
+      tags:
+      - Procurelock
+      summary: Match Verify
+      operationId: match_verify_v1_procurelock_match_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MatchVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchVerifyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/procurelock/by-buyer/{buyer_did}:
+    get:
+      tags:
+      - Procurelock
+      summary: By Buyer
+      operationId: by_buyer_v1_procurelock_by_buyer__buyer_did__get
+      parameters:
+      - name: buyer_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Buyer Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Buyer V1 Procurelock By Buyer  Buyer Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/procurelock/by-supplier/{supplier_did}:
+    get:
+      tags:
+      - Procurelock
+      summary: By Supplier
+      operationId: by_supplier_v1_procurelock_by_supplier__supplier_did__get
+      parameters:
+      - name: supplier_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supplier Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Supplier V1 Procurelock By Supplier  Supplier Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/procurelock/by-po/{po_number}:
+    get:
+      tags:
+      - Procurelock
+      summary: By Po
+      operationId: by_po_v1_procurelock_by_po__po_number__get
+      parameters:
+      - name: po_number
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Po Number
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Po V1 Procurelock By Po  Po Number  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    POAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        supplier_did:
+          type: string
+          title: Supplier Did
+        po_number:
+          type: string
+          title: Po Number
+        event_type:
+          $ref: '#/components/schemas/POEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        edi_payload:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Edi Payload
+        edi_wrap_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Edi Wrap Id
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - supplier_did
+      - po_number
+      - event_type
+      - event_hash
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: POAttestResponse
+    DeliveryAttestRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        supplier_did:
+          type: string
+          title: Supplier Did
+        po_number:
+          type: string
+          title: Po Number
+        asn_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asn Number
+        bol_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bol Number
+        carrier_scac:
+          anyOf:
+          - type: string
+            maxLength: 4
+          - type: 'null'
+          title: Carrier Scac
+          description: SCAC carrier code
+        delivery_status:
+          $ref: '#/components/schemas/DeliveryStatus'
+        delivered_qty:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Delivered Qty
+        received_qty:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Received Qty
+        inspection_passed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Inspection Passed
+        inspection_notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Inspection Notes
+        delivered_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivered At
+        received_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Received At
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          default: false
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - buyer_did
+      - supplier_did
+      - po_number
+      - delivery_status
+      title: DeliveryAttestRequest
+    MatchVerifyRequest:
+      properties:
+        po_number:
+          type: string
+          title: Po Number
+        buyer_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Did
+        supplier_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Supplier Did
+        require_two_way:
+          type: boolean
+          title: Require Two Way
+          description: Accept PO+IR alone (skip GR)
+          default: false
+      type: object
+      required:
+      - po_number
+      title: MatchVerifyRequest
+      description: '3-way match: PO + GR + IR. Returns the chain of receipts and whether
+
+        the line-item totals reconcile.'
+    DeliveryStatus:
+      type: string
+      enum:
+      - scheduled
+      - in_transit
+      - delivered
+      - partial
+      - rejected
+      title: DeliveryStatus
+    POAttestRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+          description: DID of the buying organization
+        supplier_did:
+          type: string
+          title: Supplier Did
+          description: DID of the supplying organization
+        po_number:
+          type: string
+          title: Po Number
+          description: Buyer's PO number (max 22 chars per X12 BEG03)
+        event_type:
+          $ref: '#/components/schemas/POEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+          description: sha256 of the PO snapshot at this state
+        erp_system:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Erp System
+          description: SAP / Oracle / NetSuite / Coupa / Ariba / Workday
+        erp_doc_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Erp Doc Id
+        sap_idoc_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sap Idoc Number
+        line_items:
+          items:
+            $ref: '#/components/schemas/POLineItem'
+          type: array
+          title: Line Items
+        total_amount_cents:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Total Amount Cents
+        currency:
+          type: string
+          maxLength: 3
+          minLength: 3
+          title: Currency
+          default: USD
+        incoterms:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Incoterms
+          description: EXW, FCA, CPT, CIP, DAP, DPU, DDP, FAS, FOB, CFR, CIF
+        ship_to_location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ship To Location
+        bill_to_location:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bill To Location
+        edi_format:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Edi Format
+          description: x12 / edifact / cxml / idoc
+        edi_document_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Edi Document Type
+          description: po / po_ack / asn / invoice / payment
+        return_edi_wrapped:
+          type: boolean
+          title: Return Edi Wrapped
+          description: Also wrap the receipt via hive_edi_bridge
+          default: false
+        sender_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sender Id
+          description: Required if return_edi_wrapped — qualifier:id
+        receiver_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receiver Id
+          description: Required if return_edi_wrapped — qualifier:id
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          description: Use Cosmic tier pricing (regulated/inspected)
+          default: false
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - buyer_did
+      - supplier_did
+      - po_number
+      - event_type
+      - event_hash
+      title: POAttestRequest
+      description: 'Attest a single PO state transition.
+
+
+        `event_hash` is the immutable content-hash the caller wants bound to the
+
+        receipt (typically sha256 of the canonical JSON of the PO snapshot). This
+
+        is what proves the buyer/supplier saw exactly the same document at this
+
+        state.'
+    DeliveryAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        supplier_did:
+          type: string
+          title: Supplier Did
+        po_number:
+          type: string
+          title: Po Number
+        delivery_status:
+          $ref: '#/components/schemas/DeliveryStatus'
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - supplier_did
+      - po_number
+      - delivery_status
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: DeliveryAttestResponse
+    POLineItem:
+      properties:
+        line_number:
+          type: integer
+          minimum: 1.0
+          title: Line Number
+        sku:
+          type: string
+          title: Sku
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        quantity:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Quantity
+        unit_of_measure:
+          type: string
+          title: Unit Of Measure
+          description: UN/ECE Recommendation 20 code (EA, KG, M, etc.)
+          default: EA
+        unit_price_cents:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Unit Price Cents
+        erp_part_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Erp Part Number
+        buyer_part_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Part Number
+        supplier_part_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Supplier Part Number
+        requested_delivery_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Requested Delivery Date
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - line_number
+      - sku
+      - quantity
+      title: POLineItem
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    POEventType:
+      type: string
+      enum:
+      - request
+      - quote
+      - po_issued
+      - po_ack
+      - asn
+      - goods_receipt
+      - invoice_receipt
+      - payment
+      - change_order
+      - cancellation
+      title: POEventType
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    POVerifyResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        supplier_did:
+          type: string
+          title: Supplier Did
+        po_number:
+          type: string
+          title: Po Number
+        event_type:
+          $ref: '#/components/schemas/POEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        verification:
+          additionalProperties: true
+          type: object
+          title: Verification
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - supplier_did
+      - po_number
+      - event_type
+      - event_hash
+      - timestamp_iso
+      - receipt_envelope
+      - verification
+      title: POVerifyResponse
+    MatchVerifyResponse:
+      properties:
+        po_number:
+          type: string
+          title: Po Number
+        matched:
+          type: boolean
+          title: Matched
+        states_present:
+          items:
+            $ref: '#/components/schemas/POEventType'
+          type: array
+          title: States Present
+        po_total_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Po Total Cents
+        gr_total_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Gr Total Cents
+        ir_total_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ir Total Cents
+        discrepancies:
+          items:
+            type: string
+          type: array
+          title: Discrepancies
+        chain:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Chain
+      type: object
+      required:
+      - po_number
+      - matched
+      - states_present
+      title: MatchVerifyResponse
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

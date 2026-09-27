@@ -1,0 +1,213 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Trust API
+  version: 0.1.0
+  description: 'Operations tagged trust across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: trust
+paths:
+  /v1/trust/health:
+    get:
+      tags:
+      - trust
+      summary: Health
+      description: Liveness check + record count.
+      operationId: health_v1_trust_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Trust Health Get
+  /v1/trust/benchmarks:
+    get:
+      tags:
+      - trust
+      summary: Benchmarks
+      description: 'List benchmark records. Default: latest per key, all primitives, all statuses.'
+      operationId: benchmarks_v1_trust_benchmarks_get
+      parameters:
+      - name: primitive
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by primitive name
+          title: Primitive
+        description: Filter by primitive name
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter by result_status: smoke|preliminary|publishable'
+          title: Status
+        description: 'Filter by result_status: smoke|preliminary|publishable'
+      - name: latest
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: Return only latest per (primitive, adversary, dataset, task)
+          default: true
+          title: Latest
+        description: Return only latest per (primitive, adversary, dataset, task)
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Benchmarks V1 Trust Benchmarks Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trust/benchmarks/{record_id}:
+    get:
+      tags:
+      - trust
+      summary: Benchmark
+      description: Fetch a single signed record by id.
+      operationId: benchmark_v1_trust_benchmarks__record_id__get
+      parameters:
+      - name: record_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Record Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Benchmark V1 Trust Benchmarks  Record Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trust/agents:
+    get:
+      tags:
+      - trust
+      summary: Agents
+      description: Public agent trust directory — composite score (PDR/MDR/ASS/DLQ), sorted by trust score.
+      operationId: agents_v1_trust_agents_get
+      parameters:
+      - name: category
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter by category: infrastructure|legal|payments|compliance'
+          title: Category
+        description: 'Filter by category: infrastructure|legal|payments|compliance'
+      - name: min_score
+        in: query
+        required: false
+        schema:
+          type: number
+          description: Minimum composite trust score
+          default: 0.0
+          title: Min Score
+        description: Minimum composite trust score
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Agents V1 Trust Agents Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

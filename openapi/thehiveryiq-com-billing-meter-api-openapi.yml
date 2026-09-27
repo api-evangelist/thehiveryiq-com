@@ -1,0 +1,264 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Billing Meter API
+  version: 0.1.0
+  description: 'Operations tagged billing-meter across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: billing-meter
+paths:
+  /v1/billing/meter/health:
+    get:
+      tags:
+      - billing-meter
+      summary: Meter Health
+      description: Public — describes the meter schema, prices, and supported chains.
+      operationId: meter_health_v1_billing_meter_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Meter Health V1 Billing Meter Health Get
+  /v1/billing/activate:
+    post:
+      tags:
+      - billing-meter
+      summary: Meter Activate
+      description: 'Bind an activation key (and optionally a wallet) to a metered account.
+
+        Idempotent — activating the same key twice returns the same account.'
+      operationId: meter_activate_v1_billing_activate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Meter Activate V1 Billing Activate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/billing/usage/{account_id}:
+    get:
+      tags:
+      - billing-meter
+      summary: Meter Usage
+      description: Signed usage snapshot for an account. Verify via /v1/receipt/verify.
+      operationId: meter_usage_v1_billing_usage__account_id__get
+      parameters:
+      - name: account_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Account Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Meter Usage V1 Billing Usage  Account Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/billing/topup/intent:
+    post:
+      tags:
+      - billing-meter
+      summary: Meter Topup Intent
+      description: Create a USDC top-up intent. Returns treasury address + amount + memo.
+      operationId: meter_topup_intent_v1_billing_topup_intent_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopupIntentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Meter Topup Intent V1 Billing Topup Intent Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/billing/topup/{intent_id}:
+    get:
+      tags:
+      - billing-meter
+      summary: Meter Topup Status
+      description: Check settlement status of a topup intent.
+      operationId: meter_topup_status_v1_billing_topup__intent_id__get
+      parameters:
+      - name: intent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Intent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Meter Topup Status V1 Billing Topup  Intent Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/billing/whoami:
+    get:
+      tags:
+      - billing-meter
+      summary: Whoami
+      description: Resolve activation key → account_id. Useful for the /billing/ dashboard.
+      operationId: whoami_v1_billing_whoami_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Whoami V1 Billing Whoami Get
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    TopupIntentRequest:
+      properties:
+        account_id:
+          type: string
+          title: Account Id
+        chain:
+          type: string
+          title: Chain
+          description: 'One of: base, ethereum'
+        amount_cents:
+          type: integer
+          minimum: 1000.0
+          title: Amount Cents
+          description: Amount to top up in USD cents. Minimum 1000 ($10.00).
+      type: object
+      required:
+      - account_id
+      - chain
+      - amount_cents
+      title: TopupIntentRequest
+    ActivateRequest:
+      properties:
+        activation_key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Activation Key Id
+          description: Existing X-Hive-Activation-Key value
+        wallet_addr:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet Addr
+          description: Optional wallet address to bind (informational)
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+          description: Optional human label — e.g. 'circle-prod'
+      type: object
+      title: ActivateRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

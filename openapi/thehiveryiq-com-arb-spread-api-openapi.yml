@@ -1,0 +1,296 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Arb Spread API
+  version: 0.1.0
+  description: 'Operations tagged arb-spread across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: arb-spread
+paths:
+  /v1/arb/spread/scan:
+    get:
+      tags:
+      - arb-spread
+      summary: Scan Spread
+      description: 'Scan the marketplace bus for price-spread arbitrage opportunities.
+
+
+        Groups OPEN offers by (shape, canonical_capability), identifies pairs
+
+        from different sellers where spread exceeds thresholds. Read-only.'
+      operationId: scan_spread_v1_arb_spread_scan_get
+      parameters:
+      - name: min_spread_usdc
+        in: query
+        required: false
+        schema:
+          type: number
+          minimum: 0.0
+          description: Minimum absolute spread in USDC
+          default: 0.5
+          title: Min Spread Usdc
+        description: Minimum absolute spread in USDC
+      - name: min_spread_pct
+        in: query
+        required: false
+        schema:
+          type: number
+          minimum: 0.0
+          description: Minimum relative spread as fraction (0.05 = 5%)
+          default: 0.05
+          title: Min Spread Pct
+        description: Minimum relative spread as fraction (0.05 = 5%)
+      - name: shape
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by shape (e.g. 'Attestor', 'Provenancer', 'Oracle')
+          title: Shape
+        description: Filter by shape (e.g. 'Attestor', 'Provenancer', 'Oracle')
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Scan Spread V1 Arb Spread Scan Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/arb/spread/book:
+    post:
+      tags:
+      - arb-spread
+      summary: Book Pair
+      description: 'Book a specific arbitrage pair by offer IDs.
+
+
+        Fetches both offers from the bus, runs all three gates
+
+        (NEED + YIELD + CLEAN-MONEY), and books the pair if all pass.
+
+
+        Returns the booked ArbPair or gate rejection detail.'
+      operationId: book_pair_v1_arb_spread_book_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_arb__routes__BookRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Book Pair V1 Arb Spread Book Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/arb/spread/auto:
+    post:
+      tags:
+      - arb-spread
+      summary: Auto Book
+      description: 'Auto-book the top N safe opportunities from the current scan.
+
+
+        For each opportunity (sorted by spread_usdc descending):
+
+        1. Fetch both offers from bus
+
+        2. Run three gates
+
+        3. If all pass: book, fill, and mock-settle
+
+        4. If any gate fails: record rejection and continue
+
+
+        Returns list of booked pairs, rejections, and aggregate stats.'
+      operationId: auto_book_v1_arb_spread_auto_post
+      parameters:
+      - name: max_books
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          description: Maximum number of pairs to auto-book
+          default: 3
+          title: Max Books
+        description: Maximum number of pairs to auto-book
+      - name: min_spread_usdc
+        in: query
+        required: false
+        schema:
+          type: number
+          minimum: 0.0
+          default: 0.5
+          title: Min Spread Usdc
+      - name: min_spread_pct
+        in: query
+        required: false
+        schema:
+          type: number
+          minimum: 0.0
+          default: 0.05
+          title: Min Spread Pct
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Auto Book V1 Arb Spread Auto Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/arb/spread/pnl:
+    get:
+      tags:
+      - arb-spread
+      summary: Get Pnl
+      description: 'Cumulative P&L, fill count, and hit rate.
+
+
+        hit_rate = settled / total_booked
+
+        net_pnl = gross_spread_captured - platform_fees'
+      operationId: get_pnl_v1_arb_spread_pnl_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Pnl V1 Arb Spread Pnl Get
+  /v1/arb/spread/stats:
+    get:
+      tags:
+      - arb-spread
+      summary: Get Stats
+      description: 'Per-wallet contribution to arb fills and P&L.
+
+
+        Shows each supermodel''s role as buy-side and sell-side in settled pairs.'
+      operationId: get_stats_v1_arb_spread_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Stats V1 Arb Spread Stats Get
+components:
+  schemas:
+    hivemorph__hive_arb__routes__BookRequest:
+      properties:
+        buy_offer_id:
+          type: string
+          title: Buy Offer Id
+          description: Bus offer ID of the cheaper (buy-side) offer
+        sell_offer_id:
+          type: string
+          title: Sell Offer Id
+          description: Bus offer ID of the more expensive (sell-side) offer
+      type: object
+      required:
+      - buy_offer_id
+      - sell_offer_id
+      title: BookRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

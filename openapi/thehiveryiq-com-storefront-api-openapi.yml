@@ -1,0 +1,215 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Storefront API
+  version: 0.1.0
+  description: 'Operations tagged storefront across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: storefront
+paths:
+  /v1/storefront:
+    get:
+      tags:
+      - storefront
+      summary: Get Full Storefront
+      description: Full public catalog of all hot supermodels and their offerings.
+      operationId: get_full_storefront_v1_storefront_get
+      parameters:
+      - name: include_cold
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Include Cold
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Full Storefront V1 Storefront Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/storefront/search:
+    get:
+      tags:
+      - storefront
+      summary: Search Storefront
+      description: Search the storefront by capability, price range, or accepted asset.
+      operationId: search_storefront_v1_storefront_search_get
+      parameters:
+      - name: min_price
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0
+          - type: 'null'
+          title: Min Price
+      - name: max_price
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0
+          - type: 'null'
+          title: Max Price
+      - name: capability
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Capability
+      - name: asset
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asset
+      - name: include_cold
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Include Cold
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Search Storefront V1 Storefront Search Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/storefront/{shape_or_id}:
+    get:
+      tags:
+      - storefront
+      summary: Get Storefront Entry
+      description: 'Get catalog entry for a specific shape or supermodel.
+
+
+        Examples:
+
+        GET /v1/storefront/Merchant → W2 MERCHANT (Merchant lead)
+
+        GET /v1/storefront/W3?by=id → W3 PROVENANCER
+
+        GET /v1/storefront/PROVENANCER?by=id → W3 PROVENANCER'
+      operationId: get_storefront_entry_v1_storefront__shape_or_id__get
+      parameters:
+      - name: shape_or_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Shape Or Id
+      - name: by
+        in: query
+        required: false
+        schema:
+          type: string
+          description: '''shape'' (e.g. Merchant) or ''id'' (e.g. W2 or MERCHANT)'
+          default: shape
+          title: By
+        description: '''shape'' (e.g. Merchant) or ''id'' (e.g. W2 or MERCHANT)'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Storefront Entry V1 Storefront  Shape Or Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

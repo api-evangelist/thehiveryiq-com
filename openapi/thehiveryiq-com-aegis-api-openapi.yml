@@ -1,0 +1,196 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Aegis API
+  version: 0.1.0
+  description: 'Operations tagged aegis across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: aegis
+paths:
+  /v1/aegis/health:
+    get:
+      tags:
+      - aegis
+      summary: Health
+      operationId: health_v1_aegis_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Aegis Health Get
+  /v1/aegis/control/audit:
+    post:
+      tags:
+      - aegis
+      summary: Control Audit
+      operationId: control_audit_v1_aegis_control_audit_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ControlAuditRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Control Audit V1 Aegis Control Audit Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/aegis/scan:
+    post:
+      tags:
+      - aegis
+      summary: Full Scan
+      operationId: full_scan_v1_aegis_scan_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Full Scan V1 Aegis Scan Post
+  /v1/aegis/score:
+    get:
+      tags:
+      - aegis
+      summary: Score
+      operationId: score_v1_aegis_score_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/aegis/control/{control_id}:
+    get:
+      tags:
+      - aegis
+      summary: Control Get
+      operationId: control_get_v1_aegis_control__control_id__get
+      parameters:
+      - name: control_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Control Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Control Get V1 Aegis Control  Control Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/aegis/matrix:
+    get:
+      tags:
+      - aegis
+      summary: Matrix
+      operationId: matrix_v1_aegis_matrix_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Matrix V1 Aegis Matrix Get
+components:
+  schemas:
+    ControlAuditRequest:
+      properties:
+        control_id:
+          type: string
+          title: Control Id
+          description: Control ID, e.g. 'CC6.1' or 'A.8.24'
+      type: object
+      required:
+      - control_id
+      title: ControlAuditRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

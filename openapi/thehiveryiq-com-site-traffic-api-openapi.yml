@@ -1,0 +1,530 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Site Traffic API
+  version: 0.1.0
+  description: 'Operations tagged site-traffic across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: site-traffic
+paths:
+  /v1/site/beacon:
+    post:
+      tags:
+      - site-traffic
+      summary: Beacon
+      description: First-party page-view beacon. 200 always; never blocks the page.
+      operationId: beacon_v1_site_beacon_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeaconPayload'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Beacon V1 Site Beacon Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/site/traffic:
+    get:
+      tags:
+      - site-traffic
+      summary: Traffic
+      description: 'Aggregate page views grouped by path / referrer / country / company
+
+        + a high-signal-leads projection. Now with corporate company tagging
+
+        and UTM attribution. Public read-only telemetry (no token) for the
+
+        /admin/live/ arrivals cockpit.'
+      operationId: traffic_v1_site_traffic_get
+      parameters:
+      - name: window
+        in: query
+        required: false
+        schema:
+          type: string
+          default: 24h
+          title: Window
+      - name: humans_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Humans Only
+      - name: exclude_smoke
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Exclude Smoke
+      - name: path_limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 40
+          title: Path Limit
+      - name: path_prefix
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Path Prefix
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Traffic V1 Site Traffic Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/site/page:
+    get:
+      tags:
+      - site-traffic
+      summary: Page Detail
+      description: 'Everything recorded for one page. Answers "has anyone opened this".
+
+
+        path matches by prefix unless exact is true, so /partners/ice-proof
+
+        also covers /partners/ice-proof/surfaces/. Public read-only telemetry,
+
+        same stance as /traffic.'
+      operationId: page_detail_v1_site_page_get
+      parameters:
+      - name: path
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Path
+      - name: window
+        in: query
+        required: false
+        schema:
+          type: string
+          default: 30d
+          title: Window
+      - name: exact
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Exact
+      - name: humans_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Humans Only
+      - name: exclude_smoke
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Exclude Smoke
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Page Detail V1 Site Page Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/site/timeseries:
+    get:
+      tags:
+      - site-traffic
+      summary: Timeseries
+      description: 'Bucketed time series for sparkline rendering. Returns a list of
+
+        (bucket_start_ts, count) pairs covering the window. Public read-only.'
+      operationId: timeseries_v1_site_timeseries_get
+      parameters:
+      - name: window
+        in: query
+        required: false
+        schema:
+          type: string
+          default: 24h
+          title: Window
+      - name: bucket_minutes
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 60
+          title: Bucket Minutes
+      - name: humans_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Humans Only
+      - name: exclude_smoke
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Exclude Smoke
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Timeseries V1 Site Timeseries Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/site/events:
+    get:
+      tags:
+      - site-traffic
+      summary: Events
+      description: 'Recent events tail. Used by dashboard live feed (5s refresh).
+
+        Public read-only telemetry for the /admin/live/ arrivals cockpit.'
+      operationId: events_v1_site_events_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 100
+          title: Limit
+      - name: humans_only
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Humans Only
+      - name: exclude_smoke
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Exclude Smoke
+      - name: since_ts
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Since Ts
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Events V1 Site Events Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/site/live-brief:
+    get:
+      tags:
+      - site-traffic
+      summary: Live Brief
+      description: 'Operator brief: one call that classifies the current/latest visitor
+
+        and summarizes recent telemetry into a copy-paste `brief_text`.
+
+
+        Public read-only telemetry (no token), same path as the other
+
+        /v1/site/* reads. Built for the /admin/live/ dashboard so an operator
+
+        (or assistant) can instantly tell real inbound vs spam / crawler /
+
+        datacenter-VPN / prospect without terminal access or screenshots.'
+      operationId: live_brief_v1_site_live_brief_get
+      parameters:
+      - name: window
+        in: query
+        required: false
+        schema:
+          type: string
+          default: 1h
+          title: Window
+      - name: humans_limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 12
+          title: Humans Limit
+      - name: bots_limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 8
+          title: Bots Limit
+      - name: exclude_smoke
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Exclude Smoke
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Live Brief V1 Site Live Brief Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/site/prospect/{utm}:
+    get:
+      tags:
+      - site-traffic
+      summary: Prospect Detail
+      description: 'All hits attributable to a single outreach tag (?u=francisco).
+
+        Public read-only telemetry for the arrivals cockpit.'
+      operationId: prospect_detail_v1_site_prospect__utm__get
+      parameters:
+      - name: utm
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Utm
+      - name: window
+        in: query
+        required: false
+        schema:
+          type: string
+          default: all
+          title: Window
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Prospect Detail V1 Site Prospect  Utm  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/site/traffic/redact:
+    post:
+      tags:
+      - site-traffic
+      summary: Traffic Redact
+      description: 'Token-gated wipe of records matching filters. Use carefully.
+
+
+        Body: {"path_contains": "deploy-test"} OR {"session": ""} OR
+
+        {"is_smoke": true} OR {"all_smoke": true}.'
+      operationId: traffic_redact_v1_site_traffic_redact_post
+      parameters:
+      - name: x-admin-token
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Traffic Redact V1 Site Traffic Redact Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/site/traffic/health:
+    get:
+      tags:
+      - site-traffic
+      summary: Traffic Health
+      operationId: traffic_health_v1_site_traffic_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Traffic Health V1 Site Traffic Health Get
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BeaconPayload:
+      properties:
+        path:
+          type: string
+          maxLength: 1024
+          title: Path
+          default: /
+        ref:
+          type: string
+          maxLength: 1024
+          title: Ref
+          default: ''
+        ua:
+          type: string
+          maxLength: 512
+          title: Ua
+          default: ''
+        tz:
+          type: string
+          maxLength: 64
+          title: Tz
+          default: ''
+        event:
+          type: string
+          maxLength: 32
+          title: Event
+          default: pageview
+        meta:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Meta
+      type: object
+      title: BeaconPayload
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

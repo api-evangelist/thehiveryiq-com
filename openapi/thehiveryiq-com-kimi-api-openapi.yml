@@ -1,0 +1,488 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Kimi API
+  version: 0.1.0
+  description: 'Operations tagged kimi across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: kimi
+paths:
+  /v1/kimi/health:
+    get:
+      tags:
+      - kimi
+      summary: Kimi Health
+      description: 'GET /v1/kimi/health — Returns model id, configured/not, last-call status, cumulative spend.
+
+        Always returns 200. configured=false until OPENROUTER_API_KEY is set on Render.'
+      operationId: kimi_health_v1_kimi_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /v1/kimi/wisdom:
+    post:
+      tags:
+      - kimi
+      summary: Kimi Wisdom
+      description: 'POST /v1/kimi/wisdom — Wisdom panel powered by Kimi K2.6.
+
+        Build #45 replaces the Grok call with Kimi K2.6 routing.
+
+        Falls back to curated recommendations if OPENROUTER_API_KEY is not set.'
+      operationId: kimi_wisdom_v1_kimi_wisdom_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WisdomRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WisdomResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/kimi/orchestrate:
+    post:
+      tags:
+      - kimi
+      summary: Kimi Orchestrate
+      description: 'POST /v1/kimi/orchestrate — Multi-agent orchestration.
+
+        Takes a goal + tool list, returns step-by-step plan with tool calls.
+
+        Routes to Kimi K2.6 (agent_orchestration=True). Fallback: curated plan.'
+      operationId: kimi_orchestrate_v1_kimi_orchestrate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrchestrateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrchestrateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/kimi/long-horizon:
+    post:
+      tags:
+      - kimi
+      summary: Kimi Long Horizon
+      description: 'POST /v1/kimi/long-horizon — 200+ step deep-reasoning task.
+
+        Runs Kimi''s deep-thinking mode; returns final result + reasoning trace.'
+      operationId: kimi_long_horizon_v1_kimi_long_horizon_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LongHorizonRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LongHorizonResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/kimi/code:
+    post:
+      tags:
+      - kimi
+      summary: Kimi Code
+      description: 'POST /v1/kimi/code — Code generation surface.
+
+        Generates ship reports, smoke tests, and integration glue via Kimi K2.6.'
+      operationId: kimi_code_v1_kimi_code_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodeResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    OrchestrateResponse:
+      properties:
+        plan:
+          title: Plan
+        source:
+          type: string
+          title: Source
+        configured:
+          type: boolean
+          title: Configured
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+        steps_planned:
+          type: integer
+          title: Steps Planned
+          default: 0
+      type: object
+      required:
+      - plan
+      - source
+      - configured
+      title: OrchestrateResponse
+    HealthResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        model_id:
+          type: string
+          title: Model Id
+        configured:
+          type: boolean
+          title: Configured
+        last_call_status:
+          type: string
+          title: Last Call Status
+        cumulative_spend_usd:
+          type: number
+          title: Cumulative Spend Usd
+        daily_cap_usd:
+          type: number
+          title: Daily Cap Usd
+        spend_day:
+          type: string
+          title: Spend Day
+        total_calls:
+          type: integer
+          title: Total Calls
+        build:
+          type: string
+          title: Build
+          default: '45'
+        feature_flag:
+          type: string
+          title: Feature Flag
+          default: KIMI_ENABLED
+        env_var_required:
+          type: string
+          title: Env Var Required
+          default: OPENROUTER_API_KEY
+      type: object
+      required:
+      - status
+      - model_id
+      - configured
+      - last_call_status
+      - cumulative_spend_usd
+      - daily_cap_usd
+      - spend_day
+      - total_calls
+      title: HealthResponse
+    LongHorizonRequest:
+      properties:
+        objective:
+          type: string
+          title: Objective
+          description: High-level objective
+        context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context
+          description: Additional context
+        max_tokens:
+          type: integer
+          maximum: 32768.0
+          minimum: 256.0
+          title: Max Tokens
+          description: Max output tokens
+          default: 8192
+      type: object
+      required:
+      - objective
+      title: LongHorizonRequest
+      description: 200+ step deep-reasoning task request.
+    LongHorizonResponse:
+      properties:
+        result:
+          type: string
+          title: Result
+        reasoning_trace:
+          items:
+            type: string
+          type: array
+          title: Reasoning Trace
+        source:
+          type: string
+          title: Source
+        configured:
+          type: boolean
+          title: Configured
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+        steps_executed:
+          type: integer
+          title: Steps Executed
+          default: 0
+        confidence:
+          type: number
+          title: Confidence
+          default: 0.0
+      type: object
+      required:
+      - result
+      - reasoning_trace
+      - source
+      - configured
+      title: LongHorizonResponse
+    OrchestrateRequest:
+      properties:
+        goal:
+          type: string
+          title: Goal
+          description: High-level goal to accomplish
+        tools:
+          items:
+            type: string
+          type: array
+          title: Tools
+          description: Available tool names
+        context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context
+          description: Additional context
+        max_steps:
+          type: integer
+          maximum: 200.0
+          minimum: 1.0
+          title: Max Steps
+          description: Maximum orchestration steps
+          default: 50
+      type: object
+      required:
+      - goal
+      title: OrchestrateRequest
+      description: Multi-agent orchestration request.
+    CodeRequest:
+      properties:
+        task:
+          type: string
+          title: Task
+          description: What code to generate
+        language:
+          type: string
+          title: Language
+          description: Target language (python/typescript/bash)
+          default: python
+        context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context
+          description: Additional codebase context
+        max_tokens:
+          type: integer
+          maximum: 16384.0
+          minimum: 256.0
+          title: Max Tokens
+          description: Max output tokens
+          default: 4096
+      type: object
+      required:
+      - task
+      title: CodeRequest
+      description: Code generation request.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CodeResponse:
+      properties:
+        code:
+          type: string
+          title: Code
+        language:
+          type: string
+          title: Language
+        explanation:
+          type: string
+          title: Explanation
+        source:
+          type: string
+          title: Source
+        configured:
+          type: boolean
+          title: Configured
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+      type: object
+      required:
+      - code
+      - language
+      - explanation
+      - source
+      - configured
+      title: CodeResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    WisdomRequest:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+          description: Tenant identifier
+        brand_name:
+          type: string
+          title: Brand Name
+          description: Organization name
+        company_domain:
+          type: string
+          title: Company Domain
+          description: Company domain for context
+          default: ''
+        vertical:
+          type: string
+          title: Vertical
+          description: Industry vertical
+          default: universal
+        features_enabled:
+          items:
+            type: string
+          type: array
+          title: Features Enabled
+          description: Already-active features
+        query:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Query
+          description: Optional specific question
+      type: object
+      required:
+      - tenant_id
+      - brand_name
+      title: WisdomRequest
+      description: 'Build #43 Wisdom panel request — extended to use Kimi K2.6.'
+    WisdomResponse:
+      properties:
+        recommendations:
+          title: Recommendations
+        source:
+          type: string
+          title: Source
+        configured:
+          type: boolean
+          title: Configured
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+      type: object
+      required:
+      - recommendations
+      - source
+      - configured
+      title: WisdomResponse
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

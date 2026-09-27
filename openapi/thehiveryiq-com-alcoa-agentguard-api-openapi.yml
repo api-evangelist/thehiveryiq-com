@@ -1,0 +1,629 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Alcoa Agentguard API
+  version: 0.1.0
+  description: 'Operations tagged alcoa-agentguard across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: alcoa-agentguard
+paths:
+  /v1/alcoa-agentguard/health:
+    get:
+      tags:
+      - alcoa-agentguard
+      summary: Health
+      operationId: health_v1_alcoa_agentguard_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Alcoa Agentguard Health Get
+  /v1/alcoa-agentguard/pricing:
+    get:
+      tags:
+      - alcoa-agentguard
+      summary: Pricing
+      operationId: pricing_v1_alcoa_agentguard_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Alcoa Agentguard Pricing Get
+  /v1/alcoa-agentguard/protocol_attest:
+    post:
+      tags:
+      - alcoa-agentguard
+      summary: Protocol Attest
+      description: Record a protocol or amendment event.
+      operationId: protocol_attest_v1_alcoa_agentguard_protocol_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProtocolAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Protocol Attest V1 Alcoa Agentguard Protocol Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/alcoa-agentguard/consent_attest:
+    post:
+      tags:
+      - alcoa-agentguard
+      summary: Consent Attest
+      description: Record a patient consent event (with IRB version hash).
+      operationId: consent_attest_v1_alcoa_agentguard_consent_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConsentAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Consent Attest V1 Alcoa Agentguard Consent Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/alcoa-agentguard/enrollment_attest:
+    post:
+      tags:
+      - alcoa-agentguard
+      summary: Enrollment Attest
+      description: Record an enrollment event.
+      operationId: enrollment_attest_v1_alcoa_agentguard_enrollment_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrollmentAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Enrollment Attest V1 Alcoa Agentguard Enrollment Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/alcoa-agentguard/dosing_attest:
+    post:
+      tags:
+      - alcoa-agentguard
+      summary: Dosing Attest
+      description: Record a dosing event.
+      operationId: dosing_attest_v1_alcoa_agentguard_dosing_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DosingAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Dosing Attest V1 Alcoa Agentguard Dosing Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/alcoa-agentguard/adverse_event_attest:
+    post:
+      tags:
+      - alcoa-agentguard
+      summary: Adverse Event Attest
+      description: Record an adverse event, SAE, or SUSAR.
+      operationId: adverse_event_attest_v1_alcoa_agentguard_adverse_event_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdverseEventAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Adverse Event Attest V1 Alcoa Agentguard Adverse Event Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/alcoa-agentguard/data_transfer_attest:
+    post:
+      tags:
+      - alcoa-agentguard
+      summary: Data Transfer Attest
+      description: Record a CRO data handoff / transfer event.
+      operationId: data_transfer_attest_v1_alcoa_agentguard_data_transfer_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataTransferAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Data Transfer Attest V1 Alcoa Agentguard Data Transfer Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/alcoa-agentguard/database_lock_attest:
+    post:
+      tags:
+      - alcoa-agentguard
+      summary: Database Lock Attest
+      description: Record a database lock event.
+      operationId: database_lock_attest_v1_alcoa_agentguard_database_lock_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatabaseLockAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Database Lock Attest V1 Alcoa Agentguard Database Lock Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/alcoa-agentguard/chain_verify:
+    get:
+      tags:
+      - alcoa-agentguard
+      summary: Chain Verify Endpoint
+      description: Return ordered receipt chain + chain_valid bool + per-receipt sig validity.
+      operationId: chain_verify_endpoint_v1_alcoa_agentguard_chain_verify_get
+      parameters:
+      - name: trial_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Trial ID to verify chain for
+          title: Trial Id
+        description: Trial ID to verify chain for
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Chain Verify Endpoint V1 Alcoa Agentguard Chain Verify Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/alcoa-agentguard/alcoa_audit:
+    get:
+      tags:
+      - alcoa-agentguard
+      summary: Alcoa Audit Endpoint
+      description: Return ALCOA+ completeness report — 9 attributes scored 0/1 per receipt + trial-level summary.
+      operationId: alcoa_audit_endpoint_v1_alcoa_agentguard_alcoa_audit_get
+      parameters:
+      - name: trial_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Trial ID to audit ALCOA+ completeness for
+          title: Trial Id
+        description: Trial ID to audit ALCOA+ completeness for
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Alcoa Audit Endpoint V1 Alcoa Agentguard Alcoa Audit Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    DataTransferAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of sender (sponsor/site)
+        recipient_did:
+          type: string
+          title: Recipient Did
+          description: DID of recipient (CRO)
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: CDISC-SDTM
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of transferred dataset
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: CDISC-SDTM-v3.3
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Transfer metadata: dataset_name, record_count, transfer_method, checksum, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - recipient_did
+      - original_payload_hash
+      title: DataTransferAttestRequest
+      description: Record a CRO data handoff / transfer event.
+    DatabaseLockAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of data manager or sponsor
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: CDISC-SDTM
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of locked database snapshot
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: CDISC-SDTM-v3.3
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Lock metadata: lock_date, locked_by_did, dataset_version, query_count_resolved, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - original_payload_hash
+      title: DatabaseLockAttestRequest
+      description: Record a database lock event.
+    ConsentAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of patient or site
+        irb_version_hash:
+          type: string
+          title: Irb Version Hash
+          description: sha256 of IRB-approved consent form version
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: FHIR-R5/Consent
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of consent document
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: FHIR-R5-Consent
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Consent metadata: patient_id, irb_number, consent_date, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - irb_version_hash
+      - original_payload_hash
+      title: ConsentAttestRequest
+      description: Record a patient consent event (with IRB version hash).
+    ProtocolAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of protocol author/sponsor
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: JSON-LD/CDISC-SDTM
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of protocol document
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: CDISC-SDTM-v3.3
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Protocol metadata: title, version, amendment_number, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - original_payload_hash
+      title: ProtocolAttestRequest
+      description: Record a protocol or amendment event.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DosingAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of site or nurse administering
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: CDISC-SDTM/EX
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of dosing record
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: CDISC-SDTM-v3.3/EX
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Dosing metadata: subject_id, dose_mg, route, datetime, batch_number, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - original_payload_hash
+      title: DosingAttestRequest
+      description: Record a dosing event.
+    EnrollmentAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of site or investigator
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: CDISC-SDTM/DM
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of enrollment record
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: CDISC-SDTM-v3.3/DM
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Enrollment metadata: subject_id, arm, randomization_code, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - original_payload_hash
+      title: EnrollmentAttestRequest
+      description: Record an enrollment event.
+    AdverseEventAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of investigator or site
+        ae_type:
+          type: string
+          title: Ae Type
+          description: AE / SAE / SUSAR
+          default: AE
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: CDISC-SDTM/AE
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of AE record
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: CDISC-SDTM-v3.3/AE
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'AE metadata: subject_id, meddra_code, severity, seriousness, relatedness, onset_date, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - original_payload_hash
+      title: AdverseEventAttestRequest
+      description: Record an adverse event, SAE, or SUSAR.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,1359 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Affordances API
+  version: 0.1.0
+  description: 'Operations tagged affordances across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: affordances
+paths:
+  /v1/affordance/catalog:
+    get:
+      tags:
+      - affordances
+      summary: Get Catalogs
+      description: List the affordance catalog for every hot supermodel.
+      operationId: get_catalogs_v1_affordance_catalog_get
+      parameters:
+      - name: include_cold
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Include Cold
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Catalogs V1 Affordance Catalog Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/catalog:
+    get:
+      tags:
+      - affordances
+      summary: Get Catalog
+      operationId: get_catalog_v1_affordance__supermodel__catalog_get
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Catalog V1 Affordance  Supermodel  Catalog Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/list:
+    get:
+      tags:
+      - affordances
+      summary: List For Supermodel
+      operationId: list_for_supermodel_v1_affordance__supermodel__list_get
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Type
+      - name: state
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List For Supermodel V1 Affordance  Supermodel  List Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/affordance/{aff_id}:
+    get:
+      tags:
+      - affordances
+      summary: Get One
+      operationId: get_one_v1_affordance_affordance__aff_id__get
+      parameters:
+      - name: aff_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Aff Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get One V1 Affordance Affordance  Aff Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/health:
+    get:
+      tags:
+      - affordances
+      summary: Health
+      operationId: health_v1_affordance__supermodel__health_get
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Health V1 Affordance  Supermodel  Health Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/pull:
+    post:
+      tags:
+      - affordances
+      summary: Post Pull
+      operationId: post_pull_v1_affordance__supermodel__pull_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: reason
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Free-form reason for the pull
+          title: Reason
+        description: Free-form reason for the pull
+      - name: bonus
+        in: query
+        required: false
+        schema:
+          type: number
+          minimum: 0.0
+          description: Optional tip; bonus>0 jumps queue
+          default: 0.0
+          title: Bonus
+        description: Optional tip; bonus>0 jumps queue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/PullBody'
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Pull V1 Affordance  Supermodel  Pull Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/light-fuse:
+    post:
+      tags:
+      - affordances
+      summary: Post Light Fuse
+      operationId: post_light_fuse_v1_affordance__supermodel__light_fuse_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: fuse_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Caller-side identifier for this ignition
+          title: Fuse Id
+        description: Caller-side identifier for this ignition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LightFuseBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Light Fuse V1 Affordance  Supermodel  Light Fuse Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/grab:
+    post:
+      tags:
+      - affordances
+      summary: Post Grab Rope
+      operationId: post_grab_rope_v1_affordance__supermodel__grab_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: duration_sec
+        in: query
+        required: true
+        schema:
+          type: integer
+          maximum: 86400
+          exclusiveMinimum: 0
+          title: Duration Sec
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GrabRopeBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Grab Rope V1 Affordance  Supermodel  Grab Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/snip:
+    post:
+      tags:
+      - affordances
+      summary: Post Snip
+      operationId: post_snip_v1_affordance__supermodel__snip_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: reason
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Reason
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SnipBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Snip V1 Affordance  Supermodel  Snip Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/hook:
+    post:
+      tags:
+      - affordances
+      summary: Post Hook
+      operationId: post_hook_v1_affordance__supermodel__hook_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: event
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Event
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HookBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Hook V1 Affordance  Supermodel  Hook Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/hooks:
+    get:
+      tags:
+      - affordances
+      summary: List Supermodel Hooks
+      operationId: list_supermodel_hooks_v1_affordance__supermodel__hooks_get
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: event
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Supermodel Hooks V1 Affordance  Supermodel  Hooks Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/ring:
+    post:
+      tags:
+      - affordances
+      summary: Post Ring Bell
+      operationId: post_ring_bell_v1_affordance__supermodel__ring_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RingBellBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Ring Bell V1 Affordance  Supermodel  Ring Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/trip:
+    post:
+      tags:
+      - affordances
+      summary: Post Trip
+      operationId: post_trip_v1_affordance__supermodel__trip_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Trip V1 Affordance  Supermodel  Trip Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/top-off:
+    post:
+      tags:
+      - affordances
+      summary: Post Top Off Request
+      description: 'Agent-side: post a top-off ask. Returns proposed affordance.'
+      operationId: post_top_off_request_v1_affordance__supermodel__top_off_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopOffRequestBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Top Off Request V1 Affordance  Supermodel  Top Off Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/top-off/{top_off_id}/fulfill:
+    post:
+      tags:
+      - affordances
+      summary: Post Top Off Fulfill
+      operationId: post_top_off_fulfill_v1_affordance_top_off__top_off_id__fulfill_post
+      parameters:
+      - name: top_off_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Top Off Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopOffFulfillBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Top Off Fulfill V1 Affordance Top Off  Top Off Id  Fulfill Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/top-off/{top_off_id}/complete:
+    post:
+      tags:
+      - affordances
+      summary: Post Top Off Complete
+      operationId: post_top_off_complete_v1_affordance_top_off__top_off_id__complete_post
+      parameters:
+      - name: top_off_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Top Off Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopOffCompleteBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Top Off Complete V1 Affordance Top Off  Top Off Id  Complete Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/tip:
+    post:
+      tags:
+      - affordances
+      summary: Post Tip Jar
+      operationId: post_tip_jar_v1_affordance__supermodel__tip_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TipJarBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Tip Jar V1 Affordance  Supermodel  Tip Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/sos:
+    post:
+      tags:
+      - affordances
+      summary: Post Sos Request
+      operationId: post_sos_request_v1_affordance__supermodel__sos_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SosRequestBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Sos Request V1 Affordance  Supermodel  Sos Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/sos/active:
+    get:
+      tags:
+      - affordances
+      summary: Get Sos Active
+      operationId: get_sos_active_v1_affordance_sos_active_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Sos Active V1 Affordance Sos Active Get
+  /v1/affordance/sos/{sos_id}/fulfill:
+    post:
+      tags:
+      - affordances
+      summary: Post Sos Fulfill
+      operationId: post_sos_fulfill_v1_affordance_sos__sos_id__fulfill_post
+      parameters:
+      - name: sos_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Sos Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SosFulfillBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Sos Fulfill V1 Affordance Sos  Sos Id  Fulfill Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/iou:
+    post:
+      tags:
+      - affordances
+      summary: Post Iou Request
+      operationId: post_iou_request_v1_affordance__supermodel__iou_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IouRequestBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Iou Request V1 Affordance  Supermodel  Iou Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/iou/{iou_id}/repay:
+    post:
+      tags:
+      - affordances
+      summary: Post Iou Repay
+      operationId: post_iou_repay_v1_affordance_iou__iou_id__repay_post
+      parameters:
+      - name: iou_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Iou Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IouRepayBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Iou Repay V1 Affordance Iou  Iou Id  Repay Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/bucket:
+    post:
+      tags:
+      - affordances
+      summary: Post Bucket
+      operationId: post_bucket_v1_affordance__supermodel__bucket_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: fill_to
+        in: query
+        required: true
+        schema:
+          type: number
+          exclusiveMinimum: 0
+          title: Fill To
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BucketBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Bucket V1 Affordance  Supermodel  Bucket Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/bucket/{bucket_id}/burn:
+    post:
+      tags:
+      - affordances
+      summary: Post Bucket Burn
+      operationId: post_bucket_burn_v1_affordance_bucket__bucket_id__burn_post
+      parameters:
+      - name: bucket_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Bucket Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BucketBurnBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Bucket Burn V1 Affordance Bucket  Bucket Id  Burn Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/drip:
+    post:
+      tags:
+      - affordances
+      summary: Post Drip Start
+      operationId: post_drip_start_v1_affordance__supermodel__drip_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: rate_per_sec
+        in: query
+        required: true
+        schema:
+          type: number
+          exclusiveMinimum: 0
+          title: Rate Per Sec
+      - name: max_total
+        in: query
+        required: true
+        schema:
+          type: number
+          exclusiveMinimum: 0
+          title: Max Total
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DripBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Drip Start V1 Affordance  Supermodel  Drip Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/drip/{drip_id}/stop:
+    post:
+      tags:
+      - affordances
+      summary: Post Drip Stop
+      operationId: post_drip_stop_v1_affordance_drip__drip_id__stop_post
+      parameters:
+      - name: drip_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Drip Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Drip Stop V1 Affordance Drip  Drip Id  Stop Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/phone-home:
+    post:
+      tags:
+      - affordances
+      summary: Post Phone Home Request
+      operationId: post_phone_home_request_v1_affordance__supermodel__phone_home_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhoneHomeRequestBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Phone Home Request V1 Affordance  Supermodel  Phone Home Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/affordance/{supermodel}/phone-home/respond:
+    post:
+      tags:
+      - affordances
+      summary: Post Phone Home Respond
+      operationId: post_phone_home_respond_v1_affordance__supermodel__phone_home_respond_post
+      parameters:
+      - name: supermodel
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Supermodel
+      - name: ph_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Ph Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PhoneHomeRespondBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Phone Home Respond V1 Affordance  Supermodel  Phone Home Respond Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    IouRepayBody:
+      properties:
+        repay_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Repay Usdc
+      type: object
+      required:
+      - repay_usdc
+      title: IouRepayBody
+    DripBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: DripBody
+    TipJarBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+        amount_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount Usdc
+        parent_receipt_hash:
+          type: string
+          title: Parent Receipt Hash
+      type: object
+      required:
+      - caller_did
+      - amount_usdc
+      - parent_receipt_hash
+      title: TipJarBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    LightFuseBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+          description: DID or address of the caller
+        kit_deltas:
+          additionalProperties: true
+          type: object
+          title: Kit Deltas
+        predicted_lift_usdc_per_day:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Predicted Lift Usdc Per Day
+        rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rationale
+      type: object
+      required:
+      - caller_did
+      title: LightFuseBody
+    TopOffFulfillBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+        amount_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount Usdc
+      type: object
+      required:
+      - caller_did
+      - amount_usdc
+      title: TopOffFulfillBody
+    TopOffCompleteBody:
+      properties:
+        actual_burn_usdc:
+          type: number
+          minimum: 0.0
+          title: Actual Burn Usdc
+      type: object
+      required:
+      - actual_burn_usdc
+      title: TopOffCompleteBody
+    SosFulfillBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: SosFulfillBody
+    BucketBurnBody:
+      properties:
+        amount_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount Usdc
+      type: object
+      required:
+      - amount_usdc
+      title: BucketBurnBody
+    SosRequestBody:
+      properties:
+        needed_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Needed Usdc
+        deadline_sec:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: Deadline Sec
+        reward_share_bps:
+          type: integer
+          maximum: 10000.0
+          minimum: 0.0
+          title: Reward Share Bps
+        parent_receipt_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Receipt Hash
+      type: object
+      required:
+      - needed_usdc
+      - deadline_sec
+      - reward_share_bps
+      title: SosRequestBody
+    IouRequestBody:
+      properties:
+        borrow_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Borrow Usdc
+        interest_bps:
+          type: integer
+          minimum: 0.0
+          title: Interest Bps
+        parent_receipt_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Receipt Hash
+      type: object
+      required:
+      - borrow_usdc
+      - interest_bps
+      title: IouRequestBody
+    PhoneHomeRespondBody:
+      properties:
+        decision:
+          type: string
+          title: Decision
+        skip_paid:
+          type: boolean
+          title: Skip Paid
+          default: false
+        caller_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Caller Did
+      type: object
+      required:
+      - decision
+      title: PhoneHomeRespondBody
+    SnipBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: SnipBody
+    TopOffRequestBody:
+      properties:
+        needed_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Needed Usdc
+        reason:
+          type: string
+          title: Reason
+        parent_receipt_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Receipt Hash
+        refund_unused:
+          type: boolean
+          title: Refund Unused
+          default: true
+      type: object
+      required:
+      - needed_usdc
+      - reason
+      title: TopOffRequestBody
+    TripBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: TripBody
+    HookBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+        n_triggers:
+          type: integer
+          minimum: 1.0
+          title: N Triggers
+          default: 1
+        prepay_usdc:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Prepay Usdc
+      type: object
+      required:
+      - caller_did
+      title: HookBody
+    PullBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+          description: DID or address of the caller
+      type: object
+      required:
+      - caller_did
+      title: PullBody
+    RingBellBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: RingBellBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    GrabRopeBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: GrabRopeBody
+    BucketBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: BucketBody
+    PhoneHomeRequestBody:
+      properties:
+        waiting_for:
+          type: string
+          title: Waiting For
+        cost_to_skip_usdc:
+          type: number
+          minimum: 0.0
+          title: Cost To Skip Usdc
+        parent_receipt_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Receipt Hash
+      type: object
+      required:
+      - waiting_for
+      - cost_to_skip_usdc
+      title: PhoneHomeRequestBody
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

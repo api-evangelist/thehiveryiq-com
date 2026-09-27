@@ -1,0 +1,262 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com R3pv API
+  version: 0.1.0
+  description: 'Operations tagged r3pv across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: r3pv
+paths:
+  /v1/r3pv/health:
+    get:
+      tags:
+      - r3pv
+      summary: R3Pv discovery — version, healing states, vector dimensions, signer
+      operationId: r3pv_health_v1_r3pv_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/r3pv/groups:
+    post:
+      tags:
+      - r3pv
+      summary: Create a receipt group from inline receipts and/or receipt IDs
+      operationId: r3pv_create_group_v1_r3pv_groups_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroupRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/r3pv/groups/{group_id}:
+    get:
+      tags:
+      - r3pv
+      summary: Fetch a stored receipt group
+      operationId: r3pv_get_group_v1_r3pv_groups__group_id__get
+      parameters:
+      - name: group_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Group Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/r3pv/vector:
+    get:
+      tags:
+      - r3pv
+      summary: Compute + sign a proof vector for a stored group
+      operationId: r3pv_vector_get_v1_r3pv_vector_get
+      parameters:
+      - name: group_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Group Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - r3pv
+      summary: Group + vector in one call from inline receipts/IDs
+      operationId: r3pv_vector_post_v1_r3pv_vector_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VectorRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    VectorRequest:
+      properties:
+        group_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Group Id
+          description: Existing group to compute a vector for.
+        label:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Label
+        receipts:
+          items: {}
+          type: array
+          title: Receipts
+          description: Inline receipts and/or IDs (used when group_id is not given).
+        receipt_ids:
+          items:
+            type: string
+          type: array
+          title: Receipt Ids
+        graph:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Graph
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+        persist:
+          type: boolean
+          title: Persist
+          description: If true (and no group_id given), persist the group so the vector is reproducible.
+          default: true
+      type: object
+      title: VectorRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    GroupRequest:
+      properties:
+        label:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Label
+          description: Human label for the group.
+        receipts:
+          items: {}
+          type: array
+          title: Receipts
+          description: Inline receipt objects (as returned by /v1/receipt-relay/*) and/or receipt_id strings.
+        receipt_ids:
+          items:
+            type: string
+          type: array
+          title: Receipt Ids
+          description: Receipt IDs to reference. Bodies not supplied are recorded but marked unresolved.
+        graph:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Graph
+          description: 'Optional relationships between receipts, e.g. {''edges'': [{''from'': ''r_a'', ''to'': ''r_b'', ''rel'': ''follows''}]}.'
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+          description: Optional caller metadata.
+      type: object
+      title: GroupRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

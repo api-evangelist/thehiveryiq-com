@@ -1,0 +1,346 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Xcalibur Verify API
+  version: 0.1.0
+  description: 'Operations tagged xcalibur-verify across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: xcalibur-verify
+paths:
+  /v1/verify/status:
+    get:
+      tags:
+      - xcalibur-verify
+      summary: Verify Status
+      operationId: verify_status_v1_verify_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Verify Status V1 Verify Status Get
+  /v1/verify/commitment/build:
+    post:
+      tags:
+      - xcalibur-verify
+      summary: Commitment Build
+      operationId: commitment_build_v1_verify_commitment_build_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommitmentBuildRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Commitment Build V1 Verify Commitment Build Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/verify/commitment/{tenant_id}/current:
+    get:
+      tags:
+      - xcalibur-verify
+      summary: Commitment Current
+      operationId: commitment_current_v1_verify_commitment__tenant_id__current_get
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Commitment Current V1 Verify Commitment  Tenant Id  Current Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/verify/proof/generate:
+    post:
+      tags:
+      - xcalibur-verify
+      summary: Proof Generate
+      operationId: proof_generate_v1_verify_proof_generate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProofGenerateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Proof Generate V1 Verify Proof Generate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/verify/proof/verify:
+    post:
+      tags:
+      - xcalibur-verify
+      summary: Proof Verify
+      operationId: proof_verify_v1_verify_proof_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProofVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Proof Verify V1 Verify Proof Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/verify/dispute:
+    post:
+      tags:
+      - xcalibur-verify
+      summary: Dispute
+      operationId: dispute_v1_verify_dispute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisputeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Dispute V1 Verify Dispute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/verify/demo/run:
+    post:
+      tags:
+      - xcalibur-verify
+      summary: Demo Run
+      description: 'End-to-end pipeline the landing page calls. Real Merkle tree, real
+
+        signature, real verify result. Default flow: inject entry-a from the
+
+        seeded demo corpus into a caller prompt and produce the certificate.'
+      operationId: demo_run_v1_verify_demo_run_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DemoRunRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Demo Run V1 Verify Demo Run Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    DemoRunRequest:
+      properties:
+        caller_content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Caller Content
+        entry_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entry Id
+        proof_mode:
+          type: string
+          title: Proof Mode
+          default: standard
+      type: object
+      title: DemoRunRequest
+    CommitmentBuildRequest:
+      properties:
+        tenant_id:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Tenant Id
+      type: object
+      required:
+      - tenant_id
+      title: CommitmentBuildRequest
+    ProofVerifyRequest:
+      properties:
+        proof:
+          additionalProperties: true
+          type: object
+          title: Proof
+        commitment:
+          additionalProperties: true
+          type: object
+          title: Commitment
+        certificate:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Certificate
+      type: object
+      required:
+      - proof
+      - commitment
+      title: ProofVerifyRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DisputeRequest:
+      properties:
+        certificate_id:
+          type: string
+          title: Certificate Id
+        claim:
+          type: string
+          title: Claim
+        tenant_id:
+          type: string
+          title: Tenant Id
+      type: object
+      required:
+      - certificate_id
+      - claim
+      - tenant_id
+      title: DisputeRequest
+    ProofGenerateRequest:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+        entry_id:
+          type: string
+          title: Entry Id
+        commitment_version:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Commitment Version
+        proof_mode:
+          type: string
+          title: Proof Mode
+          default: standard
+      type: object
+      required:
+      - tenant_id
+      - entry_id
+      title: ProofGenerateRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

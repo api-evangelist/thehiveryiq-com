@@ -1,0 +1,1137 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Deedlock API
+  version: 0.1.0
+  description: 'Operations tagged Deedlock across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Deedlock
+paths:
+  /v1/deedlock/mcp:
+    get:
+      summary: Deedlock Mcp Meta
+      operationId: deedlock_mcp_meta_v1_deedlock_mcp_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Deedlock
+    post:
+      summary: Deedlock Mcp
+      operationId: deedlock_mcp_v1_deedlock_mcp_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Deedlock
+  /v1/deedlock/health:
+    get:
+      tags:
+      - Deedlock
+      summary: Health
+      operationId: health_v1_deedlock_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Deedlock Health Get
+  /v1/deedlock/pricing:
+    get:
+      tags:
+      - Deedlock
+      summary: Pricing
+      operationId: pricing_v1_deedlock_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Deedlock Pricing Get
+  /v1/deedlock/deed_attest:
+    post:
+      tags:
+      - Deedlock
+      summary: Deed Attest
+      operationId: deed_attest_v1_deedlock_deed_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeedAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeedAttestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/deedlock/notary_session:
+    post:
+      tags:
+      - Deedlock
+      summary: Notary Session
+      operationId: notary_session_v1_deedlock_notary_session_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotarySessionRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotarySessionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/deedlock/recording_attest:
+    post:
+      tags:
+      - Deedlock
+      summary: Recording Attest
+      operationId: recording_attest_v1_deedlock_recording_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecordingAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordingAttestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/deedlock/deed_get/{attestation_id}:
+    get:
+      tags:
+      - Deedlock
+      summary: Deed Get
+      operationId: deed_get_v1_deedlock_deed_get__attestation_id__get
+      parameters:
+      - name: attestation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Attestation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Deed Get V1 Deedlock Deed Get  Attestation Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/deedlock/deed_verify/{attestation_id}:
+    get:
+      tags:
+      - Deedlock
+      summary: Deed Verify
+      operationId: deed_verify_v1_deedlock_deed_verify__attestation_id__get
+      parameters:
+      - name: attestation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Attestation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeedVerifyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/deedlock/chain_verify:
+    post:
+      tags:
+      - Deedlock
+      summary: Chain Verify
+      operationId: chain_verify_v1_deedlock_chain_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_deedlock__models__ChainVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChainVerifyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/deedlock/by-property/{property_id}:
+    get:
+      tags:
+      - Deedlock
+      summary: By Property
+      operationId: by_property_v1_deedlock_by_property__property_id__get
+      parameters:
+      - name: property_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Property Id
+      - name: buyer_did
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Did
+      - name: seller_did
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Seller Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Property V1 Deedlock By Property  Property Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/deedlock/by-buyer/{buyer_did}:
+    get:
+      tags:
+      - Deedlock
+      summary: By Buyer
+      operationId: by_buyer_v1_deedlock_by_buyer__buyer_did__get
+      parameters:
+      - name: buyer_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Buyer Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Buyer V1 Deedlock By Buyer  Buyer Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/deedlock/by-seller/{seller_did}:
+    get:
+      tags:
+      - Deedlock
+      summary: By Seller
+      operationId: by_seller_v1_deedlock_by_seller__seller_did__get
+      parameters:
+      - name: seller_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Seller Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Seller V1 Deedlock By Seller  Seller Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/deedlock/by-notary/{notary_did}:
+    get:
+      tags:
+      - Deedlock
+      summary: By Notary
+      operationId: by_notary_v1_deedlock_by_notary__notary_did__get
+      parameters:
+      - name: notary_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Notary Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Notary V1 Deedlock By Notary  Notary Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    NotarizationType:
+      type: string
+      enum:
+      - ron
+      - ipen
+      - traditional
+      - remote_ink
+      title: NotarizationType
+    DeedVerifyResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        seller_did:
+          type: string
+          title: Seller Did
+        property_id:
+          type: string
+          title: Property Id
+        event_type:
+          $ref: '#/components/schemas/DeedEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        verification:
+          additionalProperties: true
+          type: object
+          title: Verification
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - seller_did
+      - property_id
+      - event_type
+      - event_hash
+      - timestamp_iso
+      - receipt_envelope
+      - verification
+      title: DeedVerifyResponse
+    PropertyDescriptor:
+      properties:
+        apn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Apn
+          description: Assessor's Parcel Number
+        address_line1:
+          type: string
+          title: Address Line1
+        address_line2:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Address Line2
+        city:
+          type: string
+          title: City
+        state:
+          type: string
+          maxLength: 2
+          minLength: 2
+          title: State
+        postal_code:
+          type: string
+          title: Postal Code
+        county:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: County
+        fips_state_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fips State Code
+          description: FIPS 5-2 state code
+        fips_county_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fips County Code
+          description: FIPS 6-4 county code
+        legal_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Legal Description
+        lot:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lot
+        block:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Block
+        subdivision:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subdivision
+      type: object
+      required:
+      - address_line1
+      - city
+      - state
+      - postal_code
+      title: PropertyDescriptor
+      description: ALTA / MISMO-compatible property descriptor.
+    DeedAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        seller_did:
+          type: string
+          title: Seller Did
+        notary_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notary Did
+        property_id:
+          type: string
+          title: Property Id
+        event_type:
+          $ref: '#/components/schemas/DeedEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - seller_did
+      - property_id
+      - event_type
+      - event_hash
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: DeedAttestResponse
+    DeedAttestRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+          description: DID of the buyer
+        seller_did:
+          type: string
+          title: Seller Did
+          description: DID of the seller
+        notary_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notary Did
+          description: DID of the notary (required at NOTARY_SESSION+)
+        title_agent_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title Agent Did
+        escrow_agent_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Escrow Agent Did
+        lender_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lender Did
+        property_id:
+          type: string
+          title: Property Id
+          description: Stable ID across all events (typically APN or escrow#)
+        property:
+          anyOf:
+          - $ref: '#/components/schemas/PropertyDescriptor'
+          - type: 'null'
+        event_type:
+          $ref: '#/components/schemas/DeedEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+          description: sha256 of the document snapshot at this state
+        title_company:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title Company
+          description: First American / Old Republic / Stewart / Fidelity
+        title_order_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title Order Number
+        title_policy_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title Policy Number
+        escrow_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Escrow Number
+        mismo_xml_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Mismo Xml Hash
+          description: sha256 of MISMO 3.4 XML if applicable
+        notarization_type:
+          anyOf:
+          - $ref: '#/components/schemas/NotarizationType'
+          - type: 'null'
+        notary_journal_entry:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notary Journal Entry
+        ron_session_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ron Session Id
+          description: Notarize / Stewart / First American RON session id
+        kbai_passed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Kbai Passed
+          description: Knowledge-Based ID Authentication passed
+        credential_analysis_passed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Credential Analysis Passed
+        recording_status:
+          anyOf:
+          - $ref: '#/components/schemas/RecordingStatus'
+          - type: 'null'
+        recording_book:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Book
+        recording_page:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Page
+        recording_document_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Document Number
+        recording_county:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording County
+        recording_state:
+          anyOf:
+          - type: string
+            maxLength: 2
+          - type: 'null'
+          title: Recording State
+        recording_timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Timestamp
+        sale_price_cents:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Sale Price Cents
+        loan_amount_cents:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Loan Amount Cents
+        earnest_money_cents:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Earnest Money Cents
+        closing_cost_cents:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Closing Cost Cents
+        currency:
+          type: string
+          maxLength: 3
+          minLength: 3
+          title: Currency
+          default: USD
+        form_1099s_required:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Form 1099S Required
+        fincen_geo_targeting_order:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Fincen Geo Targeting Order
+          description: Subject to FinCEN GTO (NYC, Miami, etc.)
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          description: Use Cosmic tier (inspected / regulated)
+          default: false
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - buyer_did
+      - seller_did
+      - property_id
+      - event_type
+      - event_hash
+      title: DeedAttestRequest
+      description: 'Attest a single deed/notary state transition.
+
+
+        `event_hash` is the immutable content-hash the caller wants bound to the
+
+        receipt (typically sha256 of the canonical JSON of the document snapshot).
+
+        This proves all parties saw exactly the same document at this state.'
+    NotarySessionRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        seller_did:
+          type: string
+          title: Seller Did
+        notary_did:
+          type: string
+          title: Notary Did
+        property_id:
+          type: string
+          title: Property Id
+        notarization_type:
+          $ref: '#/components/schemas/NotarizationType'
+        document_hashes:
+          items:
+            type: string
+          type: array
+          title: Document Hashes
+          description: sha256 of each document signed in the session
+        ron_session_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ron Session Id
+        ron_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ron Platform
+          description: notarize / stewart / first_american / old_republic / proof
+        session_started_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Started At
+        session_completed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Completed At
+        kbai_passed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Kbai Passed
+        credential_analysis_passed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Credential Analysis Passed
+        notary_journal_entry:
+          type: string
+          title: Notary Journal Entry
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          default: false
+      type: object
+      required:
+      - buyer_did
+      - seller_did
+      - notary_did
+      - property_id
+      - notarization_type
+      - document_hashes
+      - notary_journal_entry
+      title: NotarySessionRequest
+    hivemorph__hive_deedlock__models__ChainVerifyRequest:
+      properties:
+        property_id:
+          type: string
+          title: Property Id
+        buyer_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Did
+        seller_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Seller Did
+        require_recorded:
+          type: boolean
+          title: Require Recorded
+          description: Require RECORDED state to consider chain complete
+          default: true
+      type: object
+      required:
+      - property_id
+      title: ChainVerifyRequest
+      description: 'Verify the full transaction chain for a property — returns the
+
+        ordered receipt chain and whether the state machine is valid.'
+    DeedEventType:
+      type: string
+      enum:
+      - disclosure
+      - offer
+      - acceptance
+      - escrow_open
+      - title_search
+      - notary_session
+      - deed_signed
+      - recording_submitted
+      - recorded
+      - closing
+      - wire_disbursed
+      - amendment
+      - cancellation
+      title: DeedEventType
+    ChainVerifyResponse:
+      properties:
+        property_id:
+          type: string
+          title: Property Id
+        chain_valid:
+          type: boolean
+          title: Chain Valid
+        states_present:
+          items:
+            $ref: '#/components/schemas/DeedEventType'
+          type: array
+          title: States Present
+        sale_price_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Sale Price Cents
+        recording_document_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Document Number
+        discrepancies:
+          items:
+            type: string
+          type: array
+          title: Discrepancies
+        chain:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Chain
+      type: object
+      required:
+      - property_id
+      - chain_valid
+      - states_present
+      title: ChainVerifyResponse
+    RecordingAttestRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        seller_did:
+          type: string
+          title: Seller Did
+        property_id:
+          type: string
+          title: Property Id
+        deed_signed_attestation_id:
+          type: string
+          title: Deed Signed Attestation Id
+          description: Prior DEED_SIGNED attestation_id for chain-of-custody
+        recording_county:
+          type: string
+          title: Recording County
+        recording_state:
+          type: string
+          maxLength: 2
+          minLength: 2
+          title: Recording State
+        recording_status:
+          $ref: '#/components/schemas/RecordingStatus'
+        recording_book:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Book
+        recording_page:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Page
+        recording_document_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Document Number
+        recording_timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Timestamp
+        pria_xml_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pria Xml Hash
+          description: sha256 of PRIA submission XML
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          default: false
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - buyer_did
+      - seller_did
+      - property_id
+      - deed_signed_attestation_id
+      - recording_county
+      - recording_state
+      - recording_status
+      title: RecordingAttestRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RecordingStatus:
+      type: string
+      enum:
+      - pending
+      - submitted
+      - recorded
+      - rejected
+      - indexed
+      title: RecordingStatus
+    RecordingAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        property_id:
+          type: string
+          title: Property Id
+        recording_status:
+          $ref: '#/components/schemas/RecordingStatus'
+        recording_county:
+          type: string
+          title: Recording County
+        recording_state:
+          type: string
+          title: Recording State
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+      type: object
+      required:
+      - attestation_id
+      - property_id
+      - recording_status
+      - recording_county
+      - recording_state
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: RecordingAttestResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    NotarySessionResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        notary_did:
+          type: string
+          title: Notary Did
+        property_id:
+          type: string
+          title: Property Id
+        notarization_type:
+          $ref: '#/components/schemas/NotarizationType'
+        document_count:
+          type: integer
+          title: Document Count
+        session_hash:
+          type: string
+          title: Session Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+      type: object
+      required:
+      - attestation_id
+      - notary_did
+      - property_id
+      - notarization_type
+      - document_count
+      - session_hash
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: NotarySessionResponse
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

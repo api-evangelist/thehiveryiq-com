@@ -1,0 +1,234 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Dashboard API
+  version: 0.1.0
+  description: 'Operations tagged dashboard across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Dashboard
+paths:
+  /v1/dashboard/gumroad:
+    get:
+      tags:
+      - Dashboard
+      summary: Dashboard Gumroad
+      operationId: dashboard_gumroad_v1_dashboard_gumroad_get
+      parameters:
+      - name: x-admin-token
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Dashboard Gumroad V1 Dashboard Gumroad Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/dashboard/receipts:
+    get:
+      tags:
+      - Dashboard
+      summary: Dashboard Receipts
+      operationId: dashboard_receipts_v1_dashboard_receipts_get
+      parameters:
+      - name: x-admin-token
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Dashboard Receipts V1 Dashboard Receipts Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/dashboard/bazaar:
+    get:
+      tags:
+      - Dashboard
+      summary: Dashboard Bazaar
+      description: 'Funnel: /bazaar pageviews → buy_click events → external Gumroad clicks.'
+      operationId: dashboard_bazaar_v1_dashboard_bazaar_get
+      parameters:
+      - name: window_hours
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 24
+          title: Window Hours
+      - name: x-admin-token
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Dashboard Bazaar V1 Dashboard Bazaar Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/dashboard/outreach:
+    get:
+      tags:
+      - Dashboard
+      summary: Dashboard Outreach
+      description: Standing outreach watch board with last-touch enrichment.
+      operationId: dashboard_outreach_v1_dashboard_outreach_get
+      parameters:
+      - name: x-admin-token
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Dashboard Outreach V1 Dashboard Outreach Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/dashboard/summary:
+    get:
+      tags:
+      - Dashboard
+      summary: Dashboard Summary
+      description: One-shot rollup — saves the dashboard from spamming 6 endpoints.
+      operationId: dashboard_summary_v1_dashboard_summary_get
+      parameters:
+      - name: x-admin-token
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Dashboard Summary V1 Dashboard Summary Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

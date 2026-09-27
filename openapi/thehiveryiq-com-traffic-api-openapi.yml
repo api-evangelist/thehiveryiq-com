@@ -1,0 +1,150 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Traffic API
+  version: 0.1.0
+  description: 'Operations tagged traffic across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: traffic
+paths:
+  /v1/traffic/stats:
+    get:
+      tags:
+      - traffic
+      summary: Multi-window traffic stats (1h, 6h, 24h, 7d)
+      operationId: traffic_stats_multi_v1_traffic_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Traffic Stats Multi V1 Traffic Stats Get
+  /v1/traffic/stats/{hours}:
+    get:
+      tags:
+      - traffic
+      summary: Traffic stats for a single window
+      operationId: traffic_stats_single_v1_traffic_stats__hours__get
+      parameters:
+      - name: hours
+        in: path
+        required: true
+        schema:
+          type: number
+          title: Hours
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Traffic Stats Single V1 Traffic Stats  Hours  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/traffic/recent:
+    get:
+      tags:
+      - traffic
+      summary: Recently-seen paths (last 1h)
+      operationId: traffic_recent_v1_traffic_recent_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Traffic Recent V1 Traffic Recent Get
+  /v1/traffic/campaign:
+    get:
+      tags:
+      - traffic
+      summary: Campaign-relevant traffic slice
+      description: 'Return per-prefix request counts for the surfaces we''re actively driving
+
+        traffic to. Useful for measuring tweet/post conversion.'
+      operationId: traffic_campaign_v1_traffic_campaign_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Traffic Campaign V1 Traffic Campaign Get
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,253 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com R5 Hktn Reputation API
+  version: 0.1.0
+  description: 'Operations tagged r5-hktn-reputation across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: r5-hktn-reputation
+paths:
+  /v1/hktn/rep/policy:
+    get:
+      tags:
+      - r5-hktn-reputation
+      summary: Rep Policy
+      operationId: rep_policy_v1_hktn_rep_policy_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/hktn/rep/leaderboard:
+    get:
+      tags:
+      - r5-hktn-reputation
+      summary: Rep Leaderboard
+      operationId: rep_leaderboard_v1_hktn_rep_leaderboard_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hktn/rep/event:
+    post:
+      tags:
+      - r5-hktn-reputation
+      summary: Rep Event
+      operationId: rep_event_v1_hktn_rep_event_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepEventReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hktn/rep/preview:
+    post:
+      tags:
+      - r5-hktn-reputation
+      summary: Rep Preview
+      operationId: rep_preview_v1_hktn_rep_preview_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepPreviewReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/hktn/rep/{agent_did}:
+    get:
+      tags:
+      - r5-hktn-reputation
+      summary: Rep Get
+      operationId: rep_get_v1_hktn_rep__agent_did__get
+      parameters:
+      - name: agent_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Did
+      - name: history
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 0
+          default: 25
+          title: History
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    RepPreviewReq:
+      properties:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        hypothetical_events:
+          items:
+            $ref: '#/components/schemas/HypotheticalEvent'
+          type: array
+          maxItems: 200
+          title: Hypothetical Events
+      type: object
+      required:
+      - agent_did
+      title: RepPreviewReq
+    HypotheticalEvent:
+      properties:
+        event_type:
+          type: string
+          title: Event Type
+        age_seconds:
+          type: integer
+          maximum: 31536000.0
+          minimum: 0.0
+          title: Age Seconds
+          default: 0
+        context:
+          additionalProperties: true
+          type: object
+          title: Context
+      type: object
+      required:
+      - event_type
+      title: HypotheticalEvent
+    RepEventReq:
+      properties:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        event_type:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Event Type
+        context:
+          additionalProperties: true
+          type: object
+          title: Context
+      type: object
+      required:
+      - agent_did
+      - event_type
+      title: RepEventReq
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

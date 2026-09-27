@@ -1,0 +1,169 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Nanopay API
+  version: 0.1.0
+  description: 'Operations tagged nanopay across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: nanopay
+paths:
+  /v1/nanopay/bench:
+    get:
+      tags:
+      - nanopay
+      summary: Live nanopay benchmark — receipts/sec, $/receipt, PQ coverage, rails
+      description: 'Public, free, real-time benchmark of Hive Nanopay rails.
+
+        No auth. Pulls real values from the receipts ledger + x402 stats.'
+      operationId: nanopay_bench_v1_nanopay_bench_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Nanopay Bench V1 Nanopay Bench Get
+  /v1/nanopay/standard:
+    get:
+      tags:
+      - nanopay
+      summary: Hive Nanopay spec metadata — version, repo, x402 PR, reference impl
+      operationId: nanopay_standard_v1_nanopay_standard_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Nanopay Standard V1 Nanopay Standard Get
+  /v1/nanopay/cross-rail:
+    post:
+      tags:
+      - nanopay
+      summary: Issue a cross-rail nanopay receipt verifiable on Base + Solana + Ethereum
+      description: 'Single receipt envelope containing rail-specific proofs for multiple chains.
+
+        Demo + production endpoint. Free.'
+      operationId: nanopay_cross_rail_v1_nanopay_cross_rail_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Body
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Nanopay Cross Rail V1 Nanopay Cross Rail Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanopay/cross-rail/verify:
+    post:
+      tags:
+      - nanopay
+      summary: Verify a cross-rail nanopay receipt (deterministic)
+      description: Deterministic verify of a cross-rail receipt envelope. Free.
+      operationId: nanopay_cross_rail_verify_v1_nanopay_cross_rail_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Body
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Nanopay Cross Rail Verify V1 Nanopay Cross Rail Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

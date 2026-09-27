@@ -1,0 +1,572 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Tradefinance API
+  version: 0.1.0
+  description: 'Operations tagged tradefinance across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: tradefinance
+paths:
+  /v1/tradefinance/template/list:
+    post:
+      tags:
+      - tradefinance
+      summary: List Tradefinance
+      operationId: list_tradefinance_v1_tradefinance_template_list_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response List Tradefinance V1 Tradefinance Template List Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradefinance/agents:
+    get:
+      tags:
+      - tradefinance
+      summary: Get Agents
+      operationId: get_agents_v1_tradefinance_agents_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Agents V1 Tradefinance Agents Get
+  /v1/tradefinance/template:
+    get:
+      tags:
+      - tradefinance
+      summary: Get Template
+      operationId: get_template_v1_tradefinance_template_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Template V1 Tradefinance Template Get
+  /v1/tradefinance/contract:
+    post:
+      tags:
+      - tradefinance
+      summary: Post Contract
+      operationId: post_contract_v1_tradefinance_contract_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_tradefinance__routes__ContractBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Contract V1 Tradefinance Contract Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradefinance/contract/{contract_id}:
+    get:
+      tags:
+      - tradefinance
+      summary: Get Contract Detail
+      operationId: get_contract_detail_v1_tradefinance_contract__contract_id__get
+      parameters:
+      - name: contract_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Contract Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Contract Detail V1 Tradefinance Contract  Contract Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradefinance/fund:
+    post:
+      tags:
+      - tradefinance
+      summary: Post Fund
+      operationId: post_fund_v1_tradefinance_fund_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FundBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Fund V1 Tradefinance Fund Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradefinance/milestone-tick:
+    post:
+      tags:
+      - tradefinance
+      summary: Post Milestone
+      operationId: post_milestone_v1_tradefinance_milestone_tick_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MilestoneBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Milestone V1 Tradefinance Milestone Tick Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradefinance/escrow/{contract_id}:
+    get:
+      tags:
+      - tradefinance
+      summary: Get Escrow Detail
+      operationId: get_escrow_detail_v1_tradefinance_escrow__contract_id__get
+      parameters:
+      - name: contract_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Contract Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Escrow Detail V1 Tradefinance Escrow  Contract Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradefinance/dispute:
+    post:
+      tags:
+      - tradefinance
+      summary: Post Dispute
+      operationId: post_dispute_v1_tradefinance_dispute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_tradefinance__routes__DisputeBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Dispute V1 Tradefinance Dispute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradefinance/webhook:
+    post:
+      tags:
+      - tradefinance
+      summary: Post Webhook
+      description: 'Public tracking-event webhook. Accepts the canonical event shape
+
+        (suitable for posting from webhook.site, Zapier, n8n, in-house ERP,
+
+        or a freight forwarder TMS). FreightWaves SONAR / MarineTraffic AIS /
+
+        GS1 EPCIS-shaped payloads are accepted as schema-compatible test
+
+        targets — they are NOT integration partners.
+
+
+        Routes:
+
+        MILESTONE event → fire milestone on the escrow (and auto-settle if
+
+        milestone == DELIVERED)
+
+        EXCEPTION event → file dispute and resolve inline'
+      operationId: post_webhook_v1_tradefinance_webhook_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Payload
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Webhook V1 Tradefinance Webhook Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradefinance/dispute/{dispute_id}:
+    get:
+      tags:
+      - tradefinance
+      summary: Get Dispute Detail
+      operationId: get_dispute_detail_v1_tradefinance_dispute__dispute_id__get
+      parameters:
+      - name: dispute_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Dispute Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Dispute Detail V1 Tradefinance Dispute  Dispute Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradefinance/economics:
+    get:
+      tags:
+      - tradefinance
+      summary: Economics
+      operationId: economics_v1_tradefinance_economics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Economics V1 Tradefinance Economics Get
+components:
+  schemas:
+    FundBody:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+        funder_did:
+          type: string
+          title: Funder Did
+      type: object
+      required:
+      - contract_id
+      - funder_did
+      title: FundBody
+    hivemorph__hive_tradefinance__routes__ContractBody:
+      properties:
+        importer_did:
+          type: string
+          title: Importer Did
+        exporter_did:
+          type: string
+          title: Exporter Did
+        freight_forwarder_did:
+          type: string
+          title: Freight Forwarder Did
+        bank_guarantor_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Bank Guarantor Did
+          default: ''
+        origin_country:
+          type: string
+          maxLength: 2
+          minLength: 2
+          title: Origin Country
+        destination_country:
+          type: string
+          maxLength: 2
+          minLength: 2
+          title: Destination Country
+        incoterm:
+          type: string
+          title: Incoterm
+        origin_port:
+          type: string
+          title: Origin Port
+        destination_port:
+          type: string
+          title: Destination Port
+        hs_code:
+          type: string
+          title: Hs Code
+        goods_description:
+          type: string
+          title: Goods Description
+        quantity:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Quantity
+        unit:
+          type: string
+          title: Unit
+        unit_value_usd:
+          type: number
+          minimum: 0.0
+          title: Unit Value Usd
+        total_value_usd:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Total Value Usd
+        contract_value_usd:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Contract Value Usd
+        settle_currency:
+          type: string
+          title: Settle Currency
+          default: USDC
+        settle_chain:
+          type: string
+          title: Settle Chain
+          default: base
+        payment_schedule:
+          anyOf:
+          - additionalProperties:
+              type: number
+            type: object
+          - type: 'null'
+          title: Payment Schedule
+        pickup_window_start:
+          type: number
+          title: Pickup Window Start
+        pickup_window_end:
+          type: number
+          title: Pickup Window End
+        delivery_window_start:
+          type: number
+          title: Delivery Window Start
+        delivery_window_end:
+          type: number
+          title: Delivery Window End
+        bond_amount_usdc:
+          type: number
+          minimum: 0.0
+          title: Bond Amount Usdc
+          default: 0.0
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - importer_did
+      - exporter_did
+      - freight_forwarder_did
+      - origin_country
+      - destination_country
+      - incoterm
+      - origin_port
+      - destination_port
+      - hs_code
+      - goods_description
+      - quantity
+      - unit
+      - unit_value_usd
+      - total_value_usd
+      - contract_value_usd
+      - pickup_window_start
+      - pickup_window_end
+      - delivery_window_start
+      - delivery_window_end
+      title: ContractBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ListBody:
+      properties:
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      title: ListBody
+    MilestoneBody:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+        milestone:
+          type: string
+          title: Milestone
+        fired_by_did:
+          type: string
+          title: Fired By Did
+          default: ''
+        evidence:
+          additionalProperties: true
+          type: object
+          title: Evidence
+      type: object
+      required:
+      - contract_id
+      - milestone
+      title: MilestoneBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    hivemorph__hive_tradefinance__routes__DisputeBody:
+      properties:
+        dispute_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dispute Id
+        contract_id:
+          type: string
+          title: Contract Id
+        dispute_condition:
+          type: string
+          title: Dispute Condition
+        filer_did:
+          type: string
+          title: Filer Did
+        evidence:
+          additionalProperties: true
+          type: object
+          title: Evidence
+      type: object
+      required:
+      - contract_id
+      - dispute_condition
+      - filer_did
+      title: DisputeBody
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

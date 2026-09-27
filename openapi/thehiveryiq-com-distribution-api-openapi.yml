@@ -1,0 +1,445 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Distribution API
+  version: 0.1.0
+  description: 'Operations tagged distribution across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Distribution
+paths:
+  /v1/discovery/register:
+    post:
+      tags:
+      - Distribution
+      summary: Register capabilities for a shim
+      operationId: discovery_register_v1_discovery_register_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoveryRegisterRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Distribution
+      summary: List registered capabilities (public)
+      operationId: discovery_list_v1_discovery_register_get
+      parameters:
+      - name: shim
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter to a single shim.
+          title: Shim
+        description: Filter to a single shim.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/gate/register:
+    post:
+      tags:
+      - Distribution
+      summary: Register a per-ecosystem gate manifest
+      operationId: gate_register_v1_gate_register_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GateRegisterRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Distribution
+      summary: List gate manifests grouped by ecosystem (public)
+      operationId: gate_list_v1_gate_register_get
+      parameters:
+      - name: ecosystem
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter to a single ecosystem.
+          title: Ecosystem
+        description: Filter to a single ecosystem.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/marketplace/list:
+    post:
+      tags:
+      - Distribution
+      summary: List tools in the agent marketplace
+      operationId: marketplace_list_tools_v1_marketplace_list_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketplaceListRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Distribution
+      summary: Marketplace listings (public)
+      operationId: marketplace_get_v1_marketplace_list_get
+      parameters:
+      - name: shim
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter to a single shim.
+          title: Shim
+        description: Filter to a single shim.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/pulse/event:
+    post:
+      tags:
+      - Distribution
+      summary: Append a pulse event to the ring buffer
+      operationId: pulse_event_v1_pulse_event_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PulseEventRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/pulse/events:
+    get:
+      tags:
+      - Distribution
+      summary: Read recent pulse events (public)
+      operationId: pulse_events_v1_pulse_events_get
+      parameters:
+      - name: event
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by event name.
+          title: Event
+        description: Filter by event name.
+      - name: shim
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by shim.
+          title: Shim
+        description: Filter by shim.
+      - name: since_minutes
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+            minimum: 0
+          - type: 'null'
+          description: Only events within the last N minutes.
+          title: Since Minutes
+        description: Only events within the last N minutes.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          description: Max events to return (cap 500).
+          default: 100
+          title: Limit
+        description: Max events to return (cap 500).
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    MarketplaceListRequest:
+      properties:
+        shim:
+          type: string
+          minLength: 1
+          title: Shim
+        tools:
+          items:
+            $ref: '#/components/schemas/MarketplaceTool'
+          type: array
+          title: Tools
+      type: object
+      required:
+      - shim
+      title: MarketplaceListRequest
+    ToolSpec:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+          default: ''
+        input_schema:
+          additionalProperties: true
+          type: object
+          title: Input Schema
+        tags:
+          items:
+            type: string
+          type: array
+          title: Tags
+        trust_score:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Trust Score
+      type: object
+      required:
+      - name
+      title: ToolSpec
+    DiscoveryRegisterRequest:
+      properties:
+        shim:
+          type: string
+          minLength: 1
+          title: Shim
+        repo:
+          type: string
+          title: Repo
+          default: ''
+        endpoint:
+          type: string
+          title: Endpoint
+          default: ''
+        did:
+          type: string
+          title: Did
+          default: ''
+        tools:
+          items:
+            $ref: '#/components/schemas/ToolSpec'
+          type: array
+          title: Tools
+      type: object
+      required:
+      - shim
+      title: DiscoveryRegisterRequest
+    PulseEventRequest:
+      properties:
+        event:
+          type: string
+          title: Event
+        shim:
+          type: string
+          title: Shim
+          default: ''
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - event
+      title: PulseEventRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MarketplaceTool:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+          default: ''
+        pricing_usd:
+          type: number
+          title: Pricing Usd
+          default: 0.0
+        sample_request:
+          additionalProperties: true
+          type: object
+          title: Sample Request
+      type: object
+      required:
+      - name
+      title: MarketplaceTool
+    GateRegisterRequest:
+      properties:
+        shim:
+          type: string
+          minLength: 1
+          title: Shim
+        repo:
+          type: string
+          title: Repo
+          default: ''
+        ecosystem:
+          type: string
+          minLength: 1
+          title: Ecosystem
+        manifest:
+          additionalProperties: true
+          type: object
+          title: Manifest
+      type: object
+      required:
+      - shim
+      - ecosystem
+      title: GateRegisterRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

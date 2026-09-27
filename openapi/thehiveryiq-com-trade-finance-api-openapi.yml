@@ -1,0 +1,306 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Trade Finance API
+  version: 0.1.0
+  description: 'Operations tagged trade-finance across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: trade-finance
+paths:
+  /v1/trade/invoice:
+    post:
+      tags:
+      - trade-finance
+      summary: Post Invoice
+      description: 'Create a new SMB cross-border invoice.
+
+
+        The buyer (US/EU SMB) gets a payable address (canonical Safe Treasury)
+
+        and a deterministic platform fee.'
+      operationId: post_invoice_v1_trade_invoice_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceCreateBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Invoice V1 Trade Invoice Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trade/invoice/{invoice_id}:
+    get:
+      tags:
+      - trade-finance
+      summary: Get Invoice Route
+      operationId: get_invoice_route_v1_trade_invoice__invoice_id__get
+      parameters:
+      - name: invoice_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Invoice Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Invoice Route V1 Trade Invoice  Invoice Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trade/invoice/{invoice_id}/dispute:
+    post:
+      tags:
+      - trade-finance
+      summary: Post Invoice Dispute
+      description: 'Open a dispute on an invoice.
+
+
+        If `hivemorph.hive_law` is wired with a freight/insurance arbitration
+
+        template, route there. Otherwise record a stub dispute on the invoice
+
+        record and return the freight/insurance pattern reference for follow-up.
+
+
+        This avoids a fake on-chain arbitration receipt — it''s either real
+
+        HiveLaw routing or a documented stub (RAILS_RULES.md spirit, applied to
+
+        arbitration: no mocks).'
+      operationId: post_invoice_dispute_v1_trade_invoice__invoice_id__dispute_post
+      parameters:
+      - name: invoice_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Invoice Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_trade_finance__routes__DisputeBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Invoice Dispute V1 Trade Invoice  Invoice Id  Dispute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trade/fees:
+    get:
+      tags:
+      - trade-finance
+      summary: Get Fees
+      description: Public fee schedule. Used by SMB CFOs comparing to their wire fee.
+      operationId: get_fees_v1_trade_fees_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Fees V1 Trade Fees Get
+  /v1/trade/listing:
+    get:
+      tags:
+      - trade-finance
+      summary: Get Listing
+      description: Returns the HiveAgent listing record. Idempotent re-list.
+      operationId: get_listing_v1_trade_listing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Listing V1 Trade Listing Get
+  /v1/trade/invoices:
+    get:
+      tags:
+      - trade-finance
+      summary: Get Invoices
+      description: List all invoices in the registry (debug / ops surface).
+      operationId: get_invoices_v1_trade_invoices_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Invoices V1 Trade Invoices Get
+components:
+  schemas:
+    hivemorph__hive_trade_finance__routes__DisputeBody:
+      properties:
+        reason:
+          type: string
+          title: Reason
+          description: Free-form dispute reason
+        evidence_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Evidence Uri
+          description: Optional link to evidence
+      type: object
+      required:
+      - reason
+      title: DisputeBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    InvoiceCreateBody:
+      properties:
+        buyer_address:
+          type: string
+          title: Buyer Address
+          description: Buyer wallet (EVM hex or Solana base58)
+        supplier_address:
+          type: string
+          title: Supplier Address
+          description: Supplier wallet (EVM hex or Solana base58)
+        amount_usdt:
+          type: number
+          maximum: 250000.0
+          exclusiveMinimum: 0.0
+          title: Amount Usdt
+        currency_pair:
+          type: string
+          title: Currency Pair
+          description: e.g. 'USD->VND'
+        incoterm:
+          type: string
+          title: Incoterm
+          description: FOB / CIF / EXW
+        expected_settlement_chain:
+          type: string
+          title: Expected Settlement Chain
+          description: base / ethereum / solana
+        purchase_order_ref:
+          type: string
+          title: Purchase Order Ref
+        supplier_country:
+          type: string
+          maxLength: 2
+          minLength: 2
+          title: Supplier Country
+          description: ISO-3166 alpha-2 code
+        settlement_asset:
+          type: string
+          title: Settlement Asset
+          description: USDT (default) or USDC
+          default: USDT
+        hs_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Hs Code
+          description: Optional Harmonized System code
+      type: object
+      required:
+      - buyer_address
+      - supplier_address
+      - amount_usdt
+      - currency_pair
+      - incoterm
+      - expected_settlement_chain
+      - purchase_order_ref
+      - supplier_country
+      title: InvoiceCreateBody
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,298 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Model Receipts API
+  version: 0.1.0
+  description: 'Operations tagged model-receipts across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: model-receipts
+paths:
+  /v1/model-receipts/adapters:
+    get:
+      tags:
+      - model-receipts
+      summary: Adapters
+      description: List every registered provider/model adapter (env var names only, no keys).
+      operationId: adapters_v1_model_receipts_adapters_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Adapters V1 Model Receipts Adapters Get
+  /v1/model-receipts/openrouter/models:
+    get:
+      tags:
+      - model-receipts
+      summary: Openrouter Models
+      description: 'Every OpenRouter model that can be signed through /run.
+
+
+        The six hand-wired rows carry a tuned display name and demo prompt. Every
+
+        other slug in OpenRouter''s public catalogue resolves dynamically on first
+
+        use, because OpenRouter serves its whole catalogue over one uniform
+
+        OpenAI-compatible surface. ``prewired`` distinguishes the two. Nothing here
+
+        asserts that a receipt has already been produced for a given slug.'
+      operationId: openrouter_models_v1_model_receipts_openrouter_models_get
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Case-insensitive substring filter on slug or name.
+          default: ''
+          title: Q
+        description: Case-insensitive substring filter on slug or name.
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 2000
+          minimum: 0
+          description: 0 returns the whole catalogue.
+          default: 0
+          title: Limit
+        description: 0 returns the whole catalogue.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/model-receipts/leanstral-demo:
+    get:
+      tags:
+      - model-receipts
+      summary: Leanstral Demo
+      description: 'Default demo: receipt a Mistral Leanstral 1.5 call on a safe Lean 4 prompt.
+
+
+        Returns setup_required=true (HTTP 200) with a signed preflight receipt if
+
+        MISTRAL_API_KEY is not configured; otherwise runs the real call and receipts it.'
+      operationId: leanstral_demo_v1_model_receipts_leanstral_demo_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/model-receipts/run:
+    post:
+      tags:
+      - model-receipts
+      summary: Run
+      description: 'Universal runner: receipt a call to any registered provider/model.
+
+
+        Omit ``prompt`` to use the built-in safe demo prompt.'
+      operationId: run_v1_model_receipts_run_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/model-receipts/adapter-health:
+    get:
+      tags:
+      - model-receipts
+      summary: Adapter Health
+      description: Live health/demo matrix across every registered adapter.
+      operationId: adapter_health_v1_model_receipts_adapter_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/model-receipts/demo-matrix:
+    get:
+      tags:
+      - model-receipts
+      summary: Demo Matrix
+      description: Alias of /adapter-health (richer per-model matrix name).
+      operationId: demo_matrix_v1_model_receipts_demo_matrix_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/model-receipts/smartmorph-route-demo:
+    get:
+      tags:
+      - model-receipts
+      summary: Smartmorph Route Demo Get
+      description: SmartMorphAgent route proof (GET convenience; uses the built-in prompt).
+      operationId: smartmorph_route_demo_get_v1_model_receipts_smartmorph_route_demo_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    post:
+      tags:
+      - model-receipts
+      summary: Smartmorph Route Demo Post
+      description: 'SmartMorphAgent route proof.
+
+
+        Runs live model calls for the registered+configured candidates (Mistral +
+
+        DeepInfra), compares the ACTUAL observed signals (latency, visible-output
+
+        availability, and provider-reported token cost when present — else labeled
+
+        ''unknown''), selects a route by explicit rules, and signs a distinct morph
+
+        decision receipt in addition to the per-stop model-call receipts.'
+      operationId: smartmorph_route_demo_post_v1_model_receipts_smartmorph_route_demo_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - $ref: '#/components/schemas/RunRequest'
+              - type: 'null'
+              title: Req
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RunRequest:
+      properties:
+        provider:
+          type: string
+          maxLength: 64
+          title: Provider
+          description: Adapter provider, e.g. 'mistral'.
+          default: mistral
+        model:
+          type: string
+          maxLength: 128
+          title: Model
+          description: Adapter model id, e.g. 'leanstral-1-5'.
+          default: leanstral-1-5
+        prompt:
+          anyOf:
+          - type: string
+            maxLength: 8192
+          - type: 'null'
+          title: Prompt
+          description: Prompt to send. Omit to use the built-in safe demo prompt.
+        max_tokens:
+          type: integer
+          maximum: 4096.0
+          minimum: 1.0
+          title: Max Tokens
+          default: 512
+        temperature:
+          type: number
+          maximum: 2.0
+          minimum: 0.0
+          title: Temperature
+          default: 0.2
+      type: object
+      title: RunRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

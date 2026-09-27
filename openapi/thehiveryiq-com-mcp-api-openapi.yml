@@ -1,0 +1,152 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com MCP API
+  version: 0.1.0
+  description: 'Operations tagged Mcp across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: MCP
+paths:
+  /v1/mcp/provebirth:
+    get:
+      summary: Provebirth Mcp Meta
+      operationId: provebirth_mcp_meta_v1_mcp_provebirth_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+    post:
+      summary: Provebirth Mcp
+      operationId: provebirth_mcp_v1_mcp_provebirth_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+  /v1/mcp/lex-contract:
+    get:
+      summary: Lex Contract Mcp Meta
+      operationId: lex_contract_mcp_meta_v1_mcp_lex_contract_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+    post:
+      summary: Lex Contract Mcp
+      operationId: lex_contract_mcp_v1_mcp_lex_contract_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+  /v1/mcp/alcoa-agentguard:
+    get:
+      summary: Alcoa Agentguard Mcp Meta
+      operationId: alcoa_agentguard_mcp_meta_v1_mcp_alcoa_agentguard_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+    post:
+      summary: Alcoa Agentguard Mcp
+      operationId: alcoa_agentguard_mcp_v1_mcp_alcoa_agentguard_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+  /v1/mcp/hipaa-hive:
+    get:
+      summary: Hipaa Hive Mcp Meta
+      operationId: hipaa_hive_mcp_meta_v1_mcp_hipaa_hive_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+    post:
+      summary: Hipaa Hive Mcp
+      operationId: hipaa_hive_mcp_v1_mcp_hipaa_hive_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+  /v1/mcp/stormlock:
+    get:
+      summary: Stormlock Mcp Meta
+      operationId: stormlock_mcp_meta_v1_mcp_stormlock_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+    post:
+      summary: Stormlock Mcp
+      operationId: stormlock_mcp_v1_mcp_stormlock_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,324 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com R6 Hivememory API
+  version: 0.1.0
+  description: 'Operations tagged r6-hivememory across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: r6-hivememory
+paths:
+  /v1/memory/policy:
+    get:
+      tags:
+      - r6-hivememory
+      summary: Memory Policy
+      operationId: memory_policy_v1_memory_policy_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/memory/write:
+    post:
+      tags:
+      - r6-hivememory
+      summary: Memory Write
+      operationId: memory_write_v1_memory_write_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_r6__routes__WriteReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/memory/list:
+    get:
+      tags:
+      - r6-hivememory
+      summary: Memory List
+      operationId: memory_list_v1_memory_list_get
+      parameters:
+      - name: agent_did
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Agent Did
+      - name: kind
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 40
+          - type: 'null'
+          title: Kind
+      - name: scope
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 40
+          - type: 'null'
+          title: Scope
+      - name: include_revoked
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Include Revoked
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/memory/revoke/{mid}:
+    post:
+      tags:
+      - r6-hivememory
+      summary: Memory Revoke
+      operationId: memory_revoke_v1_memory_revoke__mid__post
+      parameters:
+      - name: mid
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 64
+          title: Mid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/memory/export/{agent_did}:
+    get:
+      tags:
+      - r6-hivememory
+      summary: Memory Export
+      operationId: memory_export_v1_memory_export__agent_did__get
+      parameters:
+      - name: agent_did
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 3
+          maxLength: 200
+          title: Agent Did
+      - name: include_revoked
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Include Revoked
+      - name: scope
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            maxLength: 40
+          - type: 'null'
+          title: Scope
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/memory/{mid}:
+    get:
+      tags:
+      - r6-hivememory
+      summary: Memory Get
+      operationId: memory_get_v1_memory__mid__get
+      parameters:
+      - name: mid
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 64
+          title: Mid
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    hivemorph__hive_r6__routes__WriteReq:
+      properties:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        operator_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Operator Did
+        kind:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Kind
+        scope:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Scope
+          default: operator
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+        tags:
+          items:
+            type: string
+          type: array
+          maxItems: 64
+          title: Tags
+        hktn_refs:
+          items:
+            type: string
+          type: array
+          maxItems: 64
+          title: Hktn Refs
+        provenance:
+          additionalProperties: true
+          type: object
+          title: Provenance
+        expires_at:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Expires At
+      type: object
+      required:
+      - agent_did
+      - operator_did
+      - kind
+      title: WriteReq
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

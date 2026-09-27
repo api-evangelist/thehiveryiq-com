@@ -1,0 +1,391 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Purity API
+  version: 0.1.0
+  description: 'Operations tagged purity across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: purity
+paths:
+  /v1/purity/health:
+    get:
+      tags:
+      - purity
+      summary: Health
+      operationId: health_v1_purity_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Purity Health Get
+  /v1/purity/cert/issue:
+    post:
+      tags:
+      - purity
+      summary: Cert Issue
+      operationId: cert_issue_v1_purity_cert_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurityCertIssueRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurityCertIssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/purity/cert/{cert_id}:
+    get:
+      tags:
+      - purity
+      summary: Cert Get
+      operationId: cert_get_v1_purity_cert__cert_id__get
+      parameters:
+      - name: cert_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Cert Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Cert Get V1 Purity Cert  Cert Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    Fsma204Info:
+      properties:
+        kde_lot_code:
+          type: string
+          title: Kde Lot Code
+          description: 'KDE: traceability lot code'
+        kde_cultivar:
+          type: string
+          title: Kde Cultivar
+          description: 'KDE: cultivar / variety'
+        kde_growing_area:
+          items:
+            type: number
+          type: array
+          maxItems: 2
+          minItems: 2
+          title: Kde Growing Area
+          description: '[lat, lon] growing area from KDE'
+        kde_production_date:
+          type: string
+          title: Kde Production Date
+          description: 'KDE: production / harvest date'
+      type: object
+      required:
+      - kde_lot_code
+      - kde_cultivar
+      - kde_growing_area
+      - kde_production_date
+      title: Fsma204Info
+      description: FSMA 204 Key Data Elements (optional; present for produce / livestock).
+    SubjectInfo:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Product / crop name
+        lot:
+          type: string
+          title: Lot
+          description: Lot / batch identifier
+        farm_id:
+          type: string
+          title: Farm Id
+          description: Farm or growing-operation identifier
+        growing_area:
+          items:
+            type: number
+          type: array
+          maxItems: 2
+          minItems: 2
+          title: Growing Area
+          description: '[latitude, longitude] decimal degrees'
+        harvest_date:
+          type: string
+          title: Harvest Date
+          description: ISO-8601 harvest date
+      type: object
+      required:
+      - name
+      - lot
+      - farm_id
+      - growing_area
+      - harvest_date
+      title: SubjectInfo
+      description: Subject (produce / farm lot) being certified.
+    PurityCertIssueRequest:
+      properties:
+        issuer_did:
+          type: string
+          title: Issuer Did
+          description: DID of the issuing entity (did:hive:...)
+        subject:
+          $ref: '#/components/schemas/SubjectInfo'
+          description: Subject (produce / farm lot) details
+        substrate:
+          type: string
+          enum:
+          - wave
+          - loess
+          - purity-24
+          title: Substrate
+          description: 'Substrate mode: wave (axes 1-16), loess (axes 17-24), purity-24 (all)'
+        axes:
+          items:
+            $ref: '#/components/schemas/AxisReading'
+          type: array
+          maxItems: 24
+          minItems: 1
+          title: Axes
+          description: Up to 24 axis readings
+        fsma_204:
+          anyOf:
+          - $ref: '#/components/schemas/Fsma204Info'
+          - type: 'null'
+          description: FSMA 204 KDEs (optional, present for produce/livestock)
+      type: object
+      required:
+      - issuer_did
+      - subject
+      - substrate
+      - axes
+      title: PurityCertIssueRequest
+      description: POST /v1/purity/cert/issue — issue a 24-axis Purity Receipt v3.0.
+    AxisReading:
+      properties:
+        axis_id:
+          type: integer
+          maximum: 24.0
+          minimum: 1.0
+          title: Axis Id
+          description: Axis ID 1-16 (Wave-Lattice) or 17-24 (Loess-Lattice)
+        reading_hash:
+          type: string
+          title: Reading Hash
+          description: 'sha3-256 hex of the raw reading blob, format: sha3-256:<64 hex chars>'
+        sample_count:
+          type: integer
+          minimum: 1.0
+          title: Sample Count
+          description: Number of samples in the reading
+        probe_serial:
+          type: string
+          title: Probe Serial
+          description: Serial number of the probe/instrument
+        reading_timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reading Timestamp
+          description: ISO-8601 timestamp of the reading (used for staleness check)
+        confidence:
+          anyOf:
+          - type: number
+            maximum: 1.0
+            minimum: 0.0
+          - type: 'null'
+          title: Confidence
+          description: Confidence score 0-1 (optional; <0.5 treated as low-confidence)
+      type: object
+      required:
+      - axis_id
+      - reading_hash
+      - sample_count
+      - probe_serial
+      title: AxisReading
+      description: One sensor-axis reading submitted with the purity certificate request.
+    PurityCertIssueResponse:
+      properties:
+        cert_id:
+          type: string
+          title: Cert Id
+          description: UUID of the issued certificate
+        issued_at:
+          type: string
+          title: Issued At
+          description: ISO-8601 issuance timestamp
+        issuer_did:
+          type: string
+          title: Issuer Did
+        subject:
+          additionalProperties: true
+          type: object
+          title: Subject
+        substrate:
+          type: string
+          title: Substrate
+        axes_summary:
+          $ref: '#/components/schemas/AxesSummary'
+        fsma_204_status:
+          type: string
+          enum:
+          - satisfied
+          - partial
+          - n/a
+          title: Fsma 204 Status
+          description: FSMA 204 KDE coverage status
+        purity_score:
+          type: number
+          maximum: 100.0
+          minimum: 0.0
+          title: Purity Score
+          description: Purity score 0-100 (100 - missing*4 - low_conf*2, floored at 0)
+        signatures:
+          additionalProperties:
+            type: string
+          type: object
+          title: Signatures
+          description: '{ed25519: base64..., ml_dsa_65: base64...}'
+        anchor_tx:
+          type: 'null'
+          title: Anchor Tx
+          description: Base mainnet anchor TX — placeholder until on-chain wiring
+        verification_url:
+          type: string
+          title: Verification Url
+          description: https://thehiveryiq.com/verifier/?cert=<cert_id>
+        warnings:
+          items:
+            type: string
+          type: array
+          title: Warnings
+          description: Non-fatal warnings (e.g. stale readings)
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+          description: Full SwarmReceiptIssuer envelope for downstream verification
+      type: object
+      required:
+      - cert_id
+      - issued_at
+      - issuer_did
+      - subject
+      - substrate
+      - axes_summary
+      - fsma_204_status
+      - purity_score
+      - signatures
+      - verification_url
+      - receipt_envelope
+      title: PurityCertIssueResponse
+      description: Purity Receipt v3.0 — dual-signed 24-axis soil/produce certificate.
+    AxesSummary:
+      properties:
+        count:
+          type: integer
+          title: Count
+          description: Total axes provided
+        wave_count:
+          type: integer
+          title: Wave Count
+          description: Wave-Lattice axes provided (1-16)
+        loess_count:
+          type: integer
+          title: Loess Count
+          description: Loess-Lattice axes provided (17-24)
+        missing:
+          items:
+            type: integer
+          type: array
+          title: Missing
+          description: Missing axis IDs
+      type: object
+      required:
+      - count
+      - wave_count
+      - loess_count
+      title: AxesSummary
+      description: Summary of axis coverage in the issued certificate.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

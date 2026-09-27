@@ -1,0 +1,790 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Law API
+  version: 0.1.0
+  description: 'Operations tagged law across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: law
+paths:
+  /v1/law/freight/template/list:
+    post:
+      tags:
+      - law
+      summary: List Freight Arbitration
+      operationId: list_freight_arbitration_v1_law_freight_template_list_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response List Freight Arbitration V1 Law Freight Template List Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/agents:
+    get:
+      tags:
+      - law
+      summary: Get Agents
+      operationId: get_agents_v1_law_agents_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Agents V1 Law Agents Get
+  /v1/law/freight/template:
+    get:
+      tags:
+      - law
+      summary: Get Freight Template
+      operationId: get_freight_template_v1_law_freight_template_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Freight Template V1 Law Freight Template Get
+  /v1/law/freight/contract:
+    post:
+      tags:
+      - law
+      summary: Post Freight Contract
+      operationId: post_freight_contract_v1_law_freight_contract_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_law__routes__ContractBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Freight Contract V1 Law Freight Contract Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/freight/contract/{contract_id}:
+    get:
+      tags:
+      - law
+      summary: Get Freight Contract
+      operationId: get_freight_contract_v1_law_freight_contract__contract_id__get
+      parameters:
+      - name: contract_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Contract Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Freight Contract V1 Law Freight Contract  Contract Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/freight/dispute:
+    post:
+      tags:
+      - law
+      summary: Post Freight Dispute
+      operationId: post_freight_dispute_v1_law_freight_dispute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_law__routes__DisputeBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Freight Dispute V1 Law Freight Dispute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/freight/webhook:
+    post:
+      tags:
+      - law
+      summary: Post Freight Webhook
+      description: 'Public webhook for SMB-broker freight exception events. Accepts the
+
+        canonical exception-event shape (suitable for posting from webhook.site,
+
+        Zapier, n8n, an in-house ERP, or any generic HTTP poster). Vendor-shaped
+
+        payloads matching the project44 / C.H. Robinson / Hwy Haul schemas are
+
+        also accepted as schema-compatible test targets — those vendors are NOT
+
+        integration partners (R3 council: enterprise platforms are closed
+
+        systems). Translates the payload into a HiveLaw dispute filing and
+
+        resolves it inline.'
+      operationId: post_freight_webhook_v1_law_freight_webhook_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Payload
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Freight Webhook V1 Law Freight Webhook Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/freight/dispute/{dispute_id}:
+    get:
+      tags:
+      - law
+      summary: Get Freight Dispute
+      operationId: get_freight_dispute_v1_law_freight_dispute__dispute_id__get
+      parameters:
+      - name: dispute_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Dispute Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Freight Dispute V1 Law Freight Dispute  Dispute Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/freight/economics:
+    get:
+      tags:
+      - law
+      summary: Freight Economics
+      operationId: freight_economics_v1_law_freight_economics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Freight Economics V1 Law Freight Economics Get
+  /v1/law/insurance/template/list:
+    post:
+      tags:
+      - law
+      summary: List Insurance Arbitration
+      operationId: list_insurance_arbitration_v1_law_insurance_template_list_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response List Insurance Arbitration V1 Law Insurance Template List Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/insurance/agents:
+    get:
+      tags:
+      - law
+      summary: Get Agents
+      operationId: get_agents_v1_law_insurance_agents_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Agents V1 Law Insurance Agents Get
+  /v1/law/insurance/template:
+    get:
+      tags:
+      - law
+      summary: Get Insurance Template
+      operationId: get_insurance_template_v1_law_insurance_template_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Insurance Template V1 Law Insurance Template Get
+  /v1/law/insurance/contract:
+    post:
+      tags:
+      - law
+      summary: Post Insurance Contract
+      operationId: post_insurance_contract_v1_law_insurance_contract_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_law__insurance_routes__ContractBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Insurance Contract V1 Law Insurance Contract Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/insurance/contract/{contract_id}:
+    get:
+      tags:
+      - law
+      summary: Get Insurance Contract Detail
+      operationId: get_insurance_contract_detail_v1_law_insurance_contract__contract_id__get
+      parameters:
+      - name: contract_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Contract Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Insurance Contract Detail V1 Law Insurance Contract  Contract Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/insurance/dispute:
+    post:
+      tags:
+      - law
+      summary: Post Insurance Dispute
+      operationId: post_insurance_dispute_v1_law_insurance_dispute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_law__insurance_routes__DisputeBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Insurance Dispute V1 Law Insurance Dispute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/insurance/webhook:
+    post:
+      tags:
+      - law
+      summary: Post Insurance Webhook
+      description: 'Public webhook for MGA / non-admitted-carrier insurance exception
+
+        events. Accepts the canonical exception-event shape (see
+
+        insurance_webhook.py). Cytora Autopilot and CoverGo Claims payload
+
+        shapes are accepted as schema-compatible test targets — those
+
+        vendors are NOT integration partners (R3 council). Translates the
+
+        payload into a HiveLaw insurance dispute filing and resolves it
+
+        inline. Every outcome carries `requires_human_review` per Florida
+
+        HB 527 / NAIC Model Bulletin / EU AI Act high-risk requirements.'
+      operationId: post_insurance_webhook_v1_law_insurance_webhook_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: true
+              type: object
+              title: Payload
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Insurance Webhook V1 Law Insurance Webhook Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/insurance/dispute/{dispute_id}:
+    get:
+      tags:
+      - law
+      summary: Get Insurance Dispute
+      operationId: get_insurance_dispute_v1_law_insurance_dispute__dispute_id__get
+      parameters:
+      - name: dispute_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Dispute Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Insurance Dispute V1 Law Insurance Dispute  Dispute Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/law/insurance/economics:
+    get:
+      tags:
+      - law
+      summary: Insurance Economics
+      operationId: insurance_economics_v1_law_insurance_economics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Insurance Economics V1 Law Insurance Economics Get
+components:
+  schemas:
+    hivemorph__hive_law__insurance_routes__ContractBody:
+      properties:
+        insured_did:
+          type: string
+          title: Insured Did
+        insurer_did:
+          type: string
+          title: Insurer Did
+        claims_adjuster_agent_did:
+          type: string
+          title: Claims Adjuster Agent Did
+        reinsurer_did:
+          type: string
+          title: Reinsurer Did
+          default: ''
+        repair_vendor_did:
+          type: string
+          title: Repair Vendor Did
+          default: ''
+        country_iso:
+          type: string
+          maxLength: 2
+          minLength: 2
+          title: Country Iso
+        region:
+          type: string
+          title: Region
+        regulatory_regime:
+          type: string
+          title: Regulatory Regime
+          default: ''
+        policy_id:
+          type: string
+          title: Policy Id
+        line_of_business:
+          type: string
+          title: Line Of Business
+        coverage_limit_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Coverage Limit Usdc
+        deductible_usdc:
+          type: number
+          minimum: 0.0
+          title: Deductible Usdc
+        exclusions:
+          items:
+            type: string
+          type: array
+          title: Exclusions
+        effective_at:
+          type: number
+          title: Effective At
+          default: 0.0
+        expires_at:
+          type: number
+          title: Expires At
+          default: 0.0
+        claim_id:
+          type: string
+          title: Claim Id
+        claim_type:
+          type: string
+          title: Claim Type
+        incident_date:
+          type: number
+          title: Incident Date
+        claimed_amount_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Claimed Amount Usdc
+        evidence_refs:
+          items:
+            type: string
+          type: array
+          title: Evidence Refs
+        description:
+          type: string
+          title: Description
+          default: ''
+        insurer_bond_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Insurer Bond Usdc
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - insured_did
+      - insurer_did
+      - claims_adjuster_agent_did
+      - country_iso
+      - region
+      - policy_id
+      - line_of_business
+      - coverage_limit_usdc
+      - deductible_usdc
+      - claim_id
+      - claim_type
+      - incident_date
+      - claimed_amount_usdc
+      - insurer_bond_usdc
+      title: ContractBody
+    hivemorph__hive_law__routes__DisputeBody:
+      properties:
+        dispute_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dispute Id
+        contract_id:
+          type: string
+          title: Contract Id
+        dispute_condition:
+          type: string
+          title: Dispute Condition
+        filer_did:
+          type: string
+          title: Filer Did
+        evidence:
+          additionalProperties: true
+          type: object
+          title: Evidence
+      type: object
+      required:
+      - contract_id
+      - dispute_condition
+      - filer_did
+      title: DisputeBody
+    hivemorph__hive_law__insurance_routes__DisputeBody:
+      properties:
+        dispute_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dispute Id
+        contract_id:
+          type: string
+          title: Contract Id
+        filer_did:
+          type: string
+          title: Filer Did
+        adjuster_proposed_usdc:
+          type: number
+          title: Adjuster Proposed Usdc
+          default: 0.0
+        adjuster_denied:
+          type: boolean
+          title: Adjuster Denied
+          default: false
+        denial_reason_claimed:
+          type: string
+          title: Denial Reason Claimed
+          default: ''
+        evidence:
+          additionalProperties: true
+          type: object
+          title: Evidence
+      type: object
+      required:
+      - contract_id
+      - filer_did
+      title: DisputeBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ListBody:
+      properties:
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      title: ListBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    hivemorph__hive_law__routes__ContractBody:
+      properties:
+        shipper_did:
+          type: string
+          title: Shipper Did
+        broker_did:
+          type: string
+          title: Broker Did
+        carrier_did:
+          type: string
+          title: Carrier Did
+        consignee_did:
+          type: string
+          title: Consignee Did
+        country_iso:
+          type: string
+          maxLength: 2
+          minLength: 2
+          title: Country Iso
+        region:
+          type: string
+          title: Region
+        lane_origin:
+          type: string
+          title: Lane Origin
+        lane_dest:
+          type: string
+          title: Lane Dest
+        pickup_window_start:
+          type: number
+          title: Pickup Window Start
+        pickup_window_end:
+          type: number
+          title: Pickup Window End
+        delivery_window_start:
+          type: number
+          title: Delivery Window Start
+        delivery_window_end:
+          type: number
+          title: Delivery Window End
+        freight_class:
+          type: string
+          title: Freight Class
+        weight_lb:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Weight Lb
+        dims_in:
+          items:
+            type: number
+          type: array
+          maxItems: 3
+          minItems: 3
+          title: Dims In
+        declared_value_usd:
+          type: number
+          minimum: 0.0
+          title: Declared Value Usd
+        agreed_rate_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Agreed Rate Usdc
+        bond_amount_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Bond Amount Usdc
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - shipper_did
+      - broker_did
+      - carrier_did
+      - consignee_did
+      - country_iso
+      - region
+      - lane_origin
+      - lane_dest
+      - pickup_window_start
+      - pickup_window_end
+      - delivery_window_start
+      - delivery_window_end
+      - freight_class
+      - weight_lb
+      - dims_in
+      - declared_value_usd
+      - agreed_rate_usdc
+      - bond_amount_usdc
+      title: ContractBody
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

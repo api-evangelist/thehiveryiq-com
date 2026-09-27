@@ -1,0 +1,173 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Insurance Broker API
+  version: 0.1.0
+  description: 'Operations tagged insurance-broker across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: insurance-broker
+paths:
+  /v1/insurance/products:
+    get:
+      tags:
+      - insurance-broker
+      summary: Get Products
+      description: 'Full third-party coverage catalog. Includes provider, type,
+
+        capacity, and current cost-of-coverage where the upstream exposes it.'
+      operationId: get_products_v1_insurance_products_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Products V1 Insurance Products Get
+  /v1/insurance/quote:
+    post:
+      tags:
+      - insurance-broker
+      summary: Post Quote
+      description: 'Route a quote request to one or all underwriters.
+
+
+        Hive forwards the request to the underwriter''s own quote endpoint and
+
+        returns the response verbatim. Hive does not compute premiums, bind
+
+        coverage, accept payment, or take custody.'
+      operationId: post_quote_v1_insurance_quote_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_insurance__routes__QuoteBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Quote V1 Insurance Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/insurance/today:
+    get:
+      tags:
+      - insurance-broker
+      summary: Get Today
+      description: 24h rollup — listing count + top providers by capacity.
+      operationId: get_today_v1_insurance_today_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Today V1 Insurance Today Get
+components:
+  schemas:
+    hivemorph__hive_insurance__routes__QuoteBody:
+      properties:
+        protocol:
+          type: string
+          title: Protocol
+          description: Protocol / product identifier (e.g. 'aave-v3', 'lido', or the productId from /products)
+        cover_amount_usd:
+          type: number
+          maximum: 1000000000.0
+          exclusiveMinimum: 0.0
+          title: Cover Amount Usd
+          description: Notional coverage in USD
+        duration_days:
+          type: integer
+          maximum: 365.0
+          exclusiveMinimum: 0.0
+          title: Duration Days
+          description: Coverage duration in days
+        provider:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Provider
+          description: 'Provider key. If omitted, quote is routed to all providers and the array of responses is returned. One of: nexus_mutual, sherlock, risk_harbor, insurace.'
+      type: object
+      required:
+      - protocol
+      - cover_amount_usd
+      - duration_days
+      title: QuoteBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

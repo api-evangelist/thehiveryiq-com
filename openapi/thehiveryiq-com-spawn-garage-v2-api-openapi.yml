@@ -1,0 +1,278 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Spawn Garage V2 API
+  version: 0.1.0
+  description: 'Operations tagged spawn-garage-v2 across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: spawn-garage-v2
+paths:
+  /v1/morph/spawn/v2/scan:
+    post:
+      tags:
+      - spawn-garage-v2
+      summary: Scan All Proposers
+      description: 'Run all 4 proposers once. Returns combined proposal list.
+
+
+        Sources:
+
+        - trail: /v1/trail/economy seed signals
+
+        - fleet: /v1/fleet/haul wild-agent catches
+
+        - arb: /v1/arb/spread/scan persistent capability gaps
+
+        - salvage: /v1/salvage/reinforcement/patterns (stub if not shipped)
+
+
+        All proposals created are in ''proposed'' state pending human approval.'
+      operationId: scan_all_proposers_v1_morph_spawn_v2_scan_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/morph/spawn/v2/proposals:
+    get:
+      tags:
+      - spawn-garage-v2
+      summary: List Proposals
+      description: 'List spawn proposals. Filter by source and/or state.
+
+        Newest first.'
+      operationId: list_proposals_v1_morph_spawn_v2_proposals_get
+      parameters:
+      - name: source
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter by source: trail | fleet | arb | salvage'
+          title: Source
+        description: 'Filter by source: trail | fleet | arb | salvage'
+      - name: state
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: 'Filter by state: proposed | approved | promoted | rejected | expired'
+          title: State
+        description: 'Filter by state: proposed | approved | promoted | rejected | expired'
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/morph/spawn/v2/promote:
+    post:
+      tags:
+      - spawn-garage-v2
+      summary: Promote Proposal
+      description: 'Human approval gate. Triggers cap enforcer.
+
+
+        Outcomes:
+
+        - population = 0.70 AND gap_pct <= -60.0)
+
+        - population == cap + no qualifying loser → REJECTED with reason
+
+
+        This is the ONLY path to promote a proposal. NO auto-promote.'
+      operationId: promote_proposal_v1_morph_spawn_v2_promote_post
+      parameters:
+      - name: proposal_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Proposal ID to promote
+          title: Proposal Id
+        description: Proposal ID to promote
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/morph/spawn/v2/reject:
+    post:
+      tags:
+      - spawn-garage-v2
+      summary: Reject Proposal
+      description: 'Human rejection gate. Marks proposal as rejected.
+
+        Only proposed/approved proposals can be rejected.'
+      operationId: reject_proposal_v1_morph_spawn_v2_reject_post
+      parameters:
+      - name: proposal_id
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Proposal ID to reject
+          title: Proposal Id
+        description: Proposal ID to reject
+      - name: reason
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Human-readable rejection reason
+          default: ''
+          title: Reason
+        description: Human-readable rejection reason
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/morph/spawn/v2/cap:
+    get:
+      tags:
+      - spawn-garage-v2
+      summary: Cap Status
+      description: 'Current population cap status.
+
+        Returns: population, slots_free, cap, last_cull_scan result.'
+      operationId: cap_status_v1_morph_spawn_v2_cap_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/morph/spawn/v2/stats:
+    get:
+      tags:
+      - spawn-garage-v2
+      summary: Proposal Stats
+      description: 'Aggregate proposal statistics.
+
+
+        Returns:
+
+        - by_source: proposal counts per source
+
+        - by_state: proposal counts per state
+
+        - promotions: total promoted count
+
+        - rejections: total rejected count
+
+        - retire_and_replace_count: promotions via retire-and-replace
+
+        - avg_time_to_promote_seconds: mean time from proposed to promoted
+
+        - population: current live variant count
+
+        - cap: hard cap
+
+        - slots_free: open slots'
+      operationId: proposal_stats_v1_morph_spawn_v2_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

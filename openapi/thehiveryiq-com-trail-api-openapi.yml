@@ -1,0 +1,770 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Trail API
+  version: 0.1.0
+  description: 'Operations tagged trail across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: trail
+paths:
+  /v1/trail/presets:
+    get:
+      tags:
+      - trail
+      summary: Get Presets
+      description: List the named presets and their default 6-axis physics regions.
+      operationId: get_presets_v1_trail_presets_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Presets V1 Trail Presets Get
+  /v1/trail/drop:
+    post:
+      tags:
+      - trail
+      summary: Post Drop
+      operationId: post_drop_v1_trail_drop_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DropBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Drop V1 Trail Drop Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/find:
+    get:
+      tags:
+      - trail
+      summary: Get Find
+      operationId: get_find_v1_trail_find_get
+      parameters:
+      - name: vertical
+        in: query
+        required: true
+        schema:
+          type: string
+          description: Vertical to search within
+          title: Vertical
+        description: Vertical to search within
+      - name: corridor
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Corridor
+      - name: finder_did
+        in: query
+        required: false
+        schema:
+          type: string
+          description: Finder DID for reach-gating
+          default: did:web:anonymous
+          title: Finder Did
+        description: Finder DID for reach-gating
+      - name: content_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Content Type
+      - name: k
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 20
+          title: K
+      - name: semantic_q
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Free text; embedded server-side via stub
+          title: Semantic Q
+        description: Free text; embedded server-side via stub
+      - name: min_depth_bytes
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Min Depth Bytes
+      - name: max_depth_bytes
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Depth Bytes
+      - name: min_ttl_sec
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Min Ttl Sec
+      - name: max_ttl_sec
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Ttl Sec
+      - name: min_density
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Min Density
+      - name: max_density
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Density
+      - name: min_viscosity
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Min Viscosity
+      - name: max_viscosity
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Viscosity
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Find V1 Trail Find Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/{drop_id}/scoop:
+    post:
+      tags:
+      - trail
+      summary: Post Scoop
+      operationId: post_scoop_v1_trail__drop_id__scoop_post
+      parameters:
+      - name: drop_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Drop Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoopBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Scoop V1 Trail  Drop Id  Scoop Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/{drop_id}/pay:
+    post:
+      tags:
+      - trail
+      summary: Post Pay
+      operationId: post_pay_v1_trail__drop_id__pay_post
+      parameters:
+      - name: drop_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Drop Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Pay V1 Trail  Drop Id  Pay Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/{drop_id}/dispute:
+    post:
+      tags:
+      - trail
+      summary: Post Dispute
+      operationId: post_dispute_v1_trail__drop_id__dispute_post
+      parameters:
+      - name: drop_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Drop Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__trail_routes__DisputeBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Post Dispute V1 Trail  Drop Id  Dispute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/decay/run:
+    post:
+      tags:
+      - trail
+      summary: Post Decay Run
+      operationId: post_decay_run_v1_trail_decay_run_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Decay Run V1 Trail Decay Run Post
+  /v1/trail/morphology:
+    get:
+      tags:
+      - trail
+      summary: Get Morphology
+      operationId: get_morphology_v1_trail_morphology_get
+      parameters:
+      - name: vertical
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Vertical
+      - name: corridor
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Corridor
+      - name: k
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 2000
+          minimum: 1
+          default: 200
+          title: K
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Morphology V1 Trail Morphology Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/envelope/{operator_did}:
+    get:
+      tags:
+      - trail
+      summary: Get Envelope
+      operationId: get_envelope_v1_trail_envelope__operator_did__get
+      parameters:
+      - name: operator_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Operator Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Envelope V1 Trail Envelope  Operator Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/coherence/{dropper_did}:
+    get:
+      tags:
+      - trail
+      summary: Get Coherence
+      operationId: get_coherence_v1_trail_coherence__dropper_did__get
+      parameters:
+      - name: dropper_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Dropper Did
+      - name: window_sec
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 31536000
+          minimum: 60
+          default: 86400
+          title: Window Sec
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Coherence V1 Trail Coherence  Dropper Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/economy:
+    get:
+      tags:
+      - trail
+      summary: Get Economy
+      description: 'Rolling revenue rollup: total $/window, projected $/day, per-preset
+
+        breakdown, brood routing distribution, seed-spawned uplift sum.'
+      operationId: get_economy_v1_trail_economy_get
+      parameters:
+      - name: window_sec
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 31536000
+          minimum: 60
+          default: 86400
+          title: Window Sec
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Economy V1 Trail Economy Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/economy/archetypes:
+    get:
+      tags:
+      - trail
+      summary: Get Archetypes
+      description: Return the ROI archetype table for all presets.
+      operationId: get_archetypes_v1_trail_economy_archetypes_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Archetypes V1 Trail Economy Archetypes Get
+  /v1/trail/economy/routing:
+    get:
+      tags:
+      - trail
+      summary: Get Routing
+      description: 'Return the brood load-balancer''s view: per-brood variant counts and
+
+        the next-recommended brood for a seed-drop without an explicit vertical.'
+      operationId: get_routing_v1_trail_economy_routing_get
+      parameters:
+      - name: window_sec
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 31536000
+          minimum: 3600
+          default: 604800
+          title: Window Sec
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Routing V1 Trail Economy Routing Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/{drop_id}/economy:
+    get:
+      tags:
+      - trail
+      summary: Get Drop Economy
+      description: 'Per-drop revenue: fees + tips collected, plus archetype defaults.'
+      operationId: get_drop_economy_v1_trail__drop_id__economy_get
+      parameters:
+      - name: drop_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Drop Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Drop Economy V1 Trail  Drop Id  Economy Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/trail/{drop_id}:
+    get:
+      tags:
+      - trail
+      summary: Get Drop
+      operationId: get_drop_v1_trail__drop_id__get
+      parameters:
+      - name: drop_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Drop Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Drop V1 Trail  Drop Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    LocationBody:
+      properties:
+        vertical:
+          type: string
+          title: Vertical
+          description: e.g. 'us_mx_remittance', 'usdpt_arb'
+        corridor:
+          type: string
+          title: Corridor
+          description: sub-region within vertical, e.g. 'base_mainnet/usdc'
+        topic_embedding:
+          anyOf:
+          - items:
+              type: number
+            type: array
+          - type: 'null'
+          title: Topic Embedding
+      type: object
+      required:
+      - vertical
+      - corridor
+      title: LocationBody
+    PhysicsOverrides:
+      properties:
+        distribution:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Distribution
+        density:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Density
+        depth_bytes:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Depth Bytes
+        reach:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Reach
+        ttl_sec:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ttl Sec
+        viscosity:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Viscosity
+      type: object
+      title: PhysicsOverrides
+    hivemorph__trail_routes__DisputeBody:
+      properties:
+        disputer_did:
+          type: string
+          title: Disputer Did
+        reason:
+          type: string
+          title: Reason
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - disputer_did
+      - reason
+      title: DisputeBody
+    PayBody:
+      properties:
+        finder_did:
+          type: string
+          title: Finder Did
+        amount_usdc:
+          type: number
+          title: Amount Usdc
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - finder_did
+      - amount_usdc
+      title: PayBody
+    ScoopBody:
+      properties:
+        finder_did:
+          type: string
+          title: Finder Did
+        micro_fee_usdc:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Micro Fee Usdc
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - finder_did
+      title: ScoopBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DropBody:
+      properties:
+        dropper_did:
+          type: string
+          title: Dropper Did
+          description: DID of the agent dropping the artifact
+        content_type:
+          type: string
+          title: Content Type
+          description: One of trail.CONTENT_TYPES
+        payload_b64:
+          type: string
+          title: Payload B64
+          description: Base64-encoded payload bytes
+        location:
+          $ref: '#/components/schemas/LocationBody'
+        physics_overrides:
+          anyOf:
+          - $ref: '#/components/schemas/PhysicsOverrides'
+          - type: 'null'
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - dropper_did
+      - content_type
+      - payload_b64
+      - location
+      title: DropBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,174 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Discovery API
+  version: 0.1.0
+  description: 'Operations tagged discovery across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Discovery
+paths:
+  /v1/discovery/featured:
+    get:
+      tags:
+      - Discovery
+      summary: Top-gradient Hive endpoints
+      description: Returns the top-N priced endpoints sorted by capability gradient (marginal $-yield per call × category multiplier). Each entry includes a copy-pasteable sample curl. Tier 0 — free.
+      operationId: discovery_featured_v1_discovery_featured_get
+      parameters:
+      - name: n
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 8
+          title: N
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/discovery/stranded:
+    get:
+      tags:
+      - Discovery
+      summary: Stranded paid surfaces (zero 24h consumes)
+      description: Returns paid endpoints that received zero consumes in the past 24h, sorted by potential daily yield. Used by external agents to find under-utilized Hive surfaces to integrate.
+      operationId: discovery_stranded_v1_discovery_stranded_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/agent/tools:
+    get:
+      tags:
+      - Discovery
+      summary: Curated tool index — the 10 tools every agent needs
+      description: 'Curated short-list of the 10 most useful Hive tools for autonomous agents.
+
+        Includes input schemas, pricing, and working curl examples.
+
+        Free, no auth. Designed for agent tool-selection pipelines.
+
+        LangChain, CrewAI, AutoGen, and LlamaIndex all index from this format.'
+      operationId: agent_tools_v1_agent_tools_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Agent Tools V1 Agent Tools Get
+  /v1/catalog:
+    get:
+      tags:
+      - Discovery
+      summary: Machine-readable catalog of paid endpoints + rails
+      description: 'Free machine-readable catalog of every paid endpoint, price, and rail.
+
+        Designed for agent bots probing /llms.txt -> /v1/catalog -> /.well-known/machine.json.
+
+        No auth, no payment required.'
+      operationId: v1_catalog_v1_catalog_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response V1 Catalog V1 Catalog Get
+  /.well-known/machine.json:
+    get:
+      tags:
+      - Discovery
+      summary: Minimal machine-readable handshake (v2)
+      description: 'NEXUS-compatible v2 schema for agent bots. Free, no auth.
+
+        Minimal, fast, parseable. Points back to /v1/catalog for the full surface.'
+      operationId: well_known_machine__well_known_machine_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Well Known Machine  Well Known Machine Json Get
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

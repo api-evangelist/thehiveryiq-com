@@ -1,0 +1,311 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Hive Origin API
+  version: 0.1.0
+  description: 'Operations tagged hive-origin across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: hive-origin
+paths:
+  /v1/origin/create:
+    post:
+      tags:
+      - hive-origin
+      summary: Create Origin
+      description: 'Stamp a work hash with a dual-signed receipt envelope (ML-DSA-65 + Ed25519).
+
+
+        Persists to origin_records.jsonl. The earliest record for a given
+
+        work_hash is the proven copyright holder.'
+      operationId: create_origin_v1_origin_create_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Create Origin V1 Origin Create Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/origin/by-hash/{work_hash}:
+    get:
+      tags:
+      - hive-origin
+      summary: Origins By Hash
+      description: 'Return all creators who have stamped this work hash.
+
+
+        Results are chronological — earliest is the proven creator.'
+      operationId: origins_by_hash_v1_origin_by_hash__work_hash__get
+      parameters:
+      - name: work_hash
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Work Hash
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Origins By Hash V1 Origin By Hash  Work Hash  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/origin/by-creator/{did}:
+    get:
+      tags:
+      - hive-origin
+      summary: Origins By Creator
+      description: Paginated list of works by a creator DID (default 50 per page).
+      operationId: origins_by_creator_v1_origin_by_creator__did__get
+      parameters:
+      - name: did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Origins By Creator V1 Origin By Creator  Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/origin/git-integration:
+    post:
+      tags:
+      - hive-origin
+      summary: Git Integration
+      description: 'Auto-receipt every git commit at the $50/month integration tier.
+
+
+        Stamps each commit SHA as a copyright creation event. Persists to
+
+        origin_git.jsonl. Returns origin_id + receipt envelope for the commit.'
+      operationId: git_integration_v1_origin_git_integration_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GitIntegrationRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Git Integration V1 Origin Git Integration Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/origin/health:
+    get:
+      tags:
+      - hive-origin
+      summary: Origin Health
+      description: Health check with counts.
+      operationId: origin_health_v1_origin_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Origin Health V1 Origin Health Get
+components:
+  schemas:
+    GitIntegrationRequest:
+      properties:
+        creator_did:
+          type: string
+          title: Creator Did
+          description: DID of the repository owner
+        repo_url:
+          type: string
+          maxLength: 2048
+          title: Repo Url
+        commit_sha:
+          type: string
+          maxLength: 64
+          minLength: 40
+          title: Commit Sha
+        commit_message_hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          title: Commit Message Hash
+          description: SHA-256 of the commit message
+      type: object
+      required:
+      - creator_did
+      - repo_url
+      - commit_sha
+      - commit_message_hash
+      title: GitIntegrationRequest
+    CreateRequest:
+      properties:
+        creator_did:
+          type: string
+          title: Creator Did
+          description: DID of the copyright creator
+        work_hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          title: Work Hash
+          description: SHA-256 hex hash of the work
+        work_type:
+          anyOf:
+          - type: string
+            enum:
+            - music
+            - video
+            - code
+            - writing
+            - art
+            - other
+          - type: 'null'
+          title: Work Type
+          default: other
+        title:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Title
+        license:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: License
+          description: e.g. 'cc-by-4.0', 'all-rights-reserved'
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - creator_did
+      - work_hash
+      title: CreateRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

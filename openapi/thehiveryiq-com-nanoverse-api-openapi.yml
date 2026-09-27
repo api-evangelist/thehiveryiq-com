@@ -1,0 +1,670 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Nanoverse API
+  version: 0.1.0
+  description: 'Operations tagged nanoverse across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: nanoverse
+paths:
+  /v1/nanoverse/api-pay-per-call/info:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse info — API-PAY-PER-CALL
+      description: Free — returns nanoagent metadata, primitives, pricing tier, TAM, and spec links.
+      operationId: _info_handler_v1_nanoverse_api_pay_per_call_info_get
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: api-pay-per-call
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Info Handler V1 Nanoverse Api Pay Per Call Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/api-pay-per-call/quote:
+    post:
+      tags:
+      - nanoverse
+      summary: NanoVerse quote — API-PAY-PER-CALL
+      description: Free — returns a price quote and pre-signed envelope template. Does NOT settle.
+      operationId: _quote_handler_v1_nanoverse_api_pay_per_call_quote_post
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: api-pay-per-call
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Quote Handler V1 Nanoverse Api Pay Per Call Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/compute-per-second/info:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse info — COMPUTE-PER-SECOND
+      description: Free — returns nanoagent metadata, primitives, pricing tier, TAM, and spec links.
+      operationId: _info_handler_v1_nanoverse_compute_per_second_info_get
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: compute-per-second
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Info Handler V1 Nanoverse Compute Per Second Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/compute-per-second/quote:
+    post:
+      tags:
+      - nanoverse
+      summary: NanoVerse quote — COMPUTE-PER-SECOND
+      description: Free — returns a price quote and pre-signed envelope template. Does NOT settle.
+      operationId: _quote_handler_v1_nanoverse_compute_per_second_quote_post
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: compute-per-second
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Quote Handler V1 Nanoverse Compute Per Second Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/data-per-query/info:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse info — DATA-PER-QUERY
+      description: Free — returns nanoagent metadata, primitives, pricing tier, TAM, and spec links.
+      operationId: _info_handler_v1_nanoverse_data_per_query_info_get
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: data-per-query
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Info Handler V1 Nanoverse Data Per Query Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/data-per-query/quote:
+    post:
+      tags:
+      - nanoverse
+      summary: NanoVerse quote — DATA-PER-QUERY
+      description: Free — returns a price quote and pre-signed envelope template. Does NOT settle.
+      operationId: _quote_handler_v1_nanoverse_data_per_query_quote_post
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: data-per-query
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Quote Handler V1 Nanoverse Data Per Query Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/agent-per-task/info:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse info — AGENT-PER-TASK
+      description: Free — returns nanoagent metadata, primitives, pricing tier, TAM, and spec links.
+      operationId: _info_handler_v1_nanoverse_agent_per_task_info_get
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: agent-per-task
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Info Handler V1 Nanoverse Agent Per Task Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/agent-per-task/quote:
+    post:
+      tags:
+      - nanoverse
+      summary: NanoVerse quote — AGENT-PER-TASK
+      description: Free — returns a price quote and pre-signed envelope template. Does NOT settle.
+      operationId: _quote_handler_v1_nanoverse_agent_per_task_quote_post
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: agent-per-task
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Quote Handler V1 Nanoverse Agent Per Task Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/stream-per-second/info:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse info — STREAM-PER-SECOND
+      description: Free — returns nanoagent metadata, primitives, pricing tier, TAM, and spec links.
+      operationId: _info_handler_v1_nanoverse_stream_per_second_info_get
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: stream-per-second
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Info Handler V1 Nanoverse Stream Per Second Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/stream-per-second/quote:
+    post:
+      tags:
+      - nanoverse
+      summary: NanoVerse quote — STREAM-PER-SECOND
+      description: Free — returns a price quote and pre-signed envelope template. Does NOT settle.
+      operationId: _quote_handler_v1_nanoverse_stream_per_second_quote_post
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: stream-per-second
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Quote Handler V1 Nanoverse Stream Per Second Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/iot-per-event/info:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse info — IOT-PER-EVENT
+      description: Free — returns nanoagent metadata, primitives, pricing tier, TAM, and spec links.
+      operationId: _info_handler_v1_nanoverse_iot_per_event_info_get
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: iot-per-event
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Info Handler V1 Nanoverse Iot Per Event Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/iot-per-event/quote:
+    post:
+      tags:
+      - nanoverse
+      summary: NanoVerse quote — IOT-PER-EVENT
+      description: Free — returns a price quote and pre-signed envelope template. Does NOT settle.
+      operationId: _quote_handler_v1_nanoverse_iot_per_event_quote_post
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: iot-per-event
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Quote Handler V1 Nanoverse Iot Per Event Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/storage-per-gb/info:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse info — STORAGE-PER-GB
+      description: Free — returns nanoagent metadata, primitives, pricing tier, TAM, and spec links.
+      operationId: _info_handler_v1_nanoverse_storage_per_gb_info_get
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: storage-per-gb
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Info Handler V1 Nanoverse Storage Per Gb Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/storage-per-gb/quote:
+    post:
+      tags:
+      - nanoverse
+      summary: NanoVerse quote — STORAGE-PER-GB
+      description: Free — returns a price quote and pre-signed envelope template. Does NOT settle.
+      operationId: _quote_handler_v1_nanoverse_storage_per_gb_quote_post
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: storage-per-gb
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Quote Handler V1 Nanoverse Storage Per Gb Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/verify-per-signature/info:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse info — VERIFY-PER-SIGNATURE
+      description: Free — returns nanoagent metadata, primitives, pricing tier, TAM, and spec links.
+      operationId: _info_handler_v1_nanoverse_verify_per_signature_info_get
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: verify-per-signature
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Info Handler V1 Nanoverse Verify Per Signature Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/verify-per-signature/quote:
+    post:
+      tags:
+      - nanoverse
+      summary: NanoVerse quote — VERIFY-PER-SIGNATURE
+      description: Free — returns a price quote and pre-signed envelope template. Does NOT settle.
+      operationId: _quote_handler_v1_nanoverse_verify_per_signature_quote_post
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: verify-per-signature
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Quote Handler V1 Nanoverse Verify Per Signature Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/identity-per-attest/info:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse info — IDENTITY-PER-ATTEST
+      description: Free — returns nanoagent metadata, primitives, pricing tier, TAM, and spec links.
+      operationId: _info_handler_v1_nanoverse_identity_per_attest_info_get
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: identity-per-attest
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Info Handler V1 Nanoverse Identity Per Attest Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/identity-per-attest/quote:
+    post:
+      tags:
+      - nanoverse
+      summary: NanoVerse quote — IDENTITY-PER-ATTEST
+      description: Free — returns a price quote and pre-signed envelope template. Does NOT settle.
+      operationId: _quote_handler_v1_nanoverse_identity_per_attest_quote_post
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: identity-per-attest
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Quote Handler V1 Nanoverse Identity Per Attest Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/agent-lease-marketplace/info:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse info — AGENT-LEASE-MARKETPLACE
+      description: Free — returns nanoagent metadata, primitives, pricing tier, TAM, and spec links.
+      operationId: _info_handler_v1_nanoverse_agent_lease_marketplace_info_get
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: agent-lease-marketplace
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Info Handler V1 Nanoverse Agent Lease Marketplace Info Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse/agent-lease-marketplace/quote:
+    post:
+      tags:
+      - nanoverse
+      summary: NanoVerse quote — AGENT-LEASE-MARKETPLACE
+      description: Free — returns a price quote and pre-signed envelope template. Does NOT settle.
+      operationId: _quote_handler_v1_nanoverse_agent_lease_marketplace_quote_post
+      parameters:
+      - name: slug
+        in: query
+        required: false
+        schema:
+          default: agent-lease-marketplace
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response  Quote Handler V1 Nanoverse Agent Lease Marketplace Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/nanoverse:
+    get:
+      tags:
+      - nanoverse
+      summary: NanoVerse registry — all 10 vertical nanoagents
+      description: 'Free — returns the full NanoVerse registry: all 10 verticals with info payloads.'
+      operationId: nanoverse_registry_v1_nanoverse_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Nanoverse Registry V1 Nanoverse Get
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

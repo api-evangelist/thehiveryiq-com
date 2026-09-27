@@ -1,0 +1,436 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Evaluator API
+  version: 0.1.0
+  description: 'Operations tagged evaluator across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: evaluator
+paths:
+  /v1/evaluator/status:
+    get:
+      tags:
+      - evaluator
+      summary: ERC-8183 evaluator listener state
+      operationId: get_status_v1_evaluator_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/evaluator/abi:
+    get:
+      tags:
+      - evaluator
+      summary: ERC-8183 evaluator ABI summary
+      operationId: get_abi_v1_evaluator_abi_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/evaluator/recent_jobs:
+    get:
+      tags:
+      - evaluator
+      summary: Recently evaluated jobs
+      operationId: get_recent_jobs_v1_evaluator_recent_jobs_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 25
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/evaluator/economics:
+    get:
+      tags:
+      - evaluator
+      summary: Evaluator fee + x402 rail wiring
+      operationId: get_economics_v1_evaluator_economics_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/evaluator/manual_evaluate:
+    post:
+      tags:
+      - evaluator
+      summary: Synthesize a JobSubmitted event and evaluate
+      operationId: manual_evaluate_v1_evaluator_manual_evaluate_post
+      parameters:
+      - name: x-hive-trust
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Hive-Trust
+      - name: X-Admin-Api-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Api-Key
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManualEvaluateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/evaluator/start:
+    post:
+      tags:
+      - evaluator
+      summary: Start the background listener (dev-trust only)
+      operationId: start_listener_route_v1_evaluator_start_post
+      parameters:
+      - name: x-hive-trust
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Hive-Trust
+      - name: X-Admin-Api-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Api-Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/evaluator/stop:
+    post:
+      tags:
+      - evaluator
+      summary: Stop the background listener (dev-trust only)
+      operationId: stop_listener_route_v1_evaluator_stop_post
+      parameters:
+      - name: x-hive-trust
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Hive-Trust
+      - name: X-Admin-Api-Key
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Admin-Api-Key
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/evaluator/fees:
+    get:
+      tags:
+      - evaluator
+      summary: Public ERC-8183 evaluator fee schedule
+      description: Public fee schedule (basis points per complexity tier).
+      operationId: get_fees_v1_evaluator_fees_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/evaluator/jobs:
+    post:
+      tags:
+      - evaluator
+      summary: Submit an ERC-8183 job for evaluation
+      description: 'Client posts a job. Hive computes the fee, stores SUBMITTED state,
+
+        and returns the canonical settlement recipient locked to Hive Safe Treasury.'
+      operationId: submit_job_route_v1_evaluator_jobs_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobSubmitRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/evaluator/jobs/{job_id}:
+    get:
+      tags:
+      - evaluator
+      summary: ERC-8183 job status (six-state lifecycle)
+      operationId: get_job_route_v1_evaluator_jobs__job_id__get
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Job Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/evaluator/jobs/{job_id}/attest:
+    post:
+      tags:
+      - evaluator
+      summary: Provider posts attestation; Hive scores
+      description: 'Provider posts the deliverable attestation. Hive runs HiveTrust verdict,
+
+        transitions through ACCEPTED → IN_PROGRESS → ATTESTED → EVALUATED → SETTLED|REJECTED,
+
+        and locks settlement to the Hive Safe Treasury.'
+      operationId: attest_job_route_v1_evaluator_jobs__job_id__attest_post
+      parameters:
+      - name: job_id
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Job Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_evaluator__routes__AttestRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    JobSubmitRequest:
+      properties:
+        job_id:
+          type: integer
+          minimum: 0.0
+          title: Job Id
+          description: ERC-8183 jobId (uint256).
+        client:
+          type: string
+          title: Client
+          description: Client address (0x... or solana pubkey).
+        provider:
+          type: string
+          title: Provider
+          description: Provider address.
+        tier:
+          type: string
+          title: Tier
+          description: 'Fee tier: simple | evaluation | arbitration.'
+        job_value_usdc_atomic:
+          type: integer
+          minimum: 0.0
+          title: Job Value Usdc Atomic
+          description: Job value in USDC atomic units (6 decimals).
+        chain:
+          type: string
+          title: Chain
+          description: base | ethereum | solana.
+          default: base
+        deliverable:
+          type: string
+          title: Deliverable
+          description: bytes32 deliverable commitment (0x-prefixed, 66 chars).
+          default: '0x0000000000000000000000000000000000000000000000000000000000000000'
+      type: object
+      required:
+      - job_id
+      - client
+      - provider
+      - tier
+      - job_value_usdc_atomic
+      title: JobSubmitRequest
+    ManualEvaluateRequest:
+      properties:
+        job_id:
+          type: integer
+          minimum: 0.0
+          title: Job Id
+          description: ERC-8183 jobId (uint256).
+        provider:
+          type: string
+          title: Provider
+          description: Provider address (0x...).
+        deliverable:
+          type: string
+          title: Deliverable
+          description: bytes32 deliverable commitment (0x-prefixed, 66 chars).
+          default: '0x0000000000000000000000000000000000000000000000000000000000000000'
+        extra:
+          additionalProperties: true
+          type: object
+          title: Extra
+          description: 'Optional extra payload merged into the job payload (e.g. {''red_flag'': true}).'
+      type: object
+      required:
+      - job_id
+      - provider
+      title: ManualEvaluateRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    hivemorph__hive_evaluator__routes__AttestRequest:
+      properties:
+        provider:
+          type: string
+          title: Provider
+          description: Provider address posting the attestation.
+        deliverable:
+          type: string
+          title: Deliverable
+          description: bytes32 deliverable commitment from the provider.
+        extra:
+          additionalProperties: true
+          type: object
+          title: Extra
+          description: 'Optional payload merged into the verdict job_payload (e.g. {''red_flag'': true}).'
+      type: object
+      required:
+      - provider
+      - deliverable
+      title: AttestRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

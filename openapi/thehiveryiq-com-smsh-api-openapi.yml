@@ -1,0 +1,300 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Smsh API
+  version: 0.1.0
+  description: 'Operations tagged smsh across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: smsh
+paths:
+  /v1/smsh/compress:
+    post:
+      tags:
+      - smsh
+      summary: Smsh Compress
+      description: 'Compress a prompt using smsh.
+
+
+        Modes:
+
+        - smsh-lite: dictionary + whitespace (v1 fast)
+
+        - smsh-std: + structural dedup (v1 default)
+
+        - smsh-pq-std: + PQ signed envelope (ed25519 baseline, ML-DSA-65 target)
+
+        - smsh-pq-sealed: + KEM encrypted + signed (x25519+AES-256-GCM, ML-KEM-768 target)
+
+        - smsh-v2-learned: v1-std then judge-based learned pruning
+
+
+        Optional: fidelity_target (0.0-1.0) triggers inference + fidelity check.'
+      operationId: smsh_compress_v1_smsh_compress_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_smsh__routes__CompressRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/smsh/decompress:
+    post:
+      tags:
+      - smsh
+      summary: Smsh Decompress
+      description: 'Reverse dictionary substitutions and strip the smsh decode header.
+
+        Structural dedup backreferences (D1, D2, ...) are preserved.'
+      operationId: smsh_decompress_v1_smsh_decompress_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecompressRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/smsh/compress/demo:
+    post:
+      tags:
+      - smsh
+      summary: Smsh Compress Demo
+      description: 'Free demo of smsh compression. Caps:
+
+        - input: 4000 chars max
+
+        - modes: smsh-lite, smsh-std, smsh-pq-std, smsh-pq-sealed (no v2-learned)
+
+        - fidelity_target: ignored (no inference run)
+
+        Returns the same compression result shape as /v1/smsh/compress.'
+      operationId: smsh_compress_demo_v1_smsh_compress_demo_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_smsh__routes__CompressRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/smsh/health:
+    get:
+      tags:
+      - smsh
+      summary: Smsh Health
+      description: Health check — returns ok, available modes, dictionary size. Free.
+      operationId: smsh_health_v1_smsh_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/smsh/v1_5/warmup:
+    get:
+      tags:
+      - smsh
+      summary: Smsh V1 5 Warmup
+      description: 'Pre-load LLMLingua-2 + MiniLM into memory. Returns load status.
+
+        Idempotent; subsequent calls return cached status immediately.
+
+        Free — useful after a deploy to amortize the first cold call.'
+      operationId: smsh_v1_5_warmup_v1_smsh_v1_5_warmup_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    post:
+      tags:
+      - smsh
+      summary: Smsh V1 5 Warmup
+      description: 'Pre-load LLMLingua-2 + MiniLM into memory. Returns load status.
+
+        Idempotent; subsequent calls return cached status immediately.
+
+        Free — useful after a deploy to amortize the first cold call.'
+      operationId: smsh_v1_5_warmup_v1_smsh_v1_5_warmup_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/smsh/dictionary:
+    get:
+      tags:
+      - smsh
+      summary: Smsh Dictionary
+      description: Full boilerplate dictionary with sentinel mappings. Free.
+      operationId: smsh_dictionary_v1_smsh_dictionary_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/smsh/modes:
+    get:
+      tags:
+      - smsh
+      summary: Smsh Modes
+      description: List all modes with descriptions, target ratios, and v1/v2 labels. Free.
+      operationId: smsh_modes_v1_smsh_modes_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/smsh/bench/summary:
+    get:
+      tags:
+      - smsh
+      summary: Smsh Bench Summary
+      description: 'Serve the latest bench summary JSON. Updated after each bench run.
+
+        Free — used by website to pull live numbers.'
+      operationId: smsh_bench_summary_v1_smsh_bench_summary_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    DecompressRequest:
+      properties:
+        compressed:
+          type: string
+          title: Compressed
+          description: Compressed text with smsh sentinels.
+      type: object
+      required:
+      - compressed
+      title: DecompressRequest
+    hivemorph__hive_smsh__routes__CompressRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: Prompt text to compress.
+        mode:
+          type: string
+          title: Mode
+          description: Compression mode.
+          default: smsh-std
+        fidelity_target:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Fidelity Target
+          description: If set (0.0-1.0), run inference on both raw and compressed, judge fidelity. If measured fidelity < target, response includes fallback='raw'.
+        turn_index:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Turn Index
+          description: Conversation turn index for smsh-v1 mode (0 = single-turn, >=2 = multi-turn cap 2.5x). Ignored by legacy modes.
+          default: 0
+      type: object
+      required:
+      - text
+      title: CompressRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

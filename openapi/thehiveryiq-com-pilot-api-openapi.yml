@@ -1,0 +1,197 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Pilot API
+  version: 0.1.0
+  description: 'Operations tagged pilot across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: pilot
+paths:
+  /v1/pilot/accept:
+    post:
+      tags:
+      - pilot
+      summary: Pilot Accept
+      description: Countersign a pilot offer. Returns a signed receipt + deposit instructions.
+      operationId: pilot_accept_v1_pilot_accept_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PilotAcceptReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/pilot/accepts/recent:
+    get:
+      tags:
+      - pilot
+      summary: Accepts Recent
+      description: Operator-only — read recent pilot accepts from the JSONL log.
+      operationId: accepts_recent_v1_pilot_accepts_recent_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/pilot/health:
+    get:
+      tags:
+      - pilot
+      summary: Pilot Health
+      operationId: pilot_health_v1_pilot_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    PilotAcceptReq:
+      properties:
+        slug:
+          type: string
+          maxLength: 64
+          minLength: 4
+          title: Slug
+        accepted_by_email:
+          type: string
+          maxLength: 320
+          minLength: 5
+          title: Accepted By Email
+        accepted_by_name:
+          type: string
+          maxLength: 100
+          minLength: 2
+          title: Accepted By Name
+        accepted_by_title:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Accepted By Title
+        company:
+          type: string
+          maxLength: 120
+          minLength: 2
+          title: Company
+        deposit_amount_usd:
+          type: integer
+          maximum: 10000000.0
+          minimum: 0.0
+          title: Deposit Amount Usd
+        notes:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Notes
+        counter_signature:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Counter Signature
+        counter_pubkey:
+          anyOf:
+          - type: string
+            maxLength: 256
+          - type: 'null'
+          title: Counter Pubkey
+      type: object
+      required:
+      - slug
+      - accepted_by_email
+      - accepted_by_name
+      - company
+      - deposit_amount_usd
+      title: PilotAcceptReq
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

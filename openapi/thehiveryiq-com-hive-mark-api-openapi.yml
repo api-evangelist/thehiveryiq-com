@@ -1,0 +1,291 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Hive Mark API
+  version: 0.1.0
+  description: 'Operations tagged hive-mark across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: hive-mark
+paths:
+  /v1/mark/attest:
+    post:
+      tags:
+      - hive-mark
+      summary: Attest Mark
+      description: 'Record a first-use trademark attestation.
+
+
+        Wraps the /v1/receipt/issue endpoint (ML-DSA-65 + Ed25519 dual-signed CBOR
+
+        envelope). Persists to mark_attestations.jsonl. Returns the full receipt
+
+        envelope plus mark-specific fields.'
+      operationId: attest_mark_v1_mark_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_mark__routes__AttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Attest Mark V1 Mark Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mark/by-text/{mark_text}:
+    get:
+      tags:
+      - hive-mark
+      summary: Attestations By Text
+      description: 'Return all attestations for an exact mark string (case-insensitive, URL-decoded).
+
+
+        Results are chronological — earliest first. The first result is the
+
+        priority-proving attestation.'
+      operationId: attestations_by_text_v1_mark_by_text__mark_text__get
+      parameters:
+      - name: mark_text
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Mark Text
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Attestations By Text V1 Mark By Text  Mark Text  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mark/by-owner/{did}:
+    get:
+      tags:
+      - hive-mark
+      summary: Attestations By Owner
+      description: Return all marks attested by an owner DID.
+      operationId: attestations_by_owner_v1_mark_by_owner__did__get
+      parameters:
+      - name: did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Attestations By Owner V1 Mark By Owner  Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mark/monitor:
+    post:
+      tags:
+      - hive-mark
+      summary: Create Monitor
+      description: 'Create a brand monitoring record at the $50/month tier.
+
+
+        Persists to mark_monitors.jsonl. Returns monitor_id + watched_marks count.'
+      operationId: create_monitor_v1_mark_monitor_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MonitorRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Create Monitor V1 Mark Monitor Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mark/health:
+    get:
+      tags:
+      - hive-mark
+      summary: Mark Health
+      description: Health check with counts.
+      operationId: mark_health_v1_mark_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Mark Health V1 Mark Health Get
+components:
+  schemas:
+    hivemorph__hive_mark__routes__AttestRequest:
+      properties:
+        brand_owner_did:
+          type: string
+          title: Brand Owner Did
+          description: DID of the brand owner attesting first use
+        mark_text:
+          type: string
+          maxLength: 512
+          minLength: 1
+          title: Mark Text
+          description: The trademark string
+        use_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Use Url
+          description: URL where the mark appears
+        use_type:
+          anyOf:
+          - type: string
+            enum:
+            - website
+            - social-post
+            - product-shipment
+            - ad-campaign
+            - other
+          - type: 'null'
+          title: Use Type
+          default: other
+        evidence_hash:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Evidence Hash
+          description: SHA-256 hex of screenshot/asset
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - brand_owner_did
+      - mark_text
+      title: AttestRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MonitorRequest:
+      properties:
+        brand_owner_did:
+          type: string
+          title: Brand Owner Did
+          description: DID of the brand owner
+        mark_text:
+          type: string
+          maxLength: 512
+          minLength: 1
+          title: Mark Text
+        watch_domains:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Watch Domains
+      type: object
+      required:
+      - brand_owner_did
+      - mark_text
+      title: MonitorRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

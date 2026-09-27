@@ -1,0 +1,588 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Clear API
+  version: 0.1.0
+  description: 'Operations tagged Clear across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Clear
+paths:
+  /v1/clear/how_to_pay:
+    get:
+      summary: Clear How To Pay
+      description: 'Inline payment-options surface. Any agent / facilitator can hit this
+
+        and learn how to settle into HiveMorph without any out-of-band setup.'
+      operationId: clear_how_to_pay_v1_clear_how_to_pay_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Clear
+  /v1/clear/health:
+    get:
+      tags:
+      - Clear
+      summary: Health
+      operationId: health_v1_clear_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Clear Health Get
+  /v1/clear/pricing:
+    get:
+      tags:
+      - Clear
+      summary: Pricing
+      operationId: pricing_v1_clear_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Clear Pricing Get
+  /v1/clear/pa/submit:
+    post:
+      tags:
+      - Clear
+      summary: Pa Submit
+      description: Submit a Prior Authorization and return a dual-signed receipt.
+      operationId: pa_submit_v1_clear_pa_submit_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PASubmitRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pa Submit V1 Clear Pa Submit Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/clear/pa/{pa_id}:
+    get:
+      tags:
+      - Clear
+      summary: Pa Get
+      description: Retrieve a stored PA by id.
+      operationId: pa_get_v1_clear_pa__pa_id__get
+      parameters:
+      - name: pa_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Pa Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Pa Get V1 Clear Pa  Pa Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/clear/pa/verify:
+    post:
+      tags:
+      - Clear
+      summary: Pa Verify
+      description: Verify a stored PA's dual-signed receipt.
+      operationId: pa_verify_v1_clear_pa_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PAVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pa Verify V1 Clear Pa Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/clear/decision/attest:
+    post:
+      tags:
+      - Clear
+      summary: Decision Attest
+      description: Attest a payer decision (approve/deny/pend) with chain pointer to PA.
+      operationId: decision_attest_v1_clear_decision_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Decision Attest V1 Clear Decision Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/clear/p2p/attest:
+    post:
+      tags:
+      - Clear
+      summary: P2P Attest
+      description: Attest a peer-to-peer review with chain pointer to the decision.
+      operationId: p2p_attest_v1_clear_p2p_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/P2PAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response P2P Attest V1 Clear P2P Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/clear/appeal/attest:
+    post:
+      tags:
+      - Clear
+      summary: Appeal Attest
+      description: Attest an appeal with chain pointer to the denial decision.
+      operationId: appeal_attest_v1_clear_appeal_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppealAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Appeal Attest V1 Clear Appeal Attest Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/clear/chain/verify:
+    post:
+      tags:
+      - Clear
+      summary: Chain Verify
+      description: Verify the full lifecycle chain for a PA.
+      operationId: chain_verify_v1_clear_chain_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_clear__models__ChainVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Chain Verify V1 Clear Chain Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/clear/by-payer/{payer_did}:
+    get:
+      tags:
+      - Clear
+      summary: By Payer
+      description: Paginated PA submission history by payer DID.
+      operationId: by_payer_v1_clear_by_payer__payer_did__get
+      parameters:
+      - name: payer_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Payer Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Payer V1 Clear By Payer  Payer Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/clear/by-provider/{provider_did}:
+    get:
+      tags:
+      - Clear
+      summary: By Provider
+      description: Paginated PA submission history by provider DID.
+      operationId: by_provider_v1_clear_by_provider__provider_did__get
+      parameters:
+      - name: provider_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Provider Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Provider V1 Clear By Provider  Provider Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    P2PAttestRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id of the PA under review
+        decision_id:
+          type: string
+          title: Decision Id
+          description: Chain pointer to the denial decision
+        p2p_outcome:
+          $ref: '#/components/schemas/P2POutcomeEnum'
+          description: upheld / overturned / pending
+        prior_attestation_id:
+          type: string
+          title: Prior Attestation Id
+          description: UUID chain pointer to the decision envelope
+      type: object
+      required:
+      - pa_id
+      - decision_id
+      - p2p_outcome
+      - prior_attestation_id
+      title: P2PAttestRequest
+      description: Request to attest a peer-to-peer review.
+    hivemorph__hive_clear__models__ChainVerifyRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id to trace the full chain for
+      type: object
+      required:
+      - pa_id
+      title: ChainVerifyRequest
+      description: Request to verify the full lifecycle chain for a PA.
+    UrgencyEnum:
+      type: string
+      enum:
+      - standard
+      - expedited
+      title: UrgencyEnum
+    PASubmitRequest:
+      properties:
+        payer_did:
+          type: string
+          title: Payer Did
+          description: DID of the payer (did:hive:...)
+        provider_did:
+          type: string
+          title: Provider Did
+          description: DID of the provider (did:hive:...)
+        member_did:
+          type: string
+          title: Member Did
+          description: Opaque/pseudonymous member DID — no PHI stored (did:hive:...)
+        cpt_codes:
+          items:
+            type: string
+          type: array
+          title: Cpt Codes
+          description: CPT procedure codes
+        icd10_codes:
+          items:
+            type: string
+          type: array
+          title: Icd10 Codes
+          description: ICD-10 diagnosis codes
+        clinical_doc_hash:
+          type: string
+          title: Clinical Doc Hash
+          description: sha256 hex of canonical clinical doc bundle — no raw document stored
+        urgency:
+          $ref: '#/components/schemas/UrgencyEnum'
+          description: standard or expedited
+          default: standard
+      type: object
+      required:
+      - payer_did
+      - provider_did
+      - member_did
+      - cpt_codes
+      - icd10_codes
+      - clinical_doc_hash
+      title: PASubmitRequest
+      description: Request to submit a Prior Authorization.
+    DecisionAttestRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id of the PA being decided
+        decision:
+          $ref: '#/components/schemas/DecisionEnum'
+          description: approve / deny / pend
+        decision_reason_code:
+          type: string
+          title: Decision Reason Code
+          description: Payer reason code for the decision
+        prior_attestation_id:
+          type: string
+          title: Prior Attestation Id
+          description: UUID chain pointer to the PA submission envelope (pa_id)
+      type: object
+      required:
+      - pa_id
+      - decision
+      - decision_reason_code
+      - prior_attestation_id
+      title: DecisionAttestRequest
+      description: Request to attest a payer decision on a PA.
+    AppealLevelEnum:
+      type: string
+      enum:
+      - internal
+      - external_irO
+      - state_doi
+      - federal
+      title: AppealLevelEnum
+    DecisionEnum:
+      type: string
+      enum:
+      - approve
+      - deny
+      - pend
+      title: DecisionEnum
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AppealOutcomeEnum:
+      type: string
+      enum:
+      - upheld
+      - overturned
+      - pending
+      title: AppealOutcomeEnum
+    P2POutcomeEnum:
+      type: string
+      enum:
+      - upheld
+      - overturned
+      - pending
+      title: P2POutcomeEnum
+    PAVerifyRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id to verify
+      type: object
+      required:
+      - pa_id
+      title: PAVerifyRequest
+      description: Request to verify a stored PA.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AppealAttestRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id of the PA being appealed
+        decision_id:
+          type: string
+          title: Decision Id
+          description: Chain pointer to the denial decision
+        appeal_level:
+          $ref: '#/components/schemas/AppealLevelEnum'
+          description: internal / external_irO / state_doi / federal
+        appeal_outcome:
+          $ref: '#/components/schemas/AppealOutcomeEnum'
+          description: upheld / overturned / pending
+        prior_attestation_id:
+          type: string
+          title: Prior Attestation Id
+          description: UUID chain pointer to the denial decision envelope
+      type: object
+      required:
+      - pa_id
+      - decision_id
+      - appeal_level
+      - appeal_outcome
+      - prior_attestation_id
+      title: AppealAttestRequest
+      description: Request to attest an appeal.
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

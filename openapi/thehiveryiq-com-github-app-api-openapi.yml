@@ -1,0 +1,190 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Github App API
+  version: 0.1.0
+  description: 'Operations tagged github-app across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: github-app
+paths:
+  /v1/github/health:
+    get:
+      tags:
+      - github-app
+      summary: Health
+      operationId: health_v1_github_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Github Health Get
+  /v1/github/sign-diff:
+    post:
+      tags:
+      - github-app
+      summary: Sign Diff Route
+      description: 'Manual signing API — no GitHub App install needed.
+
+
+        Useful for CI pipelines that want to PQ-sign the PR diff and post the
+
+        receipt URL into their own checks/status. Rate-limited on the underlying
+
+        /v1/receipt/free path semantics already.'
+      operationId: sign_diff_route_v1_github_sign_diff_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignDiffRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Sign Diff Route V1 Github Sign Diff Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/github/webhook:
+    post:
+      tags:
+      - github-app
+      summary: Github Webhook
+      description: 'GitHub App webhook receiver.
+
+
+        Currently handles `pull_request` events with action in {opened, synchronize,
+
+        reopened}. We verify the X-Hub-Signature-256 header, extract the PR diff
+
+        URL, sign the diff via the swarm receipt issuer, and (in v0.1) return the
+
+        comment payload. v0.2 will POST the comment to the PR via the GitHub API
+
+        using an installation access token.'
+      operationId: github_webhook_v1_github_webhook_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Github Webhook V1 Github Webhook Post
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SignDiffRequest:
+      properties:
+        repo:
+          type: string
+          maxLength: 120
+          minLength: 3
+          title: Repo
+          description: owner/repo, e.g. 'srotzin/hivemorph'
+        pr_number:
+          type: integer
+          minimum: 0.0
+          title: Pr Number
+          description: 0 if signing a non-PR diff
+        diff:
+          type: string
+          maxLength: 200000
+          minLength: 1
+          title: Diff
+          description: The unified diff content (max 200k chars)
+        base_sha:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Base Sha
+          description: Base commit sha
+        head_sha:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Head Sha
+          description: Head commit sha
+      type: object
+      required:
+      - repo
+      - pr_number
+      - diff
+      title: SignDiffRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,682 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Provebirth API
+  version: 0.1.0
+  description: 'Operations tagged provebirth across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: provebirth
+paths:
+  /v1/provebirth/health:
+    get:
+      tags:
+      - provebirth
+      summary: Health
+      operationId: health_v1_provebirth_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Provebirth Health Get
+  /v1/provebirth/pricing:
+    get:
+      tags:
+      - provebirth
+      summary: Pricing
+      operationId: pricing_v1_provebirth_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Provebirth Pricing Get
+  /v1/provebirth/cert/issue:
+    post:
+      tags:
+      - provebirth
+      summary: Cert Issue
+      operationId: cert_issue_v1_provebirth_cert_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BirthCertIssueRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BirthCertIssueResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/provebirth/cert/{cert_id}:
+    get:
+      tags:
+      - provebirth
+      summary: Cert Get
+      operationId: cert_get_v1_provebirth_cert__cert_id__get
+      parameters:
+      - name: cert_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Cert Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Cert Get V1 Provebirth Cert  Cert Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/provebirth/cert/verify:
+    post:
+      tags:
+      - provebirth
+      summary: Cert Verify
+      operationId: cert_verify_v1_provebirth_cert_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BirthCertVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BirthCertVerifyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/provebirth/action/attest:
+    post:
+      tags:
+      - provebirth
+      summary: Action Attest
+      operationId: action_attest_v1_provebirth_action_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActionAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActionAttestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/provebirth/lineage/verify:
+    post:
+      tags:
+      - provebirth
+      summary: Lineage Verify
+      operationId: lineage_verify_v1_provebirth_lineage_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LineageVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LineageVerifyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/provebirth/by-agent/{agent_did}:
+    get:
+      tags:
+      - provebirth
+      summary: By Agent
+      operationId: by_agent_v1_provebirth_by_agent__agent_did__get
+      parameters:
+      - name: agent_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Agent V1 Provebirth By Agent  Agent Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/provebirth/by-controller/{controller_did}:
+    get:
+      tags:
+      - provebirth
+      summary: By Controller
+      operationId: by_controller_v1_provebirth_by_controller__controller_did__get
+      parameters:
+      - name: controller_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Controller Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Controller V1 Provebirth By Controller  Controller Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/provebirth/by-model/{model_pin}:
+    get:
+      tags:
+      - provebirth
+      summary: By Model
+      operationId: by_model_v1_provebirth_by_model__model_pin__get
+      parameters:
+      - name: model_pin
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Model Pin
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Model V1 Provebirth By Model  Model Pin  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    BirthCertVerifyResponse:
+      properties:
+        cert_id:
+          type: string
+          title: Cert Id
+        agent_did:
+          type: string
+          title: Agent Did
+        controller_did:
+          type: string
+          title: Controller Did
+        model_pin:
+          type: string
+          title: Model Pin
+        created_at:
+          type: string
+          title: Created At
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        verification:
+          additionalProperties: true
+          type: object
+          title: Verification
+      type: object
+      required:
+      - cert_id
+      - agent_did
+      - controller_did
+      - model_pin
+      - created_at
+      - receipt_envelope
+      - verification
+      title: BirthCertVerifyResponse
+    LineageVerifyResponse:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+        cert_id:
+          type: string
+          title: Cert Id
+        chain_valid:
+          type: boolean
+          title: Chain Valid
+        birth_cert_valid:
+          type: boolean
+          title: Birth Cert Valid
+        action_count:
+          type: integer
+          title: Action Count
+        discrepancies:
+          items:
+            type: string
+          type: array
+          title: Discrepancies
+        chain:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Chain
+      type: object
+      required:
+      - agent_did
+      - cert_id
+      - chain_valid
+      - birth_cert_valid
+      - action_count
+      title: LineageVerifyResponse
+    BirthCertVerifyRequest:
+      properties:
+        cert_id:
+          type: string
+          title: Cert Id
+          description: The cert_id to verify signatures for
+      type: object
+      required:
+      - cert_id
+      title: BirthCertVerifyRequest
+    ActionAttestRequest:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID of the acting agent
+        birth_cert_id:
+          type: string
+          title: Birth Cert Id
+          description: cert_id of the agent's birth certificate (chain pointer)
+        prior_action_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prior Action Id
+          description: action_id of the immediately prior action (chain pointer, optional)
+        action_type:
+          type: string
+          title: Action Type
+          description: 'Action category: tool_call, payment, decision, output_emit'
+        action_hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          title: Action Hash
+          description: sha256 hex of the canonical action payload
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          description: Use Cosmic tier pricing
+          default: false
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - agent_did
+      - birth_cert_id
+      - action_type
+      - action_hash
+      title: ActionAttestRequest
+      description: Attest an agent action with a chain pointer back to its birth certificate.
+    ActionAttestResponse:
+      properties:
+        action_id:
+          type: string
+          title: Action Id
+        agent_did:
+          type: string
+          title: Agent Did
+        birth_cert_id:
+          type: string
+          title: Birth Cert Id
+        prior_action_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prior Action Id
+        action_type:
+          type: string
+          title: Action Type
+        action_hash:
+          type: string
+          title: Action Hash
+        created_at:
+          type: string
+          title: Created At
+        ed25519_signature:
+          type: string
+          title: Ed25519 Signature
+        mldsa65_signature:
+          type: string
+          title: Mldsa65 Signature
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+      type: object
+      required:
+      - action_id
+      - agent_did
+      - birth_cert_id
+      - action_type
+      - action_hash
+      - created_at
+      - ed25519_signature
+      - mldsa65_signature
+      - price_usd
+      - receipt_envelope
+      title: ActionAttestResponse
+    BirthCertIssueResponse:
+      properties:
+        cert_id:
+          type: string
+          title: Cert Id
+        agent_did:
+          type: string
+          title: Agent Did
+        controller_did:
+          type: string
+          title: Controller Did
+        model_pin:
+          type: string
+          title: Model Pin
+        tool_grants:
+          items:
+            type: string
+          type: array
+          title: Tool Grants
+        policy_hash:
+          type: string
+          title: Policy Hash
+        training_cut:
+          type: string
+          title: Training Cut
+        deployment_target:
+          type: string
+          title: Deployment Target
+        created_at:
+          type: string
+          title: Created At
+        ed25519_signature:
+          type: string
+          title: Ed25519 Signature
+        mldsa65_signature:
+          type: string
+          title: Mldsa65 Signature
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        signatures:
+          additionalProperties: true
+          type: object
+          title: Signatures
+        notes:
+          items:
+            type: string
+          type: array
+          title: Notes
+      type: object
+      required:
+      - cert_id
+      - agent_did
+      - controller_did
+      - model_pin
+      - tool_grants
+      - policy_hash
+      - training_cut
+      - deployment_target
+      - created_at
+      - ed25519_signature
+      - mldsa65_signature
+      - price_usd
+      - receipt_envelope
+      title: BirthCertIssueResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    LineageVerifyRequest:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: Agent DID to verify lineage for
+        cert_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cert Id
+          description: Specific cert_id to anchor verification (uses latest if omitted)
+      type: object
+      required:
+      - agent_did
+      title: LineageVerifyRequest
+      description: 'Verify the full chain for an agent: birth cert + all actions.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BirthCertIssueRequest:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID of the AI agent being born (did:hive:...)
+        controller_did:
+          type: string
+          title: Controller Did
+          description: DID of the human/org controller (did:hive:...)
+        model_pin:
+          type: string
+          title: Model Pin
+          description: Pinned model identifier, e.g. 'claude-3-5-sonnet@20241022', 'gpt-4o@2024-11-20'
+        tool_grants:
+          items:
+            type: string
+          type: array
+          title: Tool Grants
+          description: Granted tool scopes, e.g. ['fs.read', 'http.get', 'payments.x402']
+        policy_hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          title: Policy Hash
+          description: sha256 hex of the controller's policy document
+        training_cut:
+          type: string
+          title: Training Cut
+          description: ISO date of the model's training data cut-off, e.g. '2024-04-01'
+        deployment_target:
+          type: string
+          title: Deployment Target
+          description: 'Deployment framework: langchain, crewai, autogen, langgraph, mastra, custom'
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          description: Use Cosmic tier pricing
+          default: false
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - agent_did
+      - controller_did
+      - model_pin
+      - tool_grants
+      - policy_hash
+      - training_cut
+      - deployment_target
+      title: BirthCertIssueRequest
+      description: Request to issue a dual-signed agent birth certificate.
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

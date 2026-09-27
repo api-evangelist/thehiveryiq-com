@@ -1,0 +1,338 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Swarm Receipts API
+  version: 0.1.0
+  description: 'Operations tagged swarm-receipts across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: swarm-receipts
+paths:
+  /v1/receipt/verify:
+    post:
+      tags:
+      - swarm-receipts
+      summary: Verify Receipt Route
+      operationId: verify_receipt_route_v1_receipt_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Verify Receipt Route V1 Receipt Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/receipt/health:
+    get:
+      tags:
+      - swarm-receipts
+      summary: Health
+      operationId: health_v1_receipt_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Receipt Health Get
+  /v1/receipt/free:
+    post:
+      tags:
+      - swarm-receipts
+      summary: Issue Free Receipt
+      description: 'Free PQ-signed receipt. Rate-limited to 100/IP/day.
+
+
+        No login required. Accepts any string payload (PR diff, contract clause,
+
+        API log line, tx hash). Returns the signed envelope, a signatures block
+
+        that states exactly what signed it, and a verify URL. After 100/day the IP
+
+        must sign up.'
+      operationId: issue_free_receipt_v1_receipt_free_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FreeIssueRequestBody'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Issue Free Receipt V1 Receipt Free Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/receipt/pq-status:
+    get:
+      tags:
+      - swarm-receipts
+      summary: Pq Status
+      description: Say plainly whether the ML-DSA-65 signer is live on this host.
+      operationId: pq_status_v1_receipt_pq_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pq Status V1 Receipt Pq Status Get
+  /v1/receipt/pricing:
+    get:
+      tags:
+      - swarm-receipts
+      summary: Pricing
+      operationId: pricing_v1_receipt_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Receipt Pricing Get
+  /v1/receipt/issue:
+    post:
+      tags:
+      - swarm-receipts
+      summary: Issue Receipt
+      operationId: issue_receipt_v1_receipt_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueRequestBody'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Issue Receipt V1 Receipt Issue Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/receipt/{receipt_id}:
+    get:
+      tags:
+      - swarm-receipts
+      summary: Get Receipt
+      operationId: get_receipt_v1_receipt__receipt_id__get
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Receipt Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Receipt V1 Receipt  Receipt Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/receipt/settle:
+    post:
+      tags:
+      - swarm-receipts
+      summary: Settle Receipt
+      operationId: settle_receipt_v1_receipt_settle_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettleRequestBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Settle Receipt V1 Receipt Settle Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    SettleRequestBody:
+      properties:
+        receipt_id:
+          type: string
+          title: Receipt Id
+        settlement_tx_hash:
+          type: string
+          title: Settlement Tx Hash
+      type: object
+      required:
+      - receipt_id
+      - settlement_tx_hash
+      title: SettleRequestBody
+    VerifyRequestBody:
+      properties:
+        envelope:
+          additionalProperties: true
+          type: object
+          title: Envelope
+      type: object
+      required:
+      - envelope
+      title: VerifyRequestBody
+    IssueRequestBody:
+      properties:
+        tx_hash:
+          type: string
+          title: Tx Hash
+          description: Caller transaction reference
+        agent_did:
+          type: string
+          title: Agent Did
+          description: Issuing agent DID
+        counterparty_did:
+          type: string
+          title: Counterparty Did
+          description: Counterparty agent DID
+        profile:
+          type: string
+          title: Profile
+          description: Receipt profile; must be 'swarm'
+          default: swarm
+        round_id:
+          type: integer
+          title: Round Id
+          description: Optional federation round ID (0 = auto)
+          default: 0
+      type: object
+      required:
+      - tx_hash
+      - agent_did
+      - counterparty_did
+      title: IssueRequestBody
+    FreeIssueRequestBody:
+      properties:
+        payload:
+          type: string
+          maxLength: 8192
+          minLength: 1
+          title: Payload
+          description: Any string to sign (PR diff, contract clause, API log, tx hash, etc).
+        label:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Label
+          description: Optional human-readable label shown on the verify page.
+      type: object
+      required:
+      - payload
+      title: FreeIssueRequestBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

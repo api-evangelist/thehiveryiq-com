@@ -1,0 +1,453 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Governance API
+  version: 0.1.0
+  description: 'Operations tagged governance across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Governance
+paths:
+  /v1/governance/health:
+    get:
+      tags:
+      - Governance
+      summary: Health
+      description: Liveness + sample-signer fingerprint.
+      operationId: health_v1_governance_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Governance Health Get
+  /v1/governance/sample-receipt:
+    get:
+      tags:
+      - Governance
+      summary: Public sample Ed25519-signed AI-use receipt
+      description: 'Free public sample of the AI-use receipt shape governance pilots receive.
+
+        This is a static reference example — not a live signing event.
+
+        Use POST /v1/governance/lead and the pilot enrollment to receive real receipts.'
+      operationId: get_sample_receipt_example_v1_governance_sample_receipt_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Sample Receipt Example V1 Governance Sample Receipt Get
+    post:
+      tags:
+      - Governance
+      summary: Post Sample Receipt
+      description: Issue a signed sample receipt for the supplied AI use case.
+      operationId: post_sample_receipt_v1_governance_sample_receipt_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SampleReceiptBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SampleReceiptResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/governance/sample-receipt/{receipt_id}.pdf:
+    get:
+      tags:
+      - Governance
+      summary: Get Sample Pdf
+      operationId: get_sample_pdf_v1_governance_sample_receipt__receipt_id__pdf_get
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 64
+          maxLength: 64
+          pattern: ^[a-f0-9]{64}$
+          title: Receipt Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/governance/sample-receipt/{receipt_id}.json:
+    get:
+      tags:
+      - Governance
+      summary: Get Sample Json
+      operationId: get_sample_json_v1_governance_sample_receipt__receipt_id__json_get
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 64
+          maxLength: 64
+          pattern: ^[a-f0-9]{64}$
+          title: Receipt Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Sample Json V1 Governance Sample Receipt  Receipt Id  Json Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/governance/lead:
+    post:
+      tags:
+      - Governance
+      summary: Post Lead
+      description: 'Capture a governance pilot lead. Accepts optional email + company + use-case.
+
+        Always 200 — never blocks the form. Persisted to JSONL on /var/data.'
+      operationId: post_lead_v1_governance_lead_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeadBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Post Lead V1 Governance Lead Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/governance/leads:
+    get:
+      tags:
+      - Governance
+      summary: Get Leads
+      description: 'Token-gated read of recent governance leads.
+
+        Auth: query ?token=... or header X-Admin-Token, compared against ADMIN_TOKEN env.'
+      operationId: get_leads_v1_governance_leads_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 200
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Leads V1 Governance Leads Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/governance/leads/summary:
+    get:
+      tags:
+      - Governance
+      summary: Free aggregate lead counts (no PII)
+      description: 'Free aggregate counts of governance pilot leads.
+
+        No PII. For sensitive list, use authenticated GET /v1/governance/leads.'
+      operationId: get_leads_summary_v1_governance_leads_summary_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Leads Summary V1 Governance Leads Summary Get
+  /v1/governance/leads/health:
+    get:
+      tags:
+      - Governance
+      summary: Get Leads Health
+      description: Liveness for the leads log. Does not require auth.
+      operationId: get_leads_health_v1_governance_leads_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Get Leads Health V1 Governance Leads Health Get
+  /leads/health:
+    get:
+      tags:
+      - Governance
+      summary: Lead-pipeline health probe
+      description: Free top-level health probe for the governance lead-capture pipeline.
+      operationId: leads_health_leads_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Leads Health Leads Health Get
+components:
+  schemas:
+    SampleReceiptResponse:
+      properties:
+        receipt_id:
+          type: string
+          title: Receipt Id
+        issued_at:
+          type: string
+          title: Issued At
+        use_case_hash:
+          type: string
+          title: Use Case Hash
+        signer_label:
+          type: string
+          title: Signer Label
+        signer_pubkey:
+          type: string
+          title: Signer Pubkey
+        signature_b64:
+          type: string
+          title: Signature B64
+        anchor_chain:
+          type: string
+          title: Anchor Chain
+        anchor_chain_id:
+          type: integer
+          title: Anchor Chain Id
+        anchor_tx_hash:
+          type: string
+          title: Anchor Tx Hash
+        anchor_status:
+          type: string
+          title: Anchor Status
+        anchor_url:
+          type: string
+          title: Anchor Url
+        pdf_url:
+          type: string
+          title: Pdf Url
+        json_url:
+          type: string
+          title: Json Url
+        sample_notice:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sample Notice
+      type: object
+      required:
+      - receipt_id
+      - issued_at
+      - use_case_hash
+      - signer_label
+      - signer_pubkey
+      - signature_b64
+      - anchor_chain
+      - anchor_chain_id
+      - anchor_tx_hash
+      - anchor_status
+      - anchor_url
+      - pdf_url
+      - json_url
+      title: SampleReceiptResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SampleReceiptBody:
+      properties:
+        use_case:
+          type: string
+          maxLength: 4000
+          minLength: 8
+          title: Use Case
+          description: Describe the AI use case (e.g. 'GPT-4o reviews vendor NDAs and drafts redlines for Legal review').
+        enterprise_label:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Enterprise Label
+          description: How your company shows up on the receipt. Defaults to 'Sample Enterprise'.
+        model_family:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Model Family
+          description: Which model family. Defaults to 'vendor-llm/unspecified'.
+        routing_policy:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Routing Policy
+          description: Routing/policy name. Defaults to 'default-strict'.
+      type: object
+      required:
+      - use_case
+      title: SampleReceiptBody
+    LeadBody:
+      properties:
+        email:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Email
+        company:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Company
+        use_case:
+          anyOf:
+          - type: string
+            maxLength: 4000
+          - type: 'null'
+          title: Use Case
+        enterprise_label:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Enterprise Label
+        model_family:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Model Family
+        source:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Source
+        path:
+          anyOf:
+          - type: string
+            maxLength: 300
+          - type: 'null'
+          title: Path
+        ref:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Ref
+      type: object
+      title: LeadBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

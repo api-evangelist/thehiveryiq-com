@@ -1,0 +1,127 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com R2 Discovery API
+  version: 0.1.0
+  description: 'Operations tagged r2-discovery across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: r2-discovery
+paths:
+  /manifest:
+    get:
+      tags:
+      - r2-discovery
+      summary: Hivemorph plugin manifest (ChatGPT/MCP-style)
+      description: OpenAI-plugin-shaped manifest with discovery pointers, the OpenAPI URL, the A2A transport endpoint, the MCP descriptor, and the R1 receipt-profile schema.
+      operationId: get_manifest_manifest_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /a2a:
+    get:
+      tags:
+      - r2-discovery
+      summary: A2A v0.2 transport descriptor
+      description: Lists the supported JSON-RPC 2.0 methods, the protocol version, the transport endpoint, and pointers to the catalog + manifest. POST JSON-RPC payloads to this same path.
+      operationId: get_a2a_descriptor_a2a_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    post:
+      tags:
+      - r2-discovery
+      summary: A2A v0.2 JSON-RPC 2.0 transport
+      description: 'JSON-RPC 2.0 endpoint. Supports single requests and batch arrays. Methods: agent.discover, agent.card, receipt.emit, receipt.verify, pricing.read, rubric.select. Settlement actions return delegation envelopes pointing at the canonical REST endpoints — peers complete settlement themselves.'
+      operationId: post_a2a_a2a_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /.well-known/a2a.json:
+    get:
+      tags:
+      - r2-discovery
+      summary: A2A v0.2 transport descriptor (well-known alias)
+      description: Spec-mandated well-known alias for /a2a (locked spec section 1a). Returns the same A2A v0.2 transport descriptor so crawlers that discover by /.well-known/* convention reach the JSON-RPC surface on the first read. Always free.
+      operationId: well_known_a2a__well_known_a2a_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /status:
+    get:
+      tags:
+      - r2-discovery
+      summary: Public status surface
+      description: 'Live status of hivemorph: deploy commit, process uptime, discovery URLs, and per-layer status (R1-R12) with strict LIVE / PILOT / ROADMAP discipline.'
+      operationId: get_status_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/a2a/status:
+    get:
+      tags:
+      - r2-discovery
+      summary: Public status surface (A2A path alias)
+      description: Alias for /status. Provided so the A2A surface listing and any cross-ecosystem manifest that resolves agent status under /v1/a2a/* can hit the same payload.
+      operationId: get_status_a2a_alias_v1_a2a_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/transaction-harness:
+    get:
+      tags:
+      - r2-discovery
+      summary: Machine-readable 14-stage transaction harness
+      description: JSON companion to the public /transaction-harness HTML walkthrough. Every stage carries a strict label (LIVE / SAMPLE / PILOT / ROADMAP / SYNTHETIC), the canonical live endpoints involved, and the path to the signed sample artifact. No stage is labelled LIVE unless the underlying surface responds with signed bytes today.
+      operationId: get_transaction_harness_v1_transaction_harness_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

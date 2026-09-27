@@ -1,0 +1,252 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Arb Alloc API
+  version: 0.1.0
+  description: 'Operations tagged arb-alloc across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: arb-alloc
+paths:
+  /v1/arb/alloc/scan:
+    get:
+      tags:
+      - arb-alloc
+      summary: Alloc Scan
+      description: 'Read-only performance snapshot + recommended slot-share deltas.
+
+
+        Returns a list of AllocProposal objects, one per supermodel brood that has
+
+        live variants. Each proposal includes:
+
+        - Per-variant scores (revenue_per_offer × confidence × recency)
+
+        - Softmax-with-floor target shares (every variant keeps ≥ 5%)
+
+        - Delta vs current equal-split share
+
+        - Winner (highest target_share) and loser (lowest) identification
+
+        - Integration gap: what runtime.py change is needed to realise the weights'
+      operationId: alloc_scan_v1_arb_alloc_scan_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/arb/alloc/apply:
+    post:
+      tags:
+      - arb-alloc
+      summary: Alloc Apply
+      description: 'Apply reallocation.
+
+
+        dry_run=true (default): compute and return proposals only.
+
+        dry_run=false: persist proposals to alloc_history.
+
+
+        IMPORTANT: Until runtime.py is patched with the per_variant_weights hook
+
+        (see integration_gap in each proposal), applying dry_run=false logs the
+
+        intent but does NOT change live traffic routing weights. This is a soft
+
+        apply — the allocator records the desired state so Steve can wire it up.'
+      operationId: alloc_apply_v1_arb_alloc_apply_post
+      parameters:
+      - name: dry_run
+        in: query
+        required: false
+        schema:
+          type: boolean
+          description: If true (default), compute only. If false, log to alloc_history.
+          default: true
+          title: Dry Run
+        description: If true (default), compute only. If false, log to alloc_history.
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/arb/alloc/history:
+    get:
+      tags:
+      - arb-alloc
+      summary: Alloc History
+      description: 'Past reallocation events (dry_run=False runs only).
+
+
+        Each record contains:
+
+        - applied_at timestamp
+
+        - parent_id of the brood affected
+
+        - Full proposal snapshot (variants, scores, deltas) at apply time
+
+        - note field with integration status'
+      operationId: alloc_history_v1_arb_alloc_history_get
+      parameters:
+      - name: parent_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter to a specific supermodel parent_id
+          title: Parent Id
+        description: Filter to a specific supermodel parent_id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          description: Max records to return
+          default: 50
+          title: Limit
+        description: Max records to return
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/arb/alloc/stats:
+    get:
+      tags:
+      - arb-alloc
+      summary: Alloc Stats
+      description: 'Projected uplift attributable to slot reallocations.
+
+
+        Computes the mean revenue_per_offer of winners vs losers across all
+
+        alloc_history events in the lookback window. Uplift is labelled
+
+        "projected" because actual traffic reweighting is pending the runtime.py
+
+        integration point (per_variant_weights kwarg in select_routing_target).
+
+
+        Returns:
+
+        - lookback_hours
+
+        - total_reallocation_events
+
+        - unique_parents_affected
+
+        - avg_winner_rpo / avg_loser_rpo
+
+        - projected_uplift_pct
+
+        - note (integration status)'
+      operationId: alloc_stats_v1_arb_alloc_stats_get
+      parameters:
+      - name: lookback_hours
+        in: query
+        required: false
+        schema:
+          type: number
+          maximum: 8760.0
+          minimum: 1.0
+          description: Hours to look back for uplift computation
+          default: 24.0
+          title: Lookback Hours
+        description: Hours to look back for uplift computation
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

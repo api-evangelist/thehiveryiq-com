@@ -1,0 +1,151 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Prov API
+  version: 0.1.0
+  description: 'Operations tagged prov across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: prov
+paths:
+  /v1/prov/pubkey:
+    get:
+      tags:
+      - prov
+      summary: Prov Pubkey
+      description: Return the service's Ed25519 pubkey for smash.prov verification.
+      operationId: prov_pubkey_v1_prov_pubkey_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Prov Pubkey V1 Prov Pubkey Get
+  /v1/prov/verify:
+    post:
+      tags:
+      - prov
+      summary: Prov Verify
+      description: 'Verify a smash.prov signature against this service''s pubkey.
+
+
+        Free. No auth. The whole point is to prove provenance for $0.'
+      operationId: prov_verify_v1_prov_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_prov__routes__VerifyReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Prov Verify V1 Prov Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    hivemorph__hive_prov__routes__VerifyReq:
+      properties:
+        method:
+          type: string
+          title: Method
+          description: HTTP method that was signed
+        path:
+          type: string
+          title: Path
+          description: URL path that was signed
+        body_b64u:
+          type: string
+          title: Body B64U
+          description: Base64url-encoded response body bytes
+          default: ''
+        ts:
+          type: integer
+          title: Ts
+          description: Unix timestamp from X-Hive-Prov-Ts
+        sig_b64u:
+          type: string
+          title: Sig B64U
+          description: Signature from X-Hive-Prov-Sig
+      type: object
+      required:
+      - method
+      - path
+      - ts
+      - sig_b64u
+      title: VerifyReq
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

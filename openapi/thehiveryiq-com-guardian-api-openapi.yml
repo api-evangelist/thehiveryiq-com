@@ -1,0 +1,100 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Guardian API
+  version: 0.1.0
+  description: 'Operations tagged guardian across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Guardian
+paths:
+  /v1/guardian/health:
+    get:
+      tags:
+      - Guardian
+      summary: Health
+      operationId: health_v1_guardian_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Guardian Health Get
+  /v1/guardian/scores:
+    get:
+      tags:
+      - Guardian
+      summary: Scores
+      description: Per-axis quality scores from the AIMEW QualityScorer.
+      operationId: scores_v1_guardian_scores_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Scores V1 Guardian Scores Get
+  /v1/guardian/weights:
+    get:
+      tags:
+      - Guardian
+      summary: Weights
+      description: Current AIMEW weight vector. Σ w_i = 1.0 across non-excluded axes.
+      operationId: weights_v1_guardian_weights_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Weights V1 Guardian Weights Get
+  /v1/guardian/anomalies:
+    get:
+      tags:
+      - Guardian
+      summary: Anomalies
+      description: Per-axis anomaly score from the LSTM detector + quarantine list.
+      operationId: anomalies_v1_guardian_anomalies_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Anomalies V1 Guardian Anomalies Get
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

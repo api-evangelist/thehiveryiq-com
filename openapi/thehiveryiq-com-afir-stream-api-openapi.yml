@@ -1,0 +1,406 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Afir Stream API
+  version: 0.1.0
+  description: 'Operations tagged afir-stream across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: afir-stream
+paths:
+  /v1/afir-stream/health:
+    get:
+      tags:
+      - afir-stream
+      summary: Afir Stream Health
+      operationId: afir_stream_health_v1_afir_stream_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Afir Stream Health V1 Afir Stream Health Get
+  /v1/afir-stream/segment:
+    post:
+      tags:
+      - afir-stream
+      summary: Afir Stream Segment
+      operationId: afir_stream_segment_v1_afir_stream_segment_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Afir Stream Segment V1 Afir Stream Segment Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/afir-stream/seal:
+    post:
+      tags:
+      - afir-stream
+      summary: Afir Stream Seal
+      operationId: afir_stream_seal_v1_afir_stream_seal_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SealRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Afir Stream Seal V1 Afir Stream Seal Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/afir-stream/verify:
+    post:
+      tags:
+      - afir-stream
+      summary: Afir Stream Verify
+      operationId: afir_stream_verify_v1_afir_stream_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_afir_stream__routes__VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Afir Stream Verify V1 Afir Stream Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/afir-stream/examples:
+    get:
+      tags:
+      - afir-stream
+      summary: Afir Stream Examples
+      operationId: afir_stream_examples_v1_afir_stream_examples_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Afir Stream Examples V1 Afir Stream Examples Get
+  /v1/afir/health:
+    get:
+      tags:
+      - afir-stream
+      summary: Afir Health
+      operationId: afir_health_v1_afir_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Afir Health V1 Afir Health Get
+  /v1/afir/segment:
+    post:
+      tags:
+      - afir-stream
+      summary: Afir Segment
+      operationId: afir_segment_v1_afir_segment_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Afir Segment V1 Afir Segment Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/afir/seal:
+    post:
+      tags:
+      - afir-stream
+      summary: Afir Seal
+      operationId: afir_seal_v1_afir_seal_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SealRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Afir Seal V1 Afir Seal Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/afir/verify:
+    post:
+      tags:
+      - afir-stream
+      summary: Afir Verify
+      operationId: afir_verify_v1_afir_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_afir_stream__routes__VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Afir Verify V1 Afir Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/afir/examples:
+    get:
+      tags:
+      - afir-stream
+      summary: Afir Examples
+      operationId: afir_examples_v1_afir_examples_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Afir Examples V1 Afir Examples Get
+components:
+  schemas:
+    SegmentRequest:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+          description: session this segment belongs to
+        sequence:
+          type: integer
+          title: Sequence
+          description: 0-based segment index within the session
+        role:
+          type: string
+          title: Role
+          description: model-side | counterparty-side | system-side
+        content_hash:
+          type: string
+          title: Content Hash
+          description: hash of the segment content (audio/tokens)
+        started_at_us:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Started At Us
+        ended_at_us:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ended At Us
+        sign_latency_us:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Sign Latency Us
+          description: off-path signing latency for this segment (µs)
+        transcript_commitment:
+          type: string
+          title: Transcript Commitment
+          default: ''
+        continuity:
+          anyOf:
+          - $ref: '#/components/schemas/ContinuityIn'
+          - type: 'null'
+        prior_commit:
+          type: string
+          title: Prior Commit
+          default: ''
+      type: object
+      required:
+      - session_id
+      - sequence
+      - role
+      - content_hash
+      title: SegmentRequest
+    SealRequest:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+          default: ''
+        segment_receipts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Segment Receipts
+          description: ordered list of segment receipts to seal
+        declared_budget_us:
+          type: number
+          title: Declared Budget Us
+          default: 100.0
+        session_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Session Metadata
+      type: object
+      required:
+      - segment_receipts
+      title: SealRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    hivemorph__hive_afir_stream__routes__VerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: a segment receipt or a sealed session receipt
+      type: object
+      required:
+      - receipt
+      title: VerifyRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ContinuityIn:
+      properties:
+        event:
+          type: string
+          title: Event
+          description: interruption | handoff | resume | backchannel
+        continues_from_commit:
+          type: string
+          title: Continues From Commit
+          description: commit of prior receipt
+          default: ''
+        detail:
+          type: string
+          title: Detail
+          default: ''
+      type: object
+      required:
+      - event
+      title: ContinuityIn
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

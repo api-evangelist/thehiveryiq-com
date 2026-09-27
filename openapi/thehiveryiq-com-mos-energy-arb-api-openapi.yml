@@ -1,0 +1,281 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Mos Energy Arb API
+  version: 0.1.0
+  description: 'Operations tagged mos-energy-arb across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: mos-energy-arb
+paths:
+  /v1/mos/energy-arb/utility-price:
+    post:
+      tags:
+      - mos-energy-arb
+      summary: Push Utility Price
+      description: 'GATE — NEED: site must supply a positive $/kWh rate and kWh/hour figure.
+
+
+        The site operator (or an automated agent acting on their behalf) pushes
+
+        the current electricity tariff for their facility. Records are appended
+
+        to {site_did}/utility_prices.ndjson and used by the recommendation engine.
+
+
+        v0.1 accepts manual pushes only. Authentication is via DID + signed nonce;
+
+        signature verification is stubbed — the hook is in place for v0.2 when
+
+        CLOAzK proofs are wired.'
+      operationId: push_utility_price_v1_mos_energy_arb_utility_price_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UtilityPriceBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mos/energy-arb/recommendations/{site_did}:
+    get:
+      tags:
+      - mos-energy-arb
+      summary: Get Recommendations
+      description: 'GATE — YIELD: returns mine / throttle / sell-forward decision JSON.
+
+
+        Decision logic (deterministic — see _compute_recommendation docstring):
+
+        - revenue / cost 1.5 AND spike projected in next 6h → front-load
+
+        - otherwise → mine
+
+
+        Also returns:
+
+        - demonstrated_savings_projection: estimated 30-day savings if recommendations
+
+        are followed at current energy prices
+
+        - savings_30d_actual: rolling 30-day actual savings (if telemetry history exists
+
+        from Surface 1 /v1/mos/intel/telemetry)
+
+
+        External API failures are surfaced as degraded_mode=true with a conservative
+
+        "mine" recommendation rather than exposing an error response. This prevents
+
+        transient network issues from disrupting operations.'
+      operationId: get_recommendations_v1_mos_energy_arb_recommendations__site_did__get
+      parameters:
+      - name: site_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Site Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mos/energy-arb/billing/cycle:
+    post:
+      tags:
+      - mos-energy-arb
+      summary: Billing Cycle
+      description: 'GATE — CLEAN-MONEY: admin-only (HIVE_INTERNAL_DRIVER_KEY). Monthly trigger.
+
+
+        Computes 20%-of-savings invoices for every site that has utility-price
+
+        records. Records each invoice to {site_did}/invoices.ndjson.
+
+
+        v0.1 behaviour: records invoices; does NOT charge. Billing rail execution
+
+        is deferred to v0.2. The invoice record is the audit trail for when the
+
+        rail is wired.
+
+
+        Fee formula:
+
+        savings_usd = baseline_cost - actual_cost (using telemetry; see _compute_savings)
+
+        hive_fee_usd = savings_usd * 0.20
+
+
+        Returns a summary of computed invoices. In dry_run mode, returns projections
+
+        without writing to disk.'
+      operationId: billing_cycle_v1_mos_energy_arb_billing_cycle_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BillingCycleBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UtilityPriceBody:
+      properties:
+        site_did:
+          type: string
+          title: Site Did
+          description: Site DID (must be registered via /v1/mos/intel/register)
+        rate_usd_per_kwh:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Rate Usd Per Kwh
+          description: Current electricity rate in USD per kWh
+        kwh_per_hour:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Kwh Per Hour
+          description: Site's current power draw in kWh/hour
+        hashrate_th_s:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Hashrate Th S
+          description: Current site hashrate in TH/s
+        effective_ts:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Effective Ts
+          description: Unix timestamp this rate is effective from. Defaults to now.
+        site_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Site Signature
+          description: Optional DID-signed nonce for payload integrity (verification stub in v0.1).
+      type: object
+      required:
+      - site_did
+      - rate_usd_per_kwh
+      - kwh_per_hour
+      - hashrate_th_s
+      title: UtilityPriceBody
+      description: 'POST /v1/mos/energy-arb/utility-price
+
+
+        The site operator pushes their current electricity rate. In v0.1 this is a
+
+        manual push; v0.2 will integrate automatic utility API polling.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    BillingCycleBody:
+      properties:
+        billing_month:
+          type: string
+          pattern: ^\d{4}-\d{2}$
+          title: Billing Month
+          description: ISO year-month string, e.g. '2026-04'.
+        dry_run:
+          type: boolean
+          title: Dry Run
+          description: If true, compute invoices but do not write records.
+          default: false
+      type: object
+      required:
+      - billing_month
+      title: BillingCycleBody
+      description: 'POST /v1/mos/energy-arb/billing/cycle
+
+
+        Admin-only trigger (HIVE_INTERNAL_DRIVER_KEY). Records a monthly savings
+
+        invoice per site. Does NOT charge; billing rails land in v0.2.'
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

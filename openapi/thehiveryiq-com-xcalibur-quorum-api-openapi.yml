@@ -1,0 +1,239 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Xcalibur Quorum API
+  version: 0.1.0
+  description: 'Operations tagged xcalibur-quorum across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: xcalibur-quorum
+paths:
+  /v1/xcalibur/quorum/complete:
+    post:
+      tags:
+      - xcalibur-quorum
+      summary: Quorum Complete
+      description: 'Run M-of-N LLM consensus.
+
+
+        Dispatches the prompt to N models in parallel, clusters responses using
+
+        deterministic TF-IDF cosine similarity, then applies M-of-N decision.
+
+        Returns the decision, canonical response, dissent receipts, and a signed receipt.'
+      operationId: quorum_complete_v1_xcalibur_quorum_complete_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuorumCompleteBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Quorum Complete V1 Xcalibur Quorum Complete Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/xcalibur/quorum/verify:
+    post:
+      tags:
+      - xcalibur-quorum
+      summary: Quorum Verify
+      description: 'Verify the ed25519 signature on a QUORUM receipt.
+
+
+        Returns {"valid": bool, "signature_ok": bool}.
+
+        Note: signature verification uses the in-process signing key.
+
+        In production, the public key is available at GET /v1/xcalibur/quorum/health.'
+      operationId: quorum_verify_v1_xcalibur_quorum_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuorumVerifyBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Quorum Verify V1 Xcalibur Quorum Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/xcalibur/quorum/health:
+    get:
+      tags:
+      - xcalibur-quorum
+      summary: Quorum Health
+      description: Liveness check. Returns available model IDs and primitive version.
+      operationId: quorum_health_v1_xcalibur_quorum_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Quorum Health V1 Xcalibur Quorum Health Get
+  /v1/xcalibur/quorum/registry:
+    get:
+      tags:
+      - xcalibur-quorum
+      summary: Quorum Registry
+      description: 'Return the full model registry.
+
+
+        Exposes which models can participate in quorum votes,
+
+        their provider model names, families, and eras.'
+      operationId: quorum_registry_v1_xcalibur_quorum_registry_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Quorum Registry V1 Xcalibur Quorum Registry Get
+components:
+  schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    QuorumCompleteBody:
+      properties:
+        prompt:
+          type: string
+          minLength: 1
+          title: Prompt
+          description: The prompt to send to all models.
+        models:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Models
+          description: List of logical model IDs (from registry). Omit for all available.
+        m:
+          anyOf:
+          - type: integer
+            minimum: 1.0
+          - type: 'null'
+          title: M
+          description: Minimum votes for QUORUM. Defaults to ceil(N/2)+1.
+        max_tokens:
+          type: integer
+          maximum: 4096.0
+          minimum: 1.0
+          title: Max Tokens
+          description: Max tokens per model response.
+          default: 512
+        temperature:
+          type: number
+          maximum: 2.0
+          minimum: 0.0
+          title: Temperature
+          description: Sampling temperature.
+          default: 0.2
+        cluster_threshold:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Cluster Threshold
+          description: Cosine similarity threshold for clustering.
+          default: 0.78
+      type: object
+      required:
+      - prompt
+      title: QuorumCompleteBody
+    QuorumVerifyBody:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: A QUORUM receipt object to verify.
+      type: object
+      required:
+      - receipt
+      title: QuorumVerifyBody
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

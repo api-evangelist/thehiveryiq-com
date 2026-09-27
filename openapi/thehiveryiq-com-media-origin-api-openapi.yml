@@ -1,0 +1,358 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Media Origin API
+  version: 0.1.0
+  description: 'Operations tagged media-origin across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: media-origin
+paths:
+  /v1/media-origin/health:
+    get:
+      tags:
+      - media-origin
+      summary: Media Origin Health
+      operationId: media_origin_health_v1_media_origin_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Media Origin Health V1 Media Origin Health Get
+  /v1/media-origin/receipt:
+    post:
+      tags:
+      - media-origin
+      summary: Media Origin Receipt
+      operationId: media_origin_receipt_v1_media_origin_receipt_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Media Origin Receipt V1 Media Origin Receipt Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/media-origin/verify:
+    post:
+      tags:
+      - media-origin
+      summary: Media Origin Verify
+      operationId: media_origin_verify_v1_media_origin_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_media_origin__routes__VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Media Origin Verify V1 Media Origin Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/media-origin/examples:
+    get:
+      tags:
+      - media-origin
+      summary: Media Origin Examples
+      operationId: media_origin_examples_v1_media_origin_examples_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Media Origin Examples V1 Media Origin Examples Get
+  /v1/mor/health:
+    get:
+      tags:
+      - media-origin
+      summary: Mor Health
+      operationId: mor_health_v1_mor_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Mor Health V1 Mor Health Get
+  /v1/mor/issue:
+    post:
+      tags:
+      - media-origin
+      summary: Mor Issue
+      operationId: mor_issue_v1_mor_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Mor Issue V1 Mor Issue Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mor/verify:
+    post:
+      tags:
+      - media-origin
+      summary: Mor Verify
+      operationId: mor_verify_v1_mor_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_media_origin__routes__VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Mor Verify V1 Mor Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/mor/examples:
+    get:
+      tags:
+      - media-origin
+      summary: Mor Examples
+      operationId: mor_examples_v1_mor_examples_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Mor Examples V1 Mor Examples Get
+components:
+  schemas:
+    hivemorph__hive_media_origin__routes__VerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: A full M.O.R. receipt object
+      type: object
+      required:
+      - receipt
+      title: VerifyRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EvidenceIn:
+      properties:
+        c2pa_refs:
+          items: {}
+          type: array
+          title: C2Pa Refs
+        capture_attestations:
+          items: {}
+          type: array
+          title: Capture Attestations
+        model_attestations:
+          items: {}
+          type: array
+          title: Model Attestations
+        prompt_commitments:
+          items: {}
+          type: array
+          title: Prompt Commitments
+        source_asset_hashes:
+          items: {}
+          type: array
+          title: Source Asset Hashes
+        watermark_signals:
+          items: {}
+          type: array
+          title: Watermark Signals
+        human_attestations:
+          items: {}
+          type: array
+          title: Human Attestations
+      type: object
+      title: EvidenceIn
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ReceiptRequest:
+      properties:
+        cryptographic_hash:
+          type: string
+          title: Cryptographic Hash
+          description: SHA-256 (or other) content hash of the media asset
+        perceptual_hash:
+          type: string
+          title: Perceptual Hash
+          description: Perceptual/robust hash surviving transcode
+          default: ''
+        component_bindings:
+          items: {}
+          type: array
+          title: Component Bindings
+          description: Per-component (stem/layer/region) hash bindings
+        evidence:
+          anyOf:
+          - $ref: '#/components/schemas/EvidenceIn'
+          - type: 'null'
+        rights_state:
+          anyOf:
+          - $ref: '#/components/schemas/RightsStateIn'
+          - type: 'null'
+        challenge_state:
+          anyOf:
+          - $ref: '#/components/schemas/ChallengeStateIn'
+          - type: 'null'
+        registry_ref:
+          type: string
+          title: Registry Ref
+          description: Optional ledger reference
+          default: ''
+      type: object
+      required:
+      - cryptographic_hash
+      title: ReceiptRequest
+    RightsStateIn:
+      properties:
+        asserted_scope:
+          items: {}
+          type: array
+          title: Asserted Scope
+        verified_scope:
+          items: {}
+          type: array
+          title: Verified Scope
+        excluded_scope:
+          items: {}
+          type: array
+          title: Excluded Scope
+        revocation_refs:
+          items: {}
+          type: array
+          title: Revocation Refs
+        license_commitments:
+          items: {}
+          type: array
+          title: License Commitments
+      type: object
+      title: RightsStateIn
+    ChallengeStateIn:
+      properties:
+        status:
+          type: string
+          title: Status
+          default: none
+        challenge_refs:
+          items: {}
+          type: array
+          title: Challenge Refs
+      type: object
+      title: ChallengeStateIn
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

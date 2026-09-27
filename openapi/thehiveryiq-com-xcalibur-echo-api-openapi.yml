@@ -1,0 +1,241 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Xcalibur Echo API
+  version: 0.1.0
+  description: 'Operations tagged xcalibur-echo across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: xcalibur-echo
+paths:
+  /v1/xcalibur/echo/compress:
+    post:
+      tags:
+      - xcalibur-echo
+      summary: Compress a prompt with ECHO v1
+      description: 'Compress a prompt using XCALIBUR ECHO v1 output-conditioned compression.
+
+
+        Algorithm:
+
+        1. Generate K=8 candidate compressions at increasing aggressiveness.
+
+        2. Score each candidate using a deterministic TF-IDF surrogate
+
+        (tfidf-deterministic-v1) that estimates content preservation.
+
+        3. Select the best-scoring candidate that meets the target_ratio floor.
+
+        4. Run one round of gradient-free sentence-drop mutation, keeping drops
+
+        that keep the score at or above min_preservation.
+
+        5. Return the compressed prompt and a signed Ed25519 receipt.'
+      operationId: compress_prompt_v1_xcalibur_echo_compress_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__xcalibur__echo_routes__CompressRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompressResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/xcalibur/echo/verify:
+    post:
+      tags:
+      - xcalibur-echo
+      summary: Verify an ECHO receipt
+      description: 'Verify the integrity and signature of an ECHO receipt.
+
+
+        Checks performed:
+
+        - **signature**: Ed25519 signature over canonical JSON of all receipt fields
+
+        (except the signature field itself) verifies correctly.
+
+        - **token_math**: original_tokens / compressed_tokens matches compression_ratio.
+
+        - **compressed_hash_match**: if compressed_prompt is provided, sha3_256 of it
+
+        matches receipt.compressed_hash. This catches any tampering with the
+
+        compressed text.
+
+        - **kind_check**: receipt.kind is "xcalibur.echo.v1".'
+      operationId: verify_receipt_v1_xcalibur_echo_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__xcalibur__echo_routes__VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hivemorph__xcalibur__echo_routes__VerifyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/xcalibur/echo/health:
+    get:
+      tags:
+      - xcalibur-echo
+      summary: ECHO health check
+      description: Liveness probe for the XCALIBUR ECHO primitive.
+      operationId: echo_health_v1_xcalibur_echo_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Echo Health V1 Xcalibur Echo Health Get
+components:
+  schemas:
+    hivemorph__xcalibur__echo_routes__VerifyResponse:
+      properties:
+        valid:
+          type: boolean
+          title: Valid
+        checks:
+          additionalProperties: true
+          type: object
+          title: Checks
+      type: object
+      required:
+      - valid
+      - checks
+      title: VerifyResponse
+    hivemorph__xcalibur__echo_routes__VerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: The receipt object returned by /compress.
+        compressed_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Compressed Prompt
+          description: If provided, verifies that sha3_256(compressed_prompt) matches receipt.compressed_hash. Also enables tamper detection.
+      type: object
+      required:
+      - receipt
+      title: VerifyRequest
+    hivemorph__xcalibur__echo_routes__CompressRequest:
+      properties:
+        prompt:
+          type: string
+          title: Prompt
+          description: The prompt text to compress.
+        target_ratio:
+          type: number
+          title: Target Ratio
+          description: Target length-reduction ratio in (0, 1). The compressed prompt must be at most this fraction of the original token count. Default 0.6 (≤60%% of original).
+          default: 0.6
+        min_preservation:
+          type: number
+          title: Min Preservation
+          description: Minimum surrogate preservation score [0, 1]. Gradient-free mutation search keeps drops only if score stays at or above this threshold. Default 0.85.
+          default: 0.85
+      type: object
+      required:
+      - prompt
+      title: CompressRequest
+    CompressResponse:
+      properties:
+        compressed_prompt:
+          type: string
+          title: Compressed Prompt
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+      type: object
+      required:
+      - compressed_prompt
+      - receipt
+      title: CompressResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

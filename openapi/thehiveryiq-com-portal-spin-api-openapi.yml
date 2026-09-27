@@ -1,0 +1,514 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Portal Spin API
+  version: 0.1.0
+  description: 'Operations tagged portal-spin across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: portal-spin
+paths:
+  /v1/portal/spin/start:
+    post:
+      tags:
+      - portal-spin
+      summary: Spin Start
+      description: 'Anonymous spin session start. No signup required.
+
+        Returns a spin_session_id, vertical config, and pre-generated sample receipts.'
+      operationId: spin_start_v1_portal_spin_start_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpinStartRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpinStartResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/spin/emit-receipt:
+    post:
+      tags:
+      - portal-spin
+      summary: Spin Emit Receipt
+      description: 'Emit an additional sample receipt into the spin session. Creates a new
+
+        dual-signed (Ed25519 + ML-DSA-65) receipt envelope and appends it to the session.'
+      operationId: spin_emit_receipt_v1_portal_spin_emit_receipt_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmitReceiptRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmitReceiptResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/spin/promote:
+    post:
+      tags:
+      - portal-spin
+      summary: Spin Promote
+      description: 'Promote a spin session into a real tenant. Called when user clicks
+
+        ''Show me my dashboard''. Carries over receipts and vertical.'
+      operationId: spin_promote_v1_portal_spin_promote_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PromoteRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PromoteResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/{tenant_id}/lattice:
+    get:
+      tags:
+      - portal-spin
+      summary: Tenant Lattice
+      description: 'Return receipts formatted for the wave-lattice visualization.
+
+        Each node carries x/y/radius/color/label/hash/settlement_status.'
+      operationId: tenant_lattice_v1_portal__tenant_id__lattice_get
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Tenant Lattice V1 Portal  Tenant Id  Lattice Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/{tenant_id}/ledger:
+    get:
+      tags:
+      - portal-spin
+      summary: Tenant Ledger
+      description: 'Full accounting ledger. Every charge and settlement with USDC tx hashes
+
+        clickable to Basescan. Transparent, machine-verifiable.'
+      operationId: tenant_ledger_v1_portal__tenant_id__ledger_get
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Tenant Ledger V1 Portal  Tenant Id  Ledger Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/{tenant_id}/reports/pull:
+    post:
+      tags:
+      - portal-spin
+      summary: Reports Pull
+      description: Generate a report on demand. Returns structured report data.
+      operationId: reports_pull_v1_portal__tenant_id__reports_pull_post
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PullReportRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Reports Pull V1 Portal  Tenant Id  Reports Pull Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/{tenant_id}/reports/schedule:
+    post:
+      tags:
+      - portal-spin
+      summary: Reports Schedule
+      description: Schedule a daily or weekly email report for the tenant.
+      operationId: reports_schedule_v1_portal__tenant_id__reports_schedule_post
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Reports Schedule V1 Portal  Tenant Id  Reports Schedule Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/{tenant_id}/reports/reminders:
+    post:
+      tags:
+      - portal-spin
+      summary: Reports Reminders
+      description: 'Set a custom alert/reminder. Condition format: metric>threshold e.g. volume>1000, error_rate>5.'
+      operationId: reports_reminders_v1_portal__tenant_id__reports_reminders_post
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReminderRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Reports Reminders V1 Portal  Tenant Id  Reports Reminders Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ReminderRequest:
+      properties:
+        condition:
+          type: string
+          title: Condition
+          description: e.g. volume>1000, error_rate>5, settlement_pending>10
+        notify_email:
+          type: string
+          title: Notify Email
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+      type: object
+      required:
+      - condition
+      - notify_email
+      title: ReminderRequest
+    PullReportRequest:
+      properties:
+        report_type:
+          type: string
+          title: Report Type
+          description: summary | full_ledger | compliance | usage
+          default: summary
+        date_from:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Date From
+        date_to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Date To
+      type: object
+      title: PullReportRequest
+    PromoteResponse:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+        vertical:
+          type: string
+          title: Vertical
+        receipts_carried:
+          type: integer
+          title: Receipts Carried
+        portal_url:
+          type: string
+          title: Portal Url
+        promoted_at:
+          type: string
+          title: Promoted At
+      type: object
+      required:
+      - tenant_id
+      - vertical
+      - receipts_carried
+      - portal_url
+      - promoted_at
+      title: PromoteResponse
+    PromoteRequest:
+      properties:
+        spin_session_id:
+          type: string
+          title: Spin Session Id
+        tenant_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tenant Slug
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+      type: object
+      required:
+      - spin_session_id
+      title: PromoteRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SpinStartRequest:
+      properties:
+        vertical:
+          type: string
+          title: Vertical
+          description: 'One of: banking, healthcare, construction, agent-payments, real-estate, ai-compliance'
+          default: banking
+        sample_size:
+          type: integer
+          maximum: 20.0
+          minimum: 1.0
+          title: Sample Size
+          description: Number of sample receipts to pre-generate
+          default: 5
+      type: object
+      title: SpinStartRequest
+    EmitReceiptRequest:
+      properties:
+        spin_session_id:
+          type: string
+          title: Spin Session Id
+        event_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Type
+        amount_usdc:
+          anyOf:
+          - type: number
+            maximum: 10000.0
+            minimum: 0.0001
+          - type: 'null'
+          title: Amount Usdc
+      type: object
+      required:
+      - spin_session_id
+      title: EmitReceiptRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    EmitReceiptResponse:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+        total_receipts:
+          type: integer
+          title: Total Receipts
+        session_id:
+          type: string
+          title: Session Id
+      type: object
+      required:
+      - receipt
+      - total_receipts
+      - session_id
+      title: EmitReceiptResponse
+    ScheduleRequest:
+      properties:
+        frequency:
+          type: string
+          title: Frequency
+          description: daily | weekly
+          default: daily
+        email:
+          type: string
+          title: Email
+        time_utc:
+          type: string
+          title: Time Utc
+          description: HH:MM UTC
+          default: 09:00
+        report_type:
+          type: string
+          title: Report Type
+          default: summary
+      type: object
+      required:
+      - email
+      title: ScheduleRequest
+    SpinStartResponse:
+      properties:
+        spin_session_id:
+          type: string
+          title: Spin Session Id
+        vertical:
+          type: string
+          title: Vertical
+        vertical_config:
+          additionalProperties: true
+          type: object
+          title: Vertical Config
+        receipts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Receipts
+        created_at:
+          type: string
+          title: Created At
+      type: object
+      required:
+      - spin_session_id
+      - vertical
+      - vertical_config
+      - receipts
+      - created_at
+      title: SpinStartResponse
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

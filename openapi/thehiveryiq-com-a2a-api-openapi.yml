@@ -1,0 +1,298 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com A2a API
+  version: 0.1.0
+  description: 'Operations tagged a2a across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: a2a
+paths:
+  /.well-known/agent-card.json:
+    get:
+      tags:
+      - a2a
+      summary: A2A v0.2 top-level Agent Card catalog
+      description: Returns all 5 published Hive Agent Cards in a single A2A v0.2 catalog payload. This is the well-known discovery URL crawled by Azure AI Foundry, AWS Bedrock Agents, Google Cloud, and Agentverse-style A2A registries.
+      operationId: well_known_catalog__well_known_agent_card_json_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /.well-known/agents/{agent_id}/card.json:
+    get:
+      tags:
+      - a2a
+      summary: A2A v0.2 per-agent card
+      description: Per-agent A2A v0.2 Agent Card by agent_id. Returns 404 if the agent_id is not registered in Hive's A2A directory.
+      operationId: well_known_agent_card__well_known_agents__agent_id__card_json_get
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/a2a/cards:
+    get:
+      tags:
+      - a2a
+      summary: List published A2A Agent Cards
+      description: Convenience endpoint mirroring /.well-known/agent-card.json. Always free (discovery).
+      operationId: list_cards_v1_a2a_cards_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/a2a/cards/{agent_id}:
+    get:
+      tags:
+      - a2a
+      summary: Get a single A2A Agent Card
+      description: Convenience alias for /.well-known/agents/{agent_id}/card.json.
+      operationId: get_card_v1_a2a_cards__agent_id__get
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/a2a/harness:run-loop:
+    post:
+      tags:
+      - a2a
+      summary: Run HARNESS internal agent loop
+      description: 'Executes the full internal agent loop: discovery → quote → emit → verify → stats. All steps use x-hive-source: HARNESS so traffic is counted under harness_calls, not calls_paid. Revenue counters are never touched by harness traffic. Returns a combined 5-step report.'
+      operationId: harness_run_loop_v1_a2a_harness_run_loop_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/a2a/agents:
+    get:
+      tags:
+      - a2a
+      summary: List published A2A Agent Cards (agents alias)
+      description: Alias for /v1/a2a/cards. Returns the same payload. Resolves the /v1/a2a/agents path that agents expect.
+      operationId: list_agents_v1_a2a_agents_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/a2a/agents/{agent_id}:
+    get:
+      tags:
+      - a2a
+      summary: Get a single A2A Agent Card (agents alias)
+      description: Alias for /v1/a2a/cards/{agent_id}.
+      operationId: get_agent_v1_a2a_agents__agent_id__get
+      parameters:
+      - name: agent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Agent Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/a2a/handshake:
+    get:
+      tags:
+      - a2a
+      summary: A2A v0.2 handshake — GET returns schema, POST executes
+      description: 'Free schema hint endpoint. POST the same path to execute a real handshake.
+
+        See https://receipts.thehiveryiq.com/.well-known/agent-card.json for the full agent card.'
+      operationId: a2a_handshake_schema_v1_a2a_handshake_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response A2A Handshake Schema V1 A2A Handshake Get
+    post:
+      tags:
+      - a2a
+      summary: Initiate an A2A handshake with Hive Civilization
+      description: Establishes an A2A v0.2 session. Returns the agreed protocol version, supported transports, the canonical Agent Card URL, x402 payment posture, and a session_id. No persistent state is created — the session_id is a 128-bit nonce the caller can include in subsequent JSON-RPC calls for correlation. Always free (discovery-class endpoint).
+      operationId: a2a_handshake_v1_a2a_handshake_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HandshakeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attestation/status:
+    get:
+      tags:
+      - a2a
+      summary: Hive attestation system status
+      description: 'Returns a single-read summary of the attestation surface: key material present, attestation routers loaded, family availability (passport / custody / cargo / warranty / sanctions), and current pricing tier. Always free (health-class endpoint).'
+      operationId: attestation_status_v1_attestation_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HandshakeRequest:
+      properties:
+        agent_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Did
+          description: DID of the calling agent (optional but recommended for trust scoring).
+        agent_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Name
+          description: Human-readable name of the calling agent.
+        protocol_versions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Protocol Versions
+          description: List of A2A protocol versions the caller supports (e.g. ['0.2', '0.1']).
+        capabilities_requested:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Capabilities Requested
+          description: Capability tags the caller intends to use (e.g. ['receipt-emit', 'attest']).
+        nonce:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Nonce
+          description: Caller-supplied nonce, echoed back. If omitted, server generates one.
+      type: object
+      title: HandshakeRequest
+      description: A2A handshake initiation envelope.
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,0 +1,1057 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Attest API
+  version: 0.1.0
+  description: 'Operations tagged attest across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: attest
+paths:
+  /v1/attest/passport/issue:
+    post:
+      tags:
+      - attest
+      summary: Passport Issue
+      description: Issue a Pre-Action Attestation Manifest (C15 — hive-passport).
+      operationId: passport_issue_v1_attest_passport_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassportIssueRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/passport/verify:
+    post:
+      tags:
+      - attest
+      summary: Passport Verify
+      description: Verify a Pre-Action Attestation Manifest (C15 — hive-passport).
+      operationId: passport_verify_v1_attest_passport_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PassportVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/custody/append:
+    post:
+      tags:
+      - attest
+      summary: Custody Append
+      description: Append a node to a custody chain (C16 — hive-custody).
+      operationId: custody_append_v1_attest_custody_append_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustodyAppendRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/custody/verify:
+    post:
+      tags:
+      - attest
+      summary: Custody Verify
+      description: Verify a custody chain (hash linkage + signatures + taint propagation, C16).
+      operationId: custody_verify_v1_attest_custody_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustodyVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/custody/{chain_id}/proof/{index}:
+    get:
+      tags:
+      - attest
+      summary: Custody Proof
+      description: Return a Merkle inclusion proof for node[index] in a chain (C16).
+      operationId: custody_proof_v1_attest_custody__chain_id__proof__index__get
+      parameters:
+      - name: chain_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Chain Id
+      - name: index
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Index
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/cargo/register:
+    post:
+      tags:
+      - attest
+      summary: Cargo Register
+      description: Register a versioned cargo type (C17 — hive-cargo-taxonomy).
+      operationId: cargo_register_v1_attest_cargo_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CargoRegisterRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/cargo/validate:
+    post:
+      tags:
+      - attest
+      summary: Cargo Validate
+      description: Validate a payload against a registered cargo type (C17).
+      operationId: cargo_validate_v1_attest_cargo_validate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CargoValidateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/cargo/snapshot:
+    get:
+      tags:
+      - attest
+      summary: Cargo Snapshot
+      description: Return a registry snapshot with Merkle root (C17).
+      operationId: cargo_snapshot_v1_attest_cargo_snapshot_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/attest/warranty/issue:
+    post:
+      tags:
+      - attest
+      summary: Warranty Issue
+      description: Issue an attestation warranty (C18 — hive-attestation-warranty).
+      operationId: warranty_issue_v1_attest_warranty_issue_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WarrantyIssueRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/warranty/breach:
+    post:
+      tags:
+      - attest
+      summary: Warranty Breach
+      description: Report a warranty breach (C18).
+      operationId: warranty_breach_v1_attest_warranty_breach_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WarrantyBreachRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/warranty/{warranty_id}:
+    get:
+      tags:
+      - attest
+      summary: Warranty Get
+      description: Retrieve a warranty by ID (C18).
+      operationId: warranty_get_v1_attest_warranty__warranty_id__get
+      parameters:
+      - name: warranty_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Warranty Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/gate/evaluate:
+    post:
+      tags:
+      - attest
+      summary: Gate Evaluate
+      description: 'Evaluate whether an agent may proceed through the HiveAttest gate (C19).
+
+
+        Every response (allow OR deny) includes a signed C18-format receipt of
+
+        the gate decision. Decision bytes = JCS({decision, reasons, passport_fingerprint,
+
+        manifest_fingerprint, timestamp}); signed with hivemorph signing key.'
+      operationId: gate_evaluate_v1_attest_gate_evaluate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GateEvaluateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/inspect/sample:
+    post:
+      tags:
+      - attest
+      summary: Inspect Sample
+      description: Perform probabilistic secondary inspection on a sample (C20).
+      operationId: inspect_sample_v1_attest_inspect_sample_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InspectSampleRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/smsh/verify:
+    post:
+      tags:
+      - attest
+      summary: Smsh Verify
+      description: Verify a SMSH-Stamp v1 receipt (C8/C12 — smsh-stamp-verifier).
+      operationId: smsh_verify_v1_attest_smsh_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SmshVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/absence/build:
+    post:
+      tags:
+      - attest
+      summary: Absence Build
+      description: Build a sorted Merkle tree for an audit window (C13 — prov-absence).
+      operationId: absence_build_v1_attest_absence_build_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AbsenceBuildRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/absence/prove:
+    post:
+      tags:
+      - attest
+      summary: Absence Prove
+      description: Prove that a query event is absent from a built window (C13).
+      operationId: absence_prove_v1_attest_absence_prove_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AbsenceProveRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/absence/verify:
+    post:
+      tags:
+      - attest
+      summary: Absence Verify
+      description: Verify a non-membership proof against an expected root (C13).
+      operationId: absence_verify_v1_attest_absence_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AbsenceVerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/sanctions/screen:
+    post:
+      tags:
+      - attest
+      summary: Sanctions Screen
+      description: 'C21 — Pre-action sanctions/PEP screening with signed receipt.
+
+
+        REAL RAIL. Proxies OpenSanctions consolidated dataset (OFAC SDN, EU, UK HMT, UN,
+
+        PEPs, debarment). Every decision (clear or flagged) returns a C18-format signed
+
+        receipt suitable for custody-chain pinning.
+
+
+        No mock. No simulation. Production OpenSanctions match endpoint.'
+      operationId: sanctions_screen_v1_attest_sanctions_screen_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SanctionsScreenRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/agentkit/lookup:
+    post:
+      tags:
+      - attest
+      summary: Agentkit Lookup
+      description: 'C22 — AgentKit / AgentBook lookup with signed receipt.
+
+
+        REAL RAIL. Reads the canonical AgentBook contract on World Chain via JSON-RPC
+
+        eth_call (no SDK, no sidecar — direct on-chain read using web3.py-compatible
+
+        raw RPC). Returns whether the agent wallet is human-backed (registered) and
+
+        the anonymous human identifier if so.
+
+
+        No mock. No simulation. Direct chain read.'
+      operationId: agentkit_lookup_v1_attest_agentkit_lookup_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentBookLookupRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/attest/address/screen:
+    post:
+      tags:
+      - attest
+      summary: Address Screen
+      description: 'C23 — On-chain address risk screening with signed receipt.
+
+
+        REAL RAIL. Proxies GoPlus Security public address-security API (the same
+
+        engine MetaMask and Trust Wallet use for wallet-level risk warnings).
+
+        Screens 17+ risk vectors per address. No mock. No simulation. Live upstream.
+
+
+        Decision logic:
+
+        - FLAG if any boolean risk vector returns "1"
+
+        - CLEAR otherwise'
+      operationId: address_screen_v1_attest_address_screen_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressRiskScreenRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AbsenceProveRequest:
+      properties:
+        window_id:
+          type: string
+          title: Window Id
+          description: Audit window identifier (must have been built)
+        query:
+          additionalProperties: true
+          type: object
+          title: Query
+          description: Event to prove absent
+      type: object
+      required:
+      - window_id
+      - query
+      title: AbsenceProveRequest
+    CustodyAppendRequest:
+      properties:
+        chain_id:
+          type: string
+          title: Chain Id
+          description: Chain identifier (create new or append to existing)
+        transform_id:
+          type: string
+          title: Transform Id
+          description: Transform identifier for this step
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID of the agent performing the transform
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: Transform payload (will be hashed)
+        taint_status:
+          type: string
+          enum:
+          - clean
+          - tainted
+          - unknown
+          title: Taint Status
+          description: Declared taint status for this node
+          default: clean
+      type: object
+      required:
+      - chain_id
+      - transform_id
+      - agent_did
+      title: CustodyAppendRequest
+    AbsenceBuildRequest:
+      properties:
+        window_id:
+          type: string
+          title: Window Id
+          description: Audit window identifier
+        events:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Events
+          description: Observed events to commit to the sorted Merkle tree
+      type: object
+      required:
+      - window_id
+      - events
+      title: AbsenceBuildRequest
+    AgentBookLookupRequest:
+      properties:
+        address:
+          type: string
+          title: Address
+          description: EVM wallet address (0x-prefixed) to look up in AgentBook
+      type: object
+      required:
+      - address
+      title: AgentBookLookupRequest
+      description: 'AgentKit / AgentBook lookup — verify whether an agent wallet is human-backed.
+
+
+        Real rail: reads the canonical AgentBook contract on World Chain
+
+        (0xA23aB2712eA7BBa896930544C7d6636a96b944dA, lookupHuman(address) view).'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CargoValidateRequest:
+      properties:
+        cargo_type_id:
+          type: string
+          title: Cargo Type Id
+          description: Registered cargo type ID
+        version:
+          type: string
+          title: Version
+          description: Cargo type version
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: Payload to validate
+      type: object
+      required:
+      - cargo_type_id
+      - version
+      - payload
+      title: CargoValidateRequest
+    AddressRiskScreenRequest:
+      properties:
+        address:
+          type: string
+          title: Address
+          description: EVM wallet address (0x-prefixed) to screen
+        chain_id:
+          type: integer
+          title: Chain Id
+          description: EVM chain ID (default 8453 = Base, where Hive USDC settles)
+          default: 8453
+      type: object
+      required:
+      - address
+      title: AddressRiskScreenRequest
+      description: 'Pre-settlement on-chain address risk screening — 19-vector check before any USDC transfer.
+
+
+        Real rail: proxies GoPlus Security public address-security API (the same engine used
+
+        inside MetaMask and Trust Wallet for wallet-level risk warnings).
+
+
+        Returns flags for: cybercrime, money_laundering, sanctioned, mixer, phishing,
+
+        darkweb_transactions, financial_crime, blackmail_activities, stealing_attack,
+
+        fake_kyc, blacklist_doubt, honeypot_related_address, malicious_mining_activities,
+
+        fake_token, fake_standard_interface, gas_abuse, reinit, contract_address,
+
+        number_of_malicious_contracts_created.'
+    CustodyVerifyRequest:
+      properties:
+        nodes:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Nodes
+          description: Ordered list of custody chain nodes
+      type: object
+      required:
+      - nodes
+      title: CustodyVerifyRequest
+    GateEvaluateRequest:
+      properties:
+        passport_manifest:
+          additionalProperties: true
+          type: object
+          title: Passport Manifest
+          description: C15 passport manifest
+        cargo_manifest:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Cargo Manifest
+          description: C17 cargo manifest (optional)
+        custody_root:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Custody Root
+          description: Expected custody chain Merkle root (optional)
+        warranty_ids:
+          items:
+            type: string
+          type: array
+          title: Warranty Ids
+          description: Active warranty IDs to verify
+        context:
+          additionalProperties: true
+          type: object
+          title: Context
+          description: Additional gate evaluation context
+      type: object
+      required:
+      - passport_manifest
+      title: GateEvaluateRequest
+    SanctionsScreenRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Full legal name of person or entity to screen
+        schema_type:
+          type: string
+          enum:
+          - Person
+          - Company
+          - Organization
+          - LegalEntity
+          title: Schema Type
+          description: Entity type per FollowTheMoney ontology
+          default: Person
+        country:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Country
+          description: ISO-3166 country code (improves matching)
+        threshold:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Threshold
+          description: Match score threshold above which to flag
+          default: 0.7
+      type: object
+      required:
+      - name
+      title: SanctionsScreenRequest
+      description: 'Pre-action sanctions/PEP screening — gate decision before any USDC transfer or counterparty onboarding.
+
+
+        Real rail: proxies OpenSanctions consolidated dataset (OFAC SDN, EU, UK HMT, UN, PEPs, debarment).'
+    PassportIssueRequest:
+      properties:
+        action_id:
+          type: string
+          title: Action Id
+          description: Caller-supplied action correlation ID
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID of the attesting agent
+        intended_op:
+          type: string
+          title: Intended Op
+          description: Operation name, e.g. 'tool_invocation'
+        target_resource:
+          type: string
+          title: Target Resource
+          description: URI or identifier of the target
+        inputs:
+          additionalProperties: true
+          type: object
+          title: Inputs
+          description: Declared inputs (hashed)
+        ttl_seconds:
+          type: integer
+          minimum: 1.0
+          title: Ttl Seconds
+          description: Validity window in seconds
+          default: 300
+      type: object
+      required:
+      - action_id
+      - agent_did
+      - intended_op
+      - target_resource
+      title: PassportIssueRequest
+    CargoRegisterRequest:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Unique cargo type ID, e.g. 'pii'
+        name:
+          type: string
+          title: Name
+          description: Human-readable cargo type name
+        version:
+          type: string
+          title: Version
+          description: Semver version string, e.g. '1.0.0'
+        sensitivity:
+          type: string
+          enum:
+          - public
+          - internal
+          - confidential
+          - restricted
+          - critical
+          title: Sensitivity
+        schema:
+          additionalProperties: true
+          type: object
+          title: Schema
+          description: JSON Schema for payload
+        supersedes:
+          anyOf:
+          - additionalProperties:
+              type: string
+            type: object
+          - type: 'null'
+          title: Supersedes
+          description: Optional {id, version} of superseded type
+      type: object
+      required:
+      - id
+      - name
+      - version
+      - sensitivity
+      - schema
+      title: CargoRegisterRequest
+    SmshVerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: SMSH-Stamp v1 receipt object
+        pubkey_b64url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pubkey B64Url
+          description: Override trust anchor Ed25519 public key (base64url, 32 bytes)
+        max_age_seconds:
+          anyOf:
+          - type: integer
+            minimum: 1.0
+          - type: 'null'
+          title: Max Age Seconds
+          description: Reject receipts older than this many seconds
+      type: object
+      required:
+      - receipt
+      title: SmshVerifyRequest
+    PassportVerifyRequest:
+      properties:
+        manifest:
+          additionalProperties: true
+          type: object
+          title: Manifest
+          description: Full passport manifest object
+        observed_inputs:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Observed Inputs
+          description: Optional inputs to check against declared hash
+      type: object
+      required:
+      - manifest
+      title: PassportVerifyRequest
+    WarrantyBreachRequest:
+      properties:
+        warranty_id:
+          type: string
+          title: Warranty Id
+          description: Warranty ID to report breach on
+        breach_description:
+          type: string
+          title: Breach Description
+          description: Description of the breach
+        evidence:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Evidence
+          description: Optional evidence dict
+      type: object
+      required:
+      - warranty_id
+      - breach_description
+      title: WarrantyBreachRequest
+    InspectSampleRequest:
+      properties:
+        sample_id:
+          type: string
+          title: Sample Id
+          description: Identifier for the sample batch
+        records:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Records
+          description: Records to probabilistically inspect
+        sample_rate:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Sample Rate
+          description: Fraction to inspect (0.0–1.0)
+          default: 0.1
+        seed:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Seed
+          description: Optional RNG seed for reproducibility
+      type: object
+      required:
+      - sample_id
+      - records
+      title: InspectSampleRequest
+    WarrantyIssueRequest:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID of the warranting agent
+        action_id:
+          type: string
+          title: Action Id
+          description: Action correlation ID being warranted
+        claim:
+          type: string
+          title: Claim
+          description: Human-readable warranty claim
+        scope:
+          additionalProperties: true
+          type: object
+          title: Scope
+          description: Scope constraints
+        expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expires At
+          description: ISO-8601 expiry UTC
+      type: object
+      required:
+      - agent_did
+      - action_id
+      - claim
+      title: WarrantyIssueRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AbsenceVerifyRequest:
+      properties:
+        proof:
+          additionalProperties: true
+          type: object
+          title: Proof
+          description: Non-membership proof from /absence/prove
+        root_hex:
+          type: string
+          title: Root Hex
+          description: Expected Merkle root (hex)
+      type: object
+      required:
+      - proof
+      - root_hex
+      title: AbsenceVerifyRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

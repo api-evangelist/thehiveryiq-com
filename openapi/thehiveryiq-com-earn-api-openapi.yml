@@ -1,0 +1,352 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Earn API
+  version: 0.1.0
+  description: 'Operations tagged earn across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: earn
+paths:
+  /v1/earn/catalog:
+    get:
+      tags:
+      - earn
+      summary: Earn Catalog
+      operationId: earn_catalog_v1_earn_catalog_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/earn/surfaces/{surface_id}:
+    get:
+      tags:
+      - earn
+      summary: Earn Surface Detail
+      operationId: earn_surface_detail_v1_earn_surfaces__surface_id__get
+      parameters:
+      - name: surface_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Surface Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/earn/register:
+    post:
+      tags:
+      - earn
+      summary: Earn Register
+      description: 'Apply NEED + YIELD + CLEAN-MONEY checks, then upsert the earner.
+
+
+        The x402 middleware has already enforced the $0.05 fee at this point.
+
+        Idempotency: re-registration returns the same earner with
+
+        already_registered=true (the x402 layer treats subsequent calls as
+
+        paid passes — the middleware nonce/access-token machinery prevents
+
+        double-charging within an x402 session, and re-registration is
+
+        rare-by-design at the application layer).'
+      operationId: earn_register_v1_earn_register_post
+      parameters:
+      - name: X-Hive-Request-Id
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Hive-Request-Id
+      - name: X-Hive-Attribution
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Hive-Attribution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_earn__routes__RegisterBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/earn/leaderboard:
+    get:
+      tags:
+      - earn
+      summary: Earn Leaderboard
+      operationId: earn_leaderboard_v1_earn_leaderboard_get
+      parameters:
+      - name: window
+        in: query
+        required: false
+        schema:
+          type: string
+          description: 7d | 30d | lifetime
+          default: lifetime
+          title: Window
+        description: 7d | 30d | lifetime
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 10
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/earn/payout-schedule:
+    get:
+      tags:
+      - earn
+      summary: Earn Payout Schedule
+      operationId: earn_payout_schedule_v1_earn_payout_schedule_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/earn/proof/{tx_hash}:
+    get:
+      tags:
+      - earn
+      summary: Earn Proof
+      operationId: earn_proof_v1_earn_proof__tx_hash__get
+      parameters:
+      - name: tx_hash
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tx Hash
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/earn/me:
+    get:
+      tags:
+      - earn
+      summary: Earn Me
+      operationId: earn_me_v1_earn_me_get
+      parameters:
+      - name: agent_did
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Did
+      - name: X-Earner-DID
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Earner-Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/earn/payout/sweep:
+    post:
+      tags:
+      - earn
+      summary: Earn Payout Sweep
+      operationId: earn_payout_sweep_v1_earn_payout_sweep_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SweepBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    SweepBody:
+      properties:
+        dry_run:
+          type: boolean
+          title: Dry Run
+          description: Plan only — do not record
+          default: true
+        broadcast:
+          type: boolean
+          title: Broadcast
+          description: Broadcast on-chain (requires EARN_SWEEP_AUTODISPATCH=true)
+          default: false
+        threshold_usd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Threshold Usd
+          description: Override default $1.00 threshold
+      type: object
+      title: SweepBody
+    hivemorph__hive_earn__routes__RegisterBody:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID or 0x address of the registering earner
+        attribution_url:
+          type: string
+          title: Attribution Url
+          description: Optional public URL for attribution badge
+          default: ''
+        surfaces:
+          items:
+            type: string
+          type: array
+          title: Surfaces
+          description: Surface IDs the earner intends to provide
+        payout_address:
+          type: string
+          title: Payout Address
+          description: Base USDC EVM address (0x...) for payouts
+        attribution_referrer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Attribution Referrer
+          description: Referrer DID — set ONCE at register-time
+      type: object
+      required:
+      - agent_did
+      - surfaces
+      - payout_address
+      title: RegisterBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

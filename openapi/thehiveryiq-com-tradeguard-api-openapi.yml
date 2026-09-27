@@ -1,0 +1,591 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Tradeguard API
+  version: 0.1.0
+  description: 'Operations tagged Tradeguard across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Tradeguard
+paths:
+  /v1/tradeguard/mcp:
+    get:
+      summary: Tradeguard Mcp Meta
+      operationId: tradeguard_mcp_meta_v1_tradeguard_mcp_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Tradeguard
+    post:
+      summary: Tradeguard Mcp
+      operationId: tradeguard_mcp_v1_tradeguard_mcp_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Tradeguard
+  /v1/tradeguard/health:
+    get:
+      tags:
+      - Tradeguard
+      summary: Health
+      operationId: health_v1_tradeguard_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Tradeguard Health Get
+  /v1/tradeguard/pricing:
+    get:
+      tags:
+      - Tradeguard
+      summary: Pricing
+      operationId: pricing_v1_tradeguard_pricing_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Pricing V1 Tradeguard Pricing Get
+  /v1/tradeguard/attest:
+    post:
+      tags:
+      - Tradeguard
+      summary: Attest Trade
+      operationId: attest_trade_v1_tradeguard_attest_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TradeAttestRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TradeAttestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradeguard/verify/{attestation_id}:
+    get:
+      tags:
+      - Tradeguard
+      summary: Verify Attestation
+      operationId: verify_attestation_v1_tradeguard_verify__attestation_id__get
+      parameters:
+      - name: attestation_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Attestation Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/hivemorph__hive_tradeguard__models__VerifyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradeguard/by-event-hash/{order_event_hash}:
+    get:
+      tags:
+      - Tradeguard
+      summary: By Event Hash
+      operationId: by_event_hash_v1_tradeguard_by_event_hash__order_event_hash__get
+      parameters:
+      - name: order_event_hash
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Order Event Hash
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Event Hash V1 Tradeguard By Event Hash  Order Event Hash  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradeguard/by-trader/{trader_did}:
+    get:
+      tags:
+      - Tradeguard
+      summary: By Trader
+      operationId: by_trader_v1_tradeguard_by_trader__trader_did__get
+      parameters:
+      - name: trader_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Trader Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Trader V1 Tradeguard By Trader  Trader Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradeguard/by-firm/{firm_did}:
+    get:
+      tags:
+      - Tradeguard
+      summary: By Firm
+      operationId: by_firm_v1_tradeguard_by_firm__firm_did__get
+      parameters:
+      - name: firm_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Firm Did
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Firm V1 Tradeguard By Firm  Firm Did  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradeguard/by-algo/{firm_did}/{algo_id}:
+    get:
+      tags:
+      - Tradeguard
+      summary: By Algo
+      operationId: by_algo_v1_tradeguard_by_algo__firm_did___algo_id__get
+      parameters:
+      - name: firm_did
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Firm Did
+      - name: algo_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Algo Id
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 500
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response By Algo V1 Tradeguard By Algo  Firm Did   Algo Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/tradeguard/leaderboard:
+    get:
+      tags:
+      - Tradeguard
+      summary: Leaderboard
+      operationId: leaderboard_v1_tradeguard_leaderboard_get
+      parameters:
+      - name: days
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 365
+          minimum: 1
+          default: 30
+          title: Days
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 25
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Leaderboard V1 Tradeguard Leaderboard Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    TradeAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        trader_did:
+          type: string
+          title: Trader Did
+        firm_did:
+          type: string
+          title: Firm Did
+        algo_id:
+          type: string
+          title: Algo Id
+        order_event_hash:
+          type: string
+          title: Order Event Hash
+        event_type:
+          type: string
+          title: Event Type
+        venue:
+          type: string
+          title: Venue
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+      type: object
+      required:
+      - attestation_id
+      - trader_did
+      - firm_did
+      - algo_id
+      - order_event_hash
+      - event_type
+      - venue
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: TradeAttestResponse
+    hivemorph__hive_tradeguard__models__VerifyResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        trader_did:
+          type: string
+          title: Trader Did
+        firm_did:
+          type: string
+          title: Firm Did
+        algo_id:
+          type: string
+          title: Algo Id
+        order_event_hash:
+          type: string
+          title: Order Event Hash
+        event_type:
+          type: string
+          title: Event Type
+        venue:
+          type: string
+          title: Venue
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        verification:
+          additionalProperties: true
+          type: object
+          title: Verification
+      type: object
+      required:
+      - attestation_id
+      - trader_did
+      - firm_did
+      - algo_id
+      - order_event_hash
+      - event_type
+      - venue
+      - timestamp_iso
+      - receipt_envelope
+      - verification
+      title: VerifyResponse
+    TradeAttestRequest:
+      properties:
+        trader_did:
+          type: string
+          minLength: 10
+          title: Trader Did
+          description: Trader DID in did:hive format.
+        firm_did:
+          type: string
+          minLength: 10
+          title: Firm Did
+          description: Firm DID in did:hive format (Citadel, Virtu, etc.)
+        algo_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Algo Id
+          description: Firm-controlled algo identifier.
+        order_event_hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          pattern: ^[0-9a-fA-F]{64}$
+          title: Order Event Hash
+          description: SHA-256 hex digest of the FINRA CAT order/trade event payload.
+        event_type:
+          type: string
+          enum:
+          - order_new
+          - order_modify
+          - order_cancel
+          - order_route
+          - order_route_modify
+          - order_route_cancel
+          - trade_execution
+          - trade_break
+          - trade_correction
+          - algo_decision
+          title: Event Type
+          description: FINRA CAT event type.
+        venue:
+          type: string
+          enum:
+          - NYSE
+          - NASDAQ
+          - ARCA
+          - BATS
+          - IEX
+          - EDGX
+          - EDGA
+          - BYX
+          - BX
+          - PSX
+          - MEMX
+          - MIAX
+          - OTHER
+          title: Venue
+          description: Reporting venue (CAT reportable).
+        symbol:
+          anyOf:
+          - type: string
+            maxLength: 16
+          - type: 'null'
+          title: Symbol
+          description: Ticker symbol.
+        side:
+          anyOf:
+          - type: string
+            enum:
+            - buy
+            - sell
+            - sell_short
+          - type: 'null'
+          title: Side
+        quantity:
+          anyOf:
+          - type: integer
+            minimum: 1.0
+          - type: 'null'
+          title: Quantity
+          description: Order/trade quantity (shares).
+        price_cents:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Price Cents
+          description: Order/trade price in USD cents.
+        parent_order_id:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Parent Order Id
+          description: Parent CAT order id.
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+          description: Free-form metadata dict.
+      type: object
+      required:
+      - trader_did
+      - firm_did
+      - algo_id
+      - order_event_hash
+      - event_type
+      - venue
+      title: TradeAttestRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

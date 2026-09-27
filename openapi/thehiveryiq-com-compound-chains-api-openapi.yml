@@ -1,0 +1,275 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Compound Chains API
+  version: 0.1.0
+  description: 'Operations tagged compound-chains across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: compound-chains
+paths:
+  /v1/compound/chain:
+    post:
+      tags:
+      - compound-chains
+      summary: Register Chain
+      description: 'Register a chain template. Steps are affordance verbs wired in sequence.
+
+        Template variables {{step_N.receipt_hash}} resolve at run time.'
+      operationId: register_chain_v1_compound_chain_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChainTemplateBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Register Chain V1 Compound Chain Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compound/chains:
+    get:
+      tags:
+      - compound-chains
+      summary: List Chains
+      description: List all registered chain templates.
+      operationId: list_chains_v1_compound_chains_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Chains V1 Compound Chains Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compound/chain/{name_or_id}:
+    get:
+      tags:
+      - compound-chains
+      summary: Get Chain
+      operationId: get_chain_v1_compound_chain__name_or_id__get
+      parameters:
+      - name: name_or_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name Or Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Get Chain V1 Compound Chain  Name Or Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compound/chain/{name_or_id}/run:
+    post:
+      tags:
+      - compound-chains
+      summary: Run Chain
+      description: Execute all steps of a chain template sequentially.
+      operationId: run_chain_v1_compound_chain__name_or_id__run_post
+      parameters:
+      - name: name_or_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Name Or Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChainRunBody'
+              default: {}
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Run Chain V1 Compound Chain  Name Or Id  Run Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compound/runs:
+    get:
+      tags:
+      - compound-chains
+      summary: List Runs
+      description: List recent chain run records.
+      operationId: list_runs_v1_compound_runs_get
+      parameters:
+      - name: template_name
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Template Name
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response List Runs V1 Compound Runs Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ChainRunBody:
+      properties:
+        override_params:
+          anyOf:
+          - additionalProperties:
+              additionalProperties: true
+              type: object
+            type: object
+          - type: 'null'
+          title: Override Params
+          description: 'Per-step param overrides keyed by step index string: {''0'': {''caller_did'': ''...''}}'
+      type: object
+      title: ChainRunBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ChainTemplateBody:
+      properties:
+        name:
+          type: string
+          maxLength: 120
+          minLength: 1
+          title: Name
+        description:
+          type: string
+          title: Description
+          default: ''
+        steps:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          minItems: 1
+          title: Steps
+      type: object
+      required:
+      - name
+      - steps
+      title: ChainTemplateBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

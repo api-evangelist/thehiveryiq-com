@@ -1,0 +1,386 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Portal V2 API
+  version: 0.1.0
+  description: 'Operations tagged portal-v2 across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: portal-v2
+paths:
+  /v1/portal/v2/signup:
+    post:
+      tags:
+      - portal-v2
+      summary: Portal V2 Signup
+      description: 'Create a new tenant record. Infers vertical from domain using the lookup table,
+
+        then Grok if no match, then falls back to universal.
+
+        Returns tenant identity and brand hints.'
+      operationId: portal_v2_signup_v1_portal_v2_signup_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignupResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/v2/{tenant_id}/profile:
+    get:
+      tags:
+      - portal-v2
+      summary: Portal V2 Profile
+      description: 'Return tenant profile.
+
+        If tenant doesn''t exist, returns a deterministic synthetic profile based on tenant_id hash
+
+        so demo tenants always work.'
+      operationId: portal_v2_profile_v1_portal_v2__tenant_id__profile_get
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/v2/{tenant_id}/tile-prefs:
+    post:
+      tags:
+      - portal-v2
+      summary: Portal V2 Tile Prefs
+      description: Update a single tile preference. Returns the full updated tile_prefs object.
+      operationId: portal_v2_tile_prefs_v1_portal_v2__tenant_id__tile_prefs_post
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TilePrefRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Portal V2 Tile Prefs V1 Portal V2  Tenant Id  Tile Prefs Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/v2/{tenant_id}/wisdom:
+    get:
+      tags:
+      - portal-v2
+      summary: Portal V2 Wisdom
+      description: 'Return AI wisdom recommendations for a tenant.
+
+        Calls Grok via xAI API if XAI_API_KEY is set; caches 24hr.
+
+        Falls back to curated vertical-specific recommendations.'
+      operationId: portal_v2_wisdom_v1_portal_v2__tenant_id__wisdom_get
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Portal V2 Wisdom V1 Portal V2  Tenant Id  Wisdom Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/v2/{tenant_id}/features/activate:
+    post:
+      tags:
+      - portal-v2
+      summary: Portal V2 Activate Feature
+      description: 'Activate a feature for a tenant. Appends to features_enabled and queues for
+
+        billing on next renewal. Returns activation confirmation with pricing.'
+      operationId: portal_v2_activate_feature_v1_portal_v2__tenant_id__features_activate_post
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivateFeatureRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivateFeatureResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    ActivateFeatureResponse:
+      properties:
+        activated:
+          type: boolean
+          title: Activated
+        feature_id:
+          type: string
+          title: Feature Id
+        billed_on_next_renewal:
+          type: string
+          title: Billed On Next Renewal
+        monthly_addon:
+          type: number
+          title: Monthly Addon
+      type: object
+      required:
+      - activated
+      - feature_id
+      - billed_on_next_renewal
+      - monthly_addon
+      title: ActivateFeatureResponse
+    ActivateFeatureRequest:
+      properties:
+        feature_id:
+          type: string
+          title: Feature Id
+          description: Feature identifier to activate
+      type: object
+      required:
+      - feature_id
+      title: ActivateFeatureRequest
+    SignupRequest:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+          description: Unique tenant identifier
+        company_domain:
+          type: string
+          title: Company Domain
+          description: Primary domain, e.g. netskope.com
+        email:
+          type: string
+          title: Email
+          description: Admin contact email
+      type: object
+      required:
+      - tenant_id
+      - company_domain
+      - email
+      title: SignupRequest
+    ProfileResponse:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+        company_domain:
+          type: string
+          title: Company Domain
+        brand_name:
+          type: string
+          title: Brand Name
+        brand_color:
+          type: string
+          title: Brand Color
+        vertical:
+          type: string
+          title: Vertical
+        starter_pack:
+          type: string
+          title: Starter Pack
+        tile_prefs:
+          additionalProperties: true
+          type: object
+          title: Tile Prefs
+        features_enabled:
+          items:
+            type: string
+          type: array
+          title: Features Enabled
+        ai_wisdom_summary:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ai Wisdom Summary
+        wisdom_generated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wisdom Generated At
+      type: object
+      required:
+      - tenant_id
+      - company_domain
+      - brand_name
+      - brand_color
+      - vertical
+      - starter_pack
+      - tile_prefs
+      - features_enabled
+      - ai_wisdom_summary
+      - wisdom_generated_at
+      title: ProfileResponse
+    TilePrefRequest:
+      properties:
+        tile_key:
+          type: string
+          title: Tile Key
+          description: Tile identifier key
+        exposed:
+          type: boolean
+          title: Exposed
+          description: Whether tile is shown to tenant users
+        public:
+          type: boolean
+          title: Public
+          description: Whether tile is publicly visible
+      type: object
+      required:
+      - tile_key
+      - exposed
+      - public
+      title: TilePrefRequest
+    SignupResponse:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+        vertical_detected:
+          type: string
+          title: Vertical Detected
+        starter_pack:
+          type: string
+          title: Starter Pack
+        brand_color_hint:
+          type: string
+          title: Brand Color Hint
+        brand_name_hint:
+          type: string
+          title: Brand Name Hint
+      type: object
+      required:
+      - tenant_id
+      - vertical_detected
+      - starter_pack
+      - brand_color_hint
+      - brand_name_hint
+      title: SignupResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

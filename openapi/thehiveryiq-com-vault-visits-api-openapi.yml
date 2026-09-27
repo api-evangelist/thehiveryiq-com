@@ -1,0 +1,349 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Vault Visits API
+  version: 0.1.0
+  description: 'Operations tagged vault-visits across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: vault-visits
+paths:
+  /v1/vault/visit:
+    post:
+      tags:
+      - vault-visits
+      summary: Vault Visit
+      description: Record a vault page beacon. One Pushover ping per visitor session.
+      operationId: vault_visit_v1_vault_visit_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisitEvent'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/vault/visits/recent:
+    get:
+      tags:
+      - vault-visits
+      summary: Visits Recent
+      description: 'Operator-only — read recent visits from the JSONL log.
+
+        No auth at this stage; the URL is undocumented. Move behind auth before publishing.'
+      operationId: visits_recent_v1_vault_visits_recent_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/vault/visits/by-slug:
+    get:
+      tags:
+      - vault-visits
+      summary: Visits By Slug
+      description: 'Per-slug visit history. Returns ALL visits for one slug, newest first,
+
+        plus a classification summary that uses the corrected three-tier
+
+        bot-classification logic (LinkedIn-anonymous-aware).'
+      operationId: visits_by_slug_v1_vault_visits_by_slug_get
+      parameters:
+      - name: slug
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Slug
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 200
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/vault/visits/by-company:
+    get:
+      tags:
+      - vault-visits
+      summary: Visits By Company
+      description: 'Aggregate visit summary across ALL tracked slugs. One row per slug.
+
+        Useful for an operator-side dashboard at a glance.'
+      operationId: visits_by_company_v1_vault_visits_by_company_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/vault/visits/health:
+    get:
+      tags:
+      - vault-visits
+      summary: Visits Health
+      operationId: visits_health_v1_vault_visits_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/vault/visits/leaderboard:
+    get:
+      tags:
+      - vault-visits
+      summary: Visits Leaderboard
+      description: 'Slugs ranked by engagement intensity = unique_viewers × open_count.
+
+
+        Re-opens count multiplicatively because the second open by the same
+
+        viewer means absorption; a third open from a NEW fingerprint means
+
+        the vault was forwarded internally — the strongest signal we get.'
+      operationId: visits_leaderboard_v1_vault_visits_leaderboard_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/vault/visits/forwards:
+    get:
+      tags:
+      - vault-visits
+      summary: Visits Forwards
+      description: 'Slugs where the vault has been forwarded to a 2nd+ viewer.
+
+
+        This is the highest signal in the system — a prospect didn''t just
+
+        open the vault, they sent it to a colleague. Returns one row per
+
+        slug with forwarded=True, with the per-viewer breakdown.'
+      operationId: visits_forwards_v1_vault_visits_forwards_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v1/vault/visits/register-label:
+    post:
+      tags:
+      - vault-visits
+      summary: Register Label
+      description: 'Attach a human label to a slug at runtime, no deploy required.
+
+        Persists to disk so the label survives restarts. Code-defined
+
+        SLUG_LABELS still take precedence — this is a runtime overlay for
+
+        new vaults you spin up between deploys.'
+      operationId: register_label_v1_vault_visits_register_label_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabelRegister'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/vault/visits/labels:
+    get:
+      tags:
+      - vault-visits
+      summary: List Labels
+      description: Show all known slug → label mappings (code + runtime).
+      operationId: list_labels_v1_vault_visits_labels_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    LabelRegister:
+      properties:
+        slug:
+          type: string
+          maxLength: 64
+          minLength: 4
+          title: Slug
+        label:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Label
+      type: object
+      required:
+      - slug
+      - label
+      title: LabelRegister
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    VisitEvent:
+      properties:
+        slug:
+          type: string
+          maxLength: 64
+          minLength: 4
+          title: Slug
+        u:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: U
+          description: ?u= tag from URL — primary or fallback identity
+        visitor_session:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Visitor Session
+          description: random ID from sessionStorage
+        referrer:
+          anyOf:
+          - type: string
+            maxLength: 256
+          - type: 'null'
+          title: Referrer
+        event:
+          type: string
+          pattern: ^(open|dwell|scroll|close)$
+          title: Event
+          default: open
+        dwell_s:
+          anyOf:
+          - type: integer
+            maximum: 86400.0
+            minimum: 0.0
+          - type: 'null'
+          title: Dwell S
+        scroll_pct:
+          anyOf:
+          - type: integer
+            maximum: 100.0
+            minimum: 0.0
+          - type: 'null'
+          title: Scroll Pct
+        ua:
+          anyOf:
+          - type: string
+            maxLength: 400
+          - type: 'null'
+          title: Ua
+      type: object
+      required:
+      - slug
+      title: VisitEvent
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

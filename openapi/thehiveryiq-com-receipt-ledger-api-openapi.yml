@@ -1,0 +1,290 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Receipt Ledger API
+  version: 0.1.0
+  description: 'Operations tagged receipt-ledger across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: receipt-ledger
+paths:
+  /v1/receipts:
+    post:
+      tags:
+      - receipt-ledger
+      summary: Append To Ledger
+      description: Append a new entry to the append-only receipt ledger (mock-signed).
+      operationId: append_to_ledger_v1_receipts_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LedgerAppendBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Append To Ledger V1 Receipts Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - receipt-ledger
+      summary: Query Ledger
+      description: Query the receipt ledger with optional filters. Sorted newest-first.
+      operationId: query_ledger_v1_receipts_get
+      parameters:
+      - name: event_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Type
+      - name: supermodel_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Supermodel Id
+      - name: direction
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Direction
+      - name: min_amount
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: number
+            minimum: 0
+          - type: 'null'
+          title: Min Amount
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 1000
+          minimum: 1
+          default: 100
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Query Ledger V1 Receipts Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/receipts/summary:
+    get:
+      tags:
+      - receipt-ledger
+      summary: Ledger Summary
+      description: Aggregate stats over the full receipt ledger.
+      operationId: ledger_summary_v1_receipts_summary_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Ledger Summary V1 Receipts Summary Get
+  /v1/receipts/pubkey:
+    get:
+      tags:
+      - receipt-ledger
+      summary: Ledger Pubkey
+      description: 'Return the Ed25519 public key used to sign every ledger entry.
+
+        Any client can fetch this once and verify all subsequent receipts offline.'
+      operationId: ledger_pubkey_v1_receipts_pubkey_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Ledger Pubkey V1 Receipts Pubkey Get
+  /v1/receipts/verify/{seq}:
+    get:
+      tags:
+      - receipt-ledger
+      summary: Ledger Verify
+      description: 'Offline-style verification: pulls entry {seq}, re-canonicalises the body,
+
+        and verifies the Ed25519 signature against the published pubkey.
+
+        Returns a JSON proof an auditor can replay.'
+      operationId: ledger_verify_v1_receipts_verify__seq__get
+      parameters:
+      - name: seq
+        in: path
+        required: true
+        schema:
+          type: integer
+          title: Seq
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Ledger Verify V1 Receipts Verify  Seq  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    LedgerAppendBody:
+      properties:
+        event_type:
+          type: string
+          title: Event Type
+          description: affordance | bus_offer | bus_pickup | chain_run | manual
+        supermodel_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Supermodel Id
+        supermodel_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Supermodel Name
+        amount_usdc:
+          type: number
+          minimum: 0.0
+          title: Amount Usdc
+          default: 0.0
+        direction:
+          type: string
+          title: Direction
+          description: INBOUND | OUTBOUND | INTERNAL
+        ref_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ref Id
+        ref_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ref Type
+        parent_receipt_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Receipt Hash
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - event_type
+      - direction
+      title: LedgerAppendBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

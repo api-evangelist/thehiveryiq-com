@@ -1,0 +1,532 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Compute Grid API
+  version: 0.1.0
+  description: 'Operations tagged compute-grid across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: compute-grid
+paths:
+  /v1/compute-grid/verify:
+    post:
+      tags:
+      - compute-grid
+      summary: Verify
+      description: 'Verify a zk-proof and return a signed receipt. Spec §3.1 Agent #3.
+
+
+        Pricing: $0.001/proof recorded inside the receipt body.
+
+        Signing: Evaluator wallet (real EIP-191 sign via eth_account).'
+      operationId: verify_v1_compute_grid_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_compute_grid__routes__VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Verify V1 Compute Grid Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compute-grid/capacity:
+    get:
+      tags:
+      - compute-grid
+      summary: Capacity
+      operationId: capacity_v1_compute_grid_capacity_get
+      parameters:
+      - name: n
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 32
+          title: N
+      - name: refresh
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+          title: Refresh
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Capacity V1 Compute Grid Capacity Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compute-grid/agents:
+    get:
+      tags:
+      - compute-grid
+      summary: Agents
+      description: Compute Grid agent registry — 6 operational types, 15 instances.
+      operationId: agents_v1_compute_grid_agents_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Agents V1 Compute Grid Agents Get
+  /v1/compute-grid/providers:
+    get:
+      tags:
+      - compute-grid
+      summary: Providers
+      description: List enabled adapters and their upstream health. Real probes — no mocks.
+      operationId: providers_v1_compute_grid_providers_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Providers V1 Compute Grid Providers Get
+  /v1/compute-grid/quote:
+    post:
+      tags:
+      - compute-grid
+      summary: Quote
+      description: 'Gather quotes across enabled providers WITHOUT running the auction
+
+        (no proof, no ledger write). Useful for price discovery.'
+      operationId: quote_v1_compute_grid_quote_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkloadRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Quote V1 Compute Grid Quote Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compute-grid/solve:
+    post:
+      tags:
+      - compute-grid
+      summary: Solve Endpoint
+      description: 'Run the cross-pool auction and return the chosen provider, Groth16-shaped
+
+        selection proof, signed receipt, and settlement path.
+
+
+        Set persist=false to skip ledger write (probe mode).'
+      operationId: solve_endpoint_v1_compute_grid_solve_post
+      parameters:
+      - name: persist
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+          title: Persist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkloadRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Solve Endpoint V1 Compute Grid Solve Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compute-grid/book:
+    post:
+      tags:
+      - compute-grid
+      summary: Book
+      description: 'Reserve compute with the chosen provider. Real adapters; reservation paths
+
+        are gated behind provider keys. If the upstream key is not configured we
+
+        return 503 with the missing-key error rather than faking a booking.'
+      operationId: book_v1_compute_grid_book_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_compute_grid__routes__BookRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Book V1 Compute Grid Book Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compute-grid/status:
+    get:
+      tags:
+      - compute-grid
+      summary: Status Endpoint
+      description: Poll a booking by id. Returns 503 until book() is fully wired.
+      operationId: status_endpoint_v1_compute_grid_status_get
+      parameters:
+      - name: booking_id
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Booking Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Status Endpoint V1 Compute Grid Status Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compute-grid/release:
+    post:
+      tags:
+      - compute-grid
+      summary: Release Endpoint
+      operationId: release_endpoint_v1_compute_grid_release_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Release Endpoint V1 Compute Grid Release Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compute-grid/audit:
+    get:
+      tags:
+      - compute-grid
+      summary: Audit
+      description: 'Read auction history from the canonical receipt ledger.
+
+
+        Returns the most recent compute_grid_auction entries with their cost_usdc
+
+        telemetry. No proof envelopes (those live in the auction-result body and
+
+        are returned by /solve).'
+      operationId: audit_v1_compute_grid_audit_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Audit V1 Compute Grid Audit Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/compute-grid/verify-selection:
+    post:
+      tags:
+      - compute-grid
+      summary: Verify Selection
+      description: 'Independent verifier of a selection proof. Validates envelope structure
+
+        + signs a verification receipt. Reuses /verify under the hood — distinct
+
+        endpoint so callers don''t need to construct a claim manually.'
+      operationId: verify_selection_v1_compute_grid_verify_selection_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifySelectionRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Verify Selection V1 Compute Grid Verify Selection Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    WorkloadRequest:
+      properties:
+        gpu_type:
+          type: string
+          title: Gpu Type
+          description: cpu | rtx_4090 | h100 | a100 | l40s | rtx_3090 | rtx_a6000
+          default: cpu
+        cpu_cores:
+          type: integer
+          minimum: 1.0
+          title: Cpu Cores
+          default: 1
+        ram_gb:
+          type: integer
+          minimum: 1.0
+          title: Ram Gb
+          default: 4
+        duration_hours:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Duration Hours
+          default: 1.0
+        budget_usd:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Budget Usd
+        deadline_unix:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Deadline Unix
+        job_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Job Id
+        submitter_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Submitter Did
+      type: object
+      title: WorkloadRequest
+    hivemorph__hive_compute_grid__routes__VerifyRequest:
+      properties:
+        proof:
+          title: Proof
+          description: Groth16 proof envelope (dict or 8-elem list)
+        public_inputs:
+          items: {}
+          type: array
+          title: Public Inputs
+          description: Public inputs (BN254 field elements)
+        claim:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Claim
+          description: Optional claim metadata
+        proof_system:
+          type: string
+          title: Proof System
+          description: Proof system identifier
+          default: groth16
+      type: object
+      required:
+      - proof
+      - public_inputs
+      title: VerifyRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    hivemorph__hive_compute_grid__routes__BookRequest:
+      properties:
+        auction_id:
+          type: string
+          title: Auction Id
+          description: Auction id from /solve response
+        provider:
+          type: string
+          title: Provider
+          description: Chosen provider id (must match auction winner)
+        quote:
+          additionalProperties: true
+          type: object
+          title: Quote
+          description: The chosen Quote dict from /solve
+        deadline_unix:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: Deadline Unix
+      type: object
+      required:
+      - auction_id
+      - provider
+      - quote
+      - deadline_unix
+      title: BookRequest
+    ReleaseRequest:
+      properties:
+        provider:
+          type: string
+          title: Provider
+        booking_id:
+          type: string
+          title: Booking Id
+      type: object
+      required:
+      - provider
+      - booking_id
+      title: ReleaseRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    VerifySelectionRequest:
+      properties:
+        proof:
+          title: Proof
+          description: Groth16 envelope from /solve.proof_envelope
+        public_inputs:
+          items: {}
+          type: array
+          title: Public Inputs
+          description: From /solve.proof_public_inputs
+      type: object
+      required:
+      - proof
+      - public_inputs
+      title: VerifySelectionRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

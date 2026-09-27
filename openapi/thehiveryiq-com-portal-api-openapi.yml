@@ -1,0 +1,205 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Portal API
+  version: 0.1.0
+  description: 'Operations tagged portal across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: Portal
+paths:
+  /v1/portal/{tenant_id}/kpi:
+    get:
+      tags:
+      - Portal
+      summary: Portal Kpi
+      description: KPI snapshot for a tenant. Deterministic synthetic data seeded by tenant_id.
+      operationId: portal_kpi_v1_portal__tenant_id__kpi_get
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Portal Kpi V1 Portal  Tenant Id  Kpi Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/{tenant_id}/balance:
+    get:
+      tags:
+      - Portal
+      summary: Portal Balance
+      description: On-chain balance and billing state for a tenant.
+      operationId: portal_balance_v1_portal__tenant_id__balance_get
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Portal Balance V1 Portal  Tenant Id  Balance Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/{tenant_id}/api-key/rotate:
+    post:
+      tags:
+      - Portal
+      summary: Portal Rotate Key
+      description: 'Rotate the API key for a tenant.
+
+        The new key is returned; the previous key keeps working for 60 seconds
+
+        (grace window) to allow in-flight requests to complete.'
+      operationId: portal_rotate_key_v1_portal__tenant_id__api_key_rotate_post
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Portal Rotate Key V1 Portal  Tenant Id  Api Key Rotate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/portal/{tenant_id}/api-key/revoke:
+    post:
+      tags:
+      - Portal
+      summary: Portal Revoke Key
+      description: 'Revoke all active API keys for a tenant immediately.
+
+        Pass { "key": "tk_live_..." } to revoke a specific key; omit to revoke all.'
+      operationId: portal_revoke_key_v1_portal__tenant_id__api_key_revoke_post
+      parameters:
+      - name: tenant_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Tenant Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              anyOf:
+              - type: object
+                additionalProperties: true
+              - type: 'null'
+              title: Body
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Portal Revoke Key V1 Portal  Tenant Id  Api Key Revoke Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

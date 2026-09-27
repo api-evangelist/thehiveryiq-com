@@ -1,0 +1,297 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Xcalibur Membrane API
+  version: 0.1.0
+  description: 'Operations tagged xcalibur-membrane across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: xcalibur-membrane
+paths:
+  /v1/xcalibur/membrane/health:
+    get:
+      tags:
+      - xcalibur-membrane
+      summary: Health
+      description: Liveness probe for the MEMBRANE primitive.
+      operationId: health_v1_xcalibur_membrane_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Xcalibur Membrane Health Get
+  /v1/xcalibur/membrane/score:
+    post:
+      tags:
+      - xcalibur-membrane
+      summary: Score
+      description: 'Score an LLM output against sensitivity-labelled prompt spans.
+
+
+        Returns the decision (BLOCK / WARN / PASS), IFS, and a signed receipt.'
+      operationId: score_v1_xcalibur_membrane_score_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoreRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Score V1 Xcalibur Membrane Score Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/xcalibur/membrane/verify:
+    post:
+      tags:
+      - xcalibur-membrane
+      summary: Verify
+      description: 'Verify a MEMBRANE receipt.
+
+
+        Checks:
+
+        - signature_ok: Ed25519 signature is valid against receipt body
+
+        - math_ok: recorded decision is consistent with IFS and thresholds'
+      operationId: verify_v1_xcalibur_membrane_verify_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__xcalibur__membrane_routes__VerifyRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Verify V1 Xcalibur Membrane Verify Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/xcalibur/membrane/enforce:
+    post:
+      tags:
+      - xcalibur-membrane
+      summary: Enforce
+      description: 'Gate endpoint: runs scoring and either blocks or passes the output.
+
+
+        - BLOCK → HTTP 403 with receipt
+
+        - WARN / PASS → HTTP 200 with {"output": ..., "receipt": ...}'
+      operationId: enforce_v1_xcalibur_membrane_enforce_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnforceRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/xcalibur/membrane/canary-eval:
+    get:
+      tags:
+      - xcalibur-membrane
+      summary: Canary Eval
+      description: 'Run the built-in adversarial canary test corpus.
+
+
+        Returns sensitivity (leak detection rate), specificity (clean pass rate),
+
+        and per-case results. This is the seed of the MEMBRANE-EVAL-500 benchmark.'
+      operationId: canary_eval_v1_xcalibur_membrane_canary_eval_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Canary Eval V1 Xcalibur Membrane Canary Eval Get
+components:
+  schemas:
+    SpanModel:
+      properties:
+        text:
+          type: string
+          maxLength: 32000
+          minLength: 1
+          title: Text
+        label:
+          type: string
+          maxLength: 64
+          title: Label
+          default: PUBLIC
+      type: object
+      required:
+      - text
+      title: SpanModel
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EnforceRequest:
+      properties:
+        spans:
+          items:
+            $ref: '#/components/schemas/SpanModel'
+          type: array
+          minItems: 1
+          title: Spans
+        output:
+          type: string
+          maxLength: 128000
+          minLength: 1
+          title: Output
+        embedding_model_id:
+          type: string
+          title: Embedding Model Id
+          default: tfidf-deterministic-v1
+        policy:
+          $ref: '#/components/schemas/PolicyModel'
+      type: object
+      required:
+      - spans
+      - output
+      title: EnforceRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PolicyModel:
+      properties:
+        tau_block:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Tau Block
+          default: 0.18
+        tau_warn:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Tau Warn
+          default: 0.06
+      type: object
+      title: PolicyModel
+    hivemorph__xcalibur__membrane_routes__VerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+      type: object
+      required:
+      - receipt
+      title: VerifyRequest
+    ScoreRequest:
+      properties:
+        spans:
+          items:
+            $ref: '#/components/schemas/SpanModel'
+          type: array
+          minItems: 1
+          title: Spans
+        output:
+          type: string
+          maxLength: 128000
+          minLength: 1
+          title: Output
+        embedding_model_id:
+          type: string
+          title: Embedding Model Id
+          default: tfidf-deterministic-v1
+        policy:
+          $ref: '#/components/schemas/PolicyModel'
+      type: object
+      required:
+      - spans
+      - output
+      title: ScoreRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

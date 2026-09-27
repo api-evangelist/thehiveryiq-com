@@ -1,0 +1,175 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Smsh Learned API
+  version: 0.1.0
+  description: 'Operations tagged smsh-learned across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: smsh-learned
+paths:
+  /v1/smsh/judge:
+    post:
+      tags:
+      - smsh-learned
+      summary: Score span importance via live judge
+      description: 'Split the input text into spans and ask a live frontier model to score each span 0-100 for how critical it is to the downstream answer. Tier2 call: $0.005 + judge model cost. Powered by smsh-judge-v1 prompt. LLMLingua-2 family.'
+      operationId: smsh_judge_v1_smsh_judge_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_smsh___judge_routes_patch__JudgeRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/smsh/learned_prune:
+    post:
+      tags:
+      - smsh-learned
+      summary: Learned token-importance pruning
+      description: 'Run judge_span_importance then drop lowest-importance spans until target compression ratio is hit. Returns pruned text and full audit trail. Tier2 call: $0.005 + judge model cost. This is the smsh-v2 learned pruning layer — drop-in complement to smsh-std rule-based.'
+      operationId: smsh_learned_prune_v1_smsh_learned_prune_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LearnedPruneRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    LearnedPruneRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: The prompt text to prune.
+        target_ratio:
+          type: number
+          maximum: 0.99
+          minimum: 0.1
+          title: Target Ratio
+          description: Target compression ratio (output tokens / input tokens). Default 0.5 = 50 percent of original.
+          default: 0.5
+        importance_floor:
+          type: integer
+          maximum: 100.0
+          minimum: 0.0
+          title: Importance Floor
+          description: Spans with importance below this floor are eligible to drop. Default 30. Raise to 40-50 for higher fidelity.
+          default: 30
+        model:
+          type: string
+          title: Model
+          description: Model alias for the judge. See /v1/smsh/judge for options.
+          default: auto
+      type: object
+      required:
+      - text
+      title: LearnedPruneRequest
+    hivemorph__hive_smsh___judge_routes_patch__JudgeRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: The prompt text to judge for span importance.
+        max_spans:
+          type: integer
+          maximum: 200.0
+          minimum: 1.0
+          title: Max Spans
+          description: Maximum number of spans to segment into. Default 60.
+          default: 60
+        model:
+          type: string
+          title: Model
+          description: 'Model alias for the judge. ''auto'' uses mistral-7b (cheapest). Options: mistral-7b, llama-3-8b, gemini-2-0-flash, gpt-4o-mini, qwen-2-5-72b, mixtral-8x7b, llama-3-70b, claude-3-5-haiku, claude-3-5-sonnet, gpt-4o, claude-3-opus.'
+          default: auto
+      type: object
+      required:
+      - text
+      title: JudgeRequest
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

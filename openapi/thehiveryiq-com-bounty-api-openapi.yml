@@ -1,0 +1,500 @@
+openapi: 3.2.0
+info:
+  title: Thehiveryiq Com Bounty API
+  version: 0.1.0
+  description: 'Operations tagged bounty across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://receipts.thehiveryiq.com
+  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
+tags:
+- name: bounty
+paths:
+  /v1/bounty/program:
+    get:
+      tags:
+      - bounty
+      summary: Program
+      operationId: program_v1_bounty_program_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Program V1 Bounty Program Get
+  /v1/bounty/register:
+    post:
+      tags:
+      - bounty
+      summary: Register
+      operationId: register_v1_bounty_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/hivemorph__hive_bounty__routes__RegisterBody'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Register V1 Bounty Register Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bounty/leaderboard:
+    get:
+      tags:
+      - bounty
+      summary: Leaderboard
+      operationId: leaderboard_v1_bounty_leaderboard_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Leaderboard V1 Bounty Leaderboard Get
+  /v1/bounty/status/{code}:
+    get:
+      tags:
+      - bounty
+      summary: Status
+      operationId: status_v1_bounty_status__code__get
+      parameters:
+      - name: code
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Code
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Status V1 Bounty Status  Code  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bounty/admin/confirm:
+    post:
+      tags:
+      - bounty
+      summary: Admin Confirm
+      operationId: admin_confirm_v1_bounty_admin_confirm_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Admin Confirm V1 Bounty Admin Confirm Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bounty/admin/attribute:
+    post:
+      tags:
+      - bounty
+      summary: Admin Attribute
+      operationId: admin_attribute_v1_bounty_admin_attribute_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttributeBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Admin Attribute V1 Bounty Admin Attribute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bounty/admin/payout:
+    post:
+      tags:
+      - bounty
+      summary: Admin Payout
+      operationId: admin_payout_v1_bounty_admin_payout_post
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayoutBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Admin Payout V1 Bounty Admin Payout Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bounty/health:
+    get:
+      tags:
+      - bounty
+      summary: Health
+      operationId: health_v1_bounty_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Health V1 Bounty Health Get
+  /v1/bounty/:
+    get:
+      tags:
+      - bounty
+      summary: Bounty Root
+      description: Bare /v1/bounty answers with a useful map instead of 404.
+      operationId: bounty_root_v1_bounty__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Bounty Root V1 Bounty  Get
+  /v1/bounty:
+    get:
+      tags:
+      - bounty
+      summary: Bounty Root
+      description: Bare /v1/bounty answers with a useful map instead of 404.
+      operationId: bounty_root_v1_bounty_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Bounty Root V1 Bounty Get
+  /v1/bounty/status/:
+    get:
+      tags:
+      - bounty
+      summary: Status Root
+      description: Catch the common mistake of GET /v1/bounty/status with no code.
+      operationId: status_root_v1_bounty_status__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Status Root V1 Bounty Status  Get
+  /v1/bounty/status:
+    get:
+      tags:
+      - bounty
+      summary: Status Root
+      description: Catch the common mistake of GET /v1/bounty/status with no code.
+      operationId: status_root_v1_bounty_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Status Root V1 Bounty Status Get
+  /v1/bounty/admin/queue:
+    get:
+      tags:
+      - bounty
+      summary: Admin Queue
+      operationId: admin_queue_v1_bounty_admin_queue_get
+      parameters:
+      - name: authorization
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+                title: Response Admin Queue V1 Bounty Admin Queue Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /v1/bounty/lookup:
+    post:
+      tags:
+      - bounty
+      summary: Lookup
+      description: 'Public recovery: if a submitter lost their code, return it by repo_url.'
+      operationId: lookup_v1_bounty_lookup_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LookupBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                additionalProperties: true
+                type: object
+                title: Response Lookup V1 Bounty Lookup Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    PayoutBody:
+      properties:
+        referrer_code:
+          type: string
+          title: Referrer Code
+        kind:
+          type: string
+          title: Kind
+          description: upfront | commission
+        amount_usdc:
+          type: number
+          title: Amount Usdc
+        tx_hash:
+          type: string
+          title: Tx Hash
+      type: object
+      required:
+      - referrer_code
+      - kind
+      - amount_usdc
+      - tx_hash
+      title: PayoutBody
+    LookupBody:
+      properties:
+        repo_url:
+          type: string
+          title: Repo Url
+      type: object
+      required:
+      - repo_url
+      title: LookupBody
+    ConfirmBody:
+      properties:
+        referrer_code:
+          type: string
+          title: Referrer Code
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - referrer_code
+      title: ConfirmBody
+    AttributeBody:
+      properties:
+        referrer_code:
+          type: string
+          title: Referrer Code
+        receipt_id:
+          type: string
+          title: Receipt Id
+        value_usdc:
+          type: number
+          title: Value Usdc
+      type: object
+      required:
+      - referrer_code
+      - receipt_id
+      - value_usdc
+      title: AttributeBody
+      description: Called by the receipt issuer (or a backfill cron) to attribute a paid mint.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    hivemorph__hive_bounty__routes__RegisterBody:
+      properties:
+        handle:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Handle
+          description: X handle e.g. @somebody
+        repo_url:
+          type: string
+          title: Repo Url
+          description: Public GitHub repo URL of the agent
+        verify_url:
+          type: string
+          title: Verify Url
+          description: https://thehiveryiq.com/verify/?id=<receipt_id> URL
+        wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet
+          description: Base 8453 wallet (0x...) — required before payout
+        framework:
+          type: string
+          title: Framework
+          description: 'Primary framework: langchain | langgraph | crewai'
+      type: object
+      required:
+      - handle
+      - repo_url
+      - verify_url
+      - framework
+      title: RegisterBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- thehiveryiq-com-hivemorph-openapi.json
+- thehiveryiq-com-hivemorph-openapi.yml
+x-mpp:
+  realm: api.thehiveryiq.com
+  payment:
+    method: tempo
+    currency: '0x20c000000000000000000000b9537d11c60e8b50'
+    decimals: 6
+    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+  rails:
+  - x402
+  - mpp
+  categories:
+  - compute
+  - inference
+  integration: first-party
+  tags:
+  - inference
+  - openai-compatible
+  - llm
+  - embeddings
+  - compute
+  - stream-a
+  - settleable
+  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
