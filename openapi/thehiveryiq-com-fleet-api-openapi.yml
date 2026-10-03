@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Fleet API
+  title: HiveMorph v0.1 Fleet API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged fleet across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: Fleet
 paths:
@@ -410,6 +407,90 @@ paths:
                 title: Response Fleet Stats V1 Fleet Stats Get
 components:
   schemas:
+    MothershipIntakeBody:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID or 0x address of the arriving agent
+        need:
+          type: string
+          title: Need
+          description: Natural language need declaration from the agent
+        consent:
+          type: boolean
+          title: Consent
+          description: Agent opt-in consent (MUST be True)
+          default: true
+        trawler_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Trawler Id
+          description: Trawler that attracted this agent
+        source_type:
+          type: string
+          title: Source Type
+          description: 'Source primitive: ''net'' | ''pot'' | ''direct'''
+          default: net
+        source_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source Id
+          description: net_id or pot_id that sourced this agent
+        tip_usdc:
+          type: number
+          minimum: 0.0
+          title: Tip Usdc
+          description: Mock USDC tip/credit to open for the agent
+          default: 0.5
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - agent_did
+      - need
+      title: MothershipIntakeBody
+    PotDropBody:
+      properties:
+        trawler_id:
+          type: string
+          title: Trawler Id
+          description: Parent trawler ID
+        location:
+          type: string
+          title: Location
+          description: Fixed location, e.g. 'registry:npm/@hivemorph/sdk'
+        bait_description:
+          type: string
+          title: Bait Description
+          description: Rich bait — what value you're dangling
+        economic_payload_usdc:
+          type: number
+          minimum: 0.0
+          title: Economic Payload Usdc
+          description: Mock USDC reward signal for agents who step aboard
+          default: 0.5
+        ttl_sec:
+          type: integer
+          maximum: 31536000.0
+          minimum: 60.0
+          title: Ttl Sec
+          description: Pot lifetime in seconds (60–365d)
+          default: 604800
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - trawler_id
+      - location
+      - bait_description
+      title: PotDropBody
     NetCastBody:
       properties:
         trawler_id:
@@ -463,53 +544,6 @@ components:
       - region
       - attractant
       title: NetCastBody
-    MothershipIntakeBody:
-      properties:
-        agent_did:
-          type: string
-          title: Agent Did
-          description: DID or 0x address of the arriving agent
-        need:
-          type: string
-          title: Need
-          description: Natural language need declaration from the agent
-        consent:
-          type: boolean
-          title: Consent
-          description: Agent opt-in consent (MUST be True)
-          default: true
-        trawler_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Trawler Id
-          description: Trawler that attracted this agent
-        source_type:
-          type: string
-          title: Source Type
-          description: 'Source primitive: ''net'' | ''pot'' | ''direct'''
-          default: net
-        source_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source Id
-          description: net_id or pot_id that sourced this agent
-        tip_usdc:
-          type: number
-          minimum: 0.0
-          title: Tip Usdc
-          description: Mock USDC tip/credit to open for the agent
-          default: 0.5
-        metadata:
-          additionalProperties: true
-          type: object
-          title: Metadata
-      type: object
-      required:
-      - agent_did
-      - need
-      title: MothershipIntakeBody
     TrawlerLaunchBody:
       properties:
         operator_did:
@@ -530,43 +564,15 @@ components:
       required:
       - operator_did
       title: TrawlerLaunchBody
-    PotDropBody:
+    HTTPValidationError:
       properties:
-        trawler_id:
-          type: string
-          title: Trawler Id
-          description: Parent trawler ID
-        location:
-          type: string
-          title: Location
-          description: Fixed location, e.g. 'registry:npm/@hivemorph/sdk'
-        bait_description:
-          type: string
-          title: Bait Description
-          description: Rich bait — what value you're dangling
-        economic_payload_usdc:
-          type: number
-          minimum: 0.0
-          title: Economic Payload Usdc
-          description: Mock USDC reward signal for agents who step aboard
-          default: 0.5
-        ttl_sec:
-          type: integer
-          maximum: 31536000.0
-          minimum: 60.0
-          title: Ttl Sec
-          description: Pot lifetime in seconds (60–365d)
-          default: 604800
-        metadata:
-          additionalProperties: true
-          type: object
-          title: Metadata
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - trawler_id
-      - location
-      - bait_description
-      title: PotDropBody
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -593,38 +599,3 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

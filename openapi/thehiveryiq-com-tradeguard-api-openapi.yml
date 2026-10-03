@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Tradeguard API
+  title: HiveMorph v0.1 Tradeguard API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged Tradeguard across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: Tradeguard
 paths:
@@ -324,99 +321,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    TradeAttestResponse:
-      properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        trader_did:
-          type: string
-          title: Trader Did
-        firm_did:
-          type: string
-          title: Firm Did
-        algo_id:
-          type: string
-          title: Algo Id
-        order_event_hash:
-          type: string
-          title: Order Event Hash
-        event_type:
-          type: string
-          title: Event Type
-        venue:
-          type: string
-          title: Venue
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        price_usd:
-          type: number
-          title: Price Usd
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-      type: object
-      required:
-      - attestation_id
-      - trader_did
-      - firm_did
-      - algo_id
-      - order_event_hash
-      - event_type
-      - venue
-      - timestamp_iso
-      - price_usd
-      - receipt_envelope
-      title: TradeAttestResponse
-    hivemorph__hive_tradeguard__models__VerifyResponse:
-      properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        trader_did:
-          type: string
-          title: Trader Did
-        firm_did:
-          type: string
-          title: Firm Did
-        algo_id:
-          type: string
-          title: Algo Id
-        order_event_hash:
-          type: string
-          title: Order Event Hash
-        event_type:
-          type: string
-          title: Event Type
-        venue:
-          type: string
-          title: Venue
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-        verification:
-          additionalProperties: true
-          type: object
-          title: Verification
-      type: object
-      required:
-      - attestation_id
-      - trader_did
-      - firm_did
-      - algo_id
-      - order_event_hash
-      - event_type
-      - venue
-      - timestamp_iso
-      - receipt_envelope
-      - verification
-      title: VerifyResponse
     TradeAttestRequest:
       properties:
         trader_did:
@@ -528,6 +432,108 @@ components:
       - event_type
       - venue
       title: TradeAttestRequest
+    TradeAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        trader_did:
+          type: string
+          title: Trader Did
+        firm_did:
+          type: string
+          title: Firm Did
+        algo_id:
+          type: string
+          title: Algo Id
+        order_event_hash:
+          type: string
+          title: Order Event Hash
+        event_type:
+          type: string
+          title: Event Type
+        venue:
+          type: string
+          title: Venue
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+      type: object
+      required:
+      - attestation_id
+      - trader_did
+      - firm_did
+      - algo_id
+      - order_event_hash
+      - event_type
+      - venue
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: TradeAttestResponse
+    hivemorph__hive_tradeguard__models__VerifyResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        trader_did:
+          type: string
+          title: Trader Did
+        firm_did:
+          type: string
+          title: Firm Did
+        algo_id:
+          type: string
+          title: Algo Id
+        order_event_hash:
+          type: string
+          title: Order Event Hash
+        event_type:
+          type: string
+          title: Event Type
+        venue:
+          type: string
+          title: Venue
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        verification:
+          additionalProperties: true
+          type: object
+          title: Verification
+      type: object
+      required:
+      - attestation_id
+      - trader_did
+      - firm_did
+      - algo_id
+      - order_event_hash
+      - event_type
+      - venue
+      - timestamp_iso
+      - receipt_envelope
+      - verification
+      title: VerifyResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -554,38 +560,3 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

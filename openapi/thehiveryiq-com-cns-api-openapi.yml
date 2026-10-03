@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Cns API
+  title: HiveMorph v0.1 Cns API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged cns across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: cns
 paths:
@@ -144,6 +141,81 @@ components:
       - compliance_bundle
       - settlement_envelope
       title: TransferResponse
+    ComplianceEnvelopeSummary:
+      properties:
+        control_id:
+          type: string
+          title: Control Id
+        auditor:
+          type: string
+          title: Auditor
+        pass:
+          type: boolean
+          title: Pass
+        score:
+          type: number
+          title: Score
+        sha3_256:
+          type: string
+          title: Sha3 256
+        ed25519_signature:
+          type: string
+          title: Ed25519 Signature
+        mldsa65_signature:
+          type: string
+          title: Mldsa65 Signature
+        duration_ms:
+          type: number
+          title: Duration Ms
+      type: object
+      required:
+      - control_id
+      - auditor
+      - pass
+      - score
+      - sha3_256
+      - ed25519_signature
+      - mldsa65_signature
+      - duration_ms
+      title: ComplianceEnvelopeSummary
+    SettlementEnvelope:
+      properties:
+        sha3_256:
+          type: string
+          title: Sha3 256
+        ed25519_signature:
+          type: string
+          title: Ed25519 Signature
+        mldsa65_signature:
+          type: string
+          title: Mldsa65 Signature
+        sphere_tier:
+          type: string
+          title: Sphere Tier
+        sphere_cost_usd:
+          type: number
+          title: Sphere Cost Usd
+        anchor_tx:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Anchor Tx
+        anchor_chain:
+          type: string
+          title: Anchor Chain
+        verifier_url:
+          type: string
+          title: Verifier Url
+      type: object
+      required:
+      - sha3_256
+      - ed25519_signature
+      - mldsa65_signature
+      - sphere_tier
+      - sphere_cost_usd
+      - anchor_chain
+      - verifier_url
+      title: SettlementEnvelope
     ComplianceBundle:
       properties:
         controls_audited:
@@ -227,43 +299,15 @@ components:
       - asset
       - amount
       title: TransferRequest
-    ComplianceEnvelopeSummary:
+    HTTPValidationError:
       properties:
-        control_id:
-          type: string
-          title: Control Id
-        auditor:
-          type: string
-          title: Auditor
-        pass:
-          type: boolean
-          title: Pass
-        score:
-          type: number
-          title: Score
-        sha3_256:
-          type: string
-          title: Sha3 256
-        ed25519_signature:
-          type: string
-          title: Ed25519 Signature
-        mldsa65_signature:
-          type: string
-          title: Mldsa65 Signature
-        duration_ms:
-          type: number
-          title: Duration Ms
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - control_id
-      - auditor
-      - pass
-      - score
-      - sha3_256
-      - ed25519_signature
-      - mldsa65_signature
-      - duration_ms
-      title: ComplianceEnvelopeSummary
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -290,76 +334,3 @@ components:
       - msg
       - type
       title: ValidationError
-    SettlementEnvelope:
-      properties:
-        sha3_256:
-          type: string
-          title: Sha3 256
-        ed25519_signature:
-          type: string
-          title: Ed25519 Signature
-        mldsa65_signature:
-          type: string
-          title: Mldsa65 Signature
-        sphere_tier:
-          type: string
-          title: Sphere Tier
-        sphere_cost_usd:
-          type: number
-          title: Sphere Cost Usd
-        anchor_tx:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Anchor Tx
-        anchor_chain:
-          type: string
-          title: Anchor Chain
-        verifier_url:
-          type: string
-          title: Verifier Url
-      type: object
-      required:
-      - sha3_256
-      - ed25519_signature
-      - mldsa65_signature
-      - sphere_tier
-      - sphere_cost_usd
-      - anchor_chain
-      - verifier_url
-      title: SettlementEnvelope
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

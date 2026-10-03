@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Provebirth API
+  title: HiveMorph v0.1 Provebirth API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged provebirth across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: provebirth
 paths:
@@ -375,59 +372,6 @@ components:
       - birth_cert_valid
       - action_count
       title: LineageVerifyResponse
-    BirthCertVerifyRequest:
-      properties:
-        cert_id:
-          type: string
-          title: Cert Id
-          description: The cert_id to verify signatures for
-      type: object
-      required:
-      - cert_id
-      title: BirthCertVerifyRequest
-    ActionAttestRequest:
-      properties:
-        agent_did:
-          type: string
-          title: Agent Did
-          description: DID of the acting agent
-        birth_cert_id:
-          type: string
-          title: Birth Cert Id
-          description: cert_id of the agent's birth certificate (chain pointer)
-        prior_action_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Prior Action Id
-          description: action_id of the immediately prior action (chain pointer, optional)
-        action_type:
-          type: string
-          title: Action Type
-          description: 'Action category: tool_call, payment, decision, output_emit'
-        action_hash:
-          type: string
-          maxLength: 64
-          minLength: 64
-          title: Action Hash
-          description: sha256 hex of the canonical action payload
-        cosmic_tier:
-          type: boolean
-          title: Cosmic Tier
-          description: Use Cosmic tier pricing
-          default: false
-        metadata:
-          additionalProperties: true
-          type: object
-          title: Metadata
-      type: object
-      required:
-      - agent_did
-      - birth_cert_id
-      - action_type
-      - action_hash
-      title: ActionAttestRequest
-      description: Attest an agent action with a chain pointer back to its birth certificate.
     ActionAttestResponse:
       properties:
         action_id:
@@ -479,6 +423,16 @@ components:
       - price_usd
       - receipt_envelope
       title: ActionAttestResponse
+    BirthCertVerifyRequest:
+      properties:
+        cert_id:
+          type: string
+          title: Cert Id
+          description: The cert_id to verify signatures for
+      type: object
+      required:
+      - cert_id
+      title: BirthCertVerifyRequest
     BirthCertIssueResponse:
       properties:
         cert_id:
@@ -548,58 +502,6 @@ components:
       - price_usd
       - receipt_envelope
       title: BirthCertIssueResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    LineageVerifyRequest:
-      properties:
-        agent_did:
-          type: string
-          title: Agent Did
-          description: Agent DID to verify lineage for
-        cert_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cert Id
-          description: Specific cert_id to anchor verification (uses latest if omitted)
-      type: object
-      required:
-      - agent_did
-      title: LineageVerifyRequest
-      description: 'Verify the full chain for an agent: birth cert + all actions.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     BirthCertIssueRequest:
       properties:
         agent_did:
@@ -654,29 +556,98 @@ components:
       - deployment_target
       title: BirthCertIssueRequest
       description: Request to issue a dual-signed agent birth certificate.
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+    LineageVerifyRequest:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: Agent DID to verify lineage for
+        cert_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cert Id
+          description: Specific cert_id to anchor verification (uses latest if omitted)
+      type: object
+      required:
+      - agent_did
+      title: LineageVerifyRequest
+      description: 'Verify the full chain for an agent: birth cert + all actions.'
+    ActionAttestRequest:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID of the acting agent
+        birth_cert_id:
+          type: string
+          title: Birth Cert Id
+          description: cert_id of the agent's birth certificate (chain pointer)
+        prior_action_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prior Action Id
+          description: action_id of the immediately prior action (chain pointer, optional)
+        action_type:
+          type: string
+          title: Action Type
+          description: 'Action category: tool_call, payment, decision, output_emit'
+        action_hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          title: Action Hash
+          description: sha256 hex of the canonical action payload
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          description: Use Cosmic tier pricing
+          default: false
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - agent_did
+      - birth_cert_id
+      - action_type
+      - action_hash
+      title: ActionAttestRequest
+      description: Attest an agent action with a chain pointer back to its birth certificate.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

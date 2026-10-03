@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com R3 Delegation API
+  title: HiveMorph v0.1 R3 Delegation API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged r3-delegation across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: r3-delegation
 paths:
@@ -208,41 +205,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    OperatorSignReq:
-      properties:
-        envelope:
-          additionalProperties: true
-          type: object
-          title: Envelope
-          description: Unsigned or partially-signed envelope
-        operator_signature:
-          type: string
-          title: Operator Signature
-          description: base64url Ed25519 signature over canonical envelope
-        operator_pubkey:
-          type: string
-          title: Operator Pubkey
-          description: base64url Ed25519 public key
-      type: object
-      required:
-      - envelope
-      - operator_signature
-      - operator_pubkey
-      title: OperatorSignReq
-    FirewallEvalReq:
-      properties:
-        envelope:
-          additionalProperties: true
-          type: object
-          title: Envelope
-        request:
-          additionalProperties: true
-          type: object
-          title: Request
-      type: object
-      required:
-      - envelope
-      title: FirewallEvalReq
     hivemorph__hive_r3__routes__VerifyReq:
       properties:
         envelope:
@@ -309,32 +271,27 @@ components:
       required:
       - agent_id
       title: IssueReq
-    ValidationError:
+    OperatorSignReq:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
+        envelope:
+          additionalProperties: true
           type: object
-          title: Context
+          title: Envelope
+          description: Unsigned or partially-signed envelope
+        operator_signature:
+          type: string
+          title: Operator Signature
+          description: base64url Ed25519 signature over canonical envelope
+        operator_pubkey:
+          type: string
+          title: Operator Pubkey
+          description: base64url Ed25519 public key
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - envelope
+      - operator_signature
+      - operator_pubkey
+      title: OperatorSignReq
     DelegationCheckReq:
       properties:
         jti:
@@ -375,29 +332,43 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    FirewallEvalReq:
+      properties:
+        envelope:
+          additionalProperties: true
+          type: object
+          title: Envelope
+        request:
+          additionalProperties: true
+          type: object
+          title: Request
+      type: object
+      required:
+      - envelope
+      title: FirewallEvalReq

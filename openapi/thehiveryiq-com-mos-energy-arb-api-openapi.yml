@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Mos Energy Arb API
+  title: HiveMorph v0.1 Mos Energy Arb API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged mos-energy-arb across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: mos-energy-arb
 paths:
@@ -150,15 +147,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     UtilityPriceBody:
       properties:
         site_did:
@@ -205,6 +193,37 @@ components:
         The site operator pushes their current electricity rate. In v0.1 this is a
 
         manual push; v0.2 will integrate automatic utility API polling.'
+    BillingCycleBody:
+      properties:
+        billing_month:
+          type: string
+          pattern: ^\d{4}-\d{2}$
+          title: Billing Month
+          description: ISO year-month string, e.g. '2026-04'.
+        dry_run:
+          type: boolean
+          title: Dry Run
+          description: If true, compute invoices but do not write records.
+          default: false
+      type: object
+      required:
+      - billing_month
+      title: BillingCycleBody
+      description: 'POST /v1/mos/energy-arb/billing/cycle
+
+
+        Admin-only trigger (HIVE_INTERNAL_DRIVER_KEY). Records a monthly savings
+
+        invoice per site. Does NOT charge; billing rails land in v0.2.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -231,51 +250,3 @@ components:
       - msg
       - type
       title: ValidationError
-    BillingCycleBody:
-      properties:
-        billing_month:
-          type: string
-          pattern: ^\d{4}-\d{2}$
-          title: Billing Month
-          description: ISO year-month string, e.g. '2026-04'.
-        dry_run:
-          type: boolean
-          title: Dry Run
-          description: If true, compute invoices but do not write records.
-          default: false
-      type: object
-      required:
-      - billing_month
-      title: BillingCycleBody
-      description: 'POST /v1/mos/energy-arb/billing/cycle
-
-
-        Admin-only trigger (HIVE_INTERNAL_DRIVER_KEY). Records a monthly savings
-
-        invoice per site. Does NOT charge; billing rails land in v0.2.'
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

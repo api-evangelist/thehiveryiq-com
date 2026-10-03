@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Portal V2 API
+  title: HiveMorph v0.1 Portal V2 API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged portal-v2 across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: portal-v2
 paths:
@@ -175,6 +172,81 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    TilePrefRequest:
+      properties:
+        tile_key:
+          type: string
+          title: Tile Key
+          description: Tile identifier key
+        exposed:
+          type: boolean
+          title: Exposed
+          description: Whether tile is shown to tenant users
+        public:
+          type: boolean
+          title: Public
+          description: Whether tile is publicly visible
+      type: object
+      required:
+      - tile_key
+      - exposed
+      - public
+      title: TilePrefRequest
+    ActivateFeatureRequest:
+      properties:
+        feature_id:
+          type: string
+          title: Feature Id
+          description: Feature identifier to activate
+      type: object
+      required:
+      - feature_id
+      title: ActivateFeatureRequest
+    SignupResponse:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+        vertical_detected:
+          type: string
+          title: Vertical Detected
+        starter_pack:
+          type: string
+          title: Starter Pack
+        brand_color_hint:
+          type: string
+          title: Brand Color Hint
+        brand_name_hint:
+          type: string
+          title: Brand Name Hint
+      type: object
+      required:
+      - tenant_id
+      - vertical_detected
+      - starter_pack
+      - brand_color_hint
+      - brand_name_hint
+      title: SignupResponse
+    SignupRequest:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+          description: Unique tenant identifier
+        company_domain:
+          type: string
+          title: Company Domain
+          description: Primary domain, e.g. netskope.com
+        email:
+          type: string
+          title: Email
+          description: Admin contact email
+      type: object
+      required:
+      - tenant_id
+      - company_domain
+      - email
+      title: SignupRequest
     ActivateFeatureResponse:
       properties:
         activated:
@@ -196,36 +268,6 @@ components:
       - billed_on_next_renewal
       - monthly_addon
       title: ActivateFeatureResponse
-    ActivateFeatureRequest:
-      properties:
-        feature_id:
-          type: string
-          title: Feature Id
-          description: Feature identifier to activate
-      type: object
-      required:
-      - feature_id
-      title: ActivateFeatureRequest
-    SignupRequest:
-      properties:
-        tenant_id:
-          type: string
-          title: Tenant Id
-          description: Unique tenant identifier
-        company_domain:
-          type: string
-          title: Company Domain
-          description: Primary domain, e.g. netskope.com
-        email:
-          type: string
-          title: Email
-          description: Admin contact email
-      type: object
-      required:
-      - tenant_id
-      - company_domain
-      - email
-      title: SignupRequest
     ProfileResponse:
       properties:
         tenant_id:
@@ -278,51 +320,15 @@ components:
       - ai_wisdom_summary
       - wisdom_generated_at
       title: ProfileResponse
-    TilePrefRequest:
+    HTTPValidationError:
       properties:
-        tile_key:
-          type: string
-          title: Tile Key
-          description: Tile identifier key
-        exposed:
-          type: boolean
-          title: Exposed
-          description: Whether tile is shown to tenant users
-        public:
-          type: boolean
-          title: Public
-          description: Whether tile is publicly visible
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - tile_key
-      - exposed
-      - public
-      title: TilePrefRequest
-    SignupResponse:
-      properties:
-        tenant_id:
-          type: string
-          title: Tenant Id
-        vertical_detected:
-          type: string
-          title: Vertical Detected
-        starter_pack:
-          type: string
-          title: Starter Pack
-        brand_color_hint:
-          type: string
-          title: Brand Color Hint
-        brand_name_hint:
-          type: string
-          title: Brand Name Hint
-      type: object
-      required:
-      - tenant_id
-      - vertical_detected
-      - starter_pack
-      - brand_color_hint
-      - brand_name_hint
-      title: SignupResponse
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -349,38 +355,3 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

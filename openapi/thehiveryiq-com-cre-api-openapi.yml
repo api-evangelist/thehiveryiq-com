@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Cre API
+  title: HiveMorph v0.1 Cre API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged cre across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: cre
 paths:
@@ -252,6 +249,69 @@ paths:
                 $ref: '#/components/schemas/CREManifesto'
 components:
   schemas:
+    CREManifesto:
+      properties:
+        title:
+          type: string
+          title: Title
+          default: The Compliance Receipt Envelope (CRE) Standard v1.0
+        thesis:
+          type: string
+          title: Thesis
+          default: Compliance is not a workflow. It is a side effect of transacting. Every SOC 2 / ISO 27001 / HIPAA / GDPR / EU AI Act control is reducible to a tuple of fields on a cryptographically-signed envelope. If the envelope validates, the control is machine-attested.
+        standards_replaced:
+          items:
+            type: string
+          type: array
+          title: Standards Replaced
+          default:
+          - SOC 2 Type II annual audit (replaced by per-transaction CRE)
+          - ISO 27001 surveillance audits (replaced by continuous CRE coverage)
+          - HIPAA log-review burden (replaced by CRE audit trail)
+          - 21 CFR Part 11 e-signature (replaced by ML-DSA-65 dual-sig)
+          - Business Associate Agreements (replaced by CRE flow-down)
+          - GDPR Article 30 records (replaced by CRE export)
+        standards_extended:
+          items:
+            type: string
+          type: array
+          title: Standards Extended
+          default:
+          - EU AI Act high-risk attestation (CRE = perpetual conformity record)
+          - NIS2 incident reporting (CRE.404.a auto-fires)
+          - DORA ICT third-party register (CRE flow-down satisfies)
+          - eIDAS2 qualified signature (ML-DSA-65 satisfies QES requirements)
+        key_properties:
+          items:
+            type: string
+          type: array
+          title: Key Properties
+          default:
+          - Offline-verifiable — auditor verifies without calling Hive
+          - Post-quantum — ML-DSA-65 (FIPS 204) signed
+          - Cross-framework — one envelope satisfies up to 13 frameworks
+          - Continuous — every transaction is its own audit
+          - Tamper-evident — SHA3-256 canonical hash binds all fields
+          - Privacy-preserving — only hashes are envelope-resident
+      type: object
+      title: CREManifesto
+      description: The doctrine in machine-readable form.
+    CREIssueResponse:
+      properties:
+        cre_id:
+          type: string
+          title: Cre Id
+        envelope:
+          $ref: '#/components/schemas/CREEnvelope'
+        elapsed_ms:
+          type: number
+          title: Elapsed Ms
+      type: object
+      required:
+      - cre_id
+      - envelope
+      - elapsed_ms
+      title: CREIssueResponse
     CREEnvelope:
       properties:
         cre_id:
@@ -377,69 +437,6 @@ components:
       - self_attested_count
       title: CREEnvelope
       description: Full CRE envelope — what auditors ingest.
-    CREIssueResponse:
-      properties:
-        cre_id:
-          type: string
-          title: Cre Id
-        envelope:
-          $ref: '#/components/schemas/CREEnvelope'
-        elapsed_ms:
-          type: number
-          title: Elapsed Ms
-      type: object
-      required:
-      - cre_id
-      - envelope
-      - elapsed_ms
-      title: CREIssueResponse
-    CREManifesto:
-      properties:
-        title:
-          type: string
-          title: Title
-          default: The Compliance Receipt Envelope (CRE) Standard v1.0
-        thesis:
-          type: string
-          title: Thesis
-          default: Compliance is not a workflow. It is a side effect of transacting. Every SOC 2 / ISO 27001 / HIPAA / GDPR / EU AI Act control is reducible to a tuple of fields on a cryptographically-signed envelope. If the envelope validates, the control is machine-attested.
-        standards_replaced:
-          items:
-            type: string
-          type: array
-          title: Standards Replaced
-          default:
-          - SOC 2 Type II annual audit (replaced by per-transaction CRE)
-          - ISO 27001 surveillance audits (replaced by continuous CRE coverage)
-          - HIPAA log-review burden (replaced by CRE audit trail)
-          - 21 CFR Part 11 e-signature (replaced by ML-DSA-65 dual-sig)
-          - Business Associate Agreements (replaced by CRE flow-down)
-          - GDPR Article 30 records (replaced by CRE export)
-        standards_extended:
-          items:
-            type: string
-          type: array
-          title: Standards Extended
-          default:
-          - EU AI Act high-risk attestation (CRE = perpetual conformity record)
-          - NIS2 incident reporting (CRE.404.a auto-fires)
-          - DORA ICT third-party register (CRE flow-down satisfies)
-          - eIDAS2 qualified signature (ML-DSA-65 satisfies QES requirements)
-        key_properties:
-          items:
-            type: string
-          type: array
-          title: Key Properties
-          default:
-          - Offline-verifiable — auditor verifies without calling Hive
-          - Post-quantum — ML-DSA-65 (FIPS 204) signed
-          - Cross-framework — one envelope satisfies up to 13 frameworks
-          - Continuous — every transaction is its own audit
-          - Tamper-evident — SHA3-256 canonical hash binds all fields
-          - Privacy-preserving — only hashes are envelope-resident
-      type: object
-      title: CREManifesto
-      description: The doctrine in machine-readable form.
     CREIssueRequest:
       properties:
         txn_type:
@@ -513,41 +510,6 @@ components:
       - actor
       title: CREIssueRequest
       description: Issue a Compliance Receipt Envelope for any transaction.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     CREVerifyResponse:
       properties:
         cre_id:
@@ -634,29 +596,38 @@ components:
       - issued_at
       - age_seconds
       title: CREVerifyResponse
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

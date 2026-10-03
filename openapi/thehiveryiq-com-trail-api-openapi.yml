@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Trail API
+  title: HiveMorph v0.1 Trail API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged trail across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: trail
 paths:
@@ -560,28 +557,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    LocationBody:
-      properties:
-        vertical:
-          type: string
-          title: Vertical
-          description: e.g. 'us_mx_remittance', 'usdpt_arb'
-        corridor:
-          type: string
-          title: Corridor
-          description: sub-region within vertical, e.g. 'base_mainnet/usdc'
-        topic_embedding:
-          anyOf:
-          - items:
-              type: number
-            type: array
-          - type: 'null'
-          title: Topic Embedding
-      type: object
-      required:
-      - vertical
-      - corridor
-      title: LocationBody
     PhysicsOverrides:
       properties:
         distribution:
@@ -616,6 +591,39 @@ components:
           title: Viscosity
       type: object
       title: PhysicsOverrides
+    DropBody:
+      properties:
+        dropper_did:
+          type: string
+          title: Dropper Did
+          description: DID of the agent dropping the artifact
+        content_type:
+          type: string
+          title: Content Type
+          description: One of trail.CONTENT_TYPES
+        payload_b64:
+          type: string
+          title: Payload B64
+          description: Base64-encoded payload bytes
+        location:
+          $ref: '#/components/schemas/LocationBody'
+        physics_overrides:
+          anyOf:
+          - $ref: '#/components/schemas/PhysicsOverrides'
+          - type: 'null'
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - dropper_did
+      - content_type
+      - payload_b64
+      - location
+      title: DropBody
     hivemorph__trail_routes__DisputeBody:
       properties:
         disputer_did:
@@ -635,6 +643,28 @@ components:
       - disputer_did
       - reason
       title: DisputeBody
+    LocationBody:
+      properties:
+        vertical:
+          type: string
+          title: Vertical
+          description: e.g. 'us_mx_remittance', 'usdpt_arb'
+        corridor:
+          type: string
+          title: Corridor
+          description: sub-region within vertical, e.g. 'base_mainnet/usdc'
+        topic_embedding:
+          anyOf:
+          - items:
+              type: number
+            type: array
+          - type: 'null'
+          title: Topic Embedding
+      type: object
+      required:
+      - vertical
+      - corridor
+      title: LocationBody
     PayBody:
       properties:
         finder_did:
@@ -674,6 +704,15 @@ components:
       required:
       - finder_did
       title: ScoopBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -700,71 +739,3 @@ components:
       - msg
       - type
       title: ValidationError
-    DropBody:
-      properties:
-        dropper_did:
-          type: string
-          title: Dropper Did
-          description: DID of the agent dropping the artifact
-        content_type:
-          type: string
-          title: Content Type
-          description: One of trail.CONTENT_TYPES
-        payload_b64:
-          type: string
-          title: Payload B64
-          description: Base64-encoded payload bytes
-        location:
-          $ref: '#/components/schemas/LocationBody'
-        physics_overrides:
-          anyOf:
-          - $ref: '#/components/schemas/PhysicsOverrides'
-          - type: 'null'
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-      type: object
-      required:
-      - dropper_did
-      - content_type
-      - payload_b64
-      - location
-      title: DropBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

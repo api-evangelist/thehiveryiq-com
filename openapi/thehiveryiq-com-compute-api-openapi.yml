@@ -1,12 +1,12 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Compute API
+  title: HiveCompute — OpenAI-Compatible Inference Router Compute API
   version: 1.0.0
+  description: 'Stream A inference API: OpenAI-compatible, per-token USDC settlement on Base L2 (x402) and Tempo (MPP).'
   contact:
     name: Hive Civilization
     url: https://thehiveryiq.com
     email: steve@thehiveryiq.com
-  description: 'Operations tagged Compute across 2 of this provider''s published API definitions: thehiveryiq-com-hivecompute-openapi.json, thehiveryiq-com-hivecompute-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.thehiveryiq.com
 tags:
@@ -27,8 +27,6 @@ paths:
       - Compute
       operationId: postV1ComputeChatCompletions
       x-operation-id-source: derived
-    servers:
-    - url: https://api.thehiveryiq.com
   /v1/compute/completions:
     post:
       summary: Text completions
@@ -44,8 +42,6 @@ paths:
       - Compute
       operationId: postV1ComputeCompletions
       x-operation-id-source: derived
-    servers:
-    - url: https://api.thehiveryiq.com
   /v1/compute/embeddings:
     post:
       summary: Embeddings
@@ -61,8 +57,6 @@ paths:
       - Compute
       operationId: postV1ComputeEmbeddings
       x-operation-id-source: derived
-    servers:
-    - url: https://api.thehiveryiq.com
   /v1/compute/models:
     get:
       summary: List available models
@@ -73,8 +67,6 @@ paths:
       - Compute
       operationId: getV1ComputeModels
       x-operation-id-source: derived
-    servers:
-    - url: https://api.thehiveryiq.com
   /v1/compute/estimate:
     post:
       summary: Estimate inference cost
@@ -85,11 +77,6 @@ paths:
       - Compute
       operationId: postV1ComputeEstimate
       x-operation-id-source: derived
-    servers:
-    - url: https://api.thehiveryiq.com
-x-refined-from:
-- thehiveryiq-com-hivecompute-openapi.json
-- thehiveryiq-com-hivecompute-openapi.yml
 x-mpp:
   realm: api.thehiveryiq.com
   payment:

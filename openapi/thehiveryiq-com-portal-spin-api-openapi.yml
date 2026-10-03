@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Portal Spin API
+  title: HiveMorph v0.1 Portal Spin API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged portal-spin across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: portal-spin
 paths:
@@ -281,25 +278,6 @@ components:
       - condition
       - notify_email
       title: ReminderRequest
-    PullReportRequest:
-      properties:
-        report_type:
-          type: string
-          title: Report Type
-          description: summary | full_ledger | compliance | usage
-          default: summary
-        date_from:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Date From
-        date_to:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Date To
-      type: object
-      title: PullReportRequest
     PromoteResponse:
       properties:
         tenant_id:
@@ -325,115 +303,6 @@ components:
       - portal_url
       - promoted_at
       title: PromoteResponse
-    PromoteRequest:
-      properties:
-        spin_session_id:
-          type: string
-          title: Spin Session Id
-        tenant_slug:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tenant Slug
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-      type: object
-      required:
-      - spin_session_id
-      title: PromoteRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    SpinStartRequest:
-      properties:
-        vertical:
-          type: string
-          title: Vertical
-          description: 'One of: banking, healthcare, construction, agent-payments, real-estate, ai-compliance'
-          default: banking
-        sample_size:
-          type: integer
-          maximum: 20.0
-          minimum: 1.0
-          title: Sample Size
-          description: Number of sample receipts to pre-generate
-          default: 5
-      type: object
-      title: SpinStartRequest
-    EmitReceiptRequest:
-      properties:
-        spin_session_id:
-          type: string
-          title: Spin Session Id
-        event_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Event Type
-        amount_usdc:
-          anyOf:
-          - type: number
-            maximum: 10000.0
-            minimum: 0.0001
-          - type: 'null'
-          title: Amount Usdc
-      type: object
-      required:
-      - spin_session_id
-      title: EmitReceiptRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    EmitReceiptResponse:
-      properties:
-        receipt:
-          additionalProperties: true
-          type: object
-          title: Receipt
-        total_receipts:
-          type: integer
-          title: Total Receipts
-        session_id:
-          type: string
-          title: Session Id
-      type: object
-      required:
-      - receipt
-      - total_receipts
-      - session_id
-      title: EmitReceiptResponse
     ScheduleRequest:
       properties:
         frequency:
@@ -457,6 +326,64 @@ components:
       required:
       - email
       title: ScheduleRequest
+    PullReportRequest:
+      properties:
+        report_type:
+          type: string
+          title: Report Type
+          description: summary | full_ledger | compliance | usage
+          default: summary
+        date_from:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Date From
+        date_to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Date To
+      type: object
+      title: PullReportRequest
+    EmitReceiptRequest:
+      properties:
+        spin_session_id:
+          type: string
+          title: Spin Session Id
+        event_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Type
+        amount_usdc:
+          anyOf:
+          - type: number
+            maximum: 10000.0
+            minimum: 0.0001
+          - type: 'null'
+          title: Amount Usdc
+      type: object
+      required:
+      - spin_session_id
+      title: EmitReceiptRequest
+    EmitReceiptResponse:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+        total_receipts:
+          type: integer
+          title: Total Receipts
+        session_id:
+          type: string
+          title: Session Id
+      type: object
+      required:
+      - receipt
+      - total_receipts
+      - session_id
+      title: EmitReceiptResponse
     SpinStartResponse:
       properties:
         spin_session_id:
@@ -486,29 +413,73 @@ components:
       - receipts
       - created_at
       title: SpinStartResponse
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+    SpinStartRequest:
+      properties:
+        vertical:
+          type: string
+          title: Vertical
+          description: 'One of: banking, healthcare, construction, agent-payments, real-estate, ai-compliance'
+          default: banking
+        sample_size:
+          type: integer
+          maximum: 20.0
+          minimum: 1.0
+          title: Sample Size
+          description: Number of sample receipts to pre-generate
+          default: 5
+      type: object
+      title: SpinStartRequest
+    PromoteRequest:
+      properties:
+        spin_session_id:
+          type: string
+          title: Spin Session Id
+        tenant_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tenant Slug
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+      type: object
+      required:
+      - spin_session_id
+      title: PromoteRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

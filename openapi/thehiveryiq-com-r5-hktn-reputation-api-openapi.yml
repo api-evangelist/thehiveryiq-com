@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com R5 Hktn Reputation API
+  title: HiveMorph v0.1 R5 Hktn Reputation API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged r5-hktn-reputation across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: r5-hktn-reputation
 paths:
@@ -133,42 +130,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    RepPreviewReq:
-      properties:
-        agent_did:
-          type: string
-          maxLength: 200
-          minLength: 3
-          title: Agent Did
-        hypothetical_events:
-          items:
-            $ref: '#/components/schemas/HypotheticalEvent'
-          type: array
-          maxItems: 200
-          title: Hypothetical Events
-      type: object
-      required:
-      - agent_did
-      title: RepPreviewReq
-    HypotheticalEvent:
-      properties:
-        event_type:
-          type: string
-          title: Event Type
-        age_seconds:
-          type: integer
-          maximum: 31536000.0
-          minimum: 0.0
-          title: Age Seconds
-          default: 0
-        context:
-          additionalProperties: true
-          type: object
-          title: Context
-      type: object
-      required:
-      - event_type
-      title: HypotheticalEvent
     RepEventReq:
       properties:
         agent_did:
@@ -190,6 +151,34 @@ components:
       - agent_did
       - event_type
       title: RepEventReq
+    HypotheticalEvent:
+      properties:
+        event_type:
+          type: string
+          title: Event Type
+        age_seconds:
+          type: integer
+          maximum: 31536000.0
+          minimum: 0.0
+          title: Age Seconds
+          default: 0
+        context:
+          additionalProperties: true
+          type: object
+          title: Context
+      type: object
+      required:
+      - event_type
+      title: HypotheticalEvent
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -216,38 +205,20 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
+    RepPreviewReq:
       properties:
-        detail:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        hypothetical_events:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/HypotheticalEvent'
           type: array
-          title: Detail
+          maxItems: 200
+          title: Hypothetical Events
       type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+      required:
+      - agent_did
+      title: RepPreviewReq

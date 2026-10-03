@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com R10 Rvc API
+  title: HiveMorph v0.1 R10 Rvc API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged r10-rvc across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: r10-rvc
 paths:
@@ -214,6 +211,23 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    OpenReq:
+      properties:
+        commitment_id:
+          type: string
+          maxLength: 64
+          minLength: 4
+          title: Commitment Id
+        k:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: K
+      type: object
+      required:
+      - commitment_id
+      - k
+      title: OpenReq
     BatchOpenReq:
       properties:
         commitment_id:
@@ -233,30 +247,23 @@ components:
       - commitment_id
       - positions
       title: BatchOpenReq
-    hivemorph__hive_r10__routes__VerifyReq:
+    VectorEntry:
       properties:
-        commitment_id:
+        k:
           type: string
-          maxLength: 64
-          minLength: 4
-          title: Commitment Id
-        opening:
-          additionalProperties: true
-          type: object
-          title: Opening
-          description: An Opening envelope as returned by /open
-        expected_rubric_root:
-          anyOf:
-          - type: string
-            maxLength: 256
-            minLength: 4
-          - type: 'null'
-          title: Expected Rubric Root
+          maxLength: 128
+          minLength: 1
+          title: K
+        s:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: S
       type: object
       required:
-      - commitment_id
-      - opening
-      title: VerifyReq
+      - k
+      - s
+      title: VectorEntry
     CommitReq:
       properties:
         rubric_root:
@@ -294,23 +301,39 @@ components:
       - operator
       - scored_at
       title: CommitReq
-    VectorEntry:
+    hivemorph__hive_r10__routes__VerifyReq:
       properties:
-        k:
+        commitment_id:
           type: string
-          maxLength: 128
-          minLength: 1
-          title: K
-        s:
-          type: number
-          maximum: 1.0
-          minimum: 0.0
-          title: S
+          maxLength: 64
+          minLength: 4
+          title: Commitment Id
+        opening:
+          additionalProperties: true
+          type: object
+          title: Opening
+          description: An Opening envelope as returned by /open
+        expected_rubric_root:
+          anyOf:
+          - type: string
+            maxLength: 256
+            minLength: 4
+          - type: 'null'
+          title: Expected Rubric Root
       type: object
       required:
-      - k
-      - s
-      title: VectorEntry
+      - commitment_id
+      - opening
+      title: VerifyReq
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -337,55 +360,3 @@ components:
       - msg
       - type
       title: ValidationError
-    OpenReq:
-      properties:
-        commitment_id:
-          type: string
-          maxLength: 64
-          minLength: 4
-          title: Commitment Id
-        k:
-          type: string
-          maxLength: 128
-          minLength: 1
-          title: K
-      type: object
-      required:
-      - commitment_id
-      - k
-      title: OpenReq
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Receipt Relay API
+  title: HiveMorph v0.1 Receipt Relay API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged receipt-relay across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: receipt-relay
 paths:
@@ -95,124 +92,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HttpRequest:
-      properties:
-        url:
-          type: string
-          maxLength: 2048
-          title: Url
-          description: Absolute http(s) URL. Must resolve to a public address (SSRF-guarded).
-        method:
-          type: string
-          maxLength: 10
-          title: Method
-          default: GET
-        headers:
-          additionalProperties:
-            type: string
-          type: object
-          title: Headers
-          description: Request headers (do not send secrets you don't want hashed).
-        body:
-          anyOf:
-          - type: string
-            maxLength: 32768
-          - type: 'null'
-          title: Body
-          description: Optional request body (string).
-        external_system:
-          type: string
-          maxLength: 120
-          title: External System
-          default: http
-        dry_run:
-          type: boolean
-          title: Dry Run
-          description: If true, sign a prepare-only event WITHOUT making the request.
-          default: false
-        actor:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Actor
-      type: object
-      required:
-      - url
-      title: HttpRequest
-    EventRequest:
-      properties:
-        action:
-          type: string
-          maxLength: 200
-          minLength: 1
-          title: Action
-          description: What happened, e.g. 'invoice.paid' or 'stablecoin_transfer'.
-        external_system:
-          type: string
-          maxLength: 120
-          title: External System
-          description: Source system, e.g. 'circle', 'stripe', 'my-agent'.
-          default: unknown
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-          description: Arbitrary event payload. Hashed into intent_hash; signed as self-attested.
-        request_body:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Request Body
-          description: Optional request bytes/object to hash into request_hash.
-        response_body:
-          anyOf:
-          - {}
-          - type: 'null'
-          title: Response Body
-          description: Optional response bytes/object to hash into response_hash.
-        evidence:
-          items: {}
-          type: array
-          title: Evidence
-          description: Optional supporting artifacts; each is hashed into evidence_hashes.
-        actor:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Actor
-          description: 'Optional actor/agent identifiers (e.g. {''agent_did'': ''...''}).'
-      type: object
-      required:
-      - action
-      title: EventRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     ChainRequest:
       properties:
         chain:
@@ -262,6 +141,98 @@ components:
       - chain
       - tx
       title: ChainRequest
+    EventRequest:
+      properties:
+        action:
+          type: string
+          maxLength: 200
+          minLength: 1
+          title: Action
+          description: What happened, e.g. 'invoice.paid' or 'stablecoin_transfer'.
+        external_system:
+          type: string
+          maxLength: 120
+          title: External System
+          description: Source system, e.g. 'circle', 'stripe', 'my-agent'.
+          default: unknown
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: Arbitrary event payload. Hashed into intent_hash; signed as self-attested.
+        request_body:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Request Body
+          description: Optional request bytes/object to hash into request_hash.
+        response_body:
+          anyOf:
+          - {}
+          - type: 'null'
+          title: Response Body
+          description: Optional response bytes/object to hash into response_hash.
+        evidence:
+          items: {}
+          type: array
+          title: Evidence
+          description: Optional supporting artifacts; each is hashed into evidence_hashes.
+        actor:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Actor
+          description: 'Optional actor/agent identifiers (e.g. {''agent_did'': ''...''}).'
+      type: object
+      required:
+      - action
+      title: EventRequest
+    HttpRequest:
+      properties:
+        url:
+          type: string
+          maxLength: 2048
+          title: Url
+          description: Absolute http(s) URL. Must resolve to a public address (SSRF-guarded).
+        method:
+          type: string
+          maxLength: 10
+          title: Method
+          default: GET
+        headers:
+          additionalProperties:
+            type: string
+          type: object
+          title: Headers
+          description: Request headers (do not send secrets you don't want hashed).
+        body:
+          anyOf:
+          - type: string
+            maxLength: 32768
+          - type: 'null'
+          title: Body
+          description: Optional request body (string).
+        external_system:
+          type: string
+          maxLength: 120
+          title: External System
+          default: http
+        dry_run:
+          type: boolean
+          title: Dry Run
+          description: If true, sign a prepare-only event WITHOUT making the request.
+          default: false
+        actor:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Actor
+      type: object
+      required:
+      - url
+      title: HttpRequest
     HTTPValidationError:
       properties:
         detail:
@@ -271,29 +242,29 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

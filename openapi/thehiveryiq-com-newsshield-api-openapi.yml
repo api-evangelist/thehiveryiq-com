@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Newsshield API
+  title: HiveMorph v0.1 Newsshield API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged newsshield across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: newsshield
 paths:
@@ -312,6 +309,17 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    hivemorph__hive_newsshield__models__ChainVerifyRequest:
+      properties:
+        asset_id:
+          type: string
+          title: Asset Id
+          description: asset_id to trace the full lifecycle chain for
+      type: object
+      required:
+      - asset_id
+      title: ChainVerifyRequest
+      description: Request to verify the full lifecycle chain for an asset.
     EditRequest:
       properties:
         asset_id:
@@ -366,6 +374,23 @@ components:
       - ai_content_disclosure
       title: EditRequest
       description: Request to attest an edit step with chain pointer.
+    AssetVerifyRequest:
+      properties:
+        asset_id:
+          type: string
+          title: Asset Id
+          description: asset_id to verify
+        attestation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Attestation Id
+          description: Specific attestation_id to verify; if omitted, verifies the first capture event
+      type: object
+      required:
+      - asset_id
+      title: AssetVerifyRequest
+      description: Request to verify a stored asset envelope.
     CaptureRequest:
       properties:
         asset_id:
@@ -408,109 +433,14 @@ components:
       - ai_content_disclosure
       title: CaptureRequest
       description: Request to attest a capture event (camera/mic).
-    SyndicateRequest:
-      properties:
-        asset_id:
-          type: string
-          title: Asset Id
-          description: UUID of the asset being syndicated
-        asset_kind:
-          $ref: '#/components/schemas/AssetKindEnum'
-          description: image / video / audio / document
-        actor_did:
-          type: string
-          title: Actor Did
-          description: DID of the syndication partner
-        publisher_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Publisher Did
-          description: Original publisher DID
-        capture_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Capture Did
-          description: Origin capture DID
-        editor_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Editor Did
-          description: Editor DID if applicable
-        media_hash:
-          type: string
-          title: Media Hash
-          description: sha256 hex of the media bytes
-        c2pa_manifest_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: C2Pa Manifest Hash
-          description: sha256 hex of the C2PA manifest
-        ai_content_disclosure:
-          type: boolean
-          title: Ai Content Disclosure
-          description: Was AI used in generation or alteration?
-        prior_attestation_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Prior Attestation Id
-          description: Chain pointer to the publish attestation_id
-      type: object
-      required:
-      - asset_id
-      - asset_kind
-      - actor_did
-      - media_hash
-      - ai_content_disclosure
-      title: SyndicateRequest
-      description: Request to attest a syndication with chain pointer to publish.
-    AssetVerifyRequest:
-      properties:
-        asset_id:
-          type: string
-          title: Asset Id
-          description: asset_id to verify
-        attestation_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Attestation Id
-          description: Specific attestation_id to verify; if omitted, verifies the first capture event
-      type: object
-      required:
-      - asset_id
-      title: AssetVerifyRequest
-      description: Request to verify a stored asset envelope.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+    AssetKindEnum:
+      type: string
+      enum:
+      - image
+      - video
+      - audio
+      - document
+      title: AssetKindEnum
     PublishRequest:
       properties:
         asset_id:
@@ -571,15 +501,66 @@ components:
       - ai_content_disclosure
       title: PublishRequest
       description: Request to attest a publish event with chain pointer.
-    HTTPValidationError:
+    SyndicateRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        asset_id:
+          type: string
+          title: Asset Id
+          description: UUID of the asset being syndicated
+        asset_kind:
+          $ref: '#/components/schemas/AssetKindEnum'
+          description: image / video / audio / document
+        actor_did:
+          type: string
+          title: Actor Did
+          description: DID of the syndication partner
+        publisher_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher Did
+          description: Original publisher DID
+        capture_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Capture Did
+          description: Origin capture DID
+        editor_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Editor Did
+          description: Editor DID if applicable
+        media_hash:
+          type: string
+          title: Media Hash
+          description: sha256 hex of the media bytes
+        c2pa_manifest_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: C2Pa Manifest Hash
+          description: sha256 hex of the C2PA manifest
+        ai_content_disclosure:
+          type: boolean
+          title: Ai Content Disclosure
+          description: Was AI used in generation or alteration?
+        prior_attestation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prior Attestation Id
+          description: Chain pointer to the publish attestation_id
       type: object
-      title: HTTPValidationError
+      required:
+      - asset_id
+      - asset_kind
+      - actor_did
+      - media_hash
+      - ai_content_disclosure
+      title: SyndicateRequest
+      description: Request to attest a syndication with chain pointer to publish.
     TakedownRequest:
       properties:
         asset_id:
@@ -640,48 +621,38 @@ components:
       - ai_content_disclosure
       title: TakedownRequest
       description: Request to attest a takedown with chain pointer to publish.
-    AssetKindEnum:
-      type: string
-      enum:
-      - image
-      - video
-      - audio
-      - document
-      title: AssetKindEnum
-    hivemorph__hive_newsshield__models__ChainVerifyRequest:
+    HTTPValidationError:
       properties:
-        asset_id:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Asset Id
-          description: asset_id to trace the full lifecycle chain for
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - asset_id
-      title: ChainVerifyRequest
-      description: Request to verify the full lifecycle chain for an asset.
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+      - loc
+      - msg
+      - type
+      title: ValidationError

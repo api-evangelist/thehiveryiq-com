@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Stormlock API
+  title: HiveMorph v0.1 Stormlock API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged stormlock across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: stormlock
 paths:
@@ -296,47 +293,27 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    PerilClass:
-      type: string
-      enum:
-      - hurricane
-      - earthquake
-      - wildfire
-      - flood
-      - hailstorm
-      - tornado
-      - extratropical_cyclone
-      - drought
-      - freeze
-      title: PerilClass
-    DisputeAttestRequest:
+    OracleSubscribeRequest:
       properties:
         policy_did:
           type: string
           title: Policy Did
-          description: DID of the policy under dispute
-        disputing_party_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Disputing Party Did
-          description: DID of the disputing party
-        dispute_grounds:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Dispute Grounds
-          description: Grounds for dispute
+          description: DID of the policy
+        oracle_did:
+          type: string
+          title: Oracle Did
+          description: DID of the oracle being registered
         event_payload:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: Dispute metadata
+          description: Oracle subscription metadata
       type: object
       required:
       - policy_did
-      title: DisputeAttestRequest
-      description: Record a dispute opened.
+      - oracle_did
+      title: OracleSubscribeRequest
+      description: Register an oracle for a policy.
     TriggerEvalAttestRequest:
       properties:
         policy_did:
@@ -371,42 +348,6 @@ components:
       - threshold_spec
       title: TriggerEvalAttestRequest
       description: Evaluate threshold against oracle reading and record result.
-    PayoutAuthAttestRequest:
-      properties:
-        policy_did:
-          type: string
-          title: Policy Did
-          description: DID of the policy
-        cedent_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cedent Did
-          description: DID of the cedent receiving payout
-        payout_amount_usdc:
-          anyOf:
-          - type: number
-          - type: string
-            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-          title: Payout Amount Usdc
-          description: Authorized payout amount in USDC
-        treasury_sub_account:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Treasury Sub Account
-          description: Treasury sub-account address
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: Authorization metadata
-      type: object
-      required:
-      - policy_did
-      - payout_amount_usdc
-      title: PayoutAuthAttestRequest
-      description: Record payout authorization (treasury sub-account).
     BindAttestRequest:
       properties:
         policy_did:
@@ -459,116 +400,34 @@ components:
       - threshold_spec
       title: BindAttestRequest
       description: Record a policy bind event.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    OracleReadingAttestRequest:
+    DisputeAttestRequest:
       properties:
         policy_did:
           type: string
           title: Policy Did
-          description: DID of the policy
-        oracle_did:
-          type: string
-          title: Oracle Did
-          description: DID of the oracle
-        oracle_reading_payload:
-          additionalProperties: true
-          type: object
-          title: Oracle Reading Payload
-          description: 'Raw oracle reading payload: {windspeed_kmh:185, ts:''...'', station_id:''WMO_722023''}'
+          description: DID of the policy under dispute
+        disputing_party_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Disputing Party Did
+          description: DID of the disputing party
+        dispute_grounds:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dispute Grounds
+          description: Grounds for dispute
         event_payload:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: Additional reading metadata
+          description: Dispute metadata
       type: object
       required:
       - policy_did
-      - oracle_did
-      - oracle_reading_payload
-      title: OracleReadingAttestRequest
-      description: Record a single oracle reading.
-    OracleSubscribeRequest:
-      properties:
-        policy_did:
-          type: string
-          title: Policy Did
-          description: DID of the policy
-        oracle_did:
-          type: string
-          title: Oracle Did
-          description: DID of the oracle being registered
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: Oracle subscription metadata
-      type: object
-      required:
-      - policy_did
-      - oracle_did
-      title: OracleSubscribeRequest
-      description: Register an oracle for a policy.
-    ReinsuranceSettleAttestRequest:
-      properties:
-        policy_did:
-          type: string
-          title: Policy Did
-          description: DID of the policy
-        reinsurer_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reinsurer Did
-          description: DID of the reinsurer
-        carrier_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Carrier Did
-          description: DID of the carrier
-        settle_amount_usdc:
-          anyOf:
-          - type: number
-          - type: string
-            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-          - type: 'null'
-          title: Settle Amount Usdc
-          description: Settlement amount in USDC
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: Settlement leg metadata
-      type: object
-      required:
-      - policy_did
-      title: ReinsuranceSettleAttestRequest
-      description: Record reinsurance settle leg.
+      title: DisputeAttestRequest
+      description: Record a dispute opened.
     LossCalcAttestRequest:
       properties:
         policy_did:
@@ -618,6 +477,118 @@ components:
       - loss_calc_result
       title: LossCalcAttestRequest
       description: Record loss calculation and payout amount.
+    PayoutAuthAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        cedent_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cedent Did
+          description: DID of the cedent receiving payout
+        payout_amount_usdc:
+          anyOf:
+          - type: number
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          title: Payout Amount Usdc
+          description: Authorized payout amount in USDC
+        treasury_sub_account:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Treasury Sub Account
+          description: Treasury sub-account address
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Authorization metadata
+      type: object
+      required:
+      - policy_did
+      - payout_amount_usdc
+      title: PayoutAuthAttestRequest
+      description: Record payout authorization (treasury sub-account).
+    PerilClass:
+      type: string
+      enum:
+      - hurricane
+      - earthquake
+      - wildfire
+      - flood
+      - hailstorm
+      - tornado
+      - extratropical_cyclone
+      - drought
+      - freeze
+      title: PerilClass
+    ReinsuranceSettleAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        reinsurer_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reinsurer Did
+          description: DID of the reinsurer
+        carrier_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Carrier Did
+          description: DID of the carrier
+        settle_amount_usdc:
+          anyOf:
+          - type: number
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          - type: 'null'
+          title: Settle Amount Usdc
+          description: Settlement amount in USDC
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Settlement leg metadata
+      type: object
+      required:
+      - policy_did
+      title: ReinsuranceSettleAttestRequest
+      description: Record reinsurance settle leg.
+    OracleReadingAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        oracle_did:
+          type: string
+          title: Oracle Did
+          description: DID of the oracle
+        oracle_reading_payload:
+          additionalProperties: true
+          type: object
+          title: Oracle Reading Payload
+          description: 'Raw oracle reading payload: {windspeed_kmh:185, ts:''...'', station_id:''WMO_722023''}'
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Additional reading metadata
+      type: object
+      required:
+      - policy_did
+      - oracle_did
+      - oracle_reading_payload
+      title: OracleReadingAttestRequest
+      description: Record a single oracle reading.
     HTTPValidationError:
       properties:
         detail:
@@ -627,29 +598,29 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Purity API
+  title: HiveMorph v0.1 Purity API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged purity across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: purity
 paths:
@@ -79,109 +76,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    Fsma204Info:
-      properties:
-        kde_lot_code:
-          type: string
-          title: Kde Lot Code
-          description: 'KDE: traceability lot code'
-        kde_cultivar:
-          type: string
-          title: Kde Cultivar
-          description: 'KDE: cultivar / variety'
-        kde_growing_area:
-          items:
-            type: number
-          type: array
-          maxItems: 2
-          minItems: 2
-          title: Kde Growing Area
-          description: '[lat, lon] growing area from KDE'
-        kde_production_date:
-          type: string
-          title: Kde Production Date
-          description: 'KDE: production / harvest date'
-      type: object
-      required:
-      - kde_lot_code
-      - kde_cultivar
-      - kde_growing_area
-      - kde_production_date
-      title: Fsma204Info
-      description: FSMA 204 Key Data Elements (optional; present for produce / livestock).
-    SubjectInfo:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Product / crop name
-        lot:
-          type: string
-          title: Lot
-          description: Lot / batch identifier
-        farm_id:
-          type: string
-          title: Farm Id
-          description: Farm or growing-operation identifier
-        growing_area:
-          items:
-            type: number
-          type: array
-          maxItems: 2
-          minItems: 2
-          title: Growing Area
-          description: '[latitude, longitude] decimal degrees'
-        harvest_date:
-          type: string
-          title: Harvest Date
-          description: ISO-8601 harvest date
-      type: object
-      required:
-      - name
-      - lot
-      - farm_id
-      - growing_area
-      - harvest_date
-      title: SubjectInfo
-      description: Subject (produce / farm lot) being certified.
-    PurityCertIssueRequest:
-      properties:
-        issuer_did:
-          type: string
-          title: Issuer Did
-          description: DID of the issuing entity (did:hive:...)
-        subject:
-          $ref: '#/components/schemas/SubjectInfo'
-          description: Subject (produce / farm lot) details
-        substrate:
-          type: string
-          enum:
-          - wave
-          - loess
-          - purity-24
-          title: Substrate
-          description: 'Substrate mode: wave (axes 1-16), loess (axes 17-24), purity-24 (all)'
-        axes:
-          items:
-            $ref: '#/components/schemas/AxisReading'
-          type: array
-          maxItems: 24
-          minItems: 1
-          title: Axes
-          description: Up to 24 axis readings
-        fsma_204:
-          anyOf:
-          - $ref: '#/components/schemas/Fsma204Info'
-          - type: 'null'
-          description: FSMA 204 KDEs (optional, present for produce/livestock)
-      type: object
-      required:
-      - issuer_did
-      - subject
-      - substrate
-      - axes
-      title: PurityCertIssueRequest
-      description: POST /v1/purity/cert/issue — issue a 24-axis Purity Receipt v3.0.
     AxisReading:
       properties:
         axis_id:
@@ -225,6 +119,44 @@ components:
       - probe_serial
       title: AxisReading
       description: One sensor-axis reading submitted with the purity certificate request.
+    PurityCertIssueRequest:
+      properties:
+        issuer_did:
+          type: string
+          title: Issuer Did
+          description: DID of the issuing entity (did:hive:...)
+        subject:
+          $ref: '#/components/schemas/SubjectInfo'
+          description: Subject (produce / farm lot) details
+        substrate:
+          type: string
+          enum:
+          - wave
+          - loess
+          - purity-24
+          title: Substrate
+          description: 'Substrate mode: wave (axes 1-16), loess (axes 17-24), purity-24 (all)'
+        axes:
+          items:
+            $ref: '#/components/schemas/AxisReading'
+          type: array
+          maxItems: 24
+          minItems: 1
+          title: Axes
+          description: Up to 24 axis readings
+        fsma_204:
+          anyOf:
+          - $ref: '#/components/schemas/Fsma204Info'
+          - type: 'null'
+          description: FSMA 204 KDEs (optional, present for produce/livestock)
+      type: object
+      required:
+      - issuer_did
+      - subject
+      - substrate
+      - axes
+      title: PurityCertIssueRequest
+      description: POST /v1/purity/cert/issue — issue a 24-axis Purity Receipt v3.0.
     PurityCertIssueResponse:
       properties:
         cert_id:
@@ -301,6 +233,41 @@ components:
       - receipt_envelope
       title: PurityCertIssueResponse
       description: Purity Receipt v3.0 — dual-signed 24-axis soil/produce certificate.
+    SubjectInfo:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Product / crop name
+        lot:
+          type: string
+          title: Lot
+          description: Lot / batch identifier
+        farm_id:
+          type: string
+          title: Farm Id
+          description: Farm or growing-operation identifier
+        growing_area:
+          items:
+            type: number
+          type: array
+          maxItems: 2
+          minItems: 2
+          title: Growing Area
+          description: '[latitude, longitude] decimal degrees'
+        harvest_date:
+          type: string
+          title: Harvest Date
+          description: ISO-8601 harvest date
+      type: object
+      required:
+      - name
+      - lot
+      - farm_id
+      - growing_area
+      - harvest_date
+      title: SubjectInfo
+      description: Subject (produce / farm lot) being certified.
     AxesSummary:
       properties:
         count:
@@ -328,6 +295,45 @@ components:
       - loess_count
       title: AxesSummary
       description: Summary of axis coverage in the issued certificate.
+    Fsma204Info:
+      properties:
+        kde_lot_code:
+          type: string
+          title: Kde Lot Code
+          description: 'KDE: traceability lot code'
+        kde_cultivar:
+          type: string
+          title: Kde Cultivar
+          description: 'KDE: cultivar / variety'
+        kde_growing_area:
+          items:
+            type: number
+          type: array
+          maxItems: 2
+          minItems: 2
+          title: Kde Growing Area
+          description: '[lat, lon] growing area from KDE'
+        kde_production_date:
+          type: string
+          title: Kde Production Date
+          description: 'KDE: production / harvest date'
+      type: object
+      required:
+      - kde_lot_code
+      - kde_cultivar
+      - kde_growing_area
+      - kde_production_date
+      title: Fsma204Info
+      description: FSMA 204 Key Data Elements (optional; present for produce / livestock).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -354,38 +360,3 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

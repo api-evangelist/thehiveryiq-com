@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Capitolare API
+  title: HiveMorph v0.1 Capitolare API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged capitolare across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: capitolare
 paths:
@@ -289,50 +286,6 @@ paths:
                 type: string
 components:
   schemas:
-    LeaveRequest:
-      properties:
-        passport_id:
-          type: string
-          title: Passport Id
-      type: object
-      required:
-      - passport_id
-      title: LeaveRequest
-    UnsealRequest:
-      properties:
-        sealed_view:
-          additionalProperties: true
-          type: object
-          title: Sealed View
-        mlkem_secret_b64:
-          type: string
-          title: Mlkem Secret B64
-        x25519_secret_b64:
-          type: string
-          title: X25519 Secret B64
-      type: object
-      required:
-      - sealed_view
-      - mlkem_secret_b64
-      - x25519_secret_b64
-      title: UnsealRequest
-    hivemorph__hive_capitolare__routes__SettleRequest:
-      properties:
-        session_id:
-          type: string
-          title: Session Id
-        sealed:
-          type: boolean
-          title: Sealed
-          default: false
-        tx_hash:
-          type: string
-          title: Tx Hash
-          default: ''
-      type: object
-      required:
-      - session_id
-      title: SettleRequest
     hivemorph__hive_capitolare__routes__VerifyRequest:
       properties:
         public_view:
@@ -354,56 +307,6 @@ components:
       required:
       - public_view
       title: VerifyRequest
-    DemoWatchRequest:
-      properties:
-        job_kind:
-          type: string
-          title: Job Kind
-          default: summarize
-        amount_micro_usdc:
-          type: integer
-          minimum: 1.0
-          title: Amount Micro Usdc
-          default: 500000
-        sealed:
-          type: boolean
-          title: Sealed
-          default: false
-      type: object
-      title: DemoWatchRequest
-    EnterRequest:
-      properties:
-        agent_did:
-          type: string
-          title: Agent Did
-          description: DID the agent claims (any string).
-          default: ''
-        framework:
-          type: string
-          title: Framework
-          description: openclaw|hermes|kimi|manus|custom
-          default: custom
-        ttl_seconds:
-          type: integer
-          maximum: 86400.0
-          minimum: 60.0
-          title: Ttl Seconds
-          default: 3600
-      type: object
-      title: EnterRequest
-    AcceptRequest:
-      properties:
-        session_id:
-          type: string
-          title: Session Id
-        accepter_passport_id:
-          type: string
-          title: Accepter Passport Id
-      type: object
-      required:
-      - session_id
-      - accepter_passport_id
-      title: AcceptRequest
     ProposeRequest:
       properties:
         proposer_passport_id:
@@ -426,6 +329,74 @@ components:
       - proposer_passport_id
       - counterparty_passport_id
       title: ProposeRequest
+    EnterRequest:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID the agent claims (any string).
+          default: ''
+        framework:
+          type: string
+          title: Framework
+          description: openclaw|hermes|kimi|manus|custom
+          default: custom
+        ttl_seconds:
+          type: integer
+          maximum: 86400.0
+          minimum: 60.0
+          title: Ttl Seconds
+          default: 3600
+      type: object
+      title: EnterRequest
+    LeaveRequest:
+      properties:
+        passport_id:
+          type: string
+          title: Passport Id
+      type: object
+      required:
+      - passport_id
+      title: LeaveRequest
+    DemoWatchRequest:
+      properties:
+        job_kind:
+          type: string
+          title: Job Kind
+          default: summarize
+        amount_micro_usdc:
+          type: integer
+          minimum: 1.0
+          title: Amount Micro Usdc
+          default: 500000
+        sealed:
+          type: boolean
+          title: Sealed
+          default: false
+      type: object
+      title: DemoWatchRequest
+    AcceptRequest:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        accepter_passport_id:
+          type: string
+          title: Accepter Passport Id
+      type: object
+      required:
+      - session_id
+      - accepter_passport_id
+      title: AcceptRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -452,38 +423,38 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
+    hivemorph__hive_capitolare__routes__SettleRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        session_id:
+          type: string
+          title: Session Id
+        sealed:
+          type: boolean
+          title: Sealed
+          default: false
+        tx_hash:
+          type: string
+          title: Tx Hash
+          default: ''
       type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+      required:
+      - session_id
+      title: SettleRequest
+    UnsealRequest:
+      properties:
+        sealed_view:
+          additionalProperties: true
+          type: object
+          title: Sealed View
+        mlkem_secret_b64:
+          type: string
+          title: Mlkem Secret B64
+        x25519_secret_b64:
+          type: string
+          title: X25519 Secret B64
+      type: object
+      required:
+      - sealed_view
+      - mlkem_secret_b64
+      - x25519_secret_b64
+      title: UnsealRequest

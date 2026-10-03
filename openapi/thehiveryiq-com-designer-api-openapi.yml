@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Designer API
+  title: HiveMorph v0.1 Designer API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged designer across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: designer
 paths:
@@ -228,20 +225,70 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ChatMessage:
+    AgentChatRequest:
       properties:
-        role:
-          type: string
-          title: Role
-          description: '''user'' or ''assistant'''
-        content:
-          type: string
-          title: Content
+        messages:
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+          type: array
+          maxItems: 20
+          minItems: 1
+          title: Messages
       type: object
       required:
-      - role
-      - content
-      title: ChatMessage
+      - messages
+      title: AgentChatRequest
+    MintResponse:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        endpoint_url:
+          type: string
+          title: Endpoint Url
+        record:
+          additionalProperties: true
+          type: object
+          title: Record
+        mint_receipt_id:
+          type: string
+          title: Mint Receipt Id
+        ccacw_receipt:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ccacw Receipt
+      type: object
+      required:
+      - slug
+      - endpoint_url
+      - record
+      - mint_receipt_id
+      title: MintResponse
+    DesignerChatRequest:
+      properties:
+        messages:
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+          type: array
+          maxItems: 40
+          minItems: 1
+          title: Messages
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+        step_hint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Step Hint
+          description: 'Optional: which spec field this turn is asking about.'
+      type: object
+      required:
+      - messages
+      title: DesignerChatRequest
     DesignerChatResponse:
       properties:
         assistant_message:
@@ -284,82 +331,41 @@ components:
       - model
       - turn_id
       title: DesignerChatResponse
-    MintResponse:
+    hivemorph__hive_designer__routes__MintRequest:
       properties:
-        slug:
-          type: string
-          title: Slug
-        endpoint_url:
-          type: string
-          title: Endpoint Url
-        record:
+        spec:
           additionalProperties: true
           type: object
-          title: Record
-        mint_receipt_id:
+          title: Spec
+        publisher_address:
           type: string
-          title: Mint Receipt Id
-        ccacw_receipt:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ccacw Receipt
+          maxLength: 64
+          minLength: 42
+          title: Publisher Address
+        eip712_signature:
+          type: string
+          minLength: 10
+          title: Eip712 Signature
       type: object
       required:
-      - slug
-      - endpoint_url
-      - record
-      - mint_receipt_id
-      title: MintResponse
-    ValidationError:
+      - spec
+      - publisher_address
+      - eip712_signature
+      title: MintRequest
+    ChatMessage:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        role:
           type: string
-          title: Message
-        type:
+          title: Role
+          description: '''user'' or ''assistant'''
+        content:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Content
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AgentChatRequest:
-      properties:
-        messages:
-          items:
-            $ref: '#/components/schemas/ChatMessage'
-          type: array
-          maxItems: 20
-          minItems: 1
-          title: Messages
-      type: object
-      required:
-      - messages
-      title: AgentChatRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      - role
+      - content
+      title: ChatMessage
     AdminRecoverMintRequest:
       properties:
         spec:
@@ -389,73 +395,38 @@ components:
       - publisher_address
       - tx_hash
       title: AdminRecoverMintRequest
-    hivemorph__hive_designer__routes__MintRequest:
+    HTTPValidationError:
       properties:
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-        publisher_address:
-          type: string
-          maxLength: 64
-          minLength: 42
-          title: Publisher Address
-        eip712_signature:
-          type: string
-          minLength: 10
-          title: Eip712 Signature
-      type: object
-      required:
-      - spec
-      - publisher_address
-      - eip712_signature
-      title: MintRequest
-    DesignerChatRequest:
-      properties:
-        messages:
+        detail:
           items:
-            $ref: '#/components/schemas/ChatMessage'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          maxItems: 40
-          minItems: 1
-          title: Messages
-        spec:
-          additionalProperties: true
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
-          title: Spec
-        step_hint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Step Hint
-          description: 'Optional: which spec field this turn is asking about.'
+          title: Context
       type: object
       required:
-      - messages
-      title: DesignerChatRequest
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+      - loc
+      - msg
+      - type
+      title: ValidationError

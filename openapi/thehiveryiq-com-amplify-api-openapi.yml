@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Amplify API
+  title: HiveMorph v0.1 Amplify API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged amplify across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: amplify
 paths:
@@ -378,69 +375,6 @@ components:
         receipt is signed as the response. Verticals keep their formats and
 
         gain CCACW provability in one POST.'
-    CallBody:
-      properties:
-        prompt:
-          type: string
-          maxLength: 20000
-          minLength: 1
-          title: Prompt
-        tenant_did:
-          type: string
-          maxLength: 256
-          minLength: 3
-          title: Tenant Did
-        model:
-          type: string
-          title: Model
-          default: gpt-4o-mini
-        smsh_mode:
-          type: string
-          title: Smsh Mode
-          default: smsh-std
-        max_tokens:
-          type: integer
-          title: Max Tokens
-          default: 512
-        temperature:
-          type: number
-          title: Temperature
-          default: 0.2
-        skip_writeback:
-          type: boolean
-          title: Skip Writeback
-          default: false
-      type: object
-      required:
-      - prompt
-      - tenant_did
-      title: CallBody
-    AppendBody:
-      properties:
-        tenant_did:
-          type: string
-          title: Tenant Did
-        kind:
-          type: string
-          pattern: ^(response|fact|pattern)$
-          title: Kind
-        content:
-          type: string
-          maxLength: 20000
-          minLength: 1
-          title: Content
-        meta:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Meta
-      type: object
-      required:
-      - tenant_did
-      - kind
-      - content
-      title: AppendBody
     VerifyBody:
       properties:
         payload:
@@ -471,6 +405,32 @@ components:
       - signature_b64
       - pubkey_b64
       title: VerifyBody
+    AppendBody:
+      properties:
+        tenant_did:
+          type: string
+          title: Tenant Did
+        kind:
+          type: string
+          pattern: ^(response|fact|pattern)$
+          title: Kind
+        content:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Content
+        meta:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Meta
+      type: object
+      required:
+      - tenant_did
+      - kind
+      - content
+      title: AppendBody
     SignBody:
       properties:
         tenant_did:
@@ -525,6 +485,52 @@ components:
       - prompt
       - response
       title: SignBody
+    CallBody:
+      properties:
+        prompt:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Prompt
+        tenant_did:
+          type: string
+          maxLength: 256
+          minLength: 3
+          title: Tenant Did
+        model:
+          type: string
+          title: Model
+          default: gpt-4o-mini
+        smsh_mode:
+          type: string
+          title: Smsh Mode
+          default: smsh-std
+        max_tokens:
+          type: integer
+          title: Max Tokens
+          default: 512
+        temperature:
+          type: number
+          title: Temperature
+          default: 0.2
+        skip_writeback:
+          type: boolean
+          title: Skip Writeback
+          default: false
+      type: object
+      required:
+      - prompt
+      - tenant_did
+      title: CallBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -551,38 +557,3 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

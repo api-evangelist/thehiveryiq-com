@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Arb Compute API
+  title: HiveMorph v0.1 Arb Compute API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged arb-compute across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: arb-compute
 paths:
@@ -139,29 +136,72 @@ components:
       - shape
       - prompt
       title: RouteRequest
-    CatalogResponse:
+    ModelCatalogEntry:
       properties:
-        count:
-          type: integer
-          title: Count
-        models:
-          items:
-            $ref: '#/components/schemas/ModelCatalogEntry'
-          type: array
-          title: Models
-        tiers:
-          additionalProperties:
-            items:
-              type: string
-            type: array
-          type: object
-          title: Tiers
+        model_id:
+          type: string
+          title: Model Id
+        display_name:
+          type: string
+          title: Display Name
+        quality_tier:
+          type: string
+          title: Quality Tier
+        cost_per_1k_input:
+          type: number
+          title: Cost Per 1K Input
+        cost_per_1k_output:
+          type: number
+          title: Cost Per 1K Output
+        blended_cost_per_1k:
+          type: number
+          title: Blended Cost Per 1K
+        provider:
+          type: string
+          title: Provider
+        notes:
+          type: string
+          title: Notes
       type: object
       required:
-      - count
-      - models
-      - tiers
-      title: CatalogResponse
+      - model_id
+      - display_name
+      - quality_tier
+      - cost_per_1k_input
+      - cost_per_1k_output
+      - blended_cost_per_1k
+      - provider
+      - notes
+      title: ModelCatalogEntry
+    SavingsResponse:
+      properties:
+        calls_routed:
+          type: integer
+          title: Calls Routed
+        calls_failed:
+          type: integer
+          title: Calls Failed
+        total_cost_usd:
+          type: number
+          title: Total Cost Usd
+        total_savings_usd:
+          type: number
+          title: Total Savings Usd
+        avg_cost_reduction_pct:
+          type: number
+          title: Avg Cost Reduction Pct
+        baseline_model:
+          type: string
+          title: Baseline Model
+      type: object
+      required:
+      - calls_routed
+      - calls_failed
+      - total_cost_usd
+      - total_savings_usd
+      - avg_cost_reduction_pct
+      - baseline_model
+      title: SavingsResponse
     RouteResponse:
       properties:
         chosen_model:
@@ -210,35 +250,15 @@ components:
       - output_tokens
       - shape
       title: RouteResponse
-    SavingsResponse:
+    HTTPValidationError:
       properties:
-        calls_routed:
-          type: integer
-          title: Calls Routed
-        calls_failed:
-          type: integer
-          title: Calls Failed
-        total_cost_usd:
-          type: number
-          title: Total Cost Usd
-        total_savings_usd:
-          type: number
-          title: Total Savings Usd
-        avg_cost_reduction_pct:
-          type: number
-          title: Avg Cost Reduction Pct
-        baseline_model:
-          type: string
-          title: Baseline Model
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - calls_routed
-      - calls_failed
-      - total_cost_usd
-      - total_savings_usd
-      - avg_cost_reduction_pct
-      - baseline_model
-      title: SavingsResponse
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -265,75 +285,26 @@ components:
       - msg
       - type
       title: ValidationError
-    ModelCatalogEntry:
+    CatalogResponse:
       properties:
-        model_id:
-          type: string
-          title: Model Id
-        display_name:
-          type: string
-          title: Display Name
-        quality_tier:
-          type: string
-          title: Quality Tier
-        cost_per_1k_input:
-          type: number
-          title: Cost Per 1K Input
-        cost_per_1k_output:
-          type: number
-          title: Cost Per 1K Output
-        blended_cost_per_1k:
-          type: number
-          title: Blended Cost Per 1K
-        provider:
-          type: string
-          title: Provider
-        notes:
-          type: string
-          title: Notes
+        count:
+          type: integer
+          title: Count
+        models:
+          items:
+            $ref: '#/components/schemas/ModelCatalogEntry'
+          type: array
+          title: Models
+        tiers:
+          additionalProperties:
+            items:
+              type: string
+            type: array
+          type: object
+          title: Tiers
       type: object
       required:
-      - model_id
-      - display_name
-      - quality_tier
-      - cost_per_1k_input
-      - cost_per_1k_output
-      - blended_cost_per_1k
-      - provider
-      - notes
-      title: ModelCatalogEntry
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+      - count
+      - models
+      - tiers
+      title: CatalogResponse

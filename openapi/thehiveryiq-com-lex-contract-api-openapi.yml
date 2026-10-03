@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Lex Contract API
+  title: HiveMorph v0.1 Lex Contract API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged lex-contract across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: lex-contract
 paths:
@@ -299,84 +296,16 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AmendmentAttestRequest:
+    SignatureAttestRequest:
       properties:
         contract_id:
           type: string
           title: Contract Id
-          description: Contract ID being amended
-        parties:
-          items:
-            $ref: '#/components/schemas/ContractParty'
-          type: array
-          title: Parties
-        clause_hashes:
-          items:
-            $ref: '#/components/schemas/ClauseHash'
-          type: array
-          title: Clause Hashes
-          description: Amended clause hashes
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Amendment metadata: amendment_number, amendment_summary, effective_date, etc.'
-      type: object
-      required:
-      - contract_id
-      title: AmendmentAttestRequest
-      description: Record a contract amendment.
-    ClauseHash:
-      properties:
-        clause_id:
+          description: Contract ID being signed
+        signer_did:
           type: string
-          title: Clause Id
-          description: Clause identifier (e.g. '3.1', 'indemnity', 'ip_ownership')
-        hash:
-          type: string
-          maxLength: 64
-          minLength: 64
-          title: Hash
-          description: sha256 hex of the canonical clause text
-      type: object
-      required:
-      - clause_id
-      - hash
-      title: ClauseHash
-      description: sha256 hash of a contract clause for tamper-evidence.
-    ContractParty:
-      properties:
-        did:
-          type: string
-          title: Did
-          description: DID of the party (e.g. did:hive:org:acme)
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Human-readable name of the party
-        role:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Role
-          description: 'Party role: buyer, seller, licensor, licensee, service_provider, client, other'
-      type: object
-      required:
-      - did
-      title: ContractParty
-      description: A party to the contract with a DID.
-    NoticeAttestRequest:
-      properties:
-        contract_id:
-          type: string
-          title: Contract Id
-          description: Contract ID notice is issued against
-        notice_type:
-          type: string
-          title: Notice Type
-          description: 'Type of notice: breach, termination_intent, renewal_opt_in, renewal_opt_out, cure, other'
+          title: Signer Did
+          description: DID of the party signing
         parties:
           items:
             $ref: '#/components/schemas/ContractParty'
@@ -391,13 +320,13 @@ components:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: 'Notice metadata: notice_hash, delivery_method, cure_deadline, etc.'
+          description: 'Signature metadata: signature_method, signature_hash, timestamp, etc.'
       type: object
       required:
       - contract_id
-      - notice_type
-      title: NoticeAttestRequest
-      description: Record a formal notice (breach, termination intent, renewal opt-in/out).
+      - signer_did
+      title: SignatureAttestRequest
+      description: Record a single-party signature event.
     TerminationAttestRequest:
       properties:
         contract_id:
@@ -424,6 +353,29 @@ components:
       - contract_id
       title: TerminationAttestRequest
       description: Record contract termination.
+    ContractParty:
+      properties:
+        did:
+          type: string
+          title: Did
+          description: DID of the party (e.g. did:hive:org:acme)
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Human-readable name of the party
+        role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Role
+          description: 'Party role: buyer, seller, licensor, licensee, service_provider, client, other'
+      type: object
+      required:
+      - did
+      title: ContractParty
+      description: A party to the contract with a DID.
     DraftAttestRequest:
       properties:
         contract_id:
@@ -480,63 +432,6 @@ components:
       - contract_id
       title: RedlineAttestRequest
       description: Record a redline/markup event on a contract.
-    SignatureAttestRequest:
-      properties:
-        contract_id:
-          type: string
-          title: Contract Id
-          description: Contract ID being signed
-        signer_did:
-          type: string
-          title: Signer Did
-          description: DID of the party signing
-        parties:
-          items:
-            $ref: '#/components/schemas/ContractParty'
-          type: array
-          title: Parties
-        clause_hashes:
-          items:
-            $ref: '#/components/schemas/ClauseHash'
-          type: array
-          title: Clause Hashes
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Signature metadata: signature_method, signature_hash, timestamp, etc.'
-      type: object
-      required:
-      - contract_id
-      - signer_did
-      title: SignatureAttestRequest
-      description: Record a single-party signature event.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     ExecuteAttestRequest:
       properties:
         contract_id:
@@ -565,6 +460,82 @@ components:
       - parties
       title: ExecuteAttestRequest
       description: Record full execution (all parties signed).
+    NoticeAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID notice is issued against
+        notice_type:
+          type: string
+          title: Notice Type
+          description: 'Type of notice: breach, termination_intent, renewal_opt_in, renewal_opt_out, cure, other'
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Notice metadata: notice_hash, delivery_method, cure_deadline, etc.'
+      type: object
+      required:
+      - contract_id
+      - notice_type
+      title: NoticeAttestRequest
+      description: Record a formal notice (breach, termination intent, renewal opt-in/out).
+    ClauseHash:
+      properties:
+        clause_id:
+          type: string
+          title: Clause Id
+          description: Clause identifier (e.g. '3.1', 'indemnity', 'ip_ownership')
+        hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          title: Hash
+          description: sha256 hex of the canonical clause text
+      type: object
+      required:
+      - clause_id
+      - hash
+      title: ClauseHash
+      description: sha256 hash of a contract clause for tamper-evidence.
+    AmendmentAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID being amended
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+          description: Amended clause hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Amendment metadata: amendment_number, amendment_summary, effective_date, etc.'
+      type: object
+      required:
+      - contract_id
+      title: AmendmentAttestRequest
+      description: Record a contract amendment.
     HTTPValidationError:
       properties:
         detail:
@@ -574,29 +545,29 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

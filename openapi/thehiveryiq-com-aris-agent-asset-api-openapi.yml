@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Aris Agent Asset API
+  title: HiveMorph v0.1 Aris Agent Asset API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged aris-agent-asset across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: aris-agent-asset
 paths:
@@ -192,6 +189,64 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    PerpCloseBody:
+      properties:
+        position_id:
+          type: string
+          title: Position Id
+      type: object
+      required:
+      - position_id
+      title: PerpCloseBody
+    FundingTickBody:
+      properties:
+        underlying_key:
+          type: string
+          title: Underlying Key
+      type: object
+      required:
+      - underlying_key
+      title: FundingTickBody
+    PerpOpenBody:
+      properties:
+        underlying_key:
+          type: string
+          title: Underlying Key
+          description: agent_asset:<agent_id>
+        side:
+          type: string
+          title: Side
+          description: long or short
+        size_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Size Usdc
+        collateral_asset:
+          type: string
+          title: Collateral Asset
+          description: USDC or USDT
+        collateral_amount:
+          anyOf:
+          - type: number
+            exclusiveMinimum: 0.0
+          - type: 'null'
+          title: Collateral Amount
+        owner_did:
+          type: string
+          title: Owner Did
+          default: did:hive:caller
+        rail_settlement_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rail Settlement Id
+      type: object
+      required:
+      - underlying_key
+      - side
+      - size_usdc
+      - collateral_asset
+      title: PerpOpenBody
     AgentAssetListBody:
       properties:
         agent_id:
@@ -270,55 +325,15 @@ components:
       description: 'Revenue proof. v0.2 will validate against source-protocol
 
         signatures (CROO Agent Protocol, Virtuals Revenue Network, etc.).'
-    PerpOpenBody:
+    HTTPValidationError:
       properties:
-        underlying_key:
-          type: string
-          title: Underlying Key
-          description: agent_asset:<agent_id>
-        side:
-          type: string
-          title: Side
-          description: long or short
-        size_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Size Usdc
-        collateral_asset:
-          type: string
-          title: Collateral Asset
-          description: USDC or USDT
-        collateral_amount:
-          anyOf:
-          - type: number
-            exclusiveMinimum: 0.0
-          - type: 'null'
-          title: Collateral Amount
-        owner_did:
-          type: string
-          title: Owner Did
-          default: did:hive:caller
-        rail_settlement_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Rail Settlement Id
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - underlying_key
-      - side
-      - size_usdc
-      - collateral_asset
-      title: PerpOpenBody
-    PerpCloseBody:
-      properties:
-        position_id:
-          type: string
-          title: Position Id
-      type: object
-      required:
-      - position_id
-      title: PerpCloseBody
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -345,47 +360,3 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    FundingTickBody:
-      properties:
-        underlying_key:
-          type: string
-          title: Underlying Key
-      type: object
-      required:
-      - underlying_key
-      title: FundingTickBody
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

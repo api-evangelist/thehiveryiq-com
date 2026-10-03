@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Mos Intel API
+  title: HiveMorph v0.1 Mos Intel API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged mos-intel across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: mos-intel
 paths:
@@ -236,6 +233,23 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    TelemetryRequest:
+      properties:
+        site_did:
+          type: string
+          maxLength: 512
+          minLength: 10
+          title: Site Did
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: 'Signed telemetry payload. Recommended fields: hashrate_ths (float), health (str), temp_c (float), energy_kwh (float), workers (list[dict]). All fields are optional; include what the MOS SDK exposes.'
+      type: object
+      required:
+      - site_did
+      title: TelemetryRequest
+      description: Body for POST /v1/mos/intel/telemetry.
     hivemorph__mos__intel__RegisterRequest:
       properties:
         site_did:
@@ -299,46 +313,3 @@ components:
       - msg
       - type
       title: ValidationError
-    TelemetryRequest:
-      properties:
-        site_did:
-          type: string
-          maxLength: 512
-          minLength: 10
-          title: Site Did
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-          description: 'Signed telemetry payload. Recommended fields: hashrate_ths (float), health (str), temp_c (float), energy_kwh (float), workers (list[dict]). All fields are optional; include what the MOS SDK exposes.'
-      type: object
-      required:
-      - site_did
-      title: TelemetryRequest
-      description: Body for POST /v1/mos/intel/telemetry.
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Compute Grid API
+  title: HiveMorph v0.1 Compute Grid API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged compute-grid across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: compute-grid
 paths:
@@ -342,6 +339,87 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    hivemorph__hive_compute_grid__routes__BookRequest:
+      properties:
+        auction_id:
+          type: string
+          title: Auction Id
+          description: Auction id from /solve response
+        provider:
+          type: string
+          title: Provider
+          description: Chosen provider id (must match auction winner)
+        quote:
+          additionalProperties: true
+          type: object
+          title: Quote
+          description: The chosen Quote dict from /solve
+        deadline_unix:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: Deadline Unix
+      type: object
+      required:
+      - auction_id
+      - provider
+      - quote
+      - deadline_unix
+      title: BookRequest
+    hivemorph__hive_compute_grid__routes__VerifyRequest:
+      properties:
+        proof:
+          title: Proof
+          description: Groth16 proof envelope (dict or 8-elem list)
+        public_inputs:
+          items: {}
+          type: array
+          title: Public Inputs
+          description: Public inputs (BN254 field elements)
+        claim:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Claim
+          description: Optional claim metadata
+        proof_system:
+          type: string
+          title: Proof System
+          description: Proof system identifier
+          default: groth16
+      type: object
+      required:
+      - proof
+      - public_inputs
+      title: VerifyRequest
+    ReleaseRequest:
+      properties:
+        provider:
+          type: string
+          title: Provider
+        booking_id:
+          type: string
+          title: Booking Id
+      type: object
+      required:
+      - provider
+      - booking_id
+      title: ReleaseRequest
+    VerifySelectionRequest:
+      properties:
+        proof:
+          title: Proof
+          description: Groth16 envelope from /solve.proof_envelope
+        public_inputs:
+          items: {}
+          type: array
+          title: Public Inputs
+          description: From /solve.proof_public_inputs
+      type: object
+      required:
+      - proof
+      - public_inputs
+      title: VerifySelectionRequest
     WorkloadRequest:
       properties:
         gpu_type:
@@ -388,33 +466,15 @@ components:
           title: Submitter Did
       type: object
       title: WorkloadRequest
-    hivemorph__hive_compute_grid__routes__VerifyRequest:
+    HTTPValidationError:
       properties:
-        proof:
-          title: Proof
-          description: Groth16 proof envelope (dict or 8-elem list)
-        public_inputs:
-          items: {}
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Public Inputs
-          description: Public inputs (BN254 field elements)
-        claim:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Claim
-          description: Optional claim metadata
-        proof_system:
-          type: string
-          title: Proof System
-          description: Proof system identifier
-          default: groth16
+          title: Detail
       type: object
-      required:
-      - proof
-      - public_inputs
-      title: VerifyRequest
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -441,92 +501,3 @@ components:
       - msg
       - type
       title: ValidationError
-    hivemorph__hive_compute_grid__routes__BookRequest:
-      properties:
-        auction_id:
-          type: string
-          title: Auction Id
-          description: Auction id from /solve response
-        provider:
-          type: string
-          title: Provider
-          description: Chosen provider id (must match auction winner)
-        quote:
-          additionalProperties: true
-          type: object
-          title: Quote
-          description: The chosen Quote dict from /solve
-        deadline_unix:
-          type: integer
-          exclusiveMinimum: 0.0
-          title: Deadline Unix
-      type: object
-      required:
-      - auction_id
-      - provider
-      - quote
-      - deadline_unix
-      title: BookRequest
-    ReleaseRequest:
-      properties:
-        provider:
-          type: string
-          title: Provider
-        booking_id:
-          type: string
-          title: Booking Id
-      type: object
-      required:
-      - provider
-      - booking_id
-      title: ReleaseRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    VerifySelectionRequest:
-      properties:
-        proof:
-          title: Proof
-          description: Groth16 envelope from /solve.proof_envelope
-        public_inputs:
-          items: {}
-          type: array
-          title: Public Inputs
-          description: From /solve.proof_public_inputs
-      type: object
-      required:
-      - proof
-      - public_inputs
-      title: VerifySelectionRequest
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

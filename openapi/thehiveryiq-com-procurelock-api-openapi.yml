@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Procurelock API
+  title: HiveMorph v0.1 Procurelock API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged Procurelock across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: Procurelock
 paths:
@@ -311,57 +308,47 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    POAttestResponse:
+    MatchVerifyRequest:
       properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        buyer_did:
-          type: string
-          title: Buyer Did
-        supplier_did:
-          type: string
-          title: Supplier Did
         po_number:
           type: string
           title: Po Number
-        event_type:
-          $ref: '#/components/schemas/POEventType'
-        event_hash:
-          type: string
-          title: Event Hash
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        price_usd:
-          type: number
-          title: Price Usd
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-        edi_payload:
+        buyer_did:
           anyOf:
           - type: string
           - type: 'null'
-          title: Edi Payload
-        edi_wrap_id:
+          title: Buyer Did
+        supplier_did:
           anyOf:
           - type: string
           - type: 'null'
-          title: Edi Wrap Id
+          title: Supplier Did
+        require_two_way:
+          type: boolean
+          title: Require Two Way
+          description: Accept PO+IR alone (skip GR)
+          default: false
       type: object
       required:
-      - attestation_id
-      - buyer_did
-      - supplier_did
       - po_number
-      - event_type
-      - event_hash
-      - timestamp_iso
-      - price_usd
-      - receipt_envelope
-      title: POAttestResponse
+      title: MatchVerifyRequest
+      description: '3-way match: PO + GR + IR. Returns the chain of receipts and whether
+
+        the line-item totals reconcile.'
+    POEventType:
+      type: string
+      enum:
+      - request
+      - quote
+      - po_issued
+      - po_ack
+      - asn
+      - goods_receipt
+      - invoice_receipt
+      - payment
+      - change_order
+      - cancellation
+      title: POEventType
     DeliveryAttestRequest:
       properties:
         buyer_did:
@@ -439,42 +426,102 @@ components:
       - po_number
       - delivery_status
       title: DeliveryAttestRequest
-    MatchVerifyRequest:
+    MatchVerifyResponse:
       properties:
         po_number:
           type: string
           title: Po Number
-        buyer_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Buyer Did
-        supplier_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Supplier Did
-        require_two_way:
+        matched:
           type: boolean
-          title: Require Two Way
-          description: Accept PO+IR alone (skip GR)
-          default: false
+          title: Matched
+        states_present:
+          items:
+            $ref: '#/components/schemas/POEventType'
+          type: array
+          title: States Present
+        po_total_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Po Total Cents
+        gr_total_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Gr Total Cents
+        ir_total_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ir Total Cents
+        discrepancies:
+          items:
+            type: string
+          type: array
+          title: Discrepancies
+        chain:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Chain
       type: object
       required:
       - po_number
-      title: MatchVerifyRequest
-      description: '3-way match: PO + GR + IR. Returns the chain of receipts and whether
-
-        the line-item totals reconcile.'
-    DeliveryStatus:
-      type: string
-      enum:
-      - scheduled
-      - in_transit
-      - delivered
-      - partial
-      - rejected
-      title: DeliveryStatus
+      - matched
+      - states_present
+      title: MatchVerifyResponse
+    POAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        supplier_did:
+          type: string
+          title: Supplier Did
+        po_number:
+          type: string
+          title: Po Number
+        event_type:
+          $ref: '#/components/schemas/POEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        edi_payload:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Edi Payload
+        edi_wrap_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Edi Wrap Id
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - supplier_did
+      - po_number
+      - event_type
+      - event_hash
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: POAttestResponse
     POAttestRequest:
       properties:
         buyer_did:
@@ -600,43 +647,15 @@ components:
         is what proves the buyer/supplier saw exactly the same document at this
 
         state.'
-    DeliveryAttestResponse:
-      properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        buyer_did:
-          type: string
-          title: Buyer Did
-        supplier_did:
-          type: string
-          title: Supplier Did
-        po_number:
-          type: string
-          title: Po Number
-        delivery_status:
-          $ref: '#/components/schemas/DeliveryStatus'
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        price_usd:
-          type: number
-          title: Price Usd
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-      type: object
-      required:
-      - attestation_id
-      - buyer_did
-      - supplier_did
-      - po_number
-      - delivery_status
-      - timestamp_iso
-      - price_usd
-      - receipt_envelope
-      title: DeliveryAttestResponse
+    DeliveryStatus:
+      type: string
+      enum:
+      - scheduled
+      - in_transit
+      - delivered
+      - partial
+      - rejected
+      title: DeliveryStatus
     POLineItem:
       properties:
         line_number:
@@ -696,6 +715,52 @@ components:
       - sku
       - quantity
       title: POLineItem
+    DeliveryAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        supplier_did:
+          type: string
+          title: Supplier Did
+        po_number:
+          type: string
+          title: Po Number
+        delivery_status:
+          $ref: '#/components/schemas/DeliveryStatus'
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - supplier_did
+      - po_number
+      - delivery_status
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: DeliveryAttestResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -722,29 +787,6 @@ components:
       - msg
       - type
       title: ValidationError
-    POEventType:
-      type: string
-      enum:
-      - request
-      - quote
-      - po_issued
-      - po_ack
-      - asn
-      - goods_receipt
-      - invoice_receipt
-      - payment
-      - change_order
-      - cancellation
-      title: POEventType
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     POVerifyResponse:
       properties:
         attestation_id:
@@ -787,74 +829,3 @@ components:
       - receipt_envelope
       - verification
       title: POVerifyResponse
-    MatchVerifyResponse:
-      properties:
-        po_number:
-          type: string
-          title: Po Number
-        matched:
-          type: boolean
-          title: Matched
-        states_present:
-          items:
-            $ref: '#/components/schemas/POEventType'
-          type: array
-          title: States Present
-        po_total_cents:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Po Total Cents
-        gr_total_cents:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Gr Total Cents
-        ir_total_cents:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Ir Total Cents
-        discrepancies:
-          items:
-            type: string
-          type: array
-          title: Discrepancies
-        chain:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Chain
-      type: object
-      required:
-      - po_number
-      - matched
-      - states_present
-      title: MatchVerifyResponse
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

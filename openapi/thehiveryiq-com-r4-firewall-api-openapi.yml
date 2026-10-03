@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com R4 Firewall API
+  title: HiveMorph v0.1 R4 Firewall API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged r4-firewall across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: r4-firewall
 paths:
@@ -239,6 +236,62 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ApprovalRequestReq:
+      properties:
+        jti:
+          type: string
+          title: Jti
+        bound_violation:
+          type: string
+          title: Bound Violation
+          default: jurisdiction_not_allowed
+        request_summary:
+          additionalProperties: true
+          type: object
+          title: Request Summary
+        ttl_seconds:
+          type: integer
+          maximum: 2592000.0
+          exclusiveMinimum: 0.0
+          title: Ttl Seconds
+          default: 86400
+      type: object
+      required:
+      - jti
+      title: ApprovalRequestReq
+    ApprovalDecideReq:
+      properties:
+        decision:
+          type: string
+          title: Decision
+          description: '''approved'' or ''denied'''
+        decided_by:
+          type: string
+          title: Decided By
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - decision
+      - decided_by
+      title: ApprovalDecideReq
+    CosignSignReq:
+      properties:
+        signer_did:
+          type: string
+          title: Signer Did
+        signature:
+          type: string
+          title: Signature
+          description: base64url Ed25519 signature over (challenge_id || nonce). R11 ships full Threshold SHOD-PQ verification; today the signature is recorded but not cryptographically validated since R11 binds the multi-party signing protocol.
+      type: object
+      required:
+      - signer_did
+      - signature
+      title: CosignSignReq
     SandboxRunReq:
       properties:
         jti:
@@ -310,20 +363,15 @@ components:
       required:
       - jti
       title: CosignChallengeReq
-    CosignSignReq:
+    HTTPValidationError:
       properties:
-        signer_did:
-          type: string
-          title: Signer Did
-        signature:
-          type: string
-          title: Signature
-          description: base64url Ed25519 signature over (challenge_id || nonce). R11 ships full Threshold SHOD-PQ verification; today the signature is recorded but not cryptographically validated since R11 binds the multi-party signing protocol.
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - signer_did
-      - signature
-      title: CosignSignReq
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -350,80 +398,3 @@ components:
       - msg
       - type
       title: ValidationError
-    ApprovalRequestReq:
-      properties:
-        jti:
-          type: string
-          title: Jti
-        bound_violation:
-          type: string
-          title: Bound Violation
-          default: jurisdiction_not_allowed
-        request_summary:
-          additionalProperties: true
-          type: object
-          title: Request Summary
-        ttl_seconds:
-          type: integer
-          maximum: 2592000.0
-          exclusiveMinimum: 0.0
-          title: Ttl Seconds
-          default: 86400
-      type: object
-      required:
-      - jti
-      title: ApprovalRequestReq
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ApprovalDecideReq:
-      properties:
-        decision:
-          type: string
-          title: Decision
-          description: '''approved'' or ''denied'''
-        decided_by:
-          type: string
-          title: Decided By
-        note:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Note
-      type: object
-      required:
-      - decision
-      - decided_by
-      title: ApprovalDecideReq
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

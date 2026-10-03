@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Morso API
+  title: HiveMorph v0.1 Morso API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged morso across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: morso
 paths:
@@ -150,17 +147,21 @@ paths:
                 title: Response Morso Examples V1 Morso Examples Get
 components:
   schemas:
-    hivemorph__hive_morso__routes__VerifyRequest:
+    ExcerptIn:
       properties:
-        receipt:
-          additionalProperties: true
-          type: object
-          title: Receipt
-          description: A full MoRSo receipt object
+        fragments:
+          items:
+            $ref: '#/components/schemas/FragmentIn'
+          type: array
+          title: Fragments
+          description: Excerpt fragments cut from the parent
+        enclosing:
+          anyOf:
+          - $ref: '#/components/schemas/EnclosingIn'
+          - type: 'null'
+          description: Optional enclosing-container context
       type: object
-      required:
-      - receipt
-      title: VerifyRequest
+      title: ExcerptIn
     FragmentIn:
       properties:
         start:
@@ -211,6 +212,45 @@ components:
           default: 0
       type: object
       title: SealedParentIn
+    IssueRequest:
+      properties:
+        parent_mor:
+          additionalProperties: true
+          type: object
+          title: Parent Mor
+          description: A full, valid parent Media Origin Receipt object
+        sealed_parent:
+          $ref: '#/components/schemas/SealedParentIn'
+          description: The parent boundary map sealed at capture
+        excerpt:
+          $ref: '#/components/schemas/ExcerptIn'
+          description: The excerpt to classify against the sealed boundaries
+        excerpt_commitment:
+          type: string
+          title: Excerpt Commitment
+          description: Optional fingerprint of the excerpt
+          default: ''
+      type: object
+      required:
+      - parent_mor
+      - sealed_parent
+      - excerpt
+      title: IssueRequest
+    BoundaryIn:
+      properties:
+        kind:
+          type: string
+          title: Kind
+          description: Boundary kind, e.g. answer_start, answer_end, question_start
+        pos:
+          type: number
+          title: Pos
+          description: Boundary position on the sealed source timeline
+      type: object
+      required:
+      - kind
+      - pos
+      title: BoundaryIn
     EnclosingIn:
       properties:
         units:
@@ -240,21 +280,26 @@ components:
           title: Contiguous
       type: object
       title: EnclosingIn
-    BoundaryIn:
+    hivemorph__hive_morso__routes__VerifyRequest:
       properties:
-        kind:
-          type: string
-          title: Kind
-          description: Boundary kind, e.g. answer_start, answer_end, question_start
-        pos:
-          type: number
-          title: Pos
-          description: Boundary position on the sealed source timeline
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: A full MoRSo receipt object
       type: object
       required:
-      - kind
-      - pos
-      title: BoundaryIn
+      - receipt
+      title: VerifyRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -292,77 +337,3 @@ components:
       - sealed_parent
       - excerpt
       title: ClassifyRequest
-    ExcerptIn:
-      properties:
-        fragments:
-          items:
-            $ref: '#/components/schemas/FragmentIn'
-          type: array
-          title: Fragments
-          description: Excerpt fragments cut from the parent
-        enclosing:
-          anyOf:
-          - $ref: '#/components/schemas/EnclosingIn'
-          - type: 'null'
-          description: Optional enclosing-container context
-      type: object
-      title: ExcerptIn
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    IssueRequest:
-      properties:
-        parent_mor:
-          additionalProperties: true
-          type: object
-          title: Parent Mor
-          description: A full, valid parent Media Origin Receipt object
-        sealed_parent:
-          $ref: '#/components/schemas/SealedParentIn'
-          description: The parent boundary map sealed at capture
-        excerpt:
-          $ref: '#/components/schemas/ExcerptIn'
-          description: The excerpt to classify against the sealed boundaries
-        excerpt_commitment:
-          type: string
-          title: Excerpt Commitment
-          description: Optional fingerprint of the excerpt
-          default: ''
-      type: object
-      required:
-      - parent_mor
-      - sealed_parent
-      - excerpt
-      title: IssueRequest
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

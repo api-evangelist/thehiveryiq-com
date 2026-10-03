@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Edi API
+  title: HiveMorph v0.1 Edi API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged Edi across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: Edi
 paths:
@@ -129,54 +126,84 @@ paths:
                 title: Response Health Endpoint V1 Edi Health Get
 components:
   schemas:
-    EDIWrapRequest:
+    EDIParseRequest:
       properties:
-        receipt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Receipt Id
-          description: Existing Hive receipt id to wrap. One of receipt_id or receipt_envelope must be set.
-        receipt_envelope:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Receipt Envelope
-          description: Inline receipt envelope (alternative to receipt_id).
+        edi_payload:
+          type: string
+          title: Edi Payload
         format:
           $ref: '#/components/schemas/EDIFormat'
-          description: Output EDI format
+      type: object
+      required:
+      - edi_payload
+      - format
+      title: EDIParseRequest
+      description: Parse an inbound EDI document and extract the embedded Hive receipt segment if present.
+    EDIDocumentType:
+      type: string
+      enum:
+      - po
+      - po_ack
+      - asn
+      - invoice
+      - payment
+      title: EDIDocumentType
+    EDIWrapResponse:
+      properties:
+        wrap_id:
+          type: string
+          title: Wrap Id
+        format:
+          $ref: '#/components/schemas/EDIFormat'
         document_type:
           $ref: '#/components/schemas/EDIDocumentType'
-          description: Procurement document type
+        edi_payload:
+          type: string
+          title: Edi Payload
+          description: The serialized EDI document with appended Hive cryptographic segment
+        receipt_id:
+          type: string
+          title: Receipt Id
         sender_id:
           type: string
           title: Sender Id
-          description: Sender qualifier:id (e.g. 'ZZ:HIVE001')
         receiver_id:
           type: string
           title: Receiver Id
-          description: Receiver qualifier:id (e.g. 'ZZ:KOJO001')
         interchange_control_number:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Interchange Control Number
-          description: Optional ISA13 control number; auto-generated if omitted
-        test_indicator:
-          type: boolean
-          title: Test Indicator
-          description: ISA15 = T (test) vs P (production)
-          default: false
+        issued_at:
+          type: string
+          title: Issued At
+        price_usd:
+          type: number
+          title: Price Usd
+          default: 0.0001
+        price_micro_usdc:
+          type: integer
+          title: Price Micro Usdc
+          default: 100
       type: object
       required:
+      - wrap_id
       - format
       - document_type
+      - edi_payload
+      - receipt_id
       - sender_id
       - receiver_id
-      title: EDIWrapRequest
-      description: Request to wrap a Hive receipt in an EDI envelope.
+      - interchange_control_number
+      - issued_at
+      title: EDIWrapResponse
+    EDIFormat:
+      type: string
+      enum:
+      - x12
+      - edifact
+      - cxml
+      - idoc
+      title: EDIFormat
     EDIParseResponse:
       properties:
         parsed_at:
@@ -245,36 +272,63 @@ components:
       - hive_receipt_verifies
       - hive_receipt_envelope
       title: EDIParseResponse
-    EDIFormat:
-      type: string
-      enum:
-      - x12
-      - edifact
-      - cxml
-      - idoc
-      title: EDIFormat
-    EDIDocumentType:
-      type: string
-      enum:
-      - po
-      - po_ack
-      - asn
-      - invoice
-      - payment
-      title: EDIDocumentType
-    EDIParseRequest:
+    EDIWrapRequest:
       properties:
-        edi_payload:
-          type: string
-          title: Edi Payload
+        receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Id
+          description: Existing Hive receipt id to wrap. One of receipt_id or receipt_envelope must be set.
+        receipt_envelope:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Receipt Envelope
+          description: Inline receipt envelope (alternative to receipt_id).
         format:
           $ref: '#/components/schemas/EDIFormat'
+          description: Output EDI format
+        document_type:
+          $ref: '#/components/schemas/EDIDocumentType'
+          description: Procurement document type
+        sender_id:
+          type: string
+          title: Sender Id
+          description: Sender qualifier:id (e.g. 'ZZ:HIVE001')
+        receiver_id:
+          type: string
+          title: Receiver Id
+          description: Receiver qualifier:id (e.g. 'ZZ:KOJO001')
+        interchange_control_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Interchange Control Number
+          description: Optional ISA13 control number; auto-generated if omitted
+        test_indicator:
+          type: boolean
+          title: Test Indicator
+          description: ISA15 = T (test) vs P (production)
+          default: false
       type: object
       required:
-      - edi_payload
       - format
-      title: EDIParseRequest
-      description: Parse an inbound EDI document and extract the embedded Hive receipt segment if present.
+      - document_type
+      - sender_id
+      - receiver_id
+      title: EDIWrapRequest
+      description: Request to wrap a Hive receipt in an EDI envelope.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -301,86 +355,3 @@ components:
       - msg
       - type
       title: ValidationError
-    EDIWrapResponse:
-      properties:
-        wrap_id:
-          type: string
-          title: Wrap Id
-        format:
-          $ref: '#/components/schemas/EDIFormat'
-        document_type:
-          $ref: '#/components/schemas/EDIDocumentType'
-        edi_payload:
-          type: string
-          title: Edi Payload
-          description: The serialized EDI document with appended Hive cryptographic segment
-        receipt_id:
-          type: string
-          title: Receipt Id
-        sender_id:
-          type: string
-          title: Sender Id
-        receiver_id:
-          type: string
-          title: Receiver Id
-        interchange_control_number:
-          type: string
-          title: Interchange Control Number
-        issued_at:
-          type: string
-          title: Issued At
-        price_usd:
-          type: number
-          title: Price Usd
-          default: 0.0001
-        price_micro_usdc:
-          type: integer
-          title: Price Micro Usdc
-          default: 100
-      type: object
-      required:
-      - wrap_id
-      - format
-      - document_type
-      - edi_payload
-      - receipt_id
-      - sender_id
-      - receiver_id
-      - interchange_control_number
-      - issued_at
-      title: EDIWrapResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

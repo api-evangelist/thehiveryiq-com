@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Arb Spread API
+  title: HiveMorph v0.1 Arb Spread API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged arb-spread across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: arb-spread
 paths:
@@ -218,21 +215,6 @@ paths:
                 title: Response Get Stats V1 Arb Spread Stats Get
 components:
   schemas:
-    hivemorph__hive_arb__routes__BookRequest:
-      properties:
-        buy_offer_id:
-          type: string
-          title: Buy Offer Id
-          description: Bus offer ID of the cheaper (buy-side) offer
-        sell_offer_id:
-          type: string
-          title: Sell Offer Id
-          description: Bus offer ID of the more expensive (sell-side) offer
-      type: object
-      required:
-      - buy_offer_id
-      - sell_offer_id
-      title: BookRequest
     HTTPValidationError:
       properties:
         detail:
@@ -268,29 +250,18 @@ components:
       - msg
       - type
       title: ValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+    hivemorph__hive_arb__routes__BookRequest:
+      properties:
+        buy_offer_id:
+          type: string
+          title: Buy Offer Id
+          description: Bus offer ID of the cheaper (buy-side) offer
+        sell_offer_id:
+          type: string
+          title: Sell Offer Id
+          description: Bus offer ID of the more expensive (sell-side) offer
+      type: object
+      required:
+      - buy_offer_id
+      - sell_offer_id
+      title: BookRequest

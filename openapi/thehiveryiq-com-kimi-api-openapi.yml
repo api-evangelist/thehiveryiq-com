@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Kimi API
+  title: HiveMorph v0.1 Kimi API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged kimi across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: kimi
 paths:
@@ -143,10 +140,55 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    OrchestrateResponse:
+    WisdomRequest:
       properties:
-        plan:
-          title: Plan
+        tenant_id:
+          type: string
+          title: Tenant Id
+          description: Tenant identifier
+        brand_name:
+          type: string
+          title: Brand Name
+          description: Organization name
+        company_domain:
+          type: string
+          title: Company Domain
+          description: Company domain for context
+          default: ''
+        vertical:
+          type: string
+          title: Vertical
+          description: Industry vertical
+          default: universal
+        features_enabled:
+          items:
+            type: string
+          type: array
+          title: Features Enabled
+          description: Already-active features
+        query:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Query
+          description: Optional specific question
+      type: object
+      required:
+      - tenant_id
+      - brand_name
+      title: WisdomRequest
+      description: 'Build #43 Wisdom panel request — extended to use Kimi K2.6.'
+    CodeResponse:
+      properties:
+        code:
+          type: string
+          title: Code
+        language:
+          type: string
+          title: Language
+        explanation:
+          type: string
+          title: Explanation
         source:
           type: string
           title: Source
@@ -158,16 +200,43 @@ components:
           - type: string
           - type: 'null'
           title: Model
-        steps_planned:
-          type: integer
-          title: Steps Planned
-          default: 0
       type: object
       required:
-      - plan
+      - code
+      - language
+      - explanation
       - source
       - configured
-      title: OrchestrateResponse
+      title: CodeResponse
+    CodeRequest:
+      properties:
+        task:
+          type: string
+          title: Task
+          description: What code to generate
+        language:
+          type: string
+          title: Language
+          description: Target language (python/typescript/bash)
+          default: python
+        context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context
+          description: Additional codebase context
+        max_tokens:
+          type: integer
+          maximum: 16384.0
+          minimum: 256.0
+          title: Max Tokens
+          description: Max output tokens
+          default: 4096
+      type: object
+      required:
+      - task
+      title: CodeRequest
+      description: Code generation request.
     HealthResponse:
       properties:
         status:
@@ -241,6 +310,27 @@ components:
       - objective
       title: LongHorizonRequest
       description: 200+ step deep-reasoning task request.
+    WisdomResponse:
+      properties:
+        recommendations:
+          title: Recommendations
+        source:
+          type: string
+          title: Source
+        configured:
+          type: boolean
+          title: Configured
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+      type: object
+      required:
+      - recommendations
+      - source
+      - configured
+      title: WisdomResponse
     LongHorizonResponse:
       properties:
         result:
@@ -277,6 +367,31 @@ components:
       - source
       - configured
       title: LongHorizonResponse
+    OrchestrateResponse:
+      properties:
+        plan:
+          title: Plan
+        source:
+          type: string
+          title: Source
+        configured:
+          type: boolean
+          title: Configured
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+        steps_planned:
+          type: integer
+          title: Steps Planned
+          default: 0
+      type: object
+      required:
+      - plan
+      - source
+      - configured
+      title: OrchestrateResponse
     OrchestrateRequest:
       properties:
         goal:
@@ -307,35 +422,15 @@ components:
       - goal
       title: OrchestrateRequest
       description: Multi-agent orchestration request.
-    CodeRequest:
+    HTTPValidationError:
       properties:
-        task:
-          type: string
-          title: Task
-          description: What code to generate
-        language:
-          type: string
-          title: Language
-          description: Target language (python/typescript/bash)
-          default: python
-        context:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Context
-          description: Additional codebase context
-        max_tokens:
-          type: integer
-          maximum: 16384.0
-          minimum: 256.0
-          title: Max Tokens
-          description: Max output tokens
-          default: 4096
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - task
-      title: CodeRequest
-      description: Code generation request.
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -362,127 +457,3 @@ components:
       - msg
       - type
       title: ValidationError
-    CodeResponse:
-      properties:
-        code:
-          type: string
-          title: Code
-        language:
-          type: string
-          title: Language
-        explanation:
-          type: string
-          title: Explanation
-        source:
-          type: string
-          title: Source
-        configured:
-          type: boolean
-          title: Configured
-        model:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Model
-      type: object
-      required:
-      - code
-      - language
-      - explanation
-      - source
-      - configured
-      title: CodeResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    WisdomRequest:
-      properties:
-        tenant_id:
-          type: string
-          title: Tenant Id
-          description: Tenant identifier
-        brand_name:
-          type: string
-          title: Brand Name
-          description: Organization name
-        company_domain:
-          type: string
-          title: Company Domain
-          description: Company domain for context
-          default: ''
-        vertical:
-          type: string
-          title: Vertical
-          description: Industry vertical
-          default: universal
-        features_enabled:
-          items:
-            type: string
-          type: array
-          title: Features Enabled
-          description: Already-active features
-        query:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Query
-          description: Optional specific question
-      type: object
-      required:
-      - tenant_id
-      - brand_name
-      title: WisdomRequest
-      description: 'Build #43 Wisdom panel request — extended to use Kimi K2.6.'
-    WisdomResponse:
-      properties:
-        recommendations:
-          title: Recommendations
-        source:
-          type: string
-          title: Source
-        configured:
-          type: boolean
-          title: Configured
-        model:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Model
-      type: object
-      required:
-      - recommendations
-      - source
-      - configured
-      title: WisdomResponse
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'

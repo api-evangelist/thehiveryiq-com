@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Alcoa Agentguard API
+  title: HiveMorph v0.1 Alcoa Agentguard API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged alcoa-agentguard across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: alcoa-agentguard
 paths:
@@ -299,6 +296,42 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    DosingAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of site or nurse administering
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: CDISC-SDTM/EX
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of dosing record
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: CDISC-SDTM-v3.3/EX
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Dosing metadata: subject_id, dose_mg, route, datetime, batch_number, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - original_payload_hash
+      title: DosingAttestRequest
+      description: Record a dosing event.
     DataTransferAttestRequest:
       properties:
         trial_id:
@@ -340,83 +373,6 @@ components:
       - original_payload_hash
       title: DataTransferAttestRequest
       description: Record a CRO data handoff / transfer event.
-    DatabaseLockAttestRequest:
-      properties:
-        trial_id:
-          type: string
-          title: Trial Id
-          description: Unique trial identifier
-        attributable_did:
-          type: string
-          title: Attributable Did
-          description: DID of data manager or sponsor
-        legible_format:
-          type: string
-          title: Legible Format
-          description: Data format
-          default: CDISC-SDTM
-        original_payload_hash:
-          type: string
-          title: Original Payload Hash
-          description: sha256 of locked database snapshot
-        consistent_schema:
-          type: string
-          title: Consistent Schema
-          description: Schema URI/version
-          default: CDISC-SDTM-v3.3
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Lock metadata: lock_date, locked_by_did, dataset_version, query_count_resolved, etc.'
-      type: object
-      required:
-      - trial_id
-      - attributable_did
-      - original_payload_hash
-      title: DatabaseLockAttestRequest
-      description: Record a database lock event.
-    ConsentAttestRequest:
-      properties:
-        trial_id:
-          type: string
-          title: Trial Id
-          description: Unique trial identifier
-        attributable_did:
-          type: string
-          title: Attributable Did
-          description: DID of patient or site
-        irb_version_hash:
-          type: string
-          title: Irb Version Hash
-          description: sha256 of IRB-approved consent form version
-        legible_format:
-          type: string
-          title: Legible Format
-          description: Data format
-          default: FHIR-R5/Consent
-        original_payload_hash:
-          type: string
-          title: Original Payload Hash
-          description: sha256 of consent document
-        consistent_schema:
-          type: string
-          title: Consistent Schema
-          description: Schema URI/version
-          default: FHIR-R5-Consent
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Consent metadata: patient_id, irb_number, consent_date, etc.'
-      type: object
-      required:
-      - trial_id
-      - attributable_did
-      - irb_version_hash
-      - original_payload_hash
-      title: ConsentAttestRequest
-      description: Record a patient consent event (with IRB version hash).
     ProtocolAttestRequest:
       properties:
         trial_id:
@@ -453,68 +409,6 @@ components:
       - original_payload_hash
       title: ProtocolAttestRequest
       description: Record a protocol or amendment event.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    DosingAttestRequest:
-      properties:
-        trial_id:
-          type: string
-          title: Trial Id
-          description: Unique trial identifier
-        attributable_did:
-          type: string
-          title: Attributable Did
-          description: DID of site or nurse administering
-        legible_format:
-          type: string
-          title: Legible Format
-          description: Data format
-          default: CDISC-SDTM/EX
-        original_payload_hash:
-          type: string
-          title: Original Payload Hash
-          description: sha256 of dosing record
-        consistent_schema:
-          type: string
-          title: Consistent Schema
-          description: Schema URI/version
-          default: CDISC-SDTM-v3.3/EX
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Dosing metadata: subject_id, dose_mg, route, datetime, batch_number, etc.'
-      type: object
-      required:
-      - trial_id
-      - attributable_did
-      - original_payload_hash
-      title: DosingAttestRequest
-      description: Record a dosing event.
     EnrollmentAttestRequest:
       properties:
         trial_id:
@@ -592,6 +486,83 @@ components:
       - original_payload_hash
       title: AdverseEventAttestRequest
       description: Record an adverse event, SAE, or SUSAR.
+    ConsentAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of patient or site
+        irb_version_hash:
+          type: string
+          title: Irb Version Hash
+          description: sha256 of IRB-approved consent form version
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: FHIR-R5/Consent
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of consent document
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: FHIR-R5-Consent
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Consent metadata: patient_id, irb_number, consent_date, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - irb_version_hash
+      - original_payload_hash
+      title: ConsentAttestRequest
+      description: Record a patient consent event (with IRB version hash).
+    DatabaseLockAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of data manager or sponsor
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: CDISC-SDTM
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of locked database snapshot
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: CDISC-SDTM-v3.3
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Lock metadata: lock_date, locked_by_did, dataset_version, query_count_resolved, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - original_payload_hash
+      title: DatabaseLockAttestRequest
+      description: Record a database lock event.
     HTTPValidationError:
       properties:
         detail:
@@ -601,29 +572,29 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

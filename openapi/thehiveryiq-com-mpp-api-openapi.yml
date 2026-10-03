@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Thehiveryiq Com Mpp API
+  title: HiveMorph v0.1 Mpp API
+  description: 'Polymorphic agent runtime — single shape (Merchant), single supermodel (W2 MERCHANT). Three gates: NEED + YIELD + CLEAN-MONEY.'
   version: 0.1.0
-  description: 'Operations tagged mpp across 2 of this provider''s published API definitions: thehiveryiq-com-hivemorph-openapi.json, thehiveryiq-com-hivemorph-openapi.yml. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://receipts.thehiveryiq.com
-  description: 'Production. The document is served from this host at /openapi.json and the provider''s own llms.txt on the same host states ''Base URL: https://receipts.thehiveryiq.com''; the original document declares no servers[] (added by API Evangelist, see overlays/).'
 tags:
 - name: mpp
 paths:
@@ -114,38 +111,37 @@ paths:
                 title: Response Mpp Discovery  Well Known Mpp Json Get
 components:
   schemas:
-    ReceiptMintBody:
+    SPTBody:
       properties:
-        payload:
+        paymentMethod:
           type: string
-          maxLength: 1000000
-          minLength: 1
-          title: Payload
-          description: The payload to anchor in the receipt.
-        label:
+          title: Paymentmethod
+        networkId:
+          type: string
+          title: Networkid
+        currency:
+          type: string
+          title: Currency
+        amount:
+          type: integer
+          title: Amount
+        expiresAt:
+          type: integer
+          title: Expiresat
+        externalId:
           anyOf:
           - type: string
-            maxLength: 200
           - type: 'null'
-          title: Label
-          description: Optional human label.
-        profile:
-          type: string
-          title: Profile
-          description: 'Receipt profile: nano, standard, or pq.'
-          default: pq
-        tag:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Tag
-          description: Bounty/attribution tag (bounty_xxxx).
+          title: Externalid
       type: object
       required:
-      - payload
-      title: ReceiptMintBody
-      description: Body for /v1/receipt/mpp — same shape as existing /v1/receipt/free.
+      - paymentMethod
+      - networkId
+      - currency
+      - amount
+      - expiresAt
+      title: SPTBody
+      description: Body for /v1/receipt/mpp/spt — Stripe SPT creation proxy.
     HTTPValidationError:
       properties:
         detail:
@@ -181,60 +177,35 @@ components:
       - msg
       - type
       title: ValidationError
-    SPTBody:
+    ReceiptMintBody:
       properties:
-        paymentMethod:
+        payload:
           type: string
-          title: Paymentmethod
-        networkId:
-          type: string
-          title: Networkid
-        currency:
-          type: string
-          title: Currency
-        amount:
-          type: integer
-          title: Amount
-        expiresAt:
-          type: integer
-          title: Expiresat
-        externalId:
+          maxLength: 1000000
+          minLength: 1
+          title: Payload
+          description: The payload to anchor in the receipt.
+        label:
           anyOf:
           - type: string
+            maxLength: 200
           - type: 'null'
-          title: Externalid
+          title: Label
+          description: Optional human label.
+        profile:
+          type: string
+          title: Profile
+          description: 'Receipt profile: nano, standard, or pq.'
+          default: pq
+        tag:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Tag
+          description: Bounty/attribution tag (bounty_xxxx).
       type: object
       required:
-      - paymentMethod
-      - networkId
-      - currency
-      - amount
-      - expiresAt
-      title: SPTBody
-      description: Body for /v1/receipt/mpp/spt — Stripe SPT creation proxy.
-x-refined-from:
-- thehiveryiq-com-hivemorph-openapi.json
-- thehiveryiq-com-hivemorph-openapi.yml
-x-mpp:
-  realm: api.thehiveryiq.com
-  payment:
-    method: tempo
-    currency: '0x20c000000000000000000000b9537d11c60e8b50'
-    decimals: 6
-    recipient: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
-  rails:
-  - x402
-  - mpp
-  categories:
-  - compute
-  - inference
-  integration: first-party
-  tags:
-  - inference
-  - openai-compatible
-  - llm
-  - embeddings
-  - compute
-  - stream-a
-  - settleable
-  treasury: '0x15184Bf50B3d3F52b60434f8942b7D52F2eB436E'
+      - payload
+      title: ReceiptMintBody
+      description: Body for /v1/receipt/mpp — same shape as existing /v1/receipt/free.
