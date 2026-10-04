@@ -147,21 +147,6 @@ paths:
                 title: Response Morso Examples V1 Morso Examples Get
 components:
   schemas:
-    ExcerptIn:
-      properties:
-        fragments:
-          items:
-            $ref: '#/components/schemas/FragmentIn'
-          type: array
-          title: Fragments
-          description: Excerpt fragments cut from the parent
-        enclosing:
-          anyOf:
-          - $ref: '#/components/schemas/EnclosingIn'
-          - type: 'null'
-          description: Optional enclosing-container context
-      type: object
-      title: ExcerptIn
     FragmentIn:
       properties:
         start:
@@ -182,124 +167,6 @@ components:
       - start
       - end
       title: FragmentIn
-    SealedParentIn:
-      properties:
-        content_commitment:
-          type: string
-          title: Content Commitment
-          description: Fingerprint of the parent media (Hive never sees content)
-          default: ''
-        boundaries:
-          items:
-            $ref: '#/components/schemas/BoundaryIn'
-          type: array
-          title: Boundaries
-          description: Boundary map sealed at capture
-        origin_attestation:
-          type: string
-          title: Origin Attestation
-          description: Origin attestation string sealed at capture
-          default: ''
-        capture_meta:
-          type: string
-          title: Capture Meta
-          description: Capture metadata sealed at capture
-          default: ''
-        extent:
-          type: number
-          title: Extent
-          description: Total extent (seconds/units) of the parent
-          default: 0
-      type: object
-      title: SealedParentIn
-    IssueRequest:
-      properties:
-        parent_mor:
-          additionalProperties: true
-          type: object
-          title: Parent Mor
-          description: A full, valid parent Media Origin Receipt object
-        sealed_parent:
-          $ref: '#/components/schemas/SealedParentIn'
-          description: The parent boundary map sealed at capture
-        excerpt:
-          $ref: '#/components/schemas/ExcerptIn'
-          description: The excerpt to classify against the sealed boundaries
-        excerpt_commitment:
-          type: string
-          title: Excerpt Commitment
-          description: Optional fingerprint of the excerpt
-          default: ''
-      type: object
-      required:
-      - parent_mor
-      - sealed_parent
-      - excerpt
-      title: IssueRequest
-    BoundaryIn:
-      properties:
-        kind:
-          type: string
-          title: Kind
-          description: Boundary kind, e.g. answer_start, answer_end, question_start
-        pos:
-          type: number
-          title: Pos
-          description: Boundary position on the sealed source timeline
-      type: object
-      required:
-      - kind
-      - pos
-      title: BoundaryIn
-    EnclosingIn:
-      properties:
-        units:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Units
-          description: Total units in the enclosing container
-        covered_units:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Covered Units
-          description: Units the excerpt covers
-        unit:
-          type: string
-          title: Unit
-          default: units
-        container:
-          type: string
-          title: Container
-          default: record
-        contiguous:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Contiguous
-      type: object
-      title: EnclosingIn
-    hivemorph__hive_morso__routes__VerifyRequest:
-      properties:
-        receipt:
-          additionalProperties: true
-          type: object
-          title: Receipt
-          description: A full MoRSo receipt object
-      type: object
-      required:
-      - receipt
-      title: VerifyRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -337,3 +204,136 @@ components:
       - sealed_parent
       - excerpt
       title: ClassifyRequest
+    EnclosingIn:
+      properties:
+        units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Units
+          description: Total units in the enclosing container
+        covered_units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Covered Units
+          description: Units the excerpt covers
+        unit:
+          type: string
+          title: Unit
+          default: units
+        container:
+          type: string
+          title: Container
+          default: record
+        contiguous:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Contiguous
+      type: object
+      title: EnclosingIn
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BoundaryIn:
+      properties:
+        kind:
+          type: string
+          title: Kind
+          description: Boundary kind, e.g. answer_start, answer_end, question_start
+        pos:
+          type: number
+          title: Pos
+          description: Boundary position on the sealed source timeline
+      type: object
+      required:
+      - kind
+      - pos
+      title: BoundaryIn
+    hivemorph__hive_morso__routes__VerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: A full MoRSo receipt object
+      type: object
+      required:
+      - receipt
+      title: VerifyRequest
+    ExcerptIn:
+      properties:
+        fragments:
+          items:
+            $ref: '#/components/schemas/FragmentIn'
+          type: array
+          title: Fragments
+          description: Excerpt fragments cut from the parent
+        enclosing:
+          anyOf:
+          - $ref: '#/components/schemas/EnclosingIn'
+          - type: 'null'
+          description: Optional enclosing-container context
+      type: object
+      title: ExcerptIn
+    IssueRequest:
+      properties:
+        parent_mor:
+          additionalProperties: true
+          type: object
+          title: Parent Mor
+          description: A full, valid parent Media Origin Receipt object
+        sealed_parent:
+          $ref: '#/components/schemas/SealedParentIn'
+          description: The parent boundary map sealed at capture
+        excerpt:
+          $ref: '#/components/schemas/ExcerptIn'
+          description: The excerpt to classify against the sealed boundaries
+        excerpt_commitment:
+          type: string
+          title: Excerpt Commitment
+          description: Optional fingerprint of the excerpt
+          default: ''
+      type: object
+      required:
+      - parent_mor
+      - sealed_parent
+      - excerpt
+      title: IssueRequest
+    SealedParentIn:
+      properties:
+        content_commitment:
+          type: string
+          title: Content Commitment
+          description: Fingerprint of the parent media (Hive never sees content)
+          default: ''
+        boundaries:
+          items:
+            $ref: '#/components/schemas/BoundaryIn'
+          type: array
+          title: Boundaries
+          description: Boundary map sealed at capture
+        origin_attestation:
+          type: string
+          title: Origin Attestation
+          description: Origin attestation string sealed at capture
+          default: ''
+        capture_meta:
+          type: string
+          title: Capture Meta
+          description: Capture metadata sealed at capture
+          default: ''
+        extent:
+          type: number
+          title: Extent
+          description: Total extent (seconds/units) of the parent
+          default: 0
+      type: object
+      title: SealedParentIn

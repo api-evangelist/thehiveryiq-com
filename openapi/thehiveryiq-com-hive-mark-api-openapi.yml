@@ -153,6 +153,55 @@ paths:
                 title: Response Mark Health V1 Mark Health Get
 components:
   schemas:
+    MonitorRequest:
+      properties:
+        brand_owner_did:
+          type: string
+          title: Brand Owner Did
+          description: DID of the brand owner
+        mark_text:
+          type: string
+          maxLength: 512
+          minLength: 1
+          title: Mark Text
+        watch_domains:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Watch Domains
+      type: object
+      required:
+      - brand_owner_did
+      - mark_text
+      title: MonitorRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     hivemorph__hive_mark__routes__AttestRequest:
       properties:
         brand_owner_did:
@@ -211,52 +260,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MonitorRequest:
-      properties:
-        brand_owner_did:
-          type: string
-          title: Brand Owner Did
-          description: DID of the brand owner
-        mark_text:
-          type: string
-          maxLength: 512
-          minLength: 1
-          title: Mark Text
-        watch_domains:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Watch Domains
-      type: object
-      required:
-      - brand_owner_did
-      - mark_text
-      title: MonitorRequest

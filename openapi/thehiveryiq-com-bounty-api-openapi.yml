@@ -338,89 +338,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    LookupBody:
-      properties:
-        repo_url:
-          type: string
-          title: Repo Url
-      type: object
-      required:
-      - repo_url
-      title: LookupBody
-    AttributeBody:
-      properties:
-        referrer_code:
-          type: string
-          title: Referrer Code
-        receipt_id:
-          type: string
-          title: Receipt Id
-        value_usdc:
-          type: number
-          title: Value Usdc
-      type: object
-      required:
-      - referrer_code
-      - receipt_id
-      - value_usdc
-      title: AttributeBody
-      description: Called by the receipt issuer (or a backfill cron) to attribute a paid mint.
-    ConfirmBody:
-      properties:
-        referrer_code:
-          type: string
-          title: Referrer Code
-        note:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Note
-      type: object
-      required:
-      - referrer_code
-      title: ConfirmBody
-    hivemorph__hive_bounty__routes__RegisterBody:
-      properties:
-        handle:
-          type: string
-          maxLength: 40
-          minLength: 1
-          title: Handle
-          description: X handle e.g. @somebody
-        repo_url:
-          type: string
-          title: Repo Url
-          description: Public GitHub repo URL of the agent
-        verify_url:
-          type: string
-          title: Verify Url
-          description: https://thehiveryiq.com/verify/?id=<receipt_id> URL
-        wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wallet
-          description: Base 8453 wallet (0x...) — required before payout
-        framework:
-          type: string
-          title: Framework
-          description: 'Primary framework: langchain | langgraph | crewai'
-      type: object
-      required:
-      - handle
-      - repo_url
-      - verify_url
-      - framework
-      title: RegisterBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -469,3 +386,86 @@ components:
       - amount_usdc
       - tx_hash
       title: PayoutBody
+    LookupBody:
+      properties:
+        repo_url:
+          type: string
+          title: Repo Url
+      type: object
+      required:
+      - repo_url
+      title: LookupBody
+    hivemorph__hive_bounty__routes__RegisterBody:
+      properties:
+        handle:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Handle
+          description: X handle e.g. @somebody
+        repo_url:
+          type: string
+          title: Repo Url
+          description: Public GitHub repo URL of the agent
+        verify_url:
+          type: string
+          title: Verify Url
+          description: https://thehiveryiq.com/verify/?id=<receipt_id> URL
+        wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet
+          description: Base 8453 wallet (0x...) — required before payout
+        framework:
+          type: string
+          title: Framework
+          description: 'Primary framework: langchain | langgraph | crewai'
+      type: object
+      required:
+      - handle
+      - repo_url
+      - verify_url
+      - framework
+      title: RegisterBody
+    AttributeBody:
+      properties:
+        referrer_code:
+          type: string
+          title: Referrer Code
+        receipt_id:
+          type: string
+          title: Receipt Id
+        value_usdc:
+          type: number
+          title: Value Usdc
+      type: object
+      required:
+      - referrer_code
+      - receipt_id
+      - value_usdc
+      title: AttributeBody
+      description: Called by the receipt issuer (or a backfill cron) to attribute a paid mint.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ConfirmBody:
+      properties:
+        referrer_code:
+          type: string
+          title: Referrer Code
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - referrer_code
+      title: ConfirmBody

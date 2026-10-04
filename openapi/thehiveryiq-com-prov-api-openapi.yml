@@ -55,36 +55,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    hivemorph__hive_prov__routes__VerifyReq:
-      properties:
-        method:
-          type: string
-          title: Method
-          description: HTTP method that was signed
-        path:
-          type: string
-          title: Path
-          description: URL path that was signed
-        body_b64u:
-          type: string
-          title: Body B64U
-          description: Base64url-encoded response body bytes
-          default: ''
-        ts:
-          type: integer
-          title: Ts
-          description: Unix timestamp from X-Hive-Prov-Ts
-        sig_b64u:
-          type: string
-          title: Sig B64U
-          description: Signature from X-Hive-Prov-Sig
-      type: object
-      required:
-      - method
-      - path
-      - ts
-      - sig_b64u
-      title: VerifyReq
     HTTPValidationError:
       properties:
         detail:
@@ -120,3 +90,33 @@ components:
       - msg
       - type
       title: ValidationError
+    hivemorph__hive_prov__routes__VerifyReq:
+      properties:
+        method:
+          type: string
+          title: Method
+          description: HTTP method that was signed
+        path:
+          type: string
+          title: Path
+          description: URL path that was signed
+        body_b64u:
+          type: string
+          title: Body B64U
+          description: Base64url-encoded response body bytes
+          default: ''
+        ts:
+          type: integer
+          title: Ts
+          description: Unix timestamp from X-Hive-Prov-Ts
+        sig_b64u:
+          type: string
+          title: Sig B64U
+          description: Signature from X-Hive-Prov-Sig
+      type: object
+      required:
+      - method
+      - path
+      - ts
+      - sig_b64u
+      title: VerifyReq

@@ -58,57 +58,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    LearnedPruneRequest:
-      properties:
-        text:
-          type: string
-          title: Text
-          description: The prompt text to prune.
-        target_ratio:
-          type: number
-          maximum: 0.99
-          minimum: 0.1
-          title: Target Ratio
-          description: Target compression ratio (output tokens / input tokens). Default 0.5 = 50 percent of original.
-          default: 0.5
-        importance_floor:
-          type: integer
-          maximum: 100.0
-          minimum: 0.0
-          title: Importance Floor
-          description: Spans with importance below this floor are eligible to drop. Default 30. Raise to 40-50 for higher fidelity.
-          default: 30
-        model:
-          type: string
-          title: Model
-          description: Model alias for the judge. See /v1/smsh/judge for options.
-          default: auto
-      type: object
-      required:
-      - text
-      title: LearnedPruneRequest
-    hivemorph__hive_smsh___judge_routes_patch__JudgeRequest:
-      properties:
-        text:
-          type: string
-          title: Text
-          description: The prompt text to judge for span importance.
-        max_spans:
-          type: integer
-          maximum: 200.0
-          minimum: 1.0
-          title: Max Spans
-          description: Maximum number of spans to segment into. Default 60.
-          default: 60
-        model:
-          type: string
-          title: Model
-          description: 'Model alias for the judge. ''auto'' uses mistral-7b (cheapest). Options: mistral-7b, llama-3-8b, gemini-2-0-flash, gpt-4o-mini, qwen-2-5-72b, mixtral-8x7b, llama-3-70b, claude-3-5-haiku, claude-3-5-sonnet, gpt-4o, claude-3-opus.'
-          default: auto
-      type: object
-      required:
-      - text
-      title: JudgeRequest
     HTTPValidationError:
       properties:
         detail:
@@ -144,3 +93,54 @@ components:
       - msg
       - type
       title: ValidationError
+    hivemorph__hive_smsh___judge_routes_patch__JudgeRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: The prompt text to judge for span importance.
+        max_spans:
+          type: integer
+          maximum: 200.0
+          minimum: 1.0
+          title: Max Spans
+          description: Maximum number of spans to segment into. Default 60.
+          default: 60
+        model:
+          type: string
+          title: Model
+          description: 'Model alias for the judge. ''auto'' uses mistral-7b (cheapest). Options: mistral-7b, llama-3-8b, gemini-2-0-flash, gpt-4o-mini, qwen-2-5-72b, mixtral-8x7b, llama-3-70b, claude-3-5-haiku, claude-3-5-sonnet, gpt-4o, claude-3-opus.'
+          default: auto
+      type: object
+      required:
+      - text
+      title: JudgeRequest
+    LearnedPruneRequest:
+      properties:
+        text:
+          type: string
+          title: Text
+          description: The prompt text to prune.
+        target_ratio:
+          type: number
+          maximum: 0.99
+          minimum: 0.1
+          title: Target Ratio
+          description: Target compression ratio (output tokens / input tokens). Default 0.5 = 50 percent of original.
+          default: 0.5
+        importance_floor:
+          type: integer
+          maximum: 100.0
+          minimum: 0.0
+          title: Importance Floor
+          description: Spans with importance below this floor are eligible to drop. Default 30. Raise to 40-50 for higher fidelity.
+          default: 30
+        model:
+          type: string
+          title: Model
+          description: Model alias for the judge. See /v1/smsh/judge for options.
+          default: auto
+      type: object
+      required:
+      - text
+      title: LearnedPruneRequest

@@ -168,34 +168,6 @@ paths:
                 title: Response Origin Health V1 Origin Health Get
 components:
   schemas:
-    GitIntegrationRequest:
-      properties:
-        creator_did:
-          type: string
-          title: Creator Did
-          description: DID of the repository owner
-        repo_url:
-          type: string
-          maxLength: 2048
-          title: Repo Url
-        commit_sha:
-          type: string
-          maxLength: 64
-          minLength: 40
-          title: Commit Sha
-        commit_message_hash:
-          type: string
-          maxLength: 64
-          minLength: 64
-          title: Commit Message Hash
-          description: SHA-256 of the commit message
-      type: object
-      required:
-      - creator_did
-      - repo_url
-      - commit_sha
-      - commit_message_hash
-      title: GitIntegrationRequest
     HTTPValidationError:
       properties:
         detail:
@@ -231,6 +203,34 @@ components:
       - msg
       - type
       title: ValidationError
+    GitIntegrationRequest:
+      properties:
+        creator_did:
+          type: string
+          title: Creator Did
+          description: DID of the repository owner
+        repo_url:
+          type: string
+          maxLength: 2048
+          title: Repo Url
+        commit_sha:
+          type: string
+          maxLength: 64
+          minLength: 40
+          title: Commit Sha
+        commit_message_hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          title: Commit Message Hash
+          description: SHA-256 of the commit message
+      type: object
+      required:
+      - creator_did
+      - repo_url
+      - commit_sha
+      - commit_message_hash
+      title: GitIntegrationRequest
     CreateRequest:
       properties:
         creator_did:

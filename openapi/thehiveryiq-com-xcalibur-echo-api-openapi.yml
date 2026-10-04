@@ -110,52 +110,6 @@ paths:
                 title: Response Echo Health V1 Xcalibur Echo Health Get
 components:
   schemas:
-    hivemorph__xcalibur__echo_routes__CompressRequest:
-      properties:
-        prompt:
-          type: string
-          title: Prompt
-          description: The prompt text to compress.
-        target_ratio:
-          type: number
-          title: Target Ratio
-          description: Target length-reduction ratio in (0, 1). The compressed prompt must be at most this fraction of the original token count. Default 0.6 (≤60%% of original).
-          default: 0.6
-        min_preservation:
-          type: number
-          title: Min Preservation
-          description: Minimum surrogate preservation score [0, 1]. Gradient-free mutation search keeps drops only if score stays at or above this threshold. Default 0.85.
-          default: 0.85
-      type: object
-      required:
-      - prompt
-      title: CompressRequest
-    hivemorph__xcalibur__echo_routes__VerifyRequest:
-      properties:
-        receipt:
-          additionalProperties: true
-          type: object
-          title: Receipt
-          description: The receipt object returned by /compress.
-        compressed_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Compressed Prompt
-          description: If provided, verifies that sha3_256(compressed_prompt) matches receipt.compressed_hash. Also enables tamper detection.
-      type: object
-      required:
-      - receipt
-      title: VerifyRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -210,3 +164,49 @@ components:
       - compressed_prompt
       - receipt
       title: CompressResponse
+    hivemorph__xcalibur__echo_routes__VerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: The receipt object returned by /compress.
+        compressed_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Compressed Prompt
+          description: If provided, verifies that sha3_256(compressed_prompt) matches receipt.compressed_hash. Also enables tamper detection.
+      type: object
+      required:
+      - receipt
+      title: VerifyRequest
+    hivemorph__xcalibur__echo_routes__CompressRequest:
+      properties:
+        prompt:
+          type: string
+          title: Prompt
+          description: The prompt text to compress.
+        target_ratio:
+          type: number
+          title: Target Ratio
+          description: Target length-reduction ratio in (0, 1). The compressed prompt must be at most this fraction of the original token count. Default 0.6 (≤60%% of original).
+          default: 0.6
+        min_preservation:
+          type: number
+          title: Min Preservation
+          description: Minimum surrogate preservation score [0, 1]. Gradient-free mutation search keeps drops only if score stays at or above this threshold. Default 0.85.
+          default: 0.85
+      type: object
+      required:
+      - prompt
+      title: CompressRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError

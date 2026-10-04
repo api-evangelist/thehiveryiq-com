@@ -340,57 +340,32 @@ paths:
                 title: Response Health Endpoint V1 Perp Basis Health Get
 components:
   schemas:
-    LiquidateBody:
+    ValidationError:
       properties:
-        position_id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Position Id
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - position_id
-      title: LiquidateBody
-    IncreaseBody:
-      properties:
-        position_id:
-          type: string
-          title: Position Id
-        additional_size_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Additional Size Usdc
-        additional_collateral:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Additional Collateral
-      type: object
-      required:
-      - position_id
-      - additional_size_usdc
-      - additional_collateral
-      title: IncreaseBody
-    DecreaseBody:
-      properties:
-        position_id:
-          type: string
-          title: Position Id
-        reduce_size_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Reduce Size Usdc
-      type: object
-      required:
-      - position_id
-      - reduce_size_usdc
-      title: DecreaseBody
-    CloseBody:
-      properties:
-        position_id:
-          type: string
-          title: Position Id
-      type: object
-      required:
-      - position_id
-      title: CloseBody
+      - loc
+      - msg
+      - type
+      title: ValidationError
     OpenBody:
       properties:
         side:
@@ -431,6 +406,57 @@ components:
       - size_usdc
       - collateral_asset
       title: OpenBody
+    CloseBody:
+      properties:
+        position_id:
+          type: string
+          title: Position Id
+      type: object
+      required:
+      - position_id
+      title: CloseBody
+    LiquidateBody:
+      properties:
+        position_id:
+          type: string
+          title: Position Id
+      type: object
+      required:
+      - position_id
+      title: LiquidateBody
+    DecreaseBody:
+      properties:
+        position_id:
+          type: string
+          title: Position Id
+        reduce_size_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Reduce Size Usdc
+      type: object
+      required:
+      - position_id
+      - reduce_size_usdc
+      title: DecreaseBody
+    IncreaseBody:
+      properties:
+        position_id:
+          type: string
+          title: Position Id
+        additional_size_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Additional Size Usdc
+        additional_collateral:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Additional Collateral
+      type: object
+      required:
+      - position_id
+      - additional_size_usdc
+      - additional_collateral
+      title: IncreaseBody
     HTTPValidationError:
       properties:
         detail:
@@ -440,29 +466,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

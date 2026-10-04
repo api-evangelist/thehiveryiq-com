@@ -296,7 +296,33 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    DosingAttestRequest:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DatabaseLockAttestRequest:
       properties:
         trial_id:
           type: string
@@ -305,33 +331,33 @@ components:
         attributable_did:
           type: string
           title: Attributable Did
-          description: DID of site or nurse administering
+          description: DID of data manager or sponsor
         legible_format:
           type: string
           title: Legible Format
           description: Data format
-          default: CDISC-SDTM/EX
+          default: CDISC-SDTM
         original_payload_hash:
           type: string
           title: Original Payload Hash
-          description: sha256 of dosing record
+          description: sha256 of locked database snapshot
         consistent_schema:
           type: string
           title: Consistent Schema
           description: Schema URI/version
-          default: CDISC-SDTM-v3.3/EX
+          default: CDISC-SDTM-v3.3
         event_payload:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: 'Dosing metadata: subject_id, dose_mg, route, datetime, batch_number, etc.'
+          description: 'Lock metadata: lock_date, locked_by_did, dataset_version, query_count_resolved, etc.'
       type: object
       required:
       - trial_id
       - attributable_did
       - original_payload_hash
-      title: DosingAttestRequest
-      description: Record a dosing event.
+      title: DatabaseLockAttestRequest
+      description: Record a database lock event.
     DataTransferAttestRequest:
       properties:
         trial_id:
@@ -373,42 +399,6 @@ components:
       - original_payload_hash
       title: DataTransferAttestRequest
       description: Record a CRO data handoff / transfer event.
-    ProtocolAttestRequest:
-      properties:
-        trial_id:
-          type: string
-          title: Trial Id
-          description: Unique trial identifier
-        attributable_did:
-          type: string
-          title: Attributable Did
-          description: DID of protocol author/sponsor
-        legible_format:
-          type: string
-          title: Legible Format
-          description: Data format
-          default: JSON-LD/CDISC-SDTM
-        original_payload_hash:
-          type: string
-          title: Original Payload Hash
-          description: sha256 of protocol document
-        consistent_schema:
-          type: string
-          title: Consistent Schema
-          description: Schema URI/version
-          default: CDISC-SDTM-v3.3
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Protocol metadata: title, version, amendment_number, etc.'
-      type: object
-      required:
-      - trial_id
-      - attributable_did
-      - original_payload_hash
-      title: ProtocolAttestRequest
-      description: Record a protocol or amendment event.
     EnrollmentAttestRequest:
       properties:
         trial_id:
@@ -527,42 +517,6 @@ components:
       - original_payload_hash
       title: ConsentAttestRequest
       description: Record a patient consent event (with IRB version hash).
-    DatabaseLockAttestRequest:
-      properties:
-        trial_id:
-          type: string
-          title: Trial Id
-          description: Unique trial identifier
-        attributable_did:
-          type: string
-          title: Attributable Did
-          description: DID of data manager or sponsor
-        legible_format:
-          type: string
-          title: Legible Format
-          description: Data format
-          default: CDISC-SDTM
-        original_payload_hash:
-          type: string
-          title: Original Payload Hash
-          description: sha256 of locked database snapshot
-        consistent_schema:
-          type: string
-          title: Consistent Schema
-          description: Schema URI/version
-          default: CDISC-SDTM-v3.3
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Lock metadata: lock_date, locked_by_did, dataset_version, query_count_resolved, etc.'
-      type: object
-      required:
-      - trial_id
-      - attributable_did
-      - original_payload_hash
-      title: DatabaseLockAttestRequest
-      description: Record a database lock event.
     HTTPValidationError:
       properties:
         detail:
@@ -572,29 +526,75 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
+    ProtocolAttestRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        trial_id:
           type: string
-          title: Message
-        type:
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
+          title: Attributable Did
+          description: DID of protocol author/sponsor
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: JSON-LD/CDISC-SDTM
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of protocol document
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: CDISC-SDTM-v3.3
+        event_payload:
+          additionalProperties: true
           type: object
-          title: Context
+          title: Event Payload
+          description: 'Protocol metadata: title, version, amendment_number, etc.'
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - trial_id
+      - attributable_did
+      - original_payload_hash
+      title: ProtocolAttestRequest
+      description: Record a protocol or amendment event.
+    DosingAttestRequest:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          description: Unique trial identifier
+        attributable_did:
+          type: string
+          title: Attributable Did
+          description: DID of site or nurse administering
+        legible_format:
+          type: string
+          title: Legible Format
+          description: Data format
+          default: CDISC-SDTM/EX
+        original_payload_hash:
+          type: string
+          title: Original Payload Hash
+          description: sha256 of dosing record
+        consistent_schema:
+          type: string
+          title: Consistent Schema
+          description: Schema URI/version
+          default: CDISC-SDTM-v3.3/EX
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Dosing metadata: subject_id, dose_mg, route, datetime, batch_number, etc.'
+      type: object
+      required:
+      - trial_id
+      - attributable_did
+      - original_payload_hash
+      title: DosingAttestRequest
+      description: Record a dosing event.

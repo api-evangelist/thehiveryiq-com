@@ -179,72 +179,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    EvaluateReq:
-      properties:
-        agent_did:
-          type: string
-          maxLength: 200
-          minLength: 3
-          title: Agent Did
-        endpoint:
-          anyOf:
-          - type: string
-            maxLength: 300
-          - type: 'null'
-          title: Endpoint
-        spend_usd:
-          anyOf:
-          - type: number
-            maximum: 1000000000.0
-            minimum: 0.0
-          - type: 'null'
-          title: Spend Usd
-        counterparty_did:
-          anyOf:
-          - type: string
-            maxLength: 200
-          - type: 'null'
-          title: Counterparty Did
-        size_bytes:
-          anyOf:
-          - type: integer
-            maximum: 1000000000.0
-            minimum: 0.0
-          - type: 'null'
-          title: Size Bytes
-        proof_tier:
-          anyOf:
-          - type: string
-            maxLength: 40
-          - type: 'null'
-          title: Proof Tier
-        jurisdiction:
-          anyOf:
-          - type: string
-            maxLength: 40
-          - type: 'null'
-          title: Jurisdiction
-        latency_ms:
-          anyOf:
-          - type: number
-            maximum: 600000.0
-            minimum: 0.0
-          - type: 'null'
-          title: Latency Ms
-        persist_observation:
-          type: boolean
-          title: Persist Observation
-          default: false
-        decision:
-          anyOf:
-          - type: string
-            maxLength: 40
-          - type: 'null'
-          title: Decision
-      type: object
-      required:
-      - agent_did
-      title: EvaluateReq
     HTTPValidationError:
       properties:
         detail:
@@ -346,3 +280,69 @@ components:
       required:
       - agent_did
       title: ObserveReq
+    EvaluateReq:
+      properties:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        endpoint:
+          anyOf:
+          - type: string
+            maxLength: 300
+          - type: 'null'
+          title: Endpoint
+        spend_usd:
+          anyOf:
+          - type: number
+            maximum: 1000000000.0
+            minimum: 0.0
+          - type: 'null'
+          title: Spend Usd
+        counterparty_did:
+          anyOf:
+          - type: string
+            maxLength: 200
+          - type: 'null'
+          title: Counterparty Did
+        size_bytes:
+          anyOf:
+          - type: integer
+            maximum: 1000000000.0
+            minimum: 0.0
+          - type: 'null'
+          title: Size Bytes
+        proof_tier:
+          anyOf:
+          - type: string
+            maxLength: 40
+          - type: 'null'
+          title: Proof Tier
+        jurisdiction:
+          anyOf:
+          - type: string
+            maxLength: 40
+          - type: 'null'
+          title: Jurisdiction
+        latency_ms:
+          anyOf:
+          - type: number
+            maximum: 600000.0
+            minimum: 0.0
+          - type: 'null'
+          title: Latency Ms
+        persist_observation:
+          type: boolean
+          title: Persist Observation
+          default: false
+        decision:
+          anyOf:
+          - type: string
+            maxLength: 40
+          - type: 'null'
+          title: Decision
+      type: object
+      required:
+      - agent_did
+      title: EvaluateReq

@@ -189,24 +189,55 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    PerpCloseBody:
+    ValidationError:
       properties:
-        position_id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Position Id
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - position_id
-      title: PerpCloseBody
-    FundingTickBody:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RevenueProof:
       properties:
-        underlying_key:
+        period:
           type: string
-          title: Underlying Key
+          title: Period
+          description: e.g. '2026-04' for April 2026
+        amount_usdc:
+          type: number
+          minimum: 0.0
+          title: Amount Usdc
+        signature:
+          type: string
+          title: Signature
+          description: source-protocol signature; mocked in v0.1
+          default: ''
       type: object
       required:
-      - underlying_key
-      title: FundingTickBody
+      - period
+      - amount_usdc
+      title: RevenueProof
+      description: 'Revenue proof. v0.2 will validate against source-protocol
+
+        signatures (CROO Agent Protocol, Virtuals Revenue Network, etc.).'
     PerpOpenBody:
       properties:
         underlying_key:
@@ -247,6 +278,33 @@ components:
       - size_usdc
       - collateral_asset
       title: PerpOpenBody
+    FundingTickBody:
+      properties:
+        underlying_key:
+          type: string
+          title: Underlying Key
+      type: object
+      required:
+      - underlying_key
+      title: FundingTickBody
+    PerpCloseBody:
+      properties:
+        position_id:
+          type: string
+          title: Position Id
+      type: object
+      required:
+      - position_id
+      title: PerpCloseBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     AgentAssetListBody:
       properties:
         agent_id:
@@ -302,61 +360,3 @@ components:
       - monthly_revenue_usdc
       - days_live
       title: AgentAssetListBody
-    RevenueProof:
-      properties:
-        period:
-          type: string
-          title: Period
-          description: e.g. '2026-04' for April 2026
-        amount_usdc:
-          type: number
-          minimum: 0.0
-          title: Amount Usdc
-        signature:
-          type: string
-          title: Signature
-          description: source-protocol signature; mocked in v0.1
-          default: ''
-      type: object
-      required:
-      - period
-      - amount_usdc
-      title: RevenueProof
-      description: 'Revenue proof. v0.2 will validate against source-protocol
-
-        signatures (CROO Agent Protocol, Virtuals Revenue Network, etc.).'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

@@ -211,23 +211,73 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    OpenReq:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    VectorEntry:
+      properties:
+        k:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: K
+        s:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: S
+      type: object
+      required:
+      - k
+      - s
+      title: VectorEntry
+    hivemorph__hive_r10__routes__VerifyReq:
       properties:
         commitment_id:
           type: string
           maxLength: 64
           minLength: 4
           title: Commitment Id
-        k:
-          type: string
-          maxLength: 128
-          minLength: 1
-          title: K
+        opening:
+          additionalProperties: true
+          type: object
+          title: Opening
+          description: An Opening envelope as returned by /open
+        expected_rubric_root:
+          anyOf:
+          - type: string
+            maxLength: 256
+            minLength: 4
+          - type: 'null'
+          title: Expected Rubric Root
       type: object
       required:
       - commitment_id
-      - k
-      title: OpenReq
+      - opening
+      title: VerifyReq
     BatchOpenReq:
       properties:
         commitment_id:
@@ -247,23 +297,6 @@ components:
       - commitment_id
       - positions
       title: BatchOpenReq
-    VectorEntry:
-      properties:
-        k:
-          type: string
-          maxLength: 128
-          minLength: 1
-          title: K
-        s:
-          type: number
-          maximum: 1.0
-          minimum: 0.0
-          title: S
-      type: object
-      required:
-      - k
-      - s
-      title: VectorEntry
     CommitReq:
       properties:
         rubric_root:
@@ -301,30 +334,6 @@ components:
       - operator
       - scored_at
       title: CommitReq
-    hivemorph__hive_r10__routes__VerifyReq:
-      properties:
-        commitment_id:
-          type: string
-          maxLength: 64
-          minLength: 4
-          title: Commitment Id
-        opening:
-          additionalProperties: true
-          type: object
-          title: Opening
-          description: An Opening envelope as returned by /open
-        expected_rubric_root:
-          anyOf:
-          - type: string
-            maxLength: 256
-            minLength: 4
-          - type: 'null'
-          title: Expected Rubric Root
-      type: object
-      required:
-      - commitment_id
-      - opening
-      title: VerifyReq
     HTTPValidationError:
       properties:
         detail:
@@ -334,29 +343,20 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
+    OpenReq:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        commitment_id:
           type: string
-          title: Message
-        type:
+          maxLength: 64
+          minLength: 4
+          title: Commitment Id
+        k:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          maxLength: 128
+          minLength: 1
+          title: K
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - commitment_id
+      - k
+      title: OpenReq

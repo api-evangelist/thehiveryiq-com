@@ -234,6 +234,66 @@ paths:
                 title: Response Insurance Economics V1 Law Insurance Economics Get
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    hivemorph__hive_law__insurance_routes__DisputeBody:
+      properties:
+        dispute_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dispute Id
+        contract_id:
+          type: string
+          title: Contract Id
+        filer_did:
+          type: string
+          title: Filer Did
+        adjuster_proposed_usdc:
+          type: number
+          title: Adjuster Proposed Usdc
+          default: 0.0
+        adjuster_denied:
+          type: boolean
+          title: Adjuster Denied
+          default: false
+        denial_reason_claimed:
+          type: string
+          title: Denial Reason Claimed
+          default: ''
+        evidence:
+          additionalProperties: true
+          type: object
+          title: Evidence
+      type: object
+      required:
+      - contract_id
+      - filer_did
+      title: DisputeBody
     hivemorph__hive_law__insurance_routes__ContractBody:
       properties:
         insured_did:
@@ -339,40 +399,6 @@ components:
       - claimed_amount_usdc
       - insurer_bond_usdc
       title: ContractBody
-    hivemorph__hive_law__insurance_routes__DisputeBody:
-      properties:
-        dispute_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Dispute Id
-        contract_id:
-          type: string
-          title: Contract Id
-        filer_did:
-          type: string
-          title: Filer Did
-        adjuster_proposed_usdc:
-          type: number
-          title: Adjuster Proposed Usdc
-          default: 0.0
-        adjuster_denied:
-          type: boolean
-          title: Adjuster Denied
-          default: false
-        denial_reason_claimed:
-          type: string
-          title: Denial Reason Claimed
-          default: ''
-        evidence:
-          additionalProperties: true
-          type: object
-          title: Evidence
-      type: object
-      required:
-      - contract_id
-      - filer_did
-      title: DisputeBody
     ListBody:
       properties:
         metadata:
@@ -390,29 +416,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

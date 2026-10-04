@@ -85,15 +85,6 @@ paths:
               schema: {}
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     BulkRequest:
       properties:
         count:
@@ -161,3 +152,12 @@ components:
           description: Free-form purpose tag (logged)
       type: object
       title: SampleRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError

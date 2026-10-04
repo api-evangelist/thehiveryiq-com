@@ -230,6 +230,32 @@ paths:
                 title: Response Afir Examples V1 Afir Examples Get
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     SegmentRequest:
       properties:
         session_id:
@@ -283,6 +309,17 @@ components:
       - role
       - content_hash
       title: SegmentRequest
+    hivemorph__hive_afir_stream__routes__VerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: a segment receipt or a sealed session receipt
+      type: object
+      required:
+      - receipt
+      title: VerifyRequest
     ContinuityIn:
       properties:
         event:
@@ -302,17 +339,6 @@ components:
       required:
       - event
       title: ContinuityIn
-    hivemorph__hive_afir_stream__routes__VerifyRequest:
-      properties:
-        receipt:
-          additionalProperties: true
-          type: object
-          title: Receipt
-          description: a segment receipt or a sealed session receipt
-      type: object
-      required:
-      - receipt
-      title: VerifyRequest
     SealRequest:
       properties:
         session_id:
@@ -349,29 +375,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

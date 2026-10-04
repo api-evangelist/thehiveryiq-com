@@ -299,48 +299,6 @@ paths:
                 title: Response Economics V1 Qvac Economics Get
 components:
   schemas:
-    RegisterProviderBody:
-      properties:
-        agent_name:
-          type: string
-          maxLength: 80
-          minLength: 2
-          title: Agent Name
-        capabilities:
-          items:
-            type: string
-          type: array
-          minItems: 1
-          title: Capabilities
-        models:
-          items:
-            type: string
-          type: array
-          minItems: 1
-          title: Models
-        operator_did:
-          type: string
-          title: Operator Did
-          default: did:hive:qvac:operator
-        payout_address:
-          type: string
-          title: Payout Address
-          default: '0x15184bf50b3d3f52b60434f8942b7d52f2eb436e'
-        metadata:
-          additionalProperties: true
-          type: object
-          title: Metadata
-        force_need:
-          type: boolean
-          title: Force Need
-          description: Test/admin path — assert NEED externally (RFP from /v1/bus). Without this, NEED is enforced from live bus offers.
-          default: false
-      type: object
-      required:
-      - agent_name
-      - capabilities
-      - models
-      title: RegisterProviderBody
     HTTPValidationError:
       properties:
         detail:
@@ -420,3 +378,45 @@ components:
       - model
       - prompt
       title: InferenceRequestBody
+    RegisterProviderBody:
+      properties:
+        agent_name:
+          type: string
+          maxLength: 80
+          minLength: 2
+          title: Agent Name
+        capabilities:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Capabilities
+        models:
+          items:
+            type: string
+          type: array
+          minItems: 1
+          title: Models
+        operator_did:
+          type: string
+          title: Operator Did
+          default: did:hive:qvac:operator
+        payout_address:
+          type: string
+          title: Payout Address
+          default: '0x15184bf50b3d3f52b60434f8942b7d52f2eb436e'
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+        force_need:
+          type: boolean
+          title: Force Need
+          description: Test/admin path — assert NEED externally (RFP from /v1/bus). Without this, NEED is enforced from live bus offers.
+          default: false
+      type: object
+      required:
+      - agent_name
+      - capabilities
+      - models
+      title: RegisterProviderBody

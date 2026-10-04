@@ -111,37 +111,6 @@ paths:
                 title: Response Mpp Discovery  Well Known Mpp Json Get
 components:
   schemas:
-    SPTBody:
-      properties:
-        paymentMethod:
-          type: string
-          title: Paymentmethod
-        networkId:
-          type: string
-          title: Networkid
-        currency:
-          type: string
-          title: Currency
-        amount:
-          type: integer
-          title: Amount
-        expiresAt:
-          type: integer
-          title: Expiresat
-        externalId:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Externalid
-      type: object
-      required:
-      - paymentMethod
-      - networkId
-      - currency
-      - amount
-      - expiresAt
-      title: SPTBody
-      description: Body for /v1/receipt/mpp/spt — Stripe SPT creation proxy.
     HTTPValidationError:
       properties:
         detail:
@@ -209,3 +178,34 @@ components:
       - payload
       title: ReceiptMintBody
       description: Body for /v1/receipt/mpp — same shape as existing /v1/receipt/free.
+    SPTBody:
+      properties:
+        paymentMethod:
+          type: string
+          title: Paymentmethod
+        networkId:
+          type: string
+          title: Networkid
+        currency:
+          type: string
+          title: Currency
+        amount:
+          type: integer
+          title: Amount
+        expiresAt:
+          type: integer
+          title: Expiresat
+        externalId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Externalid
+      type: object
+      required:
+      - paymentMethod
+      - networkId
+      - currency
+      - amount
+      - expiresAt
+      title: SPTBody
+      description: Body for /v1/receipt/mpp/spt — Stripe SPT creation proxy.

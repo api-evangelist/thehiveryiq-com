@@ -228,21 +228,6 @@ paths:
                 title: Response Bus Stats V1 Bus Stats Get
 components:
   schemas:
-    PickupBody:
-      properties:
-        buyer_id:
-          type: string
-          title: Buyer Id
-          description: Supermodel ID (W2..W8) or external agent identifier
-        buyer_did:
-          type: string
-          title: Buyer Did
-          description: DID or wallet address of the buyer
-      type: object
-      required:
-      - buyer_id
-      - buyer_did
-      title: PickupBody
     HTTPValidationError:
       properties:
         detail:
@@ -278,6 +263,21 @@ components:
       - msg
       - type
       title: ValidationError
+    PickupBody:
+      properties:
+        buyer_id:
+          type: string
+          title: Buyer Id
+          description: Supermodel ID (W2..W8) or external agent identifier
+        buyer_did:
+          type: string
+          title: Buyer Did
+          description: DID or wallet address of the buyer
+      type: object
+      required:
+      - buyer_id
+      - buyer_did
+      title: PickupBody
     PostOfferBody:
       properties:
         seller_id:

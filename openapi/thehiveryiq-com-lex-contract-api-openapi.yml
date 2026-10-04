@@ -296,142 +296,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SignatureAttestRequest:
+    ValidationError:
       properties:
-        contract_id:
-          type: string
-          title: Contract Id
-          description: Contract ID being signed
-        signer_did:
-          type: string
-          title: Signer Did
-          description: DID of the party signing
-        parties:
+        loc:
           items:
-            $ref: '#/components/schemas/ContractParty'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Parties
-        clause_hashes:
-          items:
-            $ref: '#/components/schemas/ClauseHash'
-          type: array
-          title: Clause Hashes
-        event_payload:
-          additionalProperties: true
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
-          title: Event Payload
-          description: 'Signature metadata: signature_method, signature_hash, timestamp, etc.'
+          title: Context
       type: object
       required:
-      - contract_id
-      - signer_did
-      title: SignatureAttestRequest
-      description: Record a single-party signature event.
-    TerminationAttestRequest:
-      properties:
-        contract_id:
-          type: string
-          title: Contract Id
-          description: Contract ID being terminated
-        parties:
-          items:
-            $ref: '#/components/schemas/ContractParty'
-          type: array
-          title: Parties
-        clause_hashes:
-          items:
-            $ref: '#/components/schemas/ClauseHash'
-          type: array
-          title: Clause Hashes
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Termination metadata: termination_reason, effective_date, for_cause, etc.'
-      type: object
-      required:
-      - contract_id
-      title: TerminationAttestRequest
-      description: Record contract termination.
-    ContractParty:
-      properties:
-        did:
-          type: string
-          title: Did
-          description: DID of the party (e.g. did:hive:org:acme)
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Human-readable name of the party
-        role:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Role
-          description: 'Party role: buyer, seller, licensor, licensee, service_provider, client, other'
-      type: object
-      required:
-      - did
-      title: ContractParty
-      description: A party to the contract with a DID.
-    DraftAttestRequest:
-      properties:
-        contract_id:
-          type: string
-          title: Contract Id
-          description: Unique contract identifier (UUID or client-assigned)
-        parties:
-          items:
-            $ref: '#/components/schemas/ContractParty'
-          type: array
-          title: Parties
-          description: Contracting parties with DIDs
-        clause_hashes:
-          items:
-            $ref: '#/components/schemas/ClauseHash'
-          type: array
-          title: Clause Hashes
-          description: Clause tamper-evidence hashes
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: Arbitrary event metadata (title, jurisdiction, governing_law, etc.)
-      type: object
-      required:
-      - contract_id
-      - parties
-      title: DraftAttestRequest
-      description: Record a contract draft creation event.
-    RedlineAttestRequest:
-      properties:
-        contract_id:
-          type: string
-          title: Contract Id
-          description: Contract ID being redlined
-        parties:
-          items:
-            $ref: '#/components/schemas/ContractParty'
-          type: array
-          title: Parties
-        clause_hashes:
-          items:
-            $ref: '#/components/schemas/ClauseHash'
-          type: array
-          title: Clause Hashes
-          description: Updated clause hashes after redline
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Redline metadata: redliner_did, change_summary, version_label, etc.'
-      type: object
-      required:
-      - contract_id
-      title: RedlineAttestRequest
-      description: Record a redline/markup event on a contract.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ExecuteAttestRequest:
       properties:
         contract_id:
@@ -509,6 +399,64 @@ components:
       - hash
       title: ClauseHash
       description: sha256 hash of a contract clause for tamper-evidence.
+    SignatureAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID being signed
+        signer_did:
+          type: string
+          title: Signer Did
+          description: DID of the party signing
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Signature metadata: signature_method, signature_hash, timestamp, etc.'
+      type: object
+      required:
+      - contract_id
+      - signer_did
+      title: SignatureAttestRequest
+      description: Record a single-party signature event.
+    RedlineAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID being redlined
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+          description: Updated clause hashes after redline
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Redline metadata: redliner_did, change_summary, version_label, etc.'
+      type: object
+      required:
+      - contract_id
+      title: RedlineAttestRequest
+      description: Record a redline/markup event on a contract.
     AmendmentAttestRequest:
       properties:
         contract_id:
@@ -536,6 +484,84 @@ components:
       - contract_id
       title: AmendmentAttestRequest
       description: Record a contract amendment.
+    ContractParty:
+      properties:
+        did:
+          type: string
+          title: Did
+          description: DID of the party (e.g. did:hive:org:acme)
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Human-readable name of the party
+        role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Role
+          description: 'Party role: buyer, seller, licensor, licensee, service_provider, client, other'
+      type: object
+      required:
+      - did
+      title: ContractParty
+      description: A party to the contract with a DID.
+    DraftAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Unique contract identifier (UUID or client-assigned)
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+          description: Contracting parties with DIDs
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+          description: Clause tamper-evidence hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Arbitrary event metadata (title, jurisdiction, governing_law, etc.)
+      type: object
+      required:
+      - contract_id
+      - parties
+      title: DraftAttestRequest
+      description: Record a contract draft creation event.
+    TerminationAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID being terminated
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Termination metadata: termination_reason, effective_date, for_cause, etc.'
+      type: object
+      required:
+      - contract_id
+      title: TerminationAttestRequest
+      description: Record contract termination.
     HTTPValidationError:
       properties:
         detail:
@@ -545,29 +571,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

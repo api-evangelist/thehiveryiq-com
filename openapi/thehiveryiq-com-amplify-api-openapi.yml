@@ -311,6 +311,58 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AppendBody:
+      properties:
+        tenant_did:
+          type: string
+          title: Tenant Did
+        kind:
+          type: string
+          pattern: ^(response|fact|pattern)$
+          title: Kind
+        content:
+          type: string
+          maxLength: 20000
+          minLength: 1
+          title: Content
+        meta:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Meta
+      type: object
+      required:
+      - tenant_did
+      - kind
+      - content
+      title: AppendBody
     WrapReceiptBody:
       properties:
         vertical:
@@ -375,62 +427,6 @@ components:
         receipt is signed as the response. Verticals keep their formats and
 
         gain CCACW provability in one POST.'
-    VerifyBody:
-      properties:
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-        signature_b64:
-          type: string
-          minLength: 8
-          title: Signature B64
-        pubkey_b64:
-          type: string
-          minLength: 8
-          title: Pubkey B64
-        prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Prompt
-        response:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Response
-      type: object
-      required:
-      - payload
-      - signature_b64
-      - pubkey_b64
-      title: VerifyBody
-    AppendBody:
-      properties:
-        tenant_did:
-          type: string
-          title: Tenant Did
-        kind:
-          type: string
-          pattern: ^(response|fact|pattern)$
-          title: Kind
-        content:
-          type: string
-          maxLength: 20000
-          minLength: 1
-          title: Content
-        meta:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Meta
-      type: object
-      required:
-      - tenant_did
-      - kind
-      - content
-      title: AppendBody
     SignBody:
       properties:
         tenant_did:
@@ -522,6 +518,36 @@ components:
       - prompt
       - tenant_did
       title: CallBody
+    VerifyBody:
+      properties:
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+        signature_b64:
+          type: string
+          minLength: 8
+          title: Signature B64
+        pubkey_b64:
+          type: string
+          minLength: 8
+          title: Pubkey B64
+        prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prompt
+        response:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response
+      type: object
+      required:
+      - payload
+      - signature_b64
+      - pubkey_b64
+      title: VerifyBody
     HTTPValidationError:
       properties:
         detail:
@@ -531,29 +557,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

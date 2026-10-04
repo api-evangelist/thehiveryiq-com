@@ -309,17 +309,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    hivemorph__hive_newsshield__models__ChainVerifyRequest:
-      properties:
-        asset_id:
-          type: string
-          title: Asset Id
-          description: asset_id to trace the full lifecycle chain for
-      type: object
-      required:
-      - asset_id
-      title: ChainVerifyRequest
-      description: Request to verify the full lifecycle chain for an asset.
     EditRequest:
       properties:
         asset_id:
@@ -374,23 +363,32 @@ components:
       - ai_content_disclosure
       title: EditRequest
       description: Request to attest an edit step with chain pointer.
-    AssetVerifyRequest:
+    ValidationError:
       properties:
-        asset_id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Asset Id
-          description: asset_id to verify
-        attestation_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Attestation Id
-          description: Specific attestation_id to verify; if omitted, verifies the first capture event
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - asset_id
-      title: AssetVerifyRequest
-      description: Request to verify a stored asset envelope.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CaptureRequest:
       properties:
         asset_id:
@@ -433,134 +431,34 @@ components:
       - ai_content_disclosure
       title: CaptureRequest
       description: Request to attest a capture event (camera/mic).
-    AssetKindEnum:
-      type: string
-      enum:
-      - image
-      - video
-      - audio
-      - document
-      title: AssetKindEnum
-    PublishRequest:
+    AssetVerifyRequest:
       properties:
         asset_id:
           type: string
           title: Asset Id
-          description: UUID of the asset being published
-        asset_kind:
-          $ref: '#/components/schemas/AssetKindEnum'
-          description: image / video / audio / document
-        actor_did:
-          type: string
-          title: Actor Did
-          description: DID of the publisher
-        publisher_did:
+          description: asset_id to verify
+        attestation_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Publisher Did
-          description: Publisher DID (alias for actor_did in publish context)
-        capture_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Capture Did
-          description: Origin capture DID — propagated from capture
-        editor_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Editor Did
-          description: Editor DID if applicable
-        media_hash:
-          type: string
-          title: Media Hash
-          description: sha256 hex of the published media bytes
-        c2pa_manifest_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: C2Pa Manifest Hash
-          description: sha256 hex of the C2PA manifest
-        ai_content_disclosure:
-          type: boolean
-          title: Ai Content Disclosure
-          description: Was AI used in generation or alteration?
-        prior_attestation_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Prior Attestation Id
-          description: Chain pointer to the prior event (e.g. edit or capture attestation_id)
+          title: Attestation Id
+          description: Specific attestation_id to verify; if omitted, verifies the first capture event
       type: object
       required:
       - asset_id
-      - asset_kind
-      - actor_did
-      - media_hash
-      - ai_content_disclosure
-      title: PublishRequest
-      description: Request to attest a publish event with chain pointer.
-    SyndicateRequest:
+      title: AssetVerifyRequest
+      description: Request to verify a stored asset envelope.
+    hivemorph__hive_newsshield__models__ChainVerifyRequest:
       properties:
         asset_id:
           type: string
           title: Asset Id
-          description: UUID of the asset being syndicated
-        asset_kind:
-          $ref: '#/components/schemas/AssetKindEnum'
-          description: image / video / audio / document
-        actor_did:
-          type: string
-          title: Actor Did
-          description: DID of the syndication partner
-        publisher_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Publisher Did
-          description: Original publisher DID
-        capture_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Capture Did
-          description: Origin capture DID
-        editor_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Editor Did
-          description: Editor DID if applicable
-        media_hash:
-          type: string
-          title: Media Hash
-          description: sha256 hex of the media bytes
-        c2pa_manifest_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: C2Pa Manifest Hash
-          description: sha256 hex of the C2PA manifest
-        ai_content_disclosure:
-          type: boolean
-          title: Ai Content Disclosure
-          description: Was AI used in generation or alteration?
-        prior_attestation_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Prior Attestation Id
-          description: Chain pointer to the publish attestation_id
+          description: asset_id to trace the full lifecycle chain for
       type: object
       required:
       - asset_id
-      - asset_kind
-      - actor_did
-      - media_hash
-      - ai_content_disclosure
-      title: SyndicateRequest
-      description: Request to attest a syndication with chain pointer to publish.
+      title: ChainVerifyRequest
+      description: Request to verify the full lifecycle chain for an asset.
     TakedownRequest:
       properties:
         asset_id:
@@ -630,29 +528,131 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
+    AssetKindEnum:
+      type: string
+      enum:
+      - image
+      - video
+      - audio
+      - document
+      title: AssetKindEnum
+    SyndicateRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        asset_id:
           type: string
-          title: Message
-        type:
+          title: Asset Id
+          description: UUID of the asset being syndicated
+        asset_kind:
+          $ref: '#/components/schemas/AssetKindEnum'
+          description: image / video / audio / document
+        actor_did:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Actor Did
+          description: DID of the syndication partner
+        publisher_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher Did
+          description: Original publisher DID
+        capture_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Capture Did
+          description: Origin capture DID
+        editor_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Editor Did
+          description: Editor DID if applicable
+        media_hash:
+          type: string
+          title: Media Hash
+          description: sha256 hex of the media bytes
+        c2pa_manifest_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: C2Pa Manifest Hash
+          description: sha256 hex of the C2PA manifest
+        ai_content_disclosure:
+          type: boolean
+          title: Ai Content Disclosure
+          description: Was AI used in generation or alteration?
+        prior_attestation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prior Attestation Id
+          description: Chain pointer to the publish attestation_id
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - asset_id
+      - asset_kind
+      - actor_did
+      - media_hash
+      - ai_content_disclosure
+      title: SyndicateRequest
+      description: Request to attest a syndication with chain pointer to publish.
+    PublishRequest:
+      properties:
+        asset_id:
+          type: string
+          title: Asset Id
+          description: UUID of the asset being published
+        asset_kind:
+          $ref: '#/components/schemas/AssetKindEnum'
+          description: image / video / audio / document
+        actor_did:
+          type: string
+          title: Actor Did
+          description: DID of the publisher
+        publisher_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Publisher Did
+          description: Publisher DID (alias for actor_did in publish context)
+        capture_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Capture Did
+          description: Origin capture DID — propagated from capture
+        editor_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Editor Did
+          description: Editor DID if applicable
+        media_hash:
+          type: string
+          title: Media Hash
+          description: sha256 hex of the published media bytes
+        c2pa_manifest_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: C2Pa Manifest Hash
+          description: sha256 hex of the C2PA manifest
+        ai_content_disclosure:
+          type: boolean
+          title: Ai Content Disclosure
+          description: Was AI used in generation or alteration?
+        prior_attestation_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prior Attestation Id
+          description: Chain pointer to the prior event (e.g. edit or capture attestation_id)
+      type: object
+      required:
+      - asset_id
+      - asset_kind
+      - actor_did
+      - media_hash
+      - ai_content_disclosure
+      title: PublishRequest
+      description: Request to attest a publish event with chain pointer.

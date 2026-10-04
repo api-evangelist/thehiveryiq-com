@@ -308,33 +308,187 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    MatchVerifyRequest:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    POVerifyResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        supplier_did:
+          type: string
+          title: Supplier Did
+        po_number:
+          type: string
+          title: Po Number
+        event_type:
+          $ref: '#/components/schemas/POEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        verification:
+          additionalProperties: true
+          type: object
+          title: Verification
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - supplier_did
+      - po_number
+      - event_type
+      - event_hash
+      - timestamp_iso
+      - receipt_envelope
+      - verification
+      title: POVerifyResponse
+    POLineItem:
+      properties:
+        line_number:
+          type: integer
+          minimum: 1.0
+          title: Line Number
+        sku:
+          type: string
+          title: Sku
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        quantity:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Quantity
+        unit_of_measure:
+          type: string
+          title: Unit Of Measure
+          description: UN/ECE Recommendation 20 code (EA, KG, M, etc.)
+          default: EA
+        unit_price_cents:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Unit Price Cents
+        erp_part_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Erp Part Number
+        buyer_part_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Part Number
+        supplier_part_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Supplier Part Number
+        requested_delivery_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Requested Delivery Date
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - line_number
+      - sku
+      - quantity
+      title: POLineItem
+    DeliveryStatus:
+      type: string
+      enum:
+      - scheduled
+      - in_transit
+      - delivered
+      - partial
+      - rejected
+      title: DeliveryStatus
+    MatchVerifyResponse:
       properties:
         po_number:
           type: string
           title: Po Number
-        buyer_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Buyer Did
-        supplier_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Supplier Did
-        require_two_way:
+        matched:
           type: boolean
-          title: Require Two Way
-          description: Accept PO+IR alone (skip GR)
-          default: false
+          title: Matched
+        states_present:
+          items:
+            $ref: '#/components/schemas/POEventType'
+          type: array
+          title: States Present
+        po_total_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Po Total Cents
+        gr_total_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Gr Total Cents
+        ir_total_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Ir Total Cents
+        discrepancies:
+          items:
+            type: string
+          type: array
+          title: Discrepancies
+        chain:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Chain
       type: object
       required:
       - po_number
-      title: MatchVerifyRequest
-      description: '3-way match: PO + GR + IR. Returns the chain of receipts and whether
-
-        the line-item totals reconcile.'
+      - matched
+      - states_present
+      title: MatchVerifyResponse
     POEventType:
       type: string
       enum:
@@ -426,102 +580,6 @@ components:
       - po_number
       - delivery_status
       title: DeliveryAttestRequest
-    MatchVerifyResponse:
-      properties:
-        po_number:
-          type: string
-          title: Po Number
-        matched:
-          type: boolean
-          title: Matched
-        states_present:
-          items:
-            $ref: '#/components/schemas/POEventType'
-          type: array
-          title: States Present
-        po_total_cents:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Po Total Cents
-        gr_total_cents:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Gr Total Cents
-        ir_total_cents:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Ir Total Cents
-        discrepancies:
-          items:
-            type: string
-          type: array
-          title: Discrepancies
-        chain:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Chain
-      type: object
-      required:
-      - po_number
-      - matched
-      - states_present
-      title: MatchVerifyResponse
-    POAttestResponse:
-      properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        buyer_did:
-          type: string
-          title: Buyer Did
-        supplier_did:
-          type: string
-          title: Supplier Did
-        po_number:
-          type: string
-          title: Po Number
-        event_type:
-          $ref: '#/components/schemas/POEventType'
-        event_hash:
-          type: string
-          title: Event Hash
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        price_usd:
-          type: number
-          title: Price Usd
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-        edi_payload:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Edi Payload
-        edi_wrap_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Edi Wrap Id
-      type: object
-      required:
-      - attestation_id
-      - buyer_did
-      - supplier_did
-      - po_number
-      - event_type
-      - event_hash
-      - timestamp_iso
-      - price_usd
-      - receipt_envelope
-      title: POAttestResponse
     POAttestRequest:
       properties:
         buyer_did:
@@ -647,74 +705,93 @@ components:
         is what proves the buyer/supplier saw exactly the same document at this
 
         state.'
-    DeliveryStatus:
-      type: string
-      enum:
-      - scheduled
-      - in_transit
-      - delivered
-      - partial
-      - rejected
-      title: DeliveryStatus
-    POLineItem:
+    MatchVerifyRequest:
       properties:
-        line_number:
-          type: integer
-          minimum: 1.0
-          title: Line Number
-        sku:
+        po_number:
           type: string
-          title: Sku
-        description:
+          title: Po Number
+        buyer_did:
           anyOf:
           - type: string
           - type: 'null'
-          title: Description
-        quantity:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Quantity
-        unit_of_measure:
-          type: string
-          title: Unit Of Measure
-          description: UN/ECE Recommendation 20 code (EA, KG, M, etc.)
-          default: EA
-        unit_price_cents:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Unit Price Cents
-        erp_part_number:
+          title: Buyer Did
+        supplier_did:
           anyOf:
           - type: string
           - type: 'null'
-          title: Erp Part Number
-        buyer_part_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Buyer Part Number
-        supplier_part_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Supplier Part Number
-        requested_delivery_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Requested Delivery Date
-        metadata:
-          additionalProperties: true
-          type: object
-          title: Metadata
+          title: Supplier Did
+        require_two_way:
+          type: boolean
+          title: Require Two Way
+          description: Accept PO+IR alone (skip GR)
+          default: false
       type: object
       required:
-      - line_number
-      - sku
-      - quantity
-      title: POLineItem
+      - po_number
+      title: MatchVerifyRequest
+      description: '3-way match: PO + GR + IR. Returns the chain of receipts and whether
+
+        the line-item totals reconcile.'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    POAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        supplier_did:
+          type: string
+          title: Supplier Did
+        po_number:
+          type: string
+          title: Po Number
+        event_type:
+          $ref: '#/components/schemas/POEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        edi_payload:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Edi Payload
+        edi_wrap_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Edi Wrap Id
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - supplier_did
+      - po_number
+      - event_type
+      - event_hash
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: POAttestResponse
     DeliveryAttestResponse:
       properties:
         attestation_id:
@@ -752,80 +829,3 @@ components:
       - price_usd
       - receipt_envelope
       title: DeliveryAttestResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    POVerifyResponse:
-      properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        buyer_did:
-          type: string
-          title: Buyer Did
-        supplier_did:
-          type: string
-          title: Supplier Did
-        po_number:
-          type: string
-          title: Po Number
-        event_type:
-          $ref: '#/components/schemas/POEventType'
-        event_hash:
-          type: string
-          title: Event Hash
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-        verification:
-          additionalProperties: true
-          type: object
-          title: Verification
-      type: object
-      required:
-      - attestation_id
-      - buyer_did
-      - supplier_did
-      - po_number
-      - event_type
-      - event_hash
-      - timestamp_iso
-      - receipt_envelope
-      - verification
-      title: POVerifyResponse

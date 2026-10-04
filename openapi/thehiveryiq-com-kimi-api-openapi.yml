@@ -140,176 +140,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    WisdomRequest:
+    ValidationError:
       properties:
-        tenant_id:
-          type: string
-          title: Tenant Id
-          description: Tenant identifier
-        brand_name:
-          type: string
-          title: Brand Name
-          description: Organization name
-        company_domain:
-          type: string
-          title: Company Domain
-          description: Company domain for context
-          default: ''
-        vertical:
-          type: string
-          title: Vertical
-          description: Industry vertical
-          default: universal
-        features_enabled:
+        loc:
           items:
-            type: string
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Features Enabled
-          description: Already-active features
-        query:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Query
-          description: Optional specific question
-      type: object
-      required:
-      - tenant_id
-      - brand_name
-      title: WisdomRequest
-      description: 'Build #43 Wisdom panel request — extended to use Kimi K2.6.'
-    CodeResponse:
-      properties:
-        code:
+          title: Location
+        msg:
           type: string
-          title: Code
-        language:
+          title: Message
+        type:
           type: string
-          title: Language
-        explanation:
-          type: string
-          title: Explanation
-        source:
-          type: string
-          title: Source
-        configured:
-          type: boolean
-          title: Configured
-        model:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Model
-      type: object
-      required:
-      - code
-      - language
-      - explanation
-      - source
-      - configured
-      title: CodeResponse
-    CodeRequest:
-      properties:
-        task:
-          type: string
-          title: Task
-          description: What code to generate
-        language:
-          type: string
-          title: Language
-          description: Target language (python/typescript/bash)
-          default: python
-        context:
-          anyOf:
-          - type: string
-          - type: 'null'
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
           title: Context
-          description: Additional codebase context
-        max_tokens:
-          type: integer
-          maximum: 16384.0
-          minimum: 256.0
-          title: Max Tokens
-          description: Max output tokens
-          default: 4096
       type: object
       required:
-      - task
-      title: CodeRequest
-      description: Code generation request.
-    HealthResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        model_id:
-          type: string
-          title: Model Id
-        configured:
-          type: boolean
-          title: Configured
-        last_call_status:
-          type: string
-          title: Last Call Status
-        cumulative_spend_usd:
-          type: number
-          title: Cumulative Spend Usd
-        daily_cap_usd:
-          type: number
-          title: Daily Cap Usd
-        spend_day:
-          type: string
-          title: Spend Day
-        total_calls:
-          type: integer
-          title: Total Calls
-        build:
-          type: string
-          title: Build
-          default: '45'
-        feature_flag:
-          type: string
-          title: Feature Flag
-          default: KIMI_ENABLED
-        env_var_required:
-          type: string
-          title: Env Var Required
-          default: OPENROUTER_API_KEY
-      type: object
-      required:
-      - status
-      - model_id
-      - configured
-      - last_call_status
-      - cumulative_spend_usd
-      - daily_cap_usd
-      - spend_day
-      - total_calls
-      title: HealthResponse
-    LongHorizonRequest:
-      properties:
-        objective:
-          type: string
-          title: Objective
-          description: High-level objective
-        context:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Context
-          description: Additional context
-        max_tokens:
-          type: integer
-          maximum: 32768.0
-          minimum: 256.0
-          title: Max Tokens
-          description: Max output tokens
-          default: 8192
-      type: object
-      required:
-      - objective
-      title: LongHorizonRequest
-      description: 200+ step deep-reasoning task request.
+      - loc
+      - msg
+      - type
+      title: ValidationError
     WisdomResponse:
       properties:
         recommendations:
@@ -392,6 +248,176 @@ components:
       - source
       - configured
       title: OrchestrateResponse
+    LongHorizonRequest:
+      properties:
+        objective:
+          type: string
+          title: Objective
+          description: High-level objective
+        context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context
+          description: Additional context
+        max_tokens:
+          type: integer
+          maximum: 32768.0
+          minimum: 256.0
+          title: Max Tokens
+          description: Max output tokens
+          default: 8192
+      type: object
+      required:
+      - objective
+      title: LongHorizonRequest
+      description: 200+ step deep-reasoning task request.
+    CodeResponse:
+      properties:
+        code:
+          type: string
+          title: Code
+        language:
+          type: string
+          title: Language
+        explanation:
+          type: string
+          title: Explanation
+        source:
+          type: string
+          title: Source
+        configured:
+          type: boolean
+          title: Configured
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+      type: object
+      required:
+      - code
+      - language
+      - explanation
+      - source
+      - configured
+      title: CodeResponse
+    CodeRequest:
+      properties:
+        task:
+          type: string
+          title: Task
+          description: What code to generate
+        language:
+          type: string
+          title: Language
+          description: Target language (python/typescript/bash)
+          default: python
+        context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context
+          description: Additional codebase context
+        max_tokens:
+          type: integer
+          maximum: 16384.0
+          minimum: 256.0
+          title: Max Tokens
+          description: Max output tokens
+          default: 4096
+      type: object
+      required:
+      - task
+      title: CodeRequest
+      description: Code generation request.
+    WisdomRequest:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+          description: Tenant identifier
+        brand_name:
+          type: string
+          title: Brand Name
+          description: Organization name
+        company_domain:
+          type: string
+          title: Company Domain
+          description: Company domain for context
+          default: ''
+        vertical:
+          type: string
+          title: Vertical
+          description: Industry vertical
+          default: universal
+        features_enabled:
+          items:
+            type: string
+          type: array
+          title: Features Enabled
+          description: Already-active features
+        query:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Query
+          description: Optional specific question
+      type: object
+      required:
+      - tenant_id
+      - brand_name
+      title: WisdomRequest
+      description: 'Build #43 Wisdom panel request — extended to use Kimi K2.6.'
+    HealthResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        model_id:
+          type: string
+          title: Model Id
+        configured:
+          type: boolean
+          title: Configured
+        last_call_status:
+          type: string
+          title: Last Call Status
+        cumulative_spend_usd:
+          type: number
+          title: Cumulative Spend Usd
+        daily_cap_usd:
+          type: number
+          title: Daily Cap Usd
+        spend_day:
+          type: string
+          title: Spend Day
+        total_calls:
+          type: integer
+          title: Total Calls
+        build:
+          type: string
+          title: Build
+          default: '45'
+        feature_flag:
+          type: string
+          title: Feature Flag
+          default: KIMI_ENABLED
+        env_var_required:
+          type: string
+          title: Env Var Required
+          default: OPENROUTER_API_KEY
+      type: object
+      required:
+      - status
+      - model_id
+      - configured
+      - last_call_status
+      - cumulative_spend_usd
+      - daily_cap_usd
+      - spend_day
+      - total_calls
+      title: HealthResponse
     OrchestrateRequest:
       properties:
         goal:
@@ -431,29 +457,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

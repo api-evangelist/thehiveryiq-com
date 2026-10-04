@@ -172,6 +172,53 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ActivateFeatureResponse:
+      properties:
+        activated:
+          type: boolean
+          title: Activated
+        feature_id:
+          type: string
+          title: Feature Id
+        billed_on_next_renewal:
+          type: string
+          title: Billed On Next Renewal
+        monthly_addon:
+          type: number
+          title: Monthly Addon
+      type: object
+      required:
+      - activated
+      - feature_id
+      - billed_on_next_renewal
+      - monthly_addon
+      title: ActivateFeatureResponse
     TilePrefRequest:
       properties:
         tile_key:
@@ -192,16 +239,6 @@ components:
       - exposed
       - public
       title: TilePrefRequest
-    ActivateFeatureRequest:
-      properties:
-        feature_id:
-          type: string
-          title: Feature Id
-          description: Feature identifier to activate
-      type: object
-      required:
-      - feature_id
-      title: ActivateFeatureRequest
     SignupResponse:
       properties:
         tenant_id:
@@ -227,47 +264,6 @@ components:
       - brand_color_hint
       - brand_name_hint
       title: SignupResponse
-    SignupRequest:
-      properties:
-        tenant_id:
-          type: string
-          title: Tenant Id
-          description: Unique tenant identifier
-        company_domain:
-          type: string
-          title: Company Domain
-          description: Primary domain, e.g. netskope.com
-        email:
-          type: string
-          title: Email
-          description: Admin contact email
-      type: object
-      required:
-      - tenant_id
-      - company_domain
-      - email
-      title: SignupRequest
-    ActivateFeatureResponse:
-      properties:
-        activated:
-          type: boolean
-          title: Activated
-        feature_id:
-          type: string
-          title: Feature Id
-        billed_on_next_renewal:
-          type: string
-          title: Billed On Next Renewal
-        monthly_addon:
-          type: number
-          title: Monthly Addon
-      type: object
-      required:
-      - activated
-      - feature_id
-      - billed_on_next_renewal
-      - monthly_addon
-      title: ActivateFeatureResponse
     ProfileResponse:
       properties:
         tenant_id:
@@ -320,6 +316,16 @@ components:
       - ai_wisdom_summary
       - wisdom_generated_at
       title: ProfileResponse
+    ActivateFeatureRequest:
+      properties:
+        feature_id:
+          type: string
+          title: Feature Id
+          description: Feature identifier to activate
+      type: object
+      required:
+      - feature_id
+      title: ActivateFeatureRequest
     HTTPValidationError:
       properties:
         detail:
@@ -329,29 +335,23 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
+    SignupRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        tenant_id:
           type: string
-          title: Message
-        type:
+          title: Tenant Id
+          description: Unique tenant identifier
+        company_domain:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Company Domain
+          description: Primary domain, e.g. netskope.com
+        email:
+          type: string
+          title: Email
+          description: Admin contact email
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - tenant_id
+      - company_domain
+      - email
+      title: SignupRequest

@@ -547,143 +547,48 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    CargoValidateRequest:
+    ValidationError:
       properties:
-        cargo_type_id:
-          type: string
-          title: Cargo Type Id
-          description: Registered cargo type ID
-        version:
-          type: string
-          title: Version
-          description: Cargo type version
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-          description: Payload to validate
-      type: object
-      required:
-      - cargo_type_id
-      - version
-      - payload
-      title: CargoValidateRequest
-    PassportVerifyRequest:
-      properties:
-        manifest:
-          additionalProperties: true
-          type: object
-          title: Manifest
-          description: Full passport manifest object
-        observed_inputs:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Observed Inputs
-          description: Optional inputs to check against declared hash
-      type: object
-      required:
-      - manifest
-      title: PassportVerifyRequest
-    GateEvaluateRequest:
-      properties:
-        passport_manifest:
-          additionalProperties: true
-          type: object
-          title: Passport Manifest
-          description: C15 passport manifest
-        cargo_manifest:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Cargo Manifest
-          description: C17 cargo manifest (optional)
-        custody_root:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Custody Root
-          description: Expected custody chain Merkle root (optional)
-        warranty_ids:
+        loc:
           items:
-            type: string
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Warranty Ids
-          description: Active warranty IDs to verify
-        context:
-          additionalProperties: true
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
           title: Context
-          description: Additional gate evaluation context
       type: object
       required:
-      - passport_manifest
-      title: GateEvaluateRequest
-    WarrantyBreachRequest:
-      properties:
-        warranty_id:
-          type: string
-          title: Warranty Id
-          description: Warranty ID to report breach on
-        breach_description:
-          type: string
-          title: Breach Description
-          description: Description of the breach
-        evidence:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Evidence
-          description: Optional evidence dict
-      type: object
-      required:
-      - warranty_id
-      - breach_description
-      title: WarrantyBreachRequest
-    AddressRiskScreenRequest:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AgentBookLookupRequest:
       properties:
         address:
           type: string
           title: Address
-          description: EVM wallet address (0x-prefixed) to screen
-        chain_id:
-          type: integer
-          title: Chain Id
-          description: EVM chain ID (default 8453 = Base, where Hive USDC settles)
-          default: 8453
+          description: EVM wallet address (0x-prefixed) to look up in AgentBook
       type: object
       required:
       - address
-      title: AddressRiskScreenRequest
-      description: 'Pre-settlement on-chain address risk screening — 19-vector check before any USDC transfer.
+      title: AgentBookLookupRequest
+      description: 'AgentKit / AgentBook lookup — verify whether an agent wallet is human-backed.
 
 
-        Real rail: proxies GoPlus Security public address-security API (the same engine used
+        Real rail: reads the canonical AgentBook contract on World Chain
 
-        inside MetaMask and Trust Wallet for wallet-level risk warnings).
-
-
-        Returns flags for: cybercrime, money_laundering, sanctioned, mixer, phishing,
-
-        darkweb_transactions, financial_crime, blackmail_activities, stealing_attack,
-
-        fake_kyc, blacklist_doubt, honeypot_related_address, malicious_mining_activities,
-
-        fake_token, fake_standard_interface, gas_abuse, reinit, contract_address,
-
-        number_of_malicious_contracts_created.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+        (0xA23aB2712eA7BBa896930544C7d6636a96b944dA, lookupHuman(address) view).'
     WarrantyIssueRequest:
       properties:
         agent_did:
@@ -715,110 +620,24 @@ components:
       - action_id
       - claim
       title: WarrantyIssueRequest
-    AbsenceProveRequest:
+    PassportVerifyRequest:
       properties:
-        window_id:
-          type: string
-          title: Window Id
-          description: Audit window identifier (must have been built)
-        query:
+        manifest:
           additionalProperties: true
           type: object
-          title: Query
-          description: Event to prove absent
-      type: object
-      required:
-      - window_id
-      - query
-      title: AbsenceProveRequest
-    CustodyAppendRequest:
-      properties:
-        chain_id:
-          type: string
-          title: Chain Id
-          description: Chain identifier (create new or append to existing)
-        transform_id:
-          type: string
-          title: Transform Id
-          description: Transform identifier for this step
-        agent_did:
-          type: string
-          title: Agent Did
-          description: DID of the agent performing the transform
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-          description: Transform payload (will be hashed)
-        taint_status:
-          type: string
-          enum:
-          - clean
-          - tainted
-          - unknown
-          title: Taint Status
-          description: Declared taint status for this node
-          default: clean
-      type: object
-      required:
-      - chain_id
-      - transform_id
-      - agent_did
-      title: CustodyAppendRequest
-    PassportIssueRequest:
-      properties:
-        action_id:
-          type: string
-          title: Action Id
-          description: Caller-supplied action correlation ID
-        agent_did:
-          type: string
-          title: Agent Did
-          description: DID of the attesting agent
-        intended_op:
-          type: string
-          title: Intended Op
-          description: Operation name, e.g. 'tool_invocation'
-        target_resource:
-          type: string
-          title: Target Resource
-          description: URI or identifier of the target
-        inputs:
-          additionalProperties: true
-          type: object
-          title: Inputs
-          description: Declared inputs (hashed)
-        ttl_seconds:
-          type: integer
-          minimum: 1.0
-          title: Ttl Seconds
-          description: Validity window in seconds
-          default: 300
-      type: object
-      required:
-      - action_id
-      - agent_did
-      - intended_op
-      - target_resource
-      title: PassportIssueRequest
-    AbsenceBuildRequest:
-      properties:
-        window_id:
-          type: string
-          title: Window Id
-          description: Audit window identifier
-        events:
-          items:
-            additionalProperties: true
+          title: Manifest
+          description: Full passport manifest object
+        observed_inputs:
+          anyOf:
+          - additionalProperties: true
             type: object
-          type: array
-          title: Events
-          description: Observed events to commit to the sorted Merkle tree
+          - type: 'null'
+          title: Observed Inputs
+          description: Optional inputs to check against declared hash
       type: object
       required:
-      - window_id
-      - events
-      title: AbsenceBuildRequest
+      - manifest
+      title: PassportVerifyRequest
     CargoRegisterRequest:
       properties:
         id:
@@ -863,22 +682,6 @@ components:
       - sensitivity
       - schema
       title: CargoRegisterRequest
-    AgentBookLookupRequest:
-      properties:
-        address:
-          type: string
-          title: Address
-          description: EVM wallet address (0x-prefixed) to look up in AgentBook
-      type: object
-      required:
-      - address
-      title: AgentBookLookupRequest
-      description: 'AgentKit / AgentBook lookup — verify whether an agent wallet is human-backed.
-
-
-        Real rail: reads the canonical AgentBook contract on World Chain
-
-        (0xA23aB2712eA7BBa896930544C7d6636a96b944dA, lookupHuman(address) view).'
     SanctionsScreenRequest:
       properties:
         name:
@@ -916,85 +719,41 @@ components:
 
 
         Real rail: proxies OpenSanctions consolidated dataset (OFAC SDN, EU, UK HMT, UN, PEPs, debarment).'
-    SmshVerifyRequest:
+    GateEvaluateRequest:
       properties:
-        receipt:
+        passport_manifest:
           additionalProperties: true
           type: object
-          title: Receipt
-          description: SMSH-Stamp v1 receipt object
-        pubkey_b64url:
+          title: Passport Manifest
+          description: C15 passport manifest
+        cargo_manifest:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Cargo Manifest
+          description: C17 cargo manifest (optional)
+        custody_root:
           anyOf:
           - type: string
           - type: 'null'
-          title: Pubkey B64Url
-          description: Override trust anchor Ed25519 public key (base64url, 32 bytes)
-        max_age_seconds:
-          anyOf:
-          - type: integer
-            minimum: 1.0
-          - type: 'null'
-          title: Max Age Seconds
-          description: Reject receipts older than this many seconds
-      type: object
-      required:
-      - receipt
-      title: SmshVerifyRequest
-    AbsenceVerifyRequest:
-      properties:
-        proof:
+          title: Custody Root
+          description: Expected custody chain Merkle root (optional)
+        warranty_ids:
+          items:
+            type: string
+          type: array
+          title: Warranty Ids
+          description: Active warranty IDs to verify
+        context:
           additionalProperties: true
           type: object
-          title: Proof
-          description: Non-membership proof from /absence/prove
-        root_hex:
-          type: string
-          title: Root Hex
-          description: Expected Merkle root (hex)
-      type: object
-      required:
-      - proof
-      - root_hex
-      title: AbsenceVerifyRequest
-    CustodyVerifyRequest:
-      properties:
-        nodes:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Nodes
-          description: Ordered list of custody chain nodes
-      type: object
-      required:
-      - nodes
-      title: CustodyVerifyRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
           title: Context
+          description: Additional gate evaluation context
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - passport_manifest
+      title: GateEvaluateRequest
     InspectSampleRequest:
       properties:
         sample_id:
@@ -1026,3 +785,244 @@ components:
       - sample_id
       - records
       title: InspectSampleRequest
+    PassportIssueRequest:
+      properties:
+        action_id:
+          type: string
+          title: Action Id
+          description: Caller-supplied action correlation ID
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID of the attesting agent
+        intended_op:
+          type: string
+          title: Intended Op
+          description: Operation name, e.g. 'tool_invocation'
+        target_resource:
+          type: string
+          title: Target Resource
+          description: URI or identifier of the target
+        inputs:
+          additionalProperties: true
+          type: object
+          title: Inputs
+          description: Declared inputs (hashed)
+        ttl_seconds:
+          type: integer
+          minimum: 1.0
+          title: Ttl Seconds
+          description: Validity window in seconds
+          default: 300
+      type: object
+      required:
+      - action_id
+      - agent_did
+      - intended_op
+      - target_resource
+      title: PassportIssueRequest
+    WarrantyBreachRequest:
+      properties:
+        warranty_id:
+          type: string
+          title: Warranty Id
+          description: Warranty ID to report breach on
+        breach_description:
+          type: string
+          title: Breach Description
+          description: Description of the breach
+        evidence:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Evidence
+          description: Optional evidence dict
+      type: object
+      required:
+      - warranty_id
+      - breach_description
+      title: WarrantyBreachRequest
+    CargoValidateRequest:
+      properties:
+        cargo_type_id:
+          type: string
+          title: Cargo Type Id
+          description: Registered cargo type ID
+        version:
+          type: string
+          title: Version
+          description: Cargo type version
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: Payload to validate
+      type: object
+      required:
+      - cargo_type_id
+      - version
+      - payload
+      title: CargoValidateRequest
+    AbsenceBuildRequest:
+      properties:
+        window_id:
+          type: string
+          title: Window Id
+          description: Audit window identifier
+        events:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Events
+          description: Observed events to commit to the sorted Merkle tree
+      type: object
+      required:
+      - window_id
+      - events
+      title: AbsenceBuildRequest
+    AbsenceVerifyRequest:
+      properties:
+        proof:
+          additionalProperties: true
+          type: object
+          title: Proof
+          description: Non-membership proof from /absence/prove
+        root_hex:
+          type: string
+          title: Root Hex
+          description: Expected Merkle root (hex)
+      type: object
+      required:
+      - proof
+      - root_hex
+      title: AbsenceVerifyRequest
+    CustodyVerifyRequest:
+      properties:
+        nodes:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Nodes
+          description: Ordered list of custody chain nodes
+      type: object
+      required:
+      - nodes
+      title: CustodyVerifyRequest
+    AbsenceProveRequest:
+      properties:
+        window_id:
+          type: string
+          title: Window Id
+          description: Audit window identifier (must have been built)
+        query:
+          additionalProperties: true
+          type: object
+          title: Query
+          description: Event to prove absent
+      type: object
+      required:
+      - window_id
+      - query
+      title: AbsenceProveRequest
+    SmshVerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: SMSH-Stamp v1 receipt object
+        pubkey_b64url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pubkey B64Url
+          description: Override trust anchor Ed25519 public key (base64url, 32 bytes)
+        max_age_seconds:
+          anyOf:
+          - type: integer
+            minimum: 1.0
+          - type: 'null'
+          title: Max Age Seconds
+          description: Reject receipts older than this many seconds
+      type: object
+      required:
+      - receipt
+      title: SmshVerifyRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AddressRiskScreenRequest:
+      properties:
+        address:
+          type: string
+          title: Address
+          description: EVM wallet address (0x-prefixed) to screen
+        chain_id:
+          type: integer
+          title: Chain Id
+          description: EVM chain ID (default 8453 = Base, where Hive USDC settles)
+          default: 8453
+      type: object
+      required:
+      - address
+      title: AddressRiskScreenRequest
+      description: 'Pre-settlement on-chain address risk screening — 19-vector check before any USDC transfer.
+
+
+        Real rail: proxies GoPlus Security public address-security API (the same engine used
+
+        inside MetaMask and Trust Wallet for wallet-level risk warnings).
+
+
+        Returns flags for: cybercrime, money_laundering, sanctioned, mixer, phishing,
+
+        darkweb_transactions, financial_crime, blackmail_activities, stealing_attack,
+
+        fake_kyc, blacklist_doubt, honeypot_related_address, malicious_mining_activities,
+
+        fake_token, fake_standard_interface, gas_abuse, reinit, contract_address,
+
+        number_of_malicious_contracts_created.'
+    CustodyAppendRequest:
+      properties:
+        chain_id:
+          type: string
+          title: Chain Id
+          description: Chain identifier (create new or append to existing)
+        transform_id:
+          type: string
+          title: Transform Id
+          description: Transform identifier for this step
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID of the agent performing the transform
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: Transform payload (will be hashed)
+        taint_status:
+          type: string
+          enum:
+          - clean
+          - tainted
+          - unknown
+          title: Taint Status
+          description: Declared taint status for this node
+          default: clean
+      type: object
+      required:
+      - chain_id
+      - transform_id
+      - agent_did
+      title: CustodyAppendRequest

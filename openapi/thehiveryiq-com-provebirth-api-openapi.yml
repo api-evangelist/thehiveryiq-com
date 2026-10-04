@@ -301,41 +301,51 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    BirthCertVerifyResponse:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    BirthCertVerifyRequest:
       properties:
         cert_id:
           type: string
           title: Cert Id
-        agent_did:
-          type: string
-          title: Agent Did
-        controller_did:
-          type: string
-          title: Controller Did
-        model_pin:
-          type: string
-          title: Model Pin
-        created_at:
-          type: string
-          title: Created At
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-        verification:
-          additionalProperties: true
-          type: object
-          title: Verification
+          description: The cert_id to verify signatures for
       type: object
       required:
       - cert_id
-      - agent_did
-      - controller_did
-      - model_pin
-      - created_at
-      - receipt_envelope
-      - verification
-      title: BirthCertVerifyResponse
+      title: BirthCertVerifyRequest
     LineageVerifyResponse:
       properties:
         agent_did:
@@ -372,136 +382,6 @@ components:
       - birth_cert_valid
       - action_count
       title: LineageVerifyResponse
-    ActionAttestResponse:
-      properties:
-        action_id:
-          type: string
-          title: Action Id
-        agent_did:
-          type: string
-          title: Agent Did
-        birth_cert_id:
-          type: string
-          title: Birth Cert Id
-        prior_action_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Prior Action Id
-        action_type:
-          type: string
-          title: Action Type
-        action_hash:
-          type: string
-          title: Action Hash
-        created_at:
-          type: string
-          title: Created At
-        ed25519_signature:
-          type: string
-          title: Ed25519 Signature
-        mldsa65_signature:
-          type: string
-          title: Mldsa65 Signature
-        price_usd:
-          type: number
-          title: Price Usd
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-      type: object
-      required:
-      - action_id
-      - agent_did
-      - birth_cert_id
-      - action_type
-      - action_hash
-      - created_at
-      - ed25519_signature
-      - mldsa65_signature
-      - price_usd
-      - receipt_envelope
-      title: ActionAttestResponse
-    BirthCertVerifyRequest:
-      properties:
-        cert_id:
-          type: string
-          title: Cert Id
-          description: The cert_id to verify signatures for
-      type: object
-      required:
-      - cert_id
-      title: BirthCertVerifyRequest
-    BirthCertIssueResponse:
-      properties:
-        cert_id:
-          type: string
-          title: Cert Id
-        agent_did:
-          type: string
-          title: Agent Did
-        controller_did:
-          type: string
-          title: Controller Did
-        model_pin:
-          type: string
-          title: Model Pin
-        tool_grants:
-          items:
-            type: string
-          type: array
-          title: Tool Grants
-        policy_hash:
-          type: string
-          title: Policy Hash
-        training_cut:
-          type: string
-          title: Training Cut
-        deployment_target:
-          type: string
-          title: Deployment Target
-        created_at:
-          type: string
-          title: Created At
-        ed25519_signature:
-          type: string
-          title: Ed25519 Signature
-        mldsa65_signature:
-          type: string
-          title: Mldsa65 Signature
-        price_usd:
-          type: number
-          title: Price Usd
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-        signatures:
-          additionalProperties: true
-          type: object
-          title: Signatures
-        notes:
-          items:
-            type: string
-          type: array
-          title: Notes
-      type: object
-      required:
-      - cert_id
-      - agent_did
-      - controller_did
-      - model_pin
-      - tool_grants
-      - policy_hash
-      - training_cut
-      - deployment_target
-      - created_at
-      - ed25519_signature
-      - mldsa65_signature
-      - price_usd
-      - receipt_envelope
-      title: BirthCertIssueResponse
     BirthCertIssueRequest:
       properties:
         agent_did:
@@ -573,6 +453,41 @@ components:
       - agent_did
       title: LineageVerifyRequest
       description: 'Verify the full chain for an agent: birth cert + all actions.'
+    BirthCertVerifyResponse:
+      properties:
+        cert_id:
+          type: string
+          title: Cert Id
+        agent_did:
+          type: string
+          title: Agent Did
+        controller_did:
+          type: string
+          title: Controller Did
+        model_pin:
+          type: string
+          title: Model Pin
+        created_at:
+          type: string
+          title: Created At
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        verification:
+          additionalProperties: true
+          type: object
+          title: Verification
+      type: object
+      required:
+      - cert_id
+      - agent_did
+      - controller_did
+      - model_pin
+      - created_at
+      - receipt_envelope
+      - verification
+      title: BirthCertVerifyResponse
     ActionAttestRequest:
       properties:
         agent_did:
@@ -616,38 +531,123 @@ components:
       - action_hash
       title: ActionAttestRequest
       description: Attest an agent action with a chain pointer back to its birth certificate.
-    HTTPValidationError:
+    ActionAttestResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        action_id:
           type: string
-          title: Message
-        type:
+          title: Action Id
+        agent_did:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
+          title: Agent Did
+        birth_cert_id:
+          type: string
+          title: Birth Cert Id
+        prior_action_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prior Action Id
+        action_type:
+          type: string
+          title: Action Type
+        action_hash:
+          type: string
+          title: Action Hash
+        created_at:
+          type: string
+          title: Created At
+        ed25519_signature:
+          type: string
+          title: Ed25519 Signature
+        mldsa65_signature:
+          type: string
+          title: Mldsa65 Signature
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
           type: object
-          title: Context
+          title: Receipt Envelope
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - action_id
+      - agent_did
+      - birth_cert_id
+      - action_type
+      - action_hash
+      - created_at
+      - ed25519_signature
+      - mldsa65_signature
+      - price_usd
+      - receipt_envelope
+      title: ActionAttestResponse
+    BirthCertIssueResponse:
+      properties:
+        cert_id:
+          type: string
+          title: Cert Id
+        agent_did:
+          type: string
+          title: Agent Did
+        controller_did:
+          type: string
+          title: Controller Did
+        model_pin:
+          type: string
+          title: Model Pin
+        tool_grants:
+          items:
+            type: string
+          type: array
+          title: Tool Grants
+        policy_hash:
+          type: string
+          title: Policy Hash
+        training_cut:
+          type: string
+          title: Training Cut
+        deployment_target:
+          type: string
+          title: Deployment Target
+        created_at:
+          type: string
+          title: Created At
+        ed25519_signature:
+          type: string
+          title: Ed25519 Signature
+        mldsa65_signature:
+          type: string
+          title: Mldsa65 Signature
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        signatures:
+          additionalProperties: true
+          type: object
+          title: Signatures
+        notes:
+          items:
+            type: string
+          type: array
+          title: Notes
+      type: object
+      required:
+      - cert_id
+      - agent_did
+      - controller_did
+      - model_pin
+      - tool_grants
+      - policy_hash
+      - training_cut
+      - deployment_target
+      - created_at
+      - ed25519_signature
+      - mldsa65_signature
+      - price_usd
+      - receipt_envelope
+      title: BirthCertIssueResponse

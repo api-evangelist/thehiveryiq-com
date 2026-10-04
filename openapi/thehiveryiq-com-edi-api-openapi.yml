@@ -126,6 +126,88 @@ paths:
                 title: Response Health Endpoint V1 Edi Health Get
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    EDIWrapRequest:
+      properties:
+        receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Id
+          description: Existing Hive receipt id to wrap. One of receipt_id or receipt_envelope must be set.
+        receipt_envelope:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Receipt Envelope
+          description: Inline receipt envelope (alternative to receipt_id).
+        format:
+          $ref: '#/components/schemas/EDIFormat'
+          description: Output EDI format
+        document_type:
+          $ref: '#/components/schemas/EDIDocumentType'
+          description: Procurement document type
+        sender_id:
+          type: string
+          title: Sender Id
+          description: Sender qualifier:id (e.g. 'ZZ:HIVE001')
+        receiver_id:
+          type: string
+          title: Receiver Id
+          description: Receiver qualifier:id (e.g. 'ZZ:KOJO001')
+        interchange_control_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Interchange Control Number
+          description: Optional ISA13 control number; auto-generated if omitted
+        test_indicator:
+          type: boolean
+          title: Test Indicator
+          description: ISA15 = T (test) vs P (production)
+          default: false
+      type: object
+      required:
+      - format
+      - document_type
+      - sender_id
+      - receiver_id
+      title: EDIWrapRequest
+      description: Request to wrap a Hive receipt in an EDI envelope.
+    EDIFormat:
+      type: string
+      enum:
+      - x12
+      - edifact
+      - cxml
+      - idoc
+      title: EDIFormat
     EDIParseRequest:
       properties:
         edi_payload:
@@ -148,62 +230,6 @@ components:
       - invoice
       - payment
       title: EDIDocumentType
-    EDIWrapResponse:
-      properties:
-        wrap_id:
-          type: string
-          title: Wrap Id
-        format:
-          $ref: '#/components/schemas/EDIFormat'
-        document_type:
-          $ref: '#/components/schemas/EDIDocumentType'
-        edi_payload:
-          type: string
-          title: Edi Payload
-          description: The serialized EDI document with appended Hive cryptographic segment
-        receipt_id:
-          type: string
-          title: Receipt Id
-        sender_id:
-          type: string
-          title: Sender Id
-        receiver_id:
-          type: string
-          title: Receiver Id
-        interchange_control_number:
-          type: string
-          title: Interchange Control Number
-        issued_at:
-          type: string
-          title: Issued At
-        price_usd:
-          type: number
-          title: Price Usd
-          default: 0.0001
-        price_micro_usdc:
-          type: integer
-          title: Price Micro Usdc
-          default: 100
-      type: object
-      required:
-      - wrap_id
-      - format
-      - document_type
-      - edi_payload
-      - receipt_id
-      - sender_id
-      - receiver_id
-      - interchange_control_number
-      - issued_at
-      title: EDIWrapResponse
-    EDIFormat:
-      type: string
-      enum:
-      - x12
-      - edifact
-      - cxml
-      - idoc
-      title: EDIFormat
     EDIParseResponse:
       properties:
         parsed_at:
@@ -272,54 +298,6 @@ components:
       - hive_receipt_verifies
       - hive_receipt_envelope
       title: EDIParseResponse
-    EDIWrapRequest:
-      properties:
-        receipt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Receipt Id
-          description: Existing Hive receipt id to wrap. One of receipt_id or receipt_envelope must be set.
-        receipt_envelope:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Receipt Envelope
-          description: Inline receipt envelope (alternative to receipt_id).
-        format:
-          $ref: '#/components/schemas/EDIFormat'
-          description: Output EDI format
-        document_type:
-          $ref: '#/components/schemas/EDIDocumentType'
-          description: Procurement document type
-        sender_id:
-          type: string
-          title: Sender Id
-          description: Sender qualifier:id (e.g. 'ZZ:HIVE001')
-        receiver_id:
-          type: string
-          title: Receiver Id
-          description: Receiver qualifier:id (e.g. 'ZZ:KOJO001')
-        interchange_control_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Interchange Control Number
-          description: Optional ISA13 control number; auto-generated if omitted
-        test_indicator:
-          type: boolean
-          title: Test Indicator
-          description: ISA15 = T (test) vs P (production)
-          default: false
-      type: object
-      required:
-      - format
-      - document_type
-      - sender_id
-      - receiver_id
-      title: EDIWrapRequest
-      description: Request to wrap a Hive receipt in an EDI envelope.
     HTTPValidationError:
       properties:
         detail:
@@ -329,29 +307,51 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
+    EDIWrapResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        wrap_id:
           type: string
-          title: Message
-        type:
+          title: Wrap Id
+        format:
+          $ref: '#/components/schemas/EDIFormat'
+        document_type:
+          $ref: '#/components/schemas/EDIDocumentType'
+        edi_payload:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Edi Payload
+          description: The serialized EDI document with appended Hive cryptographic segment
+        receipt_id:
+          type: string
+          title: Receipt Id
+        sender_id:
+          type: string
+          title: Sender Id
+        receiver_id:
+          type: string
+          title: Receiver Id
+        interchange_control_number:
+          type: string
+          title: Interchange Control Number
+        issued_at:
+          type: string
+          title: Issued At
+        price_usd:
+          type: number
+          title: Price Usd
+          default: 0.0001
+        price_micro_usdc:
+          type: integer
+          title: Price Micro Usdc
+          default: 100
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - wrap_id
+      - format
+      - document_type
+      - edi_payload
+      - receipt_id
+      - sender_id
+      - receiver_id
+      - interchange_control_number
+      - issued_at
+      title: EDIWrapResponse

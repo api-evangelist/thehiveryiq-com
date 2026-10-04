@@ -429,41 +429,6 @@ paths:
                 title: Response Traffic Health V1 Site Traffic Health Get
 components:
   schemas:
-    BeaconPayload:
-      properties:
-        path:
-          type: string
-          maxLength: 1024
-          title: Path
-          default: /
-        ref:
-          type: string
-          maxLength: 1024
-          title: Ref
-          default: ''
-        ua:
-          type: string
-          maxLength: 512
-          title: Ua
-          default: ''
-        tz:
-          type: string
-          maxLength: 64
-          title: Tz
-          default: ''
-        event:
-          type: string
-          maxLength: 32
-          title: Event
-          default: pageview
-        meta:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Meta
-      type: object
-      title: BeaconPayload
     HTTPValidationError:
       properties:
         detail:
@@ -499,3 +464,38 @@ components:
       - msg
       - type
       title: ValidationError
+    BeaconPayload:
+      properties:
+        path:
+          type: string
+          maxLength: 1024
+          title: Path
+          default: /
+        ref:
+          type: string
+          maxLength: 1024
+          title: Ref
+          default: ''
+        ua:
+          type: string
+          maxLength: 512
+          title: Ua
+          default: ''
+        tz:
+          type: string
+          maxLength: 64
+          title: Tz
+          default: ''
+        event:
+          type: string
+          maxLength: 32
+          title: Event
+          default: pageview
+        meta:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Meta
+      type: object
+      title: BeaconPayload

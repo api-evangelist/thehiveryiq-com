@@ -113,6 +113,25 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    hivemorph__hive_activation__router__VerifyRequest:
+      properties:
+        key:
+          type: string
+          title: Key
+          description: The tk_live_ activation key to verify.
+      type: object
+      required:
+      - key
+      title: VerifyRequest
     ValidationError:
       properties:
         loc:
@@ -139,15 +158,6 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     hivemorph__hive_activation__router__MintRequest:
       properties:
         scopes:
@@ -175,13 +185,3 @@ components:
       type: object
       title: MintRequest
       description: Body for POST /v1/activation/keys (all fields optional).
-    hivemorph__hive_activation__router__VerifyRequest:
-      properties:
-        key:
-          type: string
-          title: Key
-          description: The tk_live_ activation key to verify.
-      type: object
-      required:
-      - key
-      title: VerifyRequest

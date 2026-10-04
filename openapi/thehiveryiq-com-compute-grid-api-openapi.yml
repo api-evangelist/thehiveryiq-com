@@ -339,6 +339,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     hivemorph__hive_compute_grid__routes__BookRequest:
       properties:
         auction_id:
@@ -365,61 +391,6 @@ components:
       - quote
       - deadline_unix
       title: BookRequest
-    hivemorph__hive_compute_grid__routes__VerifyRequest:
-      properties:
-        proof:
-          title: Proof
-          description: Groth16 proof envelope (dict or 8-elem list)
-        public_inputs:
-          items: {}
-          type: array
-          title: Public Inputs
-          description: Public inputs (BN254 field elements)
-        claim:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Claim
-          description: Optional claim metadata
-        proof_system:
-          type: string
-          title: Proof System
-          description: Proof system identifier
-          default: groth16
-      type: object
-      required:
-      - proof
-      - public_inputs
-      title: VerifyRequest
-    ReleaseRequest:
-      properties:
-        provider:
-          type: string
-          title: Provider
-        booking_id:
-          type: string
-          title: Booking Id
-      type: object
-      required:
-      - provider
-      - booking_id
-      title: ReleaseRequest
-    VerifySelectionRequest:
-      properties:
-        proof:
-          title: Proof
-          description: Groth16 envelope from /solve.proof_envelope
-        public_inputs:
-          items: {}
-          type: array
-          title: Public Inputs
-          description: From /solve.proof_public_inputs
-      type: object
-      required:
-      - proof
-      - public_inputs
-      title: VerifySelectionRequest
     WorkloadRequest:
       properties:
         gpu_type:
@@ -466,6 +437,21 @@ components:
           title: Submitter Did
       type: object
       title: WorkloadRequest
+    VerifySelectionRequest:
+      properties:
+        proof:
+          title: Proof
+          description: Groth16 envelope from /solve.proof_envelope
+        public_inputs:
+          items: {}
+          type: array
+          title: Public Inputs
+          description: From /solve.proof_public_inputs
+      type: object
+      required:
+      - proof
+      - public_inputs
+      title: VerifySelectionRequest
     HTTPValidationError:
       properties:
         detail:
@@ -475,29 +461,43 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
+    hivemorph__hive_compute_grid__routes__VerifyRequest:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
+        proof:
+          title: Proof
+          description: Groth16 proof envelope (dict or 8-elem list)
+        public_inputs:
+          items: {}
           type: array
-          title: Location
-        msg:
+          title: Public Inputs
+          description: Public inputs (BN254 field elements)
+        claim:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Claim
+          description: Optional claim metadata
+        proof_system:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Proof System
+          description: Proof system identifier
+          default: groth16
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - proof
+      - public_inputs
+      title: VerifyRequest
+    ReleaseRequest:
+      properties:
+        provider:
+          type: string
+          title: Provider
+        booking_id:
+          type: string
+          title: Booking Id
+      type: object
+      required:
+      - provider
+      - booking_id
+      title: ReleaseRequest

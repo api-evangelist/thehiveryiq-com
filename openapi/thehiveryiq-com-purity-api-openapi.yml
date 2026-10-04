@@ -76,6 +76,162 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    SubjectInfo:
+      properties:
+        name:
+          type: string
+          title: Name
+          description: Product / crop name
+        lot:
+          type: string
+          title: Lot
+          description: Lot / batch identifier
+        farm_id:
+          type: string
+          title: Farm Id
+          description: Farm or growing-operation identifier
+        growing_area:
+          items:
+            type: number
+          type: array
+          maxItems: 2
+          minItems: 2
+          title: Growing Area
+          description: '[latitude, longitude] decimal degrees'
+        harvest_date:
+          type: string
+          title: Harvest Date
+          description: ISO-8601 harvest date
+      type: object
+      required:
+      - name
+      - lot
+      - farm_id
+      - growing_area
+      - harvest_date
+      title: SubjectInfo
+      description: Subject (produce / farm lot) being certified.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AxesSummary:
+      properties:
+        count:
+          type: integer
+          title: Count
+          description: Total axes provided
+        wave_count:
+          type: integer
+          title: Wave Count
+          description: Wave-Lattice axes provided (1-16)
+        loess_count:
+          type: integer
+          title: Loess Count
+          description: Loess-Lattice axes provided (17-24)
+        missing:
+          items:
+            type: integer
+          type: array
+          title: Missing
+          description: Missing axis IDs
+      type: object
+      required:
+      - count
+      - wave_count
+      - loess_count
+      title: AxesSummary
+      description: Summary of axis coverage in the issued certificate.
+    PurityCertIssueRequest:
+      properties:
+        issuer_did:
+          type: string
+          title: Issuer Did
+          description: DID of the issuing entity (did:hive:...)
+        subject:
+          $ref: '#/components/schemas/SubjectInfo'
+          description: Subject (produce / farm lot) details
+        substrate:
+          type: string
+          enum:
+          - wave
+          - loess
+          - purity-24
+          title: Substrate
+          description: 'Substrate mode: wave (axes 1-16), loess (axes 17-24), purity-24 (all)'
+        axes:
+          items:
+            $ref: '#/components/schemas/AxisReading'
+          type: array
+          maxItems: 24
+          minItems: 1
+          title: Axes
+          description: Up to 24 axis readings
+        fsma_204:
+          anyOf:
+          - $ref: '#/components/schemas/Fsma204Info'
+          - type: 'null'
+          description: FSMA 204 KDEs (optional, present for produce/livestock)
+      type: object
+      required:
+      - issuer_did
+      - subject
+      - substrate
+      - axes
+      title: PurityCertIssueRequest
+      description: POST /v1/purity/cert/issue — issue a 24-axis Purity Receipt v3.0.
+    Fsma204Info:
+      properties:
+        kde_lot_code:
+          type: string
+          title: Kde Lot Code
+          description: 'KDE: traceability lot code'
+        kde_cultivar:
+          type: string
+          title: Kde Cultivar
+          description: 'KDE: cultivar / variety'
+        kde_growing_area:
+          items:
+            type: number
+          type: array
+          maxItems: 2
+          minItems: 2
+          title: Kde Growing Area
+          description: '[lat, lon] growing area from KDE'
+        kde_production_date:
+          type: string
+          title: Kde Production Date
+          description: 'KDE: production / harvest date'
+      type: object
+      required:
+      - kde_lot_code
+      - kde_cultivar
+      - kde_growing_area
+      - kde_production_date
+      title: Fsma204Info
+      description: FSMA 204 Key Data Elements (optional; present for produce / livestock).
     AxisReading:
       properties:
         axis_id:
@@ -119,44 +275,6 @@ components:
       - probe_serial
       title: AxisReading
       description: One sensor-axis reading submitted with the purity certificate request.
-    PurityCertIssueRequest:
-      properties:
-        issuer_did:
-          type: string
-          title: Issuer Did
-          description: DID of the issuing entity (did:hive:...)
-        subject:
-          $ref: '#/components/schemas/SubjectInfo'
-          description: Subject (produce / farm lot) details
-        substrate:
-          type: string
-          enum:
-          - wave
-          - loess
-          - purity-24
-          title: Substrate
-          description: 'Substrate mode: wave (axes 1-16), loess (axes 17-24), purity-24 (all)'
-        axes:
-          items:
-            $ref: '#/components/schemas/AxisReading'
-          type: array
-          maxItems: 24
-          minItems: 1
-          title: Axes
-          description: Up to 24 axis readings
-        fsma_204:
-          anyOf:
-          - $ref: '#/components/schemas/Fsma204Info'
-          - type: 'null'
-          description: FSMA 204 KDEs (optional, present for produce/livestock)
-      type: object
-      required:
-      - issuer_did
-      - subject
-      - substrate
-      - axes
-      title: PurityCertIssueRequest
-      description: POST /v1/purity/cert/issue — issue a 24-axis Purity Receipt v3.0.
     PurityCertIssueResponse:
       properties:
         cert_id:
@@ -233,98 +351,6 @@ components:
       - receipt_envelope
       title: PurityCertIssueResponse
       description: Purity Receipt v3.0 — dual-signed 24-axis soil/produce certificate.
-    SubjectInfo:
-      properties:
-        name:
-          type: string
-          title: Name
-          description: Product / crop name
-        lot:
-          type: string
-          title: Lot
-          description: Lot / batch identifier
-        farm_id:
-          type: string
-          title: Farm Id
-          description: Farm or growing-operation identifier
-        growing_area:
-          items:
-            type: number
-          type: array
-          maxItems: 2
-          minItems: 2
-          title: Growing Area
-          description: '[latitude, longitude] decimal degrees'
-        harvest_date:
-          type: string
-          title: Harvest Date
-          description: ISO-8601 harvest date
-      type: object
-      required:
-      - name
-      - lot
-      - farm_id
-      - growing_area
-      - harvest_date
-      title: SubjectInfo
-      description: Subject (produce / farm lot) being certified.
-    AxesSummary:
-      properties:
-        count:
-          type: integer
-          title: Count
-          description: Total axes provided
-        wave_count:
-          type: integer
-          title: Wave Count
-          description: Wave-Lattice axes provided (1-16)
-        loess_count:
-          type: integer
-          title: Loess Count
-          description: Loess-Lattice axes provided (17-24)
-        missing:
-          items:
-            type: integer
-          type: array
-          title: Missing
-          description: Missing axis IDs
-      type: object
-      required:
-      - count
-      - wave_count
-      - loess_count
-      title: AxesSummary
-      description: Summary of axis coverage in the issued certificate.
-    Fsma204Info:
-      properties:
-        kde_lot_code:
-          type: string
-          title: Kde Lot Code
-          description: 'KDE: traceability lot code'
-        kde_cultivar:
-          type: string
-          title: Kde Cultivar
-          description: 'KDE: cultivar / variety'
-        kde_growing_area:
-          items:
-            type: number
-          type: array
-          maxItems: 2
-          minItems: 2
-          title: Kde Growing Area
-          description: '[lat, lon] growing area from KDE'
-        kde_production_date:
-          type: string
-          title: Kde Production Date
-          description: 'KDE: production / harvest date'
-      type: object
-      required:
-      - kde_lot_code
-      - kde_cultivar
-      - kde_growing_area
-      - kde_production_date
-      title: Fsma204Info
-      description: FSMA 204 Key Data Elements (optional; present for produce / livestock).
     HTTPValidationError:
       properties:
         detail:
@@ -334,29 +360,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

@@ -141,43 +141,32 @@ components:
       - compliance_bundle
       - settlement_envelope
       title: TransferResponse
-    ComplianceEnvelopeSummary:
+    ValidationError:
       properties:
-        control_id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Control Id
-        auditor:
+          title: Message
+        type:
           type: string
-          title: Auditor
-        pass:
-          type: boolean
-          title: Pass
-        score:
-          type: number
-          title: Score
-        sha3_256:
-          type: string
-          title: Sha3 256
-        ed25519_signature:
-          type: string
-          title: Ed25519 Signature
-        mldsa65_signature:
-          type: string
-          title: Mldsa65 Signature
-        duration_ms:
-          type: number
-          title: Duration Ms
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - control_id
-      - auditor
-      - pass
-      - score
-      - sha3_256
-      - ed25519_signature
-      - mldsa65_signature
-      - duration_ms
-      title: ComplianceEnvelopeSummary
+      - loc
+      - msg
+      - type
+      title: ValidationError
     SettlementEnvelope:
       properties:
         sha3_256:
@@ -216,29 +205,43 @@ components:
       - anchor_chain
       - verifier_url
       title: SettlementEnvelope
-    ComplianceBundle:
+    ComplianceEnvelopeSummary:
       properties:
-        controls_audited:
-          type: integer
-          title: Controls Audited
-        all_passed:
+        control_id:
+          type: string
+          title: Control Id
+        auditor:
+          type: string
+          title: Auditor
+        pass:
           type: boolean
-          title: All Passed
+          title: Pass
         score:
           type: number
           title: Score
-        envelopes:
-          items:
-            $ref: '#/components/schemas/ComplianceEnvelopeSummary'
-          type: array
-          title: Envelopes
+        sha3_256:
+          type: string
+          title: Sha3 256
+        ed25519_signature:
+          type: string
+          title: Ed25519 Signature
+        mldsa65_signature:
+          type: string
+          title: Mldsa65 Signature
+        duration_ms:
+          type: number
+          title: Duration Ms
       type: object
       required:
-      - controls_audited
-      - all_passed
+      - control_id
+      - auditor
+      - pass
       - score
-      - envelopes
-      title: ComplianceBundle
+      - sha3_256
+      - ed25519_signature
+      - mldsa65_signature
+      - duration_ms
+      title: ComplianceEnvelopeSummary
     TransferRequest:
       properties:
         from_did:
@@ -299,6 +302,29 @@ components:
       - asset
       - amount
       title: TransferRequest
+    ComplianceBundle:
+      properties:
+        controls_audited:
+          type: integer
+          title: Controls Audited
+        all_passed:
+          type: boolean
+          title: All Passed
+        score:
+          type: number
+          title: Score
+        envelopes:
+          items:
+            $ref: '#/components/schemas/ComplianceEnvelopeSummary'
+          type: array
+          title: Envelopes
+      type: object
+      required:
+      - controls_audited
+      - all_passed
+      - score
+      - envelopes
+      title: ComplianceBundle
     HTTPValidationError:
       properties:
         detail:
@@ -308,29 +334,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

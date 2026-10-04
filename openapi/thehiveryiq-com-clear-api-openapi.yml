@@ -368,78 +368,6 @@ components:
       - msg
       - type
       title: ValidationError
-    DecisionAttestRequest:
-      properties:
-        pa_id:
-          type: string
-          title: Pa Id
-          description: pa_id of the PA being decided
-        decision:
-          $ref: '#/components/schemas/DecisionEnum'
-          description: approve / deny / pend
-        decision_reason_code:
-          type: string
-          title: Decision Reason Code
-          description: Payer reason code for the decision
-        prior_attestation_id:
-          type: string
-          title: Prior Attestation Id
-          description: UUID chain pointer to the PA submission envelope (pa_id)
-      type: object
-      required:
-      - pa_id
-      - decision
-      - decision_reason_code
-      - prior_attestation_id
-      title: DecisionAttestRequest
-      description: Request to attest a payer decision on a PA.
-    DecisionEnum:
-      type: string
-      enum:
-      - approve
-      - deny
-      - pend
-      title: DecisionEnum
-    AppealAttestRequest:
-      properties:
-        pa_id:
-          type: string
-          title: Pa Id
-          description: pa_id of the PA being appealed
-        decision_id:
-          type: string
-          title: Decision Id
-          description: Chain pointer to the denial decision
-        appeal_level:
-          $ref: '#/components/schemas/AppealLevelEnum'
-          description: internal / external_irO / state_doi / federal
-        appeal_outcome:
-          $ref: '#/components/schemas/AppealOutcomeEnum'
-          description: upheld / overturned / pending
-        prior_attestation_id:
-          type: string
-          title: Prior Attestation Id
-          description: UUID chain pointer to the denial decision envelope
-      type: object
-      required:
-      - pa_id
-      - decision_id
-      - appeal_level
-      - appeal_outcome
-      - prior_attestation_id
-      title: AppealAttestRequest
-      description: Request to attest an appeal.
-    PAVerifyRequest:
-      properties:
-        pa_id:
-          type: string
-          title: Pa Id
-          description: pa_id to verify
-      type: object
-      required:
-      - pa_id
-      title: PAVerifyRequest
-      description: Request to verify a stored PA.
     AppealOutcomeEnum:
       type: string
       enum:
@@ -472,6 +400,78 @@ components:
       - prior_attestation_id
       title: P2PAttestRequest
       description: Request to attest a peer-to-peer review.
+    hivemorph__hive_clear__models__ChainVerifyRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id to trace the full chain for
+      type: object
+      required:
+      - pa_id
+      title: ChainVerifyRequest
+      description: Request to verify the full lifecycle chain for a PA.
+    AppealAttestRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id of the PA being appealed
+        decision_id:
+          type: string
+          title: Decision Id
+          description: Chain pointer to the denial decision
+        appeal_level:
+          $ref: '#/components/schemas/AppealLevelEnum'
+          description: internal / external_irO / state_doi / federal
+        appeal_outcome:
+          $ref: '#/components/schemas/AppealOutcomeEnum'
+          description: upheld / overturned / pending
+        prior_attestation_id:
+          type: string
+          title: Prior Attestation Id
+          description: UUID chain pointer to the denial decision envelope
+      type: object
+      required:
+      - pa_id
+      - decision_id
+      - appeal_level
+      - appeal_outcome
+      - prior_attestation_id
+      title: AppealAttestRequest
+      description: Request to attest an appeal.
+    DecisionAttestRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id of the PA being decided
+        decision:
+          $ref: '#/components/schemas/DecisionEnum'
+          description: approve / deny / pend
+        decision_reason_code:
+          type: string
+          title: Decision Reason Code
+          description: Payer reason code for the decision
+        prior_attestation_id:
+          type: string
+          title: Prior Attestation Id
+          description: UUID chain pointer to the PA submission envelope (pa_id)
+      type: object
+      required:
+      - pa_id
+      - decision
+      - decision_reason_code
+      - prior_attestation_id
+      title: DecisionAttestRequest
+      description: Request to attest a payer decision on a PA.
+    DecisionEnum:
+      type: string
+      enum:
+      - approve
+      - deny
+      - pend
+      title: DecisionEnum
     PASubmitRequest:
       properties:
         payer_did:
@@ -516,13 +516,23 @@ components:
       - clinical_doc_hash
       title: PASubmitRequest
       description: Request to submit a Prior Authorization.
-    P2POutcomeEnum:
+    PAVerifyRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id to verify
+      type: object
+      required:
+      - pa_id
+      title: PAVerifyRequest
+      description: Request to verify a stored PA.
+    UrgencyEnum:
       type: string
       enum:
-      - upheld
-      - overturned
-      - pending
-      title: P2POutcomeEnum
+      - standard
+      - expedited
+      title: UrgencyEnum
     AppealLevelEnum:
       type: string
       enum:
@@ -531,17 +541,6 @@ components:
       - state_doi
       - federal
       title: AppealLevelEnum
-    hivemorph__hive_clear__models__ChainVerifyRequest:
-      properties:
-        pa_id:
-          type: string
-          title: Pa Id
-          description: pa_id to trace the full chain for
-      type: object
-      required:
-      - pa_id
-      title: ChainVerifyRequest
-      description: Request to verify the full lifecycle chain for a PA.
     HTTPValidationError:
       properties:
         detail:
@@ -551,9 +550,10 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    UrgencyEnum:
+    P2POutcomeEnum:
       type: string
       enum:
-      - standard
-      - expedited
-      title: UrgencyEnum
+      - upheld
+      - overturned
+      - pending
+      title: P2POutcomeEnum

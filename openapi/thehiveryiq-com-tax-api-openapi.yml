@@ -95,38 +95,6 @@ paths:
                 title: Response Get Tax Health V1 Tax Health Get
 components:
   schemas:
-    TaxEventBody:
-      properties:
-        tx_hash:
-          type: string
-          title: Tx Hash
-          description: Transaction hash (EVM) or signature (Solana)
-        chain:
-          type: string
-          title: Chain
-          description: base | ethereum | solana
-      type: object
-      required:
-      - tx_hash
-      - chain
-      title: TaxEventBody
-    TaxBulkBody:
-      properties:
-        tx_hashes:
-          items:
-            type: string
-          type: array
-          title: Tx Hashes
-          description: Array of transaction hashes/signatures
-        chain:
-          type: string
-          title: Chain
-          description: base | ethereum | solana
-      type: object
-      required:
-      - tx_hashes
-      - chain
-      title: TaxBulkBody
     HTTPValidationError:
       properties:
         detail:
@@ -162,3 +130,35 @@ components:
       - msg
       - type
       title: ValidationError
+    TaxBulkBody:
+      properties:
+        tx_hashes:
+          items:
+            type: string
+          type: array
+          title: Tx Hashes
+          description: Array of transaction hashes/signatures
+        chain:
+          type: string
+          title: Chain
+          description: base | ethereum | solana
+      type: object
+      required:
+      - tx_hashes
+      - chain
+      title: TaxBulkBody
+    TaxEventBody:
+      properties:
+        tx_hash:
+          type: string
+          title: Tx Hash
+          description: Transaction hash (EVM) or signature (Solana)
+        chain:
+          type: string
+          title: Chain
+          description: base | ethereum | solana
+      type: object
+      required:
+      - tx_hash
+      - chain
+      title: TaxEventBody

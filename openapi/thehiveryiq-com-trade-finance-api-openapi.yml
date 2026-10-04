@@ -166,6 +166,22 @@ paths:
                 title: Response Get Invoices V1 Trade Invoices Get
 components:
   schemas:
+    hivemorph__hive_trade_finance__routes__DisputeBody:
+      properties:
+        reason:
+          type: string
+          title: Reason
+          description: Free-form dispute reason
+        evidence_uri:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Evidence Uri
+          description: Optional link to evidence
+      type: object
+      required:
+      - reason
+      title: DisputeBody
     InvoiceCreateBody:
       properties:
         buyer_address:
@@ -224,31 +240,6 @@ components:
       - purchase_order_ref
       - supplier_country
       title: InvoiceCreateBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    hivemorph__hive_trade_finance__routes__DisputeBody:
-      properties:
-        reason:
-          type: string
-          title: Reason
-          description: Free-form dispute reason
-        evidence_uri:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Evidence Uri
-          description: Optional link to evidence
-      type: object
-      required:
-      - reason
-      title: DisputeBody
     ValidationError:
       properties:
         loc:
@@ -275,3 +266,12 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError

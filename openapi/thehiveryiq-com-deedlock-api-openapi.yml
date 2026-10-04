@@ -394,247 +394,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    DeedAttestResponse:
-      properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        buyer_did:
-          type: string
-          title: Buyer Did
-        seller_did:
-          type: string
-          title: Seller Did
-        notary_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notary Did
-        property_id:
-          type: string
-          title: Property Id
-        event_type:
-          $ref: '#/components/schemas/DeedEventType'
-        event_hash:
-          type: string
-          title: Event Hash
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        price_usd:
-          type: number
-          title: Price Usd
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-      type: object
-      required:
-      - attestation_id
-      - buyer_did
-      - seller_did
-      - property_id
-      - event_type
-      - event_hash
-      - timestamp_iso
-      - price_usd
-      - receipt_envelope
-      title: DeedAttestResponse
-    PropertyDescriptor:
-      properties:
-        apn:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Apn
-          description: Assessor's Parcel Number
-        address_line1:
-          type: string
-          title: Address Line1
-        address_line2:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Address Line2
-        city:
-          type: string
-          title: City
-        state:
-          type: string
-          maxLength: 2
-          minLength: 2
-          title: State
-        postal_code:
-          type: string
-          title: Postal Code
-        county:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: County
-        fips_state_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fips State Code
-          description: FIPS 5-2 state code
-        fips_county_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fips County Code
-          description: FIPS 6-4 county code
-        legal_description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Legal Description
-        lot:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Lot
-        block:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Block
-        subdivision:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subdivision
-      type: object
-      required:
-      - address_line1
-      - city
-      - state
-      - postal_code
-      title: PropertyDescriptor
-      description: ALTA / MISMO-compatible property descriptor.
-    NotarySessionRequest:
-      properties:
-        buyer_did:
-          type: string
-          title: Buyer Did
-        seller_did:
-          type: string
-          title: Seller Did
-        notary_did:
-          type: string
-          title: Notary Did
-        property_id:
-          type: string
-          title: Property Id
-        notarization_type:
-          $ref: '#/components/schemas/NotarizationType'
-        document_hashes:
-          items:
-            type: string
-          type: array
-          title: Document Hashes
-          description: sha256 of each document signed in the session
-        ron_session_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ron Session Id
-        ron_platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ron Platform
-          description: notarize / stewart / first_american / old_republic / proof
-        session_started_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Started At
-        session_completed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Completed At
-        kbai_passed:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Kbai Passed
-        credential_analysis_passed:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Credential Analysis Passed
-        notary_journal_entry:
-          type: string
-          title: Notary Journal Entry
-        cosmic_tier:
-          type: boolean
-          title: Cosmic Tier
-          default: false
-      type: object
-      required:
-      - buyer_did
-      - seller_did
-      - notary_did
-      - property_id
-      - notarization_type
-      - document_hashes
-      - notary_journal_entry
-      title: NotarySessionRequest
-    hivemorph__hive_deedlock__models__ChainVerifyRequest:
-      properties:
-        property_id:
-          type: string
-          title: Property Id
-        buyer_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Buyer Did
-        seller_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Seller Did
-        require_recorded:
-          type: boolean
-          title: Require Recorded
-          description: Require RECORDED state to consider chain complete
-          default: true
-      type: object
-      required:
-      - property_id
-      title: ChainVerifyRequest
-      description: 'Verify the full transaction chain for a property — returns the
-
-        ordered receipt chain and whether the state machine is valid.'
-    RecordingStatus:
-      type: string
-      enum:
-      - pending
-      - submitted
-      - recorded
-      - rejected
-      - indexed
-      title: RecordingStatus
-    DeedEventType:
-      type: string
-      enum:
-      - disclosure
-      - offer
-      - acceptance
-      - escrow_open
-      - title_search
-      - notary_session
-      - deed_signed
-      - recording_submitted
-      - recorded
-      - closing
-      - wire_disbursed
-      - amendment
-      - cancellation
-      title: DeedEventType
     DeedVerifyResponse:
       properties:
         attestation_id:
@@ -677,43 +436,15 @@ components:
       - receipt_envelope
       - verification
       title: DeedVerifyResponse
-    RecordingAttestResponse:
+    HTTPValidationError:
       properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        property_id:
-          type: string
-          title: Property Id
-        recording_status:
-          $ref: '#/components/schemas/RecordingStatus'
-        recording_county:
-          type: string
-          title: Recording County
-        recording_state:
-          type: string
-          title: Recording State
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        price_usd:
-          type: number
-          title: Price Usd
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - attestation_id
-      - property_id
-      - recording_status
-      - recording_county
-      - recording_state
-      - timestamp_iso
-      - price_usd
-      - receipt_envelope
-      title: RecordingAttestResponse
+      title: HTTPValidationError
     DeedAttestRequest:
       properties:
         buyer_did:
@@ -913,46 +644,69 @@ components:
         receipt (typically sha256 of the canonical JSON of the document snapshot).
 
         This proves all parties saw exactly the same document at this state.'
-    ChainVerifyResponse:
+    ValidationError:
       properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RecordingAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
         property_id:
           type: string
           title: Property Id
-        chain_valid:
-          type: boolean
-          title: Chain Valid
-        states_present:
-          items:
-            $ref: '#/components/schemas/DeedEventType'
-          type: array
-          title: States Present
-        sale_price_cents:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Sale Price Cents
-        recording_document_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Recording Document Number
-        discrepancies:
-          items:
-            type: string
-          type: array
-          title: Discrepancies
-        chain:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Chain
+        recording_status:
+          $ref: '#/components/schemas/RecordingStatus'
+        recording_county:
+          type: string
+          title: Recording County
+        recording_state:
+          type: string
+          title: Recording State
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
       type: object
       required:
+      - attestation_id
       - property_id
-      - chain_valid
-      - states_present
-      title: ChainVerifyResponse
+      - recording_status
+      - recording_county
+      - recording_state
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: RecordingAttestResponse
     NotarySessionResponse:
       properties:
         attestation_id:
@@ -994,41 +748,6 @@ components:
       - price_usd
       - receipt_envelope
       title: NotarySessionResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     NotarizationType:
       type: string
       enum:
@@ -1037,6 +756,32 @@ components:
       - traditional
       - remote_ink
       title: NotarizationType
+    DeedEventType:
+      type: string
+      enum:
+      - disclosure
+      - offer
+      - acceptance
+      - escrow_open
+      - title_search
+      - notary_session
+      - deed_signed
+      - recording_submitted
+      - recorded
+      - closing
+      - wire_disbursed
+      - amendment
+      - cancellation
+      title: DeedEventType
+    RecordingStatus:
+      type: string
+      enum:
+      - pending
+      - submitted
+      - recorded
+      - rejected
+      - indexed
+      title: RecordingStatus
     RecordingAttestRequest:
       properties:
         buyer_did:
@@ -1106,3 +851,258 @@ components:
       - recording_state
       - recording_status
       title: RecordingAttestRequest
+    DeedAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        seller_did:
+          type: string
+          title: Seller Did
+        notary_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notary Did
+        property_id:
+          type: string
+          title: Property Id
+        event_type:
+          $ref: '#/components/schemas/DeedEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - seller_did
+      - property_id
+      - event_type
+      - event_hash
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: DeedAttestResponse
+    hivemorph__hive_deedlock__models__ChainVerifyRequest:
+      properties:
+        property_id:
+          type: string
+          title: Property Id
+        buyer_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Did
+        seller_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Seller Did
+        require_recorded:
+          type: boolean
+          title: Require Recorded
+          description: Require RECORDED state to consider chain complete
+          default: true
+      type: object
+      required:
+      - property_id
+      title: ChainVerifyRequest
+      description: 'Verify the full transaction chain for a property — returns the
+
+        ordered receipt chain and whether the state machine is valid.'
+    ChainVerifyResponse:
+      properties:
+        property_id:
+          type: string
+          title: Property Id
+        chain_valid:
+          type: boolean
+          title: Chain Valid
+        states_present:
+          items:
+            $ref: '#/components/schemas/DeedEventType'
+          type: array
+          title: States Present
+        sale_price_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Sale Price Cents
+        recording_document_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Document Number
+        discrepancies:
+          items:
+            type: string
+          type: array
+          title: Discrepancies
+        chain:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Chain
+      type: object
+      required:
+      - property_id
+      - chain_valid
+      - states_present
+      title: ChainVerifyResponse
+    PropertyDescriptor:
+      properties:
+        apn:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Apn
+          description: Assessor's Parcel Number
+        address_line1:
+          type: string
+          title: Address Line1
+        address_line2:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Address Line2
+        city:
+          type: string
+          title: City
+        state:
+          type: string
+          maxLength: 2
+          minLength: 2
+          title: State
+        postal_code:
+          type: string
+          title: Postal Code
+        county:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: County
+        fips_state_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fips State Code
+          description: FIPS 5-2 state code
+        fips_county_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fips County Code
+          description: FIPS 6-4 county code
+        legal_description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Legal Description
+        lot:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Lot
+        block:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Block
+        subdivision:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subdivision
+      type: object
+      required:
+      - address_line1
+      - city
+      - state
+      - postal_code
+      title: PropertyDescriptor
+      description: ALTA / MISMO-compatible property descriptor.
+    NotarySessionRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        seller_did:
+          type: string
+          title: Seller Did
+        notary_did:
+          type: string
+          title: Notary Did
+        property_id:
+          type: string
+          title: Property Id
+        notarization_type:
+          $ref: '#/components/schemas/NotarizationType'
+        document_hashes:
+          items:
+            type: string
+          type: array
+          title: Document Hashes
+          description: sha256 of each document signed in the session
+        ron_session_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ron Session Id
+        ron_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ron Platform
+          description: notarize / stewart / first_american / old_republic / proof
+        session_started_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Started At
+        session_completed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Completed At
+        kbai_passed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Kbai Passed
+        credential_analysis_passed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Credential Analysis Passed
+        notary_journal_entry:
+          type: string
+          title: Notary Journal Entry
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          default: false
+      type: object
+      required:
+      - buyer_did
+      - seller_did
+      - notary_did
+      - property_id
+      - notarization_type
+      - document_hashes
+      - notary_journal_entry
+      title: NotarySessionRequest

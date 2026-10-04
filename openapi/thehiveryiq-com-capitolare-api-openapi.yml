@@ -286,27 +286,32 @@ paths:
                 type: string
 components:
   schemas:
-    hivemorph__hive_capitolare__routes__VerifyRequest:
+    ValidationError:
       properties:
-        public_view:
-          additionalProperties: true
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
-          title: Public View
-        expected_venue:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expected Venue
-        sealed_view:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Sealed View
+          title: Context
       type: object
       required:
-      - public_view
-      title: VerifyRequest
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ProposeRequest:
       properties:
         proposer_passport_id:
@@ -329,35 +334,6 @@ components:
       - proposer_passport_id
       - counterparty_passport_id
       title: ProposeRequest
-    EnterRequest:
-      properties:
-        agent_did:
-          type: string
-          title: Agent Did
-          description: DID the agent claims (any string).
-          default: ''
-        framework:
-          type: string
-          title: Framework
-          description: openclaw|hermes|kimi|manus|custom
-          default: custom
-        ttl_seconds:
-          type: integer
-          maximum: 86400.0
-          minimum: 60.0
-          title: Ttl Seconds
-          default: 3600
-      type: object
-      title: EnterRequest
-    LeaveRequest:
-      properties:
-        passport_id:
-          type: string
-          title: Passport Id
-      type: object
-      required:
-      - passport_id
-      title: LeaveRequest
     DemoWatchRequest:
       properties:
         job_kind:
@@ -388,41 +364,6 @@ components:
       - session_id
       - accepter_passport_id
       title: AcceptRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     hivemorph__hive_capitolare__routes__SettleRequest:
       properties:
         session_id:
@@ -440,6 +381,26 @@ components:
       required:
       - session_id
       title: SettleRequest
+    EnterRequest:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID the agent claims (any string).
+          default: ''
+        framework:
+          type: string
+          title: Framework
+          description: openclaw|hermes|kimi|manus|custom
+          default: custom
+        ttl_seconds:
+          type: integer
+          maximum: 86400.0
+          minimum: 60.0
+          title: Ttl Seconds
+          default: 3600
+      type: object
+      title: EnterRequest
     UnsealRequest:
       properties:
         sealed_view:
@@ -458,3 +419,42 @@ components:
       - mlkem_secret_b64
       - x25519_secret_b64
       title: UnsealRequest
+    hivemorph__hive_capitolare__routes__VerifyRequest:
+      properties:
+        public_view:
+          additionalProperties: true
+          type: object
+          title: Public View
+        expected_venue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Venue
+        sealed_view:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Sealed View
+      type: object
+      required:
+      - public_view
+      title: VerifyRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    LeaveRequest:
+      properties:
+        passport_id:
+          type: string
+          title: Passport Id
+      type: object
+      required:
+      - passport_id
+      title: LeaveRequest

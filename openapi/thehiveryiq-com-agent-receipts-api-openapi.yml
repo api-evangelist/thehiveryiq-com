@@ -120,6 +120,15 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -146,26 +155,6 @@ components:
       - msg
       - type
       title: ValidationError
-    ManusDetailRequest:
-      properties:
-        task_id:
-          type: string
-          maxLength: 256
-          minLength: 1
-          title: Task Id
-      type: object
-      required:
-      - task_id
-      title: ManusDetailRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ManusCreateRequest:
       properties:
         message:
@@ -212,3 +201,14 @@ components:
           default: false
       type: object
       title: ManusCreateRequest
+    ManusDetailRequest:
+      properties:
+        task_id:
+          type: string
+          maxLength: 256
+          minLength: 1
+          title: Task Id
+      type: object
+      required:
+      - task_id
+      title: ManusDetailRequest

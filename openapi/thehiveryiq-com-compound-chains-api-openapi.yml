@@ -173,19 +173,15 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ChainRunBody:
+    HTTPValidationError:
       properties:
-        override_params:
-          anyOf:
-          - additionalProperties:
-              additionalProperties: true
-              type: object
-            type: object
-          - type: 'null'
-          title: Override Params
-          description: 'Per-step param overrides keyed by step index string: {''0'': {''caller_did'': ''...''}}'
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      title: ChainRunBody
+      title: HTTPValidationError
     ChainTemplateBody:
       properties:
         name:
@@ -209,15 +205,6 @@ components:
       - name
       - steps
       title: ChainTemplateBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -244,3 +231,16 @@ components:
       - msg
       - type
       title: ValidationError
+    ChainRunBody:
+      properties:
+        override_params:
+          anyOf:
+          - additionalProperties:
+              additionalProperties: true
+              type: object
+            type: object
+          - type: 'null'
+          title: Override Params
+          description: 'Per-step param overrides keyed by step index string: {''0'': {''caller_did'': ''...''}}'
+      type: object
+      title: ChainRunBody

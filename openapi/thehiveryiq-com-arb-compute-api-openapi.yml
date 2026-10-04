@@ -96,6 +96,32 @@ paths:
                 $ref: '#/components/schemas/CatalogResponse'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     hivemorph__hive_arb__compute_routes__RouteRequest:
       properties:
         shape:
@@ -136,72 +162,6 @@ components:
       - shape
       - prompt
       title: RouteRequest
-    ModelCatalogEntry:
-      properties:
-        model_id:
-          type: string
-          title: Model Id
-        display_name:
-          type: string
-          title: Display Name
-        quality_tier:
-          type: string
-          title: Quality Tier
-        cost_per_1k_input:
-          type: number
-          title: Cost Per 1K Input
-        cost_per_1k_output:
-          type: number
-          title: Cost Per 1K Output
-        blended_cost_per_1k:
-          type: number
-          title: Blended Cost Per 1K
-        provider:
-          type: string
-          title: Provider
-        notes:
-          type: string
-          title: Notes
-      type: object
-      required:
-      - model_id
-      - display_name
-      - quality_tier
-      - cost_per_1k_input
-      - cost_per_1k_output
-      - blended_cost_per_1k
-      - provider
-      - notes
-      title: ModelCatalogEntry
-    SavingsResponse:
-      properties:
-        calls_routed:
-          type: integer
-          title: Calls Routed
-        calls_failed:
-          type: integer
-          title: Calls Failed
-        total_cost_usd:
-          type: number
-          title: Total Cost Usd
-        total_savings_usd:
-          type: number
-          title: Total Savings Usd
-        avg_cost_reduction_pct:
-          type: number
-          title: Avg Cost Reduction Pct
-        baseline_model:
-          type: string
-          title: Baseline Model
-      type: object
-      required:
-      - calls_routed
-      - calls_failed
-      - total_cost_usd
-      - total_savings_usd
-      - avg_cost_reduction_pct
-      - baseline_model
-      title: SavingsResponse
     RouteResponse:
       properties:
         chosen_model:
@@ -250,41 +210,35 @@ components:
       - output_tokens
       - shape
       title: RouteResponse
-    HTTPValidationError:
+    SavingsResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        calls_routed:
+          type: integer
+          title: Calls Routed
+        calls_failed:
+          type: integer
+          title: Calls Failed
+        total_cost_usd:
+          type: number
+          title: Total Cost Usd
+        total_savings_usd:
+          type: number
+          title: Total Savings Usd
+        avg_cost_reduction_pct:
+          type: number
+          title: Avg Cost Reduction Pct
+        baseline_model:
           type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Baseline Model
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - calls_routed
+      - calls_failed
+      - total_cost_usd
+      - total_savings_usd
+      - avg_cost_reduction_pct
+      - baseline_model
+      title: SavingsResponse
     CatalogResponse:
       properties:
         count:
@@ -308,3 +262,49 @@ components:
       - models
       - tiers
       title: CatalogResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ModelCatalogEntry:
+      properties:
+        model_id:
+          type: string
+          title: Model Id
+        display_name:
+          type: string
+          title: Display Name
+        quality_tier:
+          type: string
+          title: Quality Tier
+        cost_per_1k_input:
+          type: number
+          title: Cost Per 1K Input
+        cost_per_1k_output:
+          type: number
+          title: Cost Per 1K Output
+        blended_cost_per_1k:
+          type: number
+          title: Blended Cost Per 1K
+        provider:
+          type: string
+          title: Provider
+        notes:
+          type: string
+          title: Notes
+      type: object
+      required:
+      - model_id
+      - display_name
+      - quality_tier
+      - cost_per_1k_input
+      - cost_per_1k_output
+      - blended_cost_per_1k
+      - provider
+      - notes
+      title: ModelCatalogEntry

@@ -196,6 +196,25 @@ paths:
               schema: {}
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DecompressRequest:
+      properties:
+        compressed:
+          type: string
+          title: Compressed
+          description: Compressed text with smsh sentinels.
+      type: object
+      required:
+      - compressed
+      title: DecompressRequest
     ValidationError:
       properties:
         loc:
@@ -222,25 +241,6 @@ components:
       - msg
       - type
       title: ValidationError
-    DecompressRequest:
-      properties:
-        compressed:
-          type: string
-          title: Compressed
-          description: Compressed text with smsh sentinels.
-      type: object
-      required:
-      - compressed
-      title: DecompressRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     hivemorph__hive_smsh__routes__CompressRequest:
       properties:
         text:

@@ -147,6 +147,63 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    BillingCycleBody:
+      properties:
+        billing_month:
+          type: string
+          pattern: ^\d{4}-\d{2}$
+          title: Billing Month
+          description: ISO year-month string, e.g. '2026-04'.
+        dry_run:
+          type: boolean
+          title: Dry Run
+          description: If true, compute invoices but do not write records.
+          default: false
+      type: object
+      required:
+      - billing_month
+      title: BillingCycleBody
+      description: 'POST /v1/mos/energy-arb/billing/cycle
+
+
+        Admin-only trigger (HIVE_INTERNAL_DRIVER_KEY). Records a monthly savings
+
+        invoice per site. Does NOT charge; billing rails land in v0.2.'
     UtilityPriceBody:
       properties:
         site_did:
@@ -193,60 +250,3 @@ components:
         The site operator pushes their current electricity rate. In v0.1 this is a
 
         manual push; v0.2 will integrate automatic utility API polling.'
-    BillingCycleBody:
-      properties:
-        billing_month:
-          type: string
-          pattern: ^\d{4}-\d{2}$
-          title: Billing Month
-          description: ISO year-month string, e.g. '2026-04'.
-        dry_run:
-          type: boolean
-          title: Dry Run
-          description: If true, compute invoices but do not write records.
-          default: false
-      type: object
-      required:
-      - billing_month
-      title: BillingCycleBody
-      description: 'POST /v1/mos/energy-arb/billing/cycle
-
-
-        Admin-only trigger (HIVE_INTERNAL_DRIVER_KEY). Records a monthly savings
-
-        invoice per site. Does NOT charge; billing rails land in v0.2.'
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

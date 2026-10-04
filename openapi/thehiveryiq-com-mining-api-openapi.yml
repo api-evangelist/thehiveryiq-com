@@ -152,6 +152,47 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PayoutRequest:
+      properties:
+        btc_amount_sats:
+          type: integer
+          maximum: 2100000000000000.0
+          exclusiveMinimum: 0.0
+          title: Btc Amount Sats
+        recipient_usdc_address:
+          type: string
+          title: Recipient Usdc Address
+      type: object
+      required:
+      - btc_amount_sats
+      - recipient_usdc_address
+      title: PayoutRequest
     hivemorph__hive_mining__routes__BookRequest:
       properties:
         worker_id:
@@ -181,6 +222,15 @@ components:
       - duration_minutes
       - payer_address
       title: BookRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     hivemorph__hive_mining__routes__RouteRequest:
       properties:
         energy_cost_usdc_per_kwh:
@@ -202,53 +252,3 @@ components:
       - energy_cost_usdc_per_kwh
       - fleet_size_th_s
       title: RouteRequest
-    PayoutRequest:
-      properties:
-        btc_amount_sats:
-          type: integer
-          maximum: 2100000000000000.0
-          exclusiveMinimum: 0.0
-          title: Btc Amount Sats
-        recipient_usdc_address:
-          type: string
-          title: Recipient Usdc Address
-      type: object
-      required:
-      - btc_amount_sats
-      - recipient_usdc_address
-      title: PayoutRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

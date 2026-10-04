@@ -282,32 +282,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ManualEvaluateRequest:
+    ValidationError:
       properties:
-        job_id:
-          type: integer
-          minimum: 0.0
-          title: Job Id
-          description: ERC-8183 jobId (uint256).
-        provider:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Provider
-          description: Provider address (0x...).
-        deliverable:
+          title: Message
+        type:
           type: string
-          title: Deliverable
-          description: bytes32 deliverable commitment (0x-prefixed, 66 chars).
-          default: '0x0000000000000000000000000000000000000000000000000000000000000000'
-        extra:
-          additionalProperties: true
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
-          title: Extra
-          description: 'Optional extra payload merged into the job payload (e.g. {''red_flag'': true}).'
+          title: Context
       type: object
       required:
-      - job_id
-      - provider
-      title: ManualEvaluateRequest
+      - loc
+      - msg
+      - type
+      title: ValidationError
     JobSubmitRequest:
       properties:
         job_id:
@@ -370,6 +370,32 @@ components:
       - provider
       - deliverable
       title: AttestRequest
+    ManualEvaluateRequest:
+      properties:
+        job_id:
+          type: integer
+          minimum: 0.0
+          title: Job Id
+          description: ERC-8183 jobId (uint256).
+        provider:
+          type: string
+          title: Provider
+          description: Provider address (0x...).
+        deliverable:
+          type: string
+          title: Deliverable
+          description: bytes32 deliverable commitment (0x-prefixed, 66 chars).
+          default: '0x0000000000000000000000000000000000000000000000000000000000000000'
+        extra:
+          additionalProperties: true
+          type: object
+          title: Extra
+          description: 'Optional extra payload merged into the job payload (e.g. {''red_flag'': true}).'
+      type: object
+      required:
+      - job_id
+      - provider
+      title: ManualEvaluateRequest
     HTTPValidationError:
       properties:
         detail:
@@ -379,29 +405,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

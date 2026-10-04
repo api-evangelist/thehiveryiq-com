@@ -45,6 +45,92 @@ paths:
               schema: {}
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    Vote:
+      properties:
+        model:
+          type: string
+          title: Model
+        stakes_tier:
+          anyOf:
+          - type: string
+            enum:
+            - volume
+            - mid
+            - premium
+          - type: 'null'
+          title: Stakes Tier
+        confidence:
+          type: number
+          title: Confidence
+          default: 0.0
+        reasoning:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reasoning
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      type: object
+      required:
+      - model
+      title: Vote
+    StakesClassifyRequest:
+      properties:
+        prompt:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Prompt
+        vertical:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Vertical
+        rules_stakes_tier:
+          type: string
+          enum:
+          - volume
+          - mid
+          - premium
+          title: Rules Stakes Tier
+          default: volume
+        monthly_estimate:
+          type: integer
+          title: Monthly Estimate
+          default: 0
+      type: object
+      required:
+      - prompt
+      title: StakesClassifyRequest
     StakesClassifyResponse:
       properties:
         stakes_tier:
@@ -113,34 +199,6 @@ components:
       - effective_stakes_tier
       - generated_at
       title: StakesClassifyResponse
-    StakesClassifyRequest:
-      properties:
-        prompt:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Prompt
-        vertical:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Vertical
-        rules_stakes_tier:
-          type: string
-          enum:
-          - volume
-          - mid
-          - premium
-          title: Rules Stakes Tier
-          default: volume
-        monthly_estimate:
-          type: integer
-          title: Monthly Estimate
-          default: 0
-      type: object
-      required:
-      - prompt
-      title: StakesClassifyRequest
     HTTPValidationError:
       properties:
         detail:
@@ -150,61 +208,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    Vote:
-      properties:
-        model:
-          type: string
-          title: Model
-        stakes_tier:
-          anyOf:
-          - type: string
-            enum:
-            - volume
-            - mid
-            - premium
-          - type: 'null'
-          title: Stakes Tier
-        confidence:
-          type: number
-          title: Confidence
-          default: 0.0
-        reasoning:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reasoning
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-      type: object
-      required:
-      - model
-      title: Vote

@@ -585,6 +585,179 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    RailSelectRequest:
+      properties:
+        asset:
+          type: string
+          title: Asset
+          description: Default settlement asset to advertise. 'USDC' or 'USDT'.
+      type: object
+      required:
+      - asset
+      title: RailSelectRequest
+      description: Body for POST /v1/x402/rails/select.
+    PricingSetRequest:
+      properties:
+        path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Path
+          description: URL path to set price for.
+        amount:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Amount
+          description: New price in USD.
+        tier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tier
+          description: Tier label (optional; inferred from amount if omitted).
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Human-readable note.
+        asset:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asset
+          description: Optional asset filter. If provided ('USDC' or 'USDT'), updates the per-asset price for this path only — the cross-asset base price is unchanged. Useful when Tether/Circle peg spreads diverge.
+      type: object
+      title: PricingSetRequest
+      description: Body for POST /v1/x402/pricing/set (also accepts query params).
+    ClientIntentRequest:
+      properties:
+        profile:
+          type: string
+          maxLength: 16
+          title: Profile
+          description: nano | standard.
+          default: nano
+        amount_usdc:
+          anyOf:
+          - type: number
+            maximum: 10000000.0
+            minimum: 0.0001
+          - type: 'null'
+          title: Amount Usdc
+        endpoint_path:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Endpoint Path
+      type: object
+      title: ClientIntentRequest
+      description: Optional body for POST /v1/x402/client-intent (and wallet-intent alias).
+    RecoverRequest:
+      properties:
+        nonce:
+          type: string
+          title: Nonce
+          description: Nonce of a previously failed proof.
+        tx_hash:
+          type: string
+          title: Tx Hash
+          description: On-chain tx hash to re-verify.
+        payer:
+          type: string
+          title: Payer
+          description: Payer address (optional; carried for audit).
+          default: ''
+        chain:
+          type: string
+          title: Chain
+          description: '''base'', ''ethereum'', or ''solana''.'
+          default: base
+        asset:
+          type: string
+          title: Asset
+          description: Asset of the original quote.
+          default: USDC
+      type: object
+      required:
+      - nonce
+      - tx_hash
+      title: RecoverRequest
+      description: Body for POST /v1/x402/recover.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ProofSubmitRequest:
+      properties:
+        nonce:
+          type: string
+          title: Nonce
+          description: Nonce from the 402 PaymentRequired response.
+        payer:
+          type: string
+          title: Payer
+          description: On-chain address of the paying account.
+        chain:
+          type: string
+          title: Chain
+          description: '''base'' or ''solana''.'
+        tx_hash:
+          type: string
+          title: Tx Hash
+          description: On-chain transaction hash (Base) or signature (Solana). Validated against the chain via JSON-RPC — see proof_validator.py. Fake or unfound tx_hash returns chain_rejected; never fails open.
+        amount_usd:
+          type: number
+          title: Amount Usd
+          description: Claimed payment amount (informational).
+          default: 0.0
+        asset:
+          type: string
+          title: Asset
+          description: Payment asset. 'USDC' or 'USDPT'.
+          default: USDC
+      type: object
+      required:
+      - nonce
+      - payer
+      - chain
+      - tx_hash
+      title: ProofSubmitRequest
+      description: Body for POST /v1/x402/proof/submit.
     QuoteRequest:
       properties:
         endpoint_path:
@@ -652,176 +825,3 @@ components:
         quote tied to a specific HiveMorph endpoint, or a quote for a specific
 
         USDC amount. Receipt profile defaults to ''standard''.'
-    ProofSubmitRequest:
-      properties:
-        nonce:
-          type: string
-          title: Nonce
-          description: Nonce from the 402 PaymentRequired response.
-        payer:
-          type: string
-          title: Payer
-          description: On-chain address of the paying account.
-        chain:
-          type: string
-          title: Chain
-          description: '''base'' or ''solana''.'
-        tx_hash:
-          type: string
-          title: Tx Hash
-          description: On-chain transaction hash (Base) or signature (Solana). Validated against the chain via JSON-RPC — see proof_validator.py. Fake or unfound tx_hash returns chain_rejected; never fails open.
-        amount_usd:
-          type: number
-          title: Amount Usd
-          description: Claimed payment amount (informational).
-          default: 0.0
-        asset:
-          type: string
-          title: Asset
-          description: Payment asset. 'USDC' or 'USDPT'.
-          default: USDC
-      type: object
-      required:
-      - nonce
-      - payer
-      - chain
-      - tx_hash
-      title: ProofSubmitRequest
-      description: Body for POST /v1/x402/proof/submit.
-    RecoverRequest:
-      properties:
-        nonce:
-          type: string
-          title: Nonce
-          description: Nonce of a previously failed proof.
-        tx_hash:
-          type: string
-          title: Tx Hash
-          description: On-chain tx hash to re-verify.
-        payer:
-          type: string
-          title: Payer
-          description: Payer address (optional; carried for audit).
-          default: ''
-        chain:
-          type: string
-          title: Chain
-          description: '''base'', ''ethereum'', or ''solana''.'
-          default: base
-        asset:
-          type: string
-          title: Asset
-          description: Asset of the original quote.
-          default: USDC
-      type: object
-      required:
-      - nonce
-      - tx_hash
-      title: RecoverRequest
-      description: Body for POST /v1/x402/recover.
-    PricingSetRequest:
-      properties:
-        path:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Path
-          description: URL path to set price for.
-        amount:
-          anyOf:
-          - type: number
-            minimum: 0.0
-          - type: 'null'
-          title: Amount
-          description: New price in USD.
-        tier:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tier
-          description: Tier label (optional; inferred from amount if omitted).
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-          description: Human-readable note.
-        asset:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Asset
-          description: Optional asset filter. If provided ('USDC' or 'USDT'), updates the per-asset price for this path only — the cross-asset base price is unchanged. Useful when Tether/Circle peg spreads diverge.
-      type: object
-      title: PricingSetRequest
-      description: Body for POST /v1/x402/pricing/set (also accepts query params).
-    ClientIntentRequest:
-      properties:
-        profile:
-          type: string
-          maxLength: 16
-          title: Profile
-          description: nano | standard.
-          default: nano
-        amount_usdc:
-          anyOf:
-          - type: number
-            maximum: 10000000.0
-            minimum: 0.0001
-          - type: 'null'
-          title: Amount Usdc
-        endpoint_path:
-          anyOf:
-          - type: string
-            maxLength: 512
-          - type: 'null'
-          title: Endpoint Path
-      type: object
-      title: ClientIntentRequest
-      description: Optional body for POST /v1/x402/client-intent (and wallet-intent alias).
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    RailSelectRequest:
-      properties:
-        asset:
-          type: string
-          title: Asset
-          description: Default settlement asset to advertise. 'USDC' or 'USDT'.
-      type: object
-      required:
-      - asset
-      title: RailSelectRequest
-      description: Body for POST /v1/x402/rails/select.

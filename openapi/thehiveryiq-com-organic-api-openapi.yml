@@ -358,87 +358,32 @@ paths:
                 title: Response Pricing V1 Pricing Get
 components:
   schemas:
-    RubricReq:
+    ValidationError:
       properties:
-        intent:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          maxLength: 2048
-          minLength: 1
-          title: Intent
-        amount_usd:
-          anyOf:
-          - type: number
-            minimum: 0.0
-          - type: 'null'
-          title: Amount Usd
-        context:
-          additionalProperties: true
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
           title: Context
-        constraints:
-          items:
-            type: string
-          type: array
-          title: Constraints
       type: object
       required:
-      - intent
-      title: RubricReq
-    ReceiptEmitReq:
-      properties:
-        agent_did:
-          type: string
-          maxLength: 200
-          minLength: 3
-          title: Agent Did
-        artifact:
-          type: string
-          maxLength: 65536
-          minLength: 1
-          title: Artifact
-          description: The artifact body or its sha256 hex
-        artifact_type:
-          type: string
-          maxLength: 128
-          title: Artifact Type
-          default: application/octet-stream
-        metadata:
-          additionalProperties: true
-          type: object
-          title: Metadata
-        regulated_envelope_jti:
-          anyOf:
-          - type: string
-            maxLength: 64
-          - type: 'null'
-          title: Regulated Envelope Jti
-          description: Required when profile='pq'. The jti of a delegation envelope (issued via /v1/delegation/issue or operator-sign) whose allowed_surfaces includes 'pq'. Standard and nano profiles ignore this field.
-      type: object
-      required:
-      - agent_did
-      - artifact
-      title: ReceiptEmitReq
-    RosettaReq:
-      properties:
-        input:
-          type: string
-          maxLength: 4096
-          minLength: 1
-          title: Input
-        locale:
-          type: string
-          maxLength: 16
-          title: Locale
-          default: en-US
-        target:
-          type: string
-          title: Target
-          description: 'canonical schema target: intent | quote | route'
-          default: intent
-      type: object
-      required:
-      - input
-      title: RosettaReq
+      - loc
+      - msg
+      - type
+      title: ValidationError
     HKTNRegisterReq:
       properties:
         agent_did:
@@ -502,6 +447,66 @@ components:
       - agent_did
       - intent
       title: ProspectorReq
+    RubricReq:
+      properties:
+        intent:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          title: Intent
+        amount_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Amount Usd
+        context:
+          additionalProperties: true
+          type: object
+          title: Context
+        constraints:
+          items:
+            type: string
+          type: array
+          title: Constraints
+      type: object
+      required:
+      - intent
+      title: RubricReq
+    ReceiptEmitReq:
+      properties:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        artifact:
+          type: string
+          maxLength: 65536
+          minLength: 1
+          title: Artifact
+          description: The artifact body or its sha256 hex
+        artifact_type:
+          type: string
+          maxLength: 128
+          title: Artifact Type
+          default: application/octet-stream
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+        regulated_envelope_jti:
+          anyOf:
+          - type: string
+            maxLength: 64
+          - type: 'null'
+          title: Regulated Envelope Jti
+          description: Required when profile='pq'. The jti of a delegation envelope (issued via /v1/delegation/issue or operator-sign) whose allowed_surfaces includes 'pq'. Standard and nano profiles ignore this field.
+      type: object
+      required:
+      - agent_did
+      - artifact
+      title: ReceiptEmitReq
     HTTPValidationError:
       properties:
         detail:
@@ -511,29 +516,24 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
+    RosettaReq:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
         input:
+          type: string
+          maxLength: 4096
+          minLength: 1
           title: Input
-        ctx:
-          type: object
-          title: Context
+        locale:
+          type: string
+          maxLength: 16
+          title: Locale
+          default: en-US
+        target:
+          type: string
+          title: Target
+          description: 'canonical schema target: intent | quote | route'
+          default: intent
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - input
+      title: RosettaReq

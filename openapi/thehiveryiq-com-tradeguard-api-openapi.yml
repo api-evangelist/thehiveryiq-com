@@ -321,6 +321,79 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    hivemorph__hive_tradeguard__models__VerifyResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        trader_did:
+          type: string
+          title: Trader Did
+        firm_did:
+          type: string
+          title: Firm Did
+        algo_id:
+          type: string
+          title: Algo Id
+        order_event_hash:
+          type: string
+          title: Order Event Hash
+        event_type:
+          type: string
+          title: Event Type
+        venue:
+          type: string
+          title: Venue
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        verification:
+          additionalProperties: true
+          type: object
+          title: Verification
+      type: object
+      required:
+      - attestation_id
+      - trader_did
+      - firm_did
+      - algo_id
+      - order_event_hash
+      - event_type
+      - venue
+      - timestamp_iso
+      - receipt_envelope
+      - verification
+      title: VerifyResponse
     TradeAttestRequest:
       properties:
         trader_did:
@@ -478,53 +551,6 @@ components:
       - price_usd
       - receipt_envelope
       title: TradeAttestResponse
-    hivemorph__hive_tradeguard__models__VerifyResponse:
-      properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        trader_did:
-          type: string
-          title: Trader Did
-        firm_did:
-          type: string
-          title: Firm Did
-        algo_id:
-          type: string
-          title: Algo Id
-        order_event_hash:
-          type: string
-          title: Order Event Hash
-        event_type:
-          type: string
-          title: Event Type
-        venue:
-          type: string
-          title: Venue
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-        verification:
-          additionalProperties: true
-          type: object
-          title: Verification
-      type: object
-      required:
-      - attestation_id
-      - trader_did
-      - firm_did
-      - algo_id
-      - order_event_hash
-      - event_type
-      - venue
-      - timestamp_iso
-      - receipt_envelope
-      - verification
-      title: VerifyResponse
     HTTPValidationError:
       properties:
         detail:
@@ -534,29 +560,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

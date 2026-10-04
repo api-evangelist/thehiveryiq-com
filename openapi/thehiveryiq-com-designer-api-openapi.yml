@@ -225,133 +225,32 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    AgentChatRequest:
+    ValidationError:
       properties:
-        messages:
+        loc:
           items:
-            $ref: '#/components/schemas/ChatMessage'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          maxItems: 20
-          minItems: 1
-          title: Messages
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - messages
-      title: AgentChatRequest
-    MintResponse:
-      properties:
-        slug:
-          type: string
-          title: Slug
-        endpoint_url:
-          type: string
-          title: Endpoint Url
-        record:
-          additionalProperties: true
-          type: object
-          title: Record
-        mint_receipt_id:
-          type: string
-          title: Mint Receipt Id
-        ccacw_receipt:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Ccacw Receipt
-      type: object
-      required:
-      - slug
-      - endpoint_url
-      - record
-      - mint_receipt_id
-      title: MintResponse
-    DesignerChatRequest:
-      properties:
-        messages:
-          items:
-            $ref: '#/components/schemas/ChatMessage'
-          type: array
-          maxItems: 40
-          minItems: 1
-          title: Messages
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-        step_hint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Step Hint
-          description: 'Optional: which spec field this turn is asking about.'
-      type: object
-      required:
-      - messages
-      title: DesignerChatRequest
-    DesignerChatResponse:
-      properties:
-        assistant_message:
-          type: string
-          title: Assistant Message
-        spec_patch:
-          additionalProperties: true
-          type: object
-          title: Spec Patch
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-        spec_complete:
-          type: boolean
-          title: Spec Complete
-        missing_fields:
-          items:
-            type: string
-          type: array
-          title: Missing Fields
-        free_quota:
-          additionalProperties: true
-          type: object
-          title: Free Quota
-        model:
-          type: string
-          title: Model
-        turn_id:
-          type: string
-          title: Turn Id
-      type: object
-      required:
-      - assistant_message
-      - spec_patch
-      - spec
-      - spec_complete
-      - missing_fields
-      - free_quota
-      - model
-      - turn_id
-      title: DesignerChatResponse
-    hivemorph__hive_designer__routes__MintRequest:
-      properties:
-        spec:
-          additionalProperties: true
-          type: object
-          title: Spec
-        publisher_address:
-          type: string
-          maxLength: 64
-          minLength: 42
-          title: Publisher Address
-        eip712_signature:
-          type: string
-          minLength: 10
-          title: Eip712 Signature
-      type: object
-      required:
-      - spec
-      - publisher_address
-      - eip712_signature
-      title: MintRequest
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ChatMessage:
       properties:
         role:
@@ -395,6 +294,105 @@ components:
       - publisher_address
       - tx_hash
       title: AdminRecoverMintRequest
+    DesignerChatResponse:
+      properties:
+        assistant_message:
+          type: string
+          title: Assistant Message
+        spec_patch:
+          additionalProperties: true
+          type: object
+          title: Spec Patch
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+        spec_complete:
+          type: boolean
+          title: Spec Complete
+        missing_fields:
+          items:
+            type: string
+          type: array
+          title: Missing Fields
+        free_quota:
+          additionalProperties: true
+          type: object
+          title: Free Quota
+        model:
+          type: string
+          title: Model
+        turn_id:
+          type: string
+          title: Turn Id
+      type: object
+      required:
+      - assistant_message
+      - spec_patch
+      - spec
+      - spec_complete
+      - missing_fields
+      - free_quota
+      - model
+      - turn_id
+      title: DesignerChatResponse
+    DesignerChatRequest:
+      properties:
+        messages:
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+          type: array
+          maxItems: 40
+          minItems: 1
+          title: Messages
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+        step_hint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Step Hint
+          description: 'Optional: which spec field this turn is asking about.'
+      type: object
+      required:
+      - messages
+      title: DesignerChatRequest
+    AgentChatRequest:
+      properties:
+        messages:
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+          type: array
+          maxItems: 20
+          minItems: 1
+          title: Messages
+      type: object
+      required:
+      - messages
+      title: AgentChatRequest
+    hivemorph__hive_designer__routes__MintRequest:
+      properties:
+        spec:
+          additionalProperties: true
+          type: object
+          title: Spec
+        publisher_address:
+          type: string
+          maxLength: 64
+          minLength: 42
+          title: Publisher Address
+        eip712_signature:
+          type: string
+          minLength: 10
+          title: Eip712 Signature
+      type: object
+      required:
+      - spec
+      - publisher_address
+      - eip712_signature
+      title: MintRequest
     HTTPValidationError:
       properties:
         detail:
@@ -404,29 +402,31 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
+    MintResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        slug:
           type: string
-          title: Message
-        type:
+          title: Slug
+        endpoint_url:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
+          title: Endpoint Url
+        record:
+          additionalProperties: true
           type: object
-          title: Context
+          title: Record
+        mint_receipt_id:
+          type: string
+          title: Mint Receipt Id
+        ccacw_receipt:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Ccacw Receipt
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - slug
+      - endpoint_url
+      - record
+      - mint_receipt_id
+      title: MintResponse

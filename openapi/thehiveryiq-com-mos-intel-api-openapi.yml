@@ -233,51 +233,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    TelemetryRequest:
-      properties:
-        site_did:
-          type: string
-          maxLength: 512
-          minLength: 10
-          title: Site Did
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-          description: 'Signed telemetry payload. Recommended fields: hashrate_ths (float), health (str), temp_c (float), energy_kwh (float), workers (list[dict]). All fields are optional; include what the MOS SDK exposes.'
-      type: object
-      required:
-      - site_did
-      title: TelemetryRequest
-      description: Body for POST /v1/mos/intel/telemetry.
-    hivemorph__mos__intel__RegisterRequest:
-      properties:
-        site_did:
-          type: string
-          maxLength: 512
-          minLength: 10
-          title: Site Did
-          description: The site DID (did:key:z6Mk... or similar).
-        operator_name:
-          anyOf:
-          - type: string
-            maxLength: 128
-          - type: 'null'
-          title: Operator Name
-          description: Optional human-readable operator name.
-        machine_count:
-          anyOf:
-          - type: integer
-            maximum: 100000.0
-            minimum: 1.0
-          - type: 'null'
-          title: Machine Count
-          description: Number of machines at this site. Informational in v0.1.
-      type: object
-      required:
-      - site_did
-      title: RegisterRequest
-      description: Body for POST /v1/mos/intel/register.
     HTTPValidationError:
       properties:
         detail:
@@ -313,3 +268,48 @@ components:
       - msg
       - type
       title: ValidationError
+    hivemorph__mos__intel__RegisterRequest:
+      properties:
+        site_did:
+          type: string
+          maxLength: 512
+          minLength: 10
+          title: Site Did
+          description: The site DID (did:key:z6Mk... or similar).
+        operator_name:
+          anyOf:
+          - type: string
+            maxLength: 128
+          - type: 'null'
+          title: Operator Name
+          description: Optional human-readable operator name.
+        machine_count:
+          anyOf:
+          - type: integer
+            maximum: 100000.0
+            minimum: 1.0
+          - type: 'null'
+          title: Machine Count
+          description: Number of machines at this site. Informational in v0.1.
+      type: object
+      required:
+      - site_did
+      title: RegisterRequest
+      description: Body for POST /v1/mos/intel/register.
+    TelemetryRequest:
+      properties:
+        site_did:
+          type: string
+          maxLength: 512
+          minLength: 10
+          title: Site Did
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+          description: 'Signed telemetry payload. Recommended fields: hashrate_ths (float), health (str), temp_c (float), energy_kwh (float), workers (list[dict]). All fields are optional; include what the MOS SDK exposes.'
+      type: object
+      required:
+      - site_did
+      title: TelemetryRequest
+      description: Body for POST /v1/mos/intel/telemetry.

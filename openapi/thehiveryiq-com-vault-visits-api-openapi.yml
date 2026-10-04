@@ -210,23 +210,6 @@ paths:
               schema: {}
 components:
   schemas:
-    LabelRegister:
-      properties:
-        slug:
-          type: string
-          maxLength: 64
-          minLength: 4
-          title: Slug
-        label:
-          type: string
-          maxLength: 80
-          minLength: 1
-          title: Label
-      type: object
-      required:
-      - slug
-      - label
-      title: LabelRegister
     HTTPValidationError:
       properties:
         detail:
@@ -262,6 +245,23 @@ components:
       - msg
       - type
       title: ValidationError
+    LabelRegister:
+      properties:
+        slug:
+          type: string
+          maxLength: 64
+          minLength: 4
+          title: Slug
+        label:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Label
+      type: object
+      required:
+      - slug
+      - label
+      title: LabelRegister
     VisitEvent:
       properties:
         slug:

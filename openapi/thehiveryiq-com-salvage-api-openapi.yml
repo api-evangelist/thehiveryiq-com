@@ -549,60 +549,6 @@ paths:
                 title: Response Stats V1 Salvage Stats Get
 components:
   schemas:
-    SelfTuneTickBody:
-      properties:
-        claims_resolved_last_hour:
-          type: integer
-          minimum: 0.0
-          title: Claims Resolved Last Hour
-          default: 0
-        arb_queue_depth:
-          type: integer
-          minimum: 0.0
-          title: Arb Queue Depth
-          default: 0
-        arb_queue_normal:
-          type: integer
-          minimum: 1.0
-          title: Arb Queue Normal
-          default: 2
-        false_positive_count:
-          type: integer
-          minimum: 0.0
-          title: False Positive Count
-          default: 0
-        total_signals:
-          type: integer
-          minimum: 0.0
-          title: Total Signals
-          default: 0
-      type: object
-      title: SelfTuneTickBody
-    BridgeObserveBody:
-      properties:
-        tx_id:
-          type: string
-          title: Tx Id
-        source_chain:
-          type: string
-          title: Source Chain
-        dest_chain:
-          type: string
-          title: Dest Chain
-        source_confirmed:
-          type: boolean
-          title: Source Confirmed
-        dest_arrived:
-          type: boolean
-          title: Dest Arrived
-      type: object
-      required:
-      - tx_id
-      - source_chain
-      - dest_chain
-      - source_confirmed
-      - dest_arrived
-      title: BridgeObserveBody
     FileClaimBody:
       properties:
         tx_id:
@@ -644,19 +590,50 @@ components:
       - victim_wallet
       - amount_usd
       title: FileClaimBody
-    SlashBody:
+    ValidationError:
       properties:
-        agent_id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Agent Id
-        reason:
+          title: Message
+        type:
           type: string
-          title: Reason
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - agent_id
-      - reason
-      title: SlashBody
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ComplianceReviewBody:
+      properties:
+        claim_id:
+          type: string
+          title: Claim Id
+        outcome:
+          type: string
+          title: Outcome
+          description: '''cleared'' or ''confirmed_fraud'''
+        reviewer:
+          type: string
+          title: Reviewer
+          default: human-reviewer
+      type: object
+      required:
+      - claim_id
+      - outcome
+      title: ComplianceReviewBody
     SignalBody:
       properties:
         tx_id:
@@ -706,24 +683,31 @@ components:
       - source_type
       - proof_type
       title: SignalBody
-    ComplianceReviewBody:
+    BridgeObserveBody:
       properties:
-        claim_id:
+        tx_id:
           type: string
-          title: Claim Id
-        outcome:
+          title: Tx Id
+        source_chain:
           type: string
-          title: Outcome
-          description: '''cleared'' or ''confirmed_fraud'''
-        reviewer:
+          title: Source Chain
+        dest_chain:
           type: string
-          title: Reviewer
-          default: human-reviewer
+          title: Dest Chain
+        source_confirmed:
+          type: boolean
+          title: Source Confirmed
+        dest_arrived:
+          type: boolean
+          title: Dest Arrived
       type: object
       required:
-      - claim_id
-      - outcome
-      title: ComplianceReviewBody
+      - tx_id
+      - source_chain
+      - dest_chain
+      - source_confirmed
+      - dest_arrived
+      title: BridgeObserveBody
     AutoProcessBody:
       properties:
         n:
@@ -743,6 +727,19 @@ components:
           default: dna-001
       type: object
       title: AutoProcessBody
+    SlashBody:
+      properties:
+        agent_id:
+          type: string
+          title: Agent Id
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - agent_id
+      - reason
+      title: SlashBody
     HTTPValidationError:
       properties:
         detail:
@@ -752,29 +749,32 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
+    SelfTuneTickBody:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+        claims_resolved_last_hour:
+          type: integer
+          minimum: 0.0
+          title: Claims Resolved Last Hour
+          default: 0
+        arb_queue_depth:
+          type: integer
+          minimum: 0.0
+          title: Arb Queue Depth
+          default: 0
+        arb_queue_normal:
+          type: integer
+          minimum: 1.0
+          title: Arb Queue Normal
+          default: 2
+        false_positive_count:
+          type: integer
+          minimum: 0.0
+          title: False Positive Count
+          default: 0
+        total_signals:
+          type: integer
+          minimum: 0.0
+          title: Total Signals
+          default: 0
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: SelfTuneTickBody

@@ -798,42 +798,19 @@ components:
       - msg
       - type
       title: ValidationError
-    hivemorph__server__SettleRequest:
+    AskItem:
       properties:
-        reservation_id:
+        kind:
           type: string
-          title: Reservation Id
-          description: 2PC reservation ID from the offer token
+          title: Kind
+          description: Capability kind requested
+          default: inference
+        params:
+          additionalProperties: true
+          type: object
+          title: Params
       type: object
-      required:
-      - reservation_id
-      title: SettleRequest
-    OfferRequest:
-      properties:
-        intent_text:
-          type: string
-          title: Intent Text
-          description: Natural language intent from counterparty
-        counterparty_did:
-          type: string
-          title: Counterparty Did
-          description: DID or 0x address of counterparty
-        asks:
-          items:
-            $ref: '#/components/schemas/AskItem'
-          type: array
-          title: Asks
-        nonce:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Nonce
-          description: Optional nonce; generated if omitted
-      type: object
-      required:
-      - intent_text
-      - counterparty_did
-      title: OfferRequest
+      title: AskItem
     SpawnFromProposalRequest:
       properties:
         parent_id:
@@ -886,6 +863,16 @@ components:
         one is worth staging, and posts the proposal back here. The variant lands
 
         as ''proposed'' — NEVER auto-approved — so the human approval gate stays on.'
+    hivemorph__server__SettleRequest:
+      properties:
+        reservation_id:
+          type: string
+          title: Reservation Id
+          description: 2PC reservation ID from the offer token
+      type: object
+      required:
+      - reservation_id
+      title: SettleRequest
     SpawnRequest:
       properties:
         kit_deltas:
@@ -918,6 +905,32 @@ components:
           description: Predicted incremental USDC/day if this variant is approved.
       type: object
       title: SpawnRequest
+    OfferRequest:
+      properties:
+        intent_text:
+          type: string
+          title: Intent Text
+          description: Natural language intent from counterparty
+        counterparty_did:
+          type: string
+          title: Counterparty Did
+          description: DID or 0x address of counterparty
+        asks:
+          items:
+            $ref: '#/components/schemas/AskItem'
+          type: array
+          title: Asks
+        nonce:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Nonce
+          description: Optional nonce; generated if omitted
+      type: object
+      required:
+      - intent_text
+      - counterparty_did
+      title: OfferRequest
     HTTPValidationError:
       properties:
         detail:
@@ -927,16 +940,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    AskItem:
-      properties:
-        kind:
-          type: string
-          title: Kind
-          description: Capability kind requested
-          default: inference
-        params:
-          additionalProperties: true
-          type: object
-          title: Params
-      type: object
-      title: AskItem

@@ -176,62 +176,43 @@ paths:
                 title: Response Mor Examples V1 Mor Examples Get
 components:
   schemas:
-    RightsStateIn:
+    ValidationError:
       properties:
-        asserted_scope:
-          items: {}
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Asserted Scope
-        verified_scope:
-          items: {}
-          type: array
-          title: Verified Scope
-        excluded_scope:
-          items: {}
-          type: array
-          title: Excluded Scope
-        revocation_refs:
-          items: {}
-          type: array
-          title: Revocation Refs
-        license_commitments:
-          items: {}
-          type: array
-          title: License Commitments
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
-      title: RightsStateIn
-    EvidenceIn:
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    hivemorph__hive_media_origin__routes__VerifyRequest:
       properties:
-        c2pa_refs:
-          items: {}
-          type: array
-          title: C2Pa Refs
-        capture_attestations:
-          items: {}
-          type: array
-          title: Capture Attestations
-        model_attestations:
-          items: {}
-          type: array
-          title: Model Attestations
-        prompt_commitments:
-          items: {}
-          type: array
-          title: Prompt Commitments
-        source_asset_hashes:
-          items: {}
-          type: array
-          title: Source Asset Hashes
-        watermark_signals:
-          items: {}
-          type: array
-          title: Watermark Signals
-        human_attestations:
-          items: {}
-          type: array
-          title: Human Attestations
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: A full M.O.R. receipt object
       type: object
-      title: EvidenceIn
+      required:
+      - receipt
+      title: VerifyRequest
     ReceiptRequest:
       properties:
         cryptographic_hash:
@@ -269,6 +250,30 @@ components:
       required:
       - cryptographic_hash
       title: ReceiptRequest
+    RightsStateIn:
+      properties:
+        asserted_scope:
+          items: {}
+          type: array
+          title: Asserted Scope
+        verified_scope:
+          items: {}
+          type: array
+          title: Verified Scope
+        excluded_scope:
+          items: {}
+          type: array
+          title: Excluded Scope
+        revocation_refs:
+          items: {}
+          type: array
+          title: Revocation Refs
+        license_commitments:
+          items: {}
+          type: array
+          title: License Commitments
+      type: object
+      title: RightsStateIn
     ChallengeStateIn:
       properties:
         status:
@@ -281,17 +286,38 @@ components:
           title: Challenge Refs
       type: object
       title: ChallengeStateIn
-    hivemorph__hive_media_origin__routes__VerifyRequest:
+    EvidenceIn:
       properties:
-        receipt:
-          additionalProperties: true
-          type: object
-          title: Receipt
-          description: A full M.O.R. receipt object
+        c2pa_refs:
+          items: {}
+          type: array
+          title: C2Pa Refs
+        capture_attestations:
+          items: {}
+          type: array
+          title: Capture Attestations
+        model_attestations:
+          items: {}
+          type: array
+          title: Model Attestations
+        prompt_commitments:
+          items: {}
+          type: array
+          title: Prompt Commitments
+        source_asset_hashes:
+          items: {}
+          type: array
+          title: Source Asset Hashes
+        watermark_signals:
+          items: {}
+          type: array
+          title: Watermark Signals
+        human_attestations:
+          items: {}
+          type: array
+          title: Human Attestations
       type: object
-      required:
-      - receipt
-      title: VerifyRequest
+      title: EvidenceIn
     HTTPValidationError:
       properties:
         detail:
@@ -301,29 +327,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

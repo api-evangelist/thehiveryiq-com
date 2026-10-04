@@ -77,6 +77,15 @@ paths:
                 title: Response Get Today V1 Insurance Today Get
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     hivemorph__hive_insurance__routes__QuoteBody:
       properties:
         protocol:
@@ -107,15 +116,6 @@ components:
       - cover_amount_usd
       - duration_days
       title: QuoteBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:

@@ -305,65 +305,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    BreachNoticeAttestRequest:
-      properties:
-        covered_entity_did:
-          type: string
-          title: Covered Entity Did
-          description: DID of the covered entity
-        business_associate_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Business Associate Did
-          description: DID of BA if applicable
-        patient_did_reference:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Patient Did Reference
-          description: Pseudonymous patient DID reference
-        minimum_necessary_scope:
-          type: string
-          title: Minimum Necessary Scope
-          description: Scope
-          default: breach_notification
-        phi_categories:
-          items:
-            type: string
-          type: array
-          title: Phi Categories
-          description: IIHI categories in breach
-        purpose_of_use:
-          $ref: '#/components/schemas/PurposeOfUse'
-          description: Purpose of use
-          default: health_oversight
-        breach_assessment_receipt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Breach Assessment Receipt Id
-          description: Receipt ID of the breach assessment
-        notification_type:
-          type: string
-          title: Notification Type
-          description: individual | media | hhs_secretary
-          default: individual
-        days_since_discovery:
-          type: integer
-          title: Days Since Discovery
-          description: Days since breach discovery (must be <= 60 for timely)
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Notification metadata: notification_hash, media_outlet_did, etc.'
-      type: object
-      required:
-      - covered_entity_did
-      - days_since_discovery
-      title: BreachNoticeAttestRequest
-      description: Record a 60-day HIPAA breach notification event.
     PurposeOfUse:
       type: string
       enum:
@@ -381,49 +322,33 @@ components:
       - specialized_government
       - workers_comp
       title: PurposeOfUse
-    PatientAccessAttestRequest:
+    ValidationError:
       properties:
-        covered_entity_did:
-          type: string
-          title: Covered Entity Did
-          description: DID of the covered entity
-        patient_did_reference:
-          type: string
-          title: Patient Did Reference
-          description: Pseudonymous patient DID reference
-        minimum_necessary_scope:
-          type: string
-          title: Minimum Necessary Scope
-          description: Minimum-necessary scope
-        phi_categories:
+        loc:
           items:
-            type: string
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Phi Categories
-          description: IIHI categories accessed
-        purpose_of_use:
-          $ref: '#/components/schemas/PurposeOfUse'
-          description: Purpose of use
-          default: patient_directed
-        authorization_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Authorization Hash
-          description: Hash of patient authorization document
-        event_payload:
-          additionalProperties: true
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
-          title: Event Payload
-          description: 'Access metadata: app_did, authorization_hash, access_type, etc.'
+          title: Context
       type: object
       required:
-      - covered_entity_did
-      - patient_did_reference
-      - minimum_necessary_scope
-      title: PatientAccessAttestRequest
-      description: Record a 21st Century Cures / USCDI patient-directed access event.
-    PhiDiscloseAttestRequest:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PhiAccessAttestRequest:
       properties:
         covered_entity_did:
           type: string
@@ -434,7 +359,7 @@ components:
           - type: string
           - type: 'null'
           title: Business Associate Did
-          description: DID of the recipient BA
+          description: DID of the business associate
         patient_did_reference:
           anyOf:
           - type: string
@@ -451,61 +376,6 @@ components:
           type: array
           title: Phi Categories
           description: IIHI categories per 45 CFR §164.103
-        purpose_of_use:
-          $ref: '#/components/schemas/PurposeOfUse'
-          description: Purpose of use per 45 CFR §164.506
-        baa_reference_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Baa Reference Id
-          description: BAA reference ID
-        recipient_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Recipient Did
-          description: DID of the disclosure recipient
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Disclosure metadata: disclosure_hash, recipient_did, authorization_hash, etc.'
-      type: object
-      required:
-      - covered_entity_did
-      - minimum_necessary_scope
-      - purpose_of_use
-      title: PhiDiscloseAttestRequest
-      description: Record a PHI disclosure event.
-    AiInferenceAttestRequest:
-      properties:
-        covered_entity_did:
-          type: string
-          title: Covered Entity Did
-          description: DID of the covered entity
-        business_associate_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Business Associate Did
-          description: DID of the BA operating the AI
-        patient_did_reference:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Patient Did Reference
-          description: Pseudonymous patient DID reference
-        minimum_necessary_scope:
-          type: string
-          title: Minimum Necessary Scope
-          description: Minimum-necessary scope for inference
-        phi_categories:
-          items:
-            type: string
-          type: array
-          title: Phi Categories
-          description: IIHI categories touched by inference
         purpose_of_use:
           $ref: '#/components/schemas/PurposeOfUse'
           description: Purpose of use per 45 CFR §164.506
@@ -516,107 +386,24 @@ components:
           title: Baa Reference Id
           description: BAA reference ID
         ai_inference_metadata:
-          additionalProperties: true
-          type: object
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
           title: Ai Inference Metadata
-          description: 'AI metadata: model_did, confidence, onc_hti1_attestation, inference_hash, etc.'
+          description: AI inference metadata
         event_payload:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: Inference event metadata
+          description: 'Access metadata: access_hash, system_did, access_type, etc.'
       type: object
       required:
       - covered_entity_did
       - minimum_necessary_scope
       - purpose_of_use
-      title: AiInferenceAttestRequest
-      description: Record an AI agent inference event touching PHI categories.
-    MinimumNecessaryCheckRequest:
-      properties:
-        covered_entity_did:
-          type: string
-          title: Covered Entity Did
-          description: DID of the covered entity
-        patient_did_reference:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Patient Did Reference
-          description: Pseudonymous patient DID reference
-        minimum_necessary_scope:
-          type: string
-          title: Minimum Necessary Scope
-          description: Requested scope
-        phi_categories:
-          items:
-            type: string
-          type: array
-          title: Phi Categories
-          description: IIHI categories requested
-        purpose_of_use:
-          $ref: '#/components/schemas/PurposeOfUse'
-          description: Purpose of use
-        requested_fields:
-          items:
-            type: string
-          type: array
-          title: Requested Fields
-          description: Policy-attribute names requested (no raw PHI)
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Check metadata: policy_hash, system_did, etc.'
-      type: object
-      required:
-      - covered_entity_did
-      - minimum_necessary_scope
-      - purpose_of_use
-      title: MinimumNecessaryCheckRequest
-      description: Run and record a minimum-necessary determination.
-    BaaAttestRequest:
-      properties:
-        covered_entity_did:
-          type: string
-          title: Covered Entity Did
-          description: DID of the covered entity
-        business_associate_did:
-          type: string
-          title: Business Associate Did
-          description: DID of the business associate
-        minimum_necessary_scope:
-          type: string
-          title: Minimum Necessary Scope
-          description: Minimum-necessary scope string
-        phi_categories:
-          items:
-            type: string
-          type: array
-          title: Phi Categories
-          description: IIHI categories per 45 CFR §164.103
-        purpose_of_use:
-          $ref: '#/components/schemas/PurposeOfUse'
-          description: Purpose of use per 45 CFR §164.506
-        baa_reference_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Baa Reference Id
-          description: BAA document hash or reference ID
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'BAA metadata: effective_date, term_years, scope_hash, etc.'
-      type: object
-      required:
-      - covered_entity_did
-      - business_associate_did
-      - minimum_necessary_scope
-      - purpose_of_use
-      title: BaaAttestRequest
-      description: Record a Business Associate Agreement scope attestation.
+      title: PhiAccessAttestRequest
+      description: Record a PHI access event.
     BreachAssessmentAttestRequest:
       properties:
         covered_entity_did:
@@ -679,7 +466,7 @@ components:
       - factor_mitigation
       title: BreachAssessmentAttestRequest
       description: Record a 4-factor HIPAA breach risk analysis.
-    PhiAccessAttestRequest:
+    AiInferenceAttestRequest:
       properties:
         covered_entity_did:
           type: string
@@ -690,7 +477,205 @@ components:
           - type: string
           - type: 'null'
           title: Business Associate Did
-          description: DID of the business associate
+          description: DID of the BA operating the AI
+        patient_did_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Patient Did Reference
+          description: Pseudonymous patient DID reference
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Minimum-necessary scope for inference
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories touched by inference
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use per 45 CFR §164.506
+        baa_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baa Reference Id
+          description: BAA reference ID
+        ai_inference_metadata:
+          additionalProperties: true
+          type: object
+          title: Ai Inference Metadata
+          description: 'AI metadata: model_did, confidence, onc_hti1_attestation, inference_hash, etc.'
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Inference event metadata
+      type: object
+      required:
+      - covered_entity_did
+      - minimum_necessary_scope
+      - purpose_of_use
+      title: AiInferenceAttestRequest
+      description: Record an AI agent inference event touching PHI categories.
+    PatientAccessAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        patient_did_reference:
+          type: string
+          title: Patient Did Reference
+          description: Pseudonymous patient DID reference
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Minimum-necessary scope
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories accessed
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use
+          default: patient_directed
+        authorization_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorization Hash
+          description: Hash of patient authorization document
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Access metadata: app_did, authorization_hash, access_type, etc.'
+      type: object
+      required:
+      - covered_entity_did
+      - patient_did_reference
+      - minimum_necessary_scope
+      title: PatientAccessAttestRequest
+      description: Record a 21st Century Cures / USCDI patient-directed access event.
+    MinimumNecessaryCheckRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        patient_did_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Patient Did Reference
+          description: Pseudonymous patient DID reference
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Requested scope
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories requested
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use
+        requested_fields:
+          items:
+            type: string
+          type: array
+          title: Requested Fields
+          description: Policy-attribute names requested (no raw PHI)
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Check metadata: policy_hash, system_did, etc.'
+      type: object
+      required:
+      - covered_entity_did
+      - minimum_necessary_scope
+      - purpose_of_use
+      title: MinimumNecessaryCheckRequest
+      description: Run and record a minimum-necessary determination.
+    BreachNoticeAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        business_associate_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Associate Did
+          description: DID of BA if applicable
+        patient_did_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Patient Did Reference
+          description: Pseudonymous patient DID reference
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Scope
+          default: breach_notification
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories in breach
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use
+          default: health_oversight
+        breach_assessment_receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Breach Assessment Receipt Id
+          description: Receipt ID of the breach assessment
+        notification_type:
+          type: string
+          title: Notification Type
+          description: individual | media | hhs_secretary
+          default: individual
+        days_since_discovery:
+          type: integer
+          title: Days Since Discovery
+          description: Days since breach discovery (must be <= 60 for timely)
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Notification metadata: notification_hash, media_outlet_did, etc.'
+      type: object
+      required:
+      - covered_entity_did
+      - days_since_discovery
+      title: BreachNoticeAttestRequest
+      description: Record a 60-day HIPAA breach notification event.
+    PhiDiscloseAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        business_associate_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Business Associate Did
+          description: DID of the recipient BA
         patient_did_reference:
           anyOf:
           - type: string
@@ -716,25 +701,66 @@ components:
           - type: 'null'
           title: Baa Reference Id
           description: BAA reference ID
-        ai_inference_metadata:
+        recipient_did:
           anyOf:
-          - additionalProperties: true
-            type: object
+          - type: string
           - type: 'null'
-          title: Ai Inference Metadata
-          description: AI inference metadata
+          title: Recipient Did
+          description: DID of the disclosure recipient
         event_payload:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: 'Access metadata: access_hash, system_did, access_type, etc.'
+          description: 'Disclosure metadata: disclosure_hash, recipient_did, authorization_hash, etc.'
       type: object
       required:
       - covered_entity_did
       - minimum_necessary_scope
       - purpose_of_use
-      title: PhiAccessAttestRequest
-      description: Record a PHI access event.
+      title: PhiDiscloseAttestRequest
+      description: Record a PHI disclosure event.
+    BaaAttestRequest:
+      properties:
+        covered_entity_did:
+          type: string
+          title: Covered Entity Did
+          description: DID of the covered entity
+        business_associate_did:
+          type: string
+          title: Business Associate Did
+          description: DID of the business associate
+        minimum_necessary_scope:
+          type: string
+          title: Minimum Necessary Scope
+          description: Minimum-necessary scope string
+        phi_categories:
+          items:
+            type: string
+          type: array
+          title: Phi Categories
+          description: IIHI categories per 45 CFR §164.103
+        purpose_of_use:
+          $ref: '#/components/schemas/PurposeOfUse'
+          description: Purpose of use per 45 CFR §164.506
+        baa_reference_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Baa Reference Id
+          description: BAA document hash or reference ID
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'BAA metadata: effective_date, term_years, scope_hash, etc.'
+      type: object
+      required:
+      - covered_entity_did
+      - business_associate_did
+      - minimum_necessary_scope
+      - purpose_of_use
+      title: BaaAttestRequest
+      description: Record a Business Associate Agreement scope attestation.
     HTTPValidationError:
       properties:
         detail:
@@ -744,29 +770,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

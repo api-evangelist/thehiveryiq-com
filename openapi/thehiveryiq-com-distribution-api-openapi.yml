@@ -249,6 +249,47 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MarketplaceListRequest:
+      properties:
+        shim:
+          type: string
+          minLength: 1
+          title: Shim
+        tools:
+          items:
+            $ref: '#/components/schemas/MarketplaceTool'
+          type: array
+          title: Tools
+      type: object
+      required:
+      - shim
+      title: MarketplaceListRequest
     MarketplaceTool:
       properties:
         name:
@@ -270,6 +311,59 @@ components:
       required:
       - name
       title: MarketplaceTool
+    PulseEventRequest:
+      properties:
+        event:
+          type: string
+          title: Event
+        shim:
+          type: string
+          title: Shim
+          default: ''
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - event
+      title: PulseEventRequest
+    DiscoveryRegisterRequest:
+      properties:
+        shim:
+          type: string
+          minLength: 1
+          title: Shim
+        repo:
+          type: string
+          title: Repo
+          default: ''
+        endpoint:
+          type: string
+          title: Endpoint
+          default: ''
+        did:
+          type: string
+          title: Did
+          default: ''
+        tools:
+          items:
+            $ref: '#/components/schemas/ToolSpec'
+          type: array
+          title: Tools
+      type: object
+      required:
+      - shim
+      title: DiscoveryRegisterRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     GateRegisterRequest:
       properties:
         shim:
@@ -320,97 +414,3 @@ components:
       required:
       - name
       title: ToolSpec
-    DiscoveryRegisterRequest:
-      properties:
-        shim:
-          type: string
-          minLength: 1
-          title: Shim
-        repo:
-          type: string
-          title: Repo
-          default: ''
-        endpoint:
-          type: string
-          title: Endpoint
-          default: ''
-        did:
-          type: string
-          title: Did
-          default: ''
-        tools:
-          items:
-            $ref: '#/components/schemas/ToolSpec'
-          type: array
-          title: Tools
-      type: object
-      required:
-      - shim
-      title: DiscoveryRegisterRequest
-    PulseEventRequest:
-      properties:
-        event:
-          type: string
-          title: Event
-        shim:
-          type: string
-          title: Shim
-          default: ''
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-      type: object
-      required:
-      - event
-      title: PulseEventRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MarketplaceListRequest:
-      properties:
-        shim:
-          type: string
-          minLength: 1
-          title: Shim
-        tools:
-          items:
-            $ref: '#/components/schemas/MarketplaceTool'
-          type: array
-          title: Tools
-      type: object
-      required:
-      - shim
-      title: MarketplaceListRequest

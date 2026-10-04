@@ -197,41 +197,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    RunRequest:
-      properties:
-        provider:
-          type: string
-          maxLength: 64
-          title: Provider
-          description: Adapter provider, e.g. 'mistral'.
-          default: mistral
-        model:
-          type: string
-          maxLength: 128
-          title: Model
-          description: Adapter model id, e.g. 'leanstral-1-5'.
-          default: leanstral-1-5
-        prompt:
-          anyOf:
-          - type: string
-            maxLength: 8192
-          - type: 'null'
-          title: Prompt
-          description: Prompt to send. Omit to use the built-in safe demo prompt.
-        max_tokens:
-          type: integer
-          maximum: 4096.0
-          minimum: 1.0
-          title: Max Tokens
-          default: 512
-        temperature:
-          type: number
-          maximum: 2.0
-          minimum: 0.0
-          title: Temperature
-          default: 0.2
-      type: object
-      title: RunRequest
     HTTPValidationError:
       properties:
         detail:
@@ -267,3 +232,38 @@ components:
       - msg
       - type
       title: ValidationError
+    RunRequest:
+      properties:
+        provider:
+          type: string
+          maxLength: 64
+          title: Provider
+          description: Adapter provider, e.g. 'mistral'.
+          default: mistral
+        model:
+          type: string
+          maxLength: 128
+          title: Model
+          description: Adapter model id, e.g. 'leanstral-1-5'.
+          default: leanstral-1-5
+        prompt:
+          anyOf:
+          - type: string
+            maxLength: 8192
+          - type: 'null'
+          title: Prompt
+          description: Prompt to send. Omit to use the built-in safe demo prompt.
+        max_tokens:
+          type: integer
+          maximum: 4096.0
+          minimum: 1.0
+          title: Max Tokens
+          default: 512
+        temperature:
+          type: number
+          maximum: 2.0
+          minimum: 0.0
+          title: Temperature
+          default: 0.2
+      type: object
+      title: RunRequest

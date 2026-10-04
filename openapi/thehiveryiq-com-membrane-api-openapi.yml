@@ -63,32 +63,6 @@ paths:
                 title: Response Health V1 Xcalibur Membrane V2 Health Get
 components:
   schemas:
-    hivemorph__xcalibur__membrane_v2_routes__ClassifyRequest:
-      properties:
-        text:
-          type: string
-          minLength: 1
-          title: Text
-          description: Text to classify for safety/injection
-        threshold:
-          type: number
-          maximum: 1.0
-          minimum: 0.0
-          title: Threshold
-          description: Decision threshold for unsafe classification (default 0.5)
-          default: 0.5
-        weights:
-          anyOf:
-          - additionalProperties:
-              type: number
-            type: object
-          - type: 'null'
-          title: Weights
-          description: 'Per-candidate weights (must sum to ~1.0). Keys: toxic_bert, deberta_pi, membrane_v1, keyword_heuristic. Uses calibrated defaults if omitted.'
-      type: object
-      required:
-      - text
-      title: ClassifyRequest
     HTTPValidationError:
       properties:
         detail:
@@ -124,3 +98,29 @@ components:
       - msg
       - type
       title: ValidationError
+    hivemorph__xcalibur__membrane_v2_routes__ClassifyRequest:
+      properties:
+        text:
+          type: string
+          minLength: 1
+          title: Text
+          description: Text to classify for safety/injection
+        threshold:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Threshold
+          description: Decision threshold for unsafe classification (default 0.5)
+          default: 0.5
+        weights:
+          anyOf:
+          - additionalProperties:
+              type: number
+            type: object
+          - type: 'null'
+          title: Weights
+          description: 'Per-candidate weights (must sum to ~1.0). Keys: toxic_bert, deberta_pi, membrane_v1, keyword_heuristic. Uses calibrated defaults if omitted.'
+      type: object
+      required:
+      - text
+      title: ClassifyRequest

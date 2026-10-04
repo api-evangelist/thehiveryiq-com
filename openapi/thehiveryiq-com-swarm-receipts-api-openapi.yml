@@ -200,77 +200,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SettleRequestBody:
-      properties:
-        receipt_id:
-          type: string
-          title: Receipt Id
-        settlement_tx_hash:
-          type: string
-          title: Settlement Tx Hash
-      type: object
-      required:
-      - receipt_id
-      - settlement_tx_hash
-      title: SettleRequestBody
-    IssueRequestBody:
-      properties:
-        tx_hash:
-          type: string
-          title: Tx Hash
-          description: Caller transaction reference
-        agent_did:
-          type: string
-          title: Agent Did
-          description: Issuing agent DID
-        counterparty_did:
-          type: string
-          title: Counterparty Did
-          description: Counterparty agent DID
-        profile:
-          type: string
-          title: Profile
-          description: Receipt profile; must be 'swarm'
-          default: swarm
-        round_id:
-          type: integer
-          title: Round Id
-          description: Optional federation round ID (0 = auto)
-          default: 0
-      type: object
-      required:
-      - tx_hash
-      - agent_did
-      - counterparty_did
-      title: IssueRequestBody
-    FreeIssueRequestBody:
-      properties:
-        payload:
-          type: string
-          maxLength: 8192
-          minLength: 1
-          title: Payload
-          description: Any string to sign (PR diff, contract clause, API log, tx hash, etc).
-        label:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Label
-          description: Optional human-readable label shown on the verify page.
-      type: object
-      required:
-      - payload
-      title: FreeIssueRequestBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -307,3 +236,74 @@ components:
       required:
       - envelope
       title: VerifyRequestBody
+    IssueRequestBody:
+      properties:
+        tx_hash:
+          type: string
+          title: Tx Hash
+          description: Caller transaction reference
+        agent_did:
+          type: string
+          title: Agent Did
+          description: Issuing agent DID
+        counterparty_did:
+          type: string
+          title: Counterparty Did
+          description: Counterparty agent DID
+        profile:
+          type: string
+          title: Profile
+          description: Receipt profile; must be 'swarm'
+          default: swarm
+        round_id:
+          type: integer
+          title: Round Id
+          description: Optional federation round ID (0 = auto)
+          default: 0
+      type: object
+      required:
+      - tx_hash
+      - agent_did
+      - counterparty_did
+      title: IssueRequestBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FreeIssueRequestBody:
+      properties:
+        payload:
+          type: string
+          maxLength: 8192
+          minLength: 1
+          title: Payload
+          description: Any string to sign (PR diff, contract clause, API log, tx hash, etc).
+        label:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Label
+          description: Optional human-readable label shown on the verify page.
+      type: object
+      required:
+      - payload
+      title: FreeIssueRequestBody
+    SettleRequestBody:
+      properties:
+        receipt_id:
+          type: string
+          title: Receipt Id
+        settlement_tx_hash:
+          type: string
+          title: Settlement Tx Hash
+      type: object
+      required:
+      - receipt_id
+      - settlement_tx_hash
+      title: SettleRequestBody

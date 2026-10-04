@@ -407,6 +407,105 @@ paths:
                 title: Response Fleet Stats V1 Fleet Stats Get
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    TrawlerLaunchBody:
+      properties:
+        operator_did:
+          type: string
+          title: Operator Did
+          description: DID or 0x address of the operator launching this trawler
+        label:
+          type: string
+          title: Label
+          description: Human-readable label for this trawler
+          default: ''
+        config:
+          additionalProperties: true
+          type: object
+          title: Config
+          description: 'Trawler config: net_regions[], pot_locations[], net_ttl_sec, pot_ttl_sec, net_budget, pot_budget, attractant, bait, economic_payload_usdc'
+      type: object
+      required:
+      - operator_did
+      title: TrawlerLaunchBody
+    NetCastBody:
+      properties:
+        trawler_id:
+          type: string
+          title: Trawler Id
+          description: Parent trawler ID
+        region:
+          type: string
+          title: Region
+          description: Region to cover, e.g. 'github/topics/a2a-agent'
+        attractant:
+          type: string
+          title: Attractant
+          description: The value signal / offer text agents will see
+        topics:
+          items:
+            type: string
+          type: array
+          title: Topics
+          description: Semantic topics for discovery
+        ttl_sec:
+          type: integer
+          maximum: 2592000.0
+          minimum: 60.0
+          title: Ttl Sec
+          description: Net lifetime in seconds (60–30d)
+          default: 86400
+        reach:
+          items:
+            type: string
+          type: array
+          title: Reach
+          description: Target audience DIDs or ['*']
+        viscosity:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Viscosity
+          description: 0=flows, 1=anchored
+          default: 0.1
+        density:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Density
+          description: Drop density (breadcrumbs per unit time)
+          default: 0.7
+      type: object
+      required:
+      - trawler_id
+      - region
+      - attractant
+      title: NetCastBody
     MothershipIntakeBody:
       properties:
         agent_did:
@@ -491,79 +590,6 @@ components:
       - location
       - bait_description
       title: PotDropBody
-    NetCastBody:
-      properties:
-        trawler_id:
-          type: string
-          title: Trawler Id
-          description: Parent trawler ID
-        region:
-          type: string
-          title: Region
-          description: Region to cover, e.g. 'github/topics/a2a-agent'
-        attractant:
-          type: string
-          title: Attractant
-          description: The value signal / offer text agents will see
-        topics:
-          items:
-            type: string
-          type: array
-          title: Topics
-          description: Semantic topics for discovery
-        ttl_sec:
-          type: integer
-          maximum: 2592000.0
-          minimum: 60.0
-          title: Ttl Sec
-          description: Net lifetime in seconds (60–30d)
-          default: 86400
-        reach:
-          items:
-            type: string
-          type: array
-          title: Reach
-          description: Target audience DIDs or ['*']
-        viscosity:
-          type: number
-          maximum: 1.0
-          minimum: 0.0
-          title: Viscosity
-          description: 0=flows, 1=anchored
-          default: 0.1
-        density:
-          type: number
-          maximum: 1.0
-          minimum: 0.0
-          title: Density
-          description: Drop density (breadcrumbs per unit time)
-          default: 0.7
-      type: object
-      required:
-      - trawler_id
-      - region
-      - attractant
-      title: NetCastBody
-    TrawlerLaunchBody:
-      properties:
-        operator_did:
-          type: string
-          title: Operator Did
-          description: DID or 0x address of the operator launching this trawler
-        label:
-          type: string
-          title: Label
-          description: Human-readable label for this trawler
-          default: ''
-        config:
-          additionalProperties: true
-          type: object
-          title: Config
-          description: 'Trawler config: net_regions[], pot_locations[], net_ttl_sec, pot_ttl_sec, net_budget, pot_budget, attractant, bait, economic_payload_usdc'
-      type: object
-      required:
-      - operator_did
-      title: TrawlerLaunchBody
     HTTPValidationError:
       properties:
         detail:
@@ -573,29 +599,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

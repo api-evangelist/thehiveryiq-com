@@ -1008,87 +1008,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    BucketBurnBody:
-      properties:
-        amount_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Amount Usdc
-      type: object
-      required:
-      - amount_usdc
-      title: BucketBurnBody
-    PhoneHomeRespondBody:
-      properties:
-        decision:
-          type: string
-          title: Decision
-        skip_paid:
-          type: boolean
-          title: Skip Paid
-          default: false
-        caller_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Caller Did
-      type: object
-      required:
-      - decision
-      title: PhoneHomeRespondBody
-    RingBellBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-      type: object
-      required:
-      - caller_did
-      title: RingBellBody
-    GrabRopeBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-      type: object
-      required:
-      - caller_did
-      title: GrabRopeBody
-    SosFulfillBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-      type: object
-      required:
-      - caller_did
-      title: SosFulfillBody
-    SosRequestBody:
-      properties:
-        needed_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Needed Usdc
-        deadline_sec:
-          type: integer
-          exclusiveMinimum: 0.0
-          title: Deadline Sec
-        reward_share_bps:
-          type: integer
-          maximum: 10000.0
-          minimum: 0.0
-          title: Reward Share Bps
-        parent_receipt_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Parent Receipt Hash
-      type: object
-      required:
-      - needed_usdc
-      - deadline_sec
-      - reward_share_bps
-      title: SosRequestBody
     HTTPValidationError:
       properties:
         detail:
@@ -1098,200 +1017,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    TopOffFulfillBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-        amount_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Amount Usdc
-      type: object
-      required:
-      - caller_did
-      - amount_usdc
-      title: TopOffFulfillBody
-    SnipBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-      type: object
-      required:
-      - caller_did
-      title: SnipBody
-    PullBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-          description: DID or address of the caller
-      type: object
-      required:
-      - caller_did
-      title: PullBody
-    LightFuseBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-          description: DID or address of the caller
-        kit_deltas:
-          additionalProperties: true
-          type: object
-          title: Kit Deltas
-        predicted_lift_usdc_per_day:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Predicted Lift Usdc Per Day
-        rationale:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Rationale
-      type: object
-      required:
-      - caller_did
-      title: LightFuseBody
-    DripBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-      type: object
-      required:
-      - caller_did
-      title: DripBody
-    TripBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-      type: object
-      required:
-      - caller_did
-      title: TripBody
-    PhoneHomeRequestBody:
-      properties:
-        waiting_for:
-          type: string
-          title: Waiting For
-        cost_to_skip_usdc:
-          type: number
-          minimum: 0.0
-          title: Cost To Skip Usdc
-        parent_receipt_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Parent Receipt Hash
-      type: object
-      required:
-      - waiting_for
-      - cost_to_skip_usdc
-      title: PhoneHomeRequestBody
-    IouRepayBody:
-      properties:
-        repay_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Repay Usdc
-      type: object
-      required:
-      - repay_usdc
-      title: IouRepayBody
-    TipJarBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-        amount_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Amount Usdc
-        parent_receipt_hash:
-          type: string
-          title: Parent Receipt Hash
-      type: object
-      required:
-      - caller_did
-      - amount_usdc
-      - parent_receipt_hash
-      title: TipJarBody
-    IouRequestBody:
-      properties:
-        borrow_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Borrow Usdc
-        interest_bps:
-          type: integer
-          minimum: 0.0
-          title: Interest Bps
-        parent_receipt_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Parent Receipt Hash
-      type: object
-      required:
-      - borrow_usdc
-      - interest_bps
-      title: IouRequestBody
-    TopOffRequestBody:
-      properties:
-        needed_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Needed Usdc
-        reason:
-          type: string
-          title: Reason
-        parent_receipt_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Parent Receipt Hash
-        refund_unused:
-          type: boolean
-          title: Refund Unused
-          default: true
-      type: object
-      required:
-      - needed_usdc
-      - reason
-      title: TopOffRequestBody
-    HookBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-        n_triggers:
-          type: integer
-          minimum: 1.0
-          title: N Triggers
-          default: 1
-        prepay_usdc:
-          anyOf:
-          - type: number
-            minimum: 0.0
-          - type: 'null'
-          title: Prepay Usdc
-      type: object
-      required:
-      - caller_did
-      title: HookBody
-    BucketBody:
-      properties:
-        caller_did:
-          type: string
-          title: Caller Did
-      type: object
-      required:
-      - caller_did
-      title: BucketBody
     ValidationError:
       properties:
         loc:
@@ -1318,6 +1043,139 @@ components:
       - msg
       - type
       title: ValidationError
+    DripBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: DripBody
+    BucketBurnBody:
+      properties:
+        amount_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount Usdc
+      type: object
+      required:
+      - amount_usdc
+      title: BucketBurnBody
+    LightFuseBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+          description: DID or address of the caller
+        kit_deltas:
+          additionalProperties: true
+          type: object
+          title: Kit Deltas
+        predicted_lift_usdc_per_day:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Predicted Lift Usdc Per Day
+        rationale:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rationale
+      type: object
+      required:
+      - caller_did
+      title: LightFuseBody
+    RingBellBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: RingBellBody
+    IouRepayBody:
+      properties:
+        repay_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Repay Usdc
+      type: object
+      required:
+      - repay_usdc
+      title: IouRepayBody
+    IouRequestBody:
+      properties:
+        borrow_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Borrow Usdc
+        interest_bps:
+          type: integer
+          minimum: 0.0
+          title: Interest Bps
+        parent_receipt_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Receipt Hash
+      type: object
+      required:
+      - borrow_usdc
+      - interest_bps
+      title: IouRequestBody
+    PhoneHomeRequestBody:
+      properties:
+        waiting_for:
+          type: string
+          title: Waiting For
+        cost_to_skip_usdc:
+          type: number
+          minimum: 0.0
+          title: Cost To Skip Usdc
+        parent_receipt_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Receipt Hash
+      type: object
+      required:
+      - waiting_for
+      - cost_to_skip_usdc
+      title: PhoneHomeRequestBody
+    TopOffRequestBody:
+      properties:
+        needed_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Needed Usdc
+        reason:
+          type: string
+          title: Reason
+        parent_receipt_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Receipt Hash
+        refund_unused:
+          type: boolean
+          title: Refund Unused
+          default: true
+      type: object
+      required:
+      - needed_usdc
+      - reason
+      title: TopOffRequestBody
+    GrabRopeBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: GrabRopeBody
     TopOffCompleteBody:
       properties:
         actual_burn_usdc:
@@ -1328,3 +1186,145 @@ components:
       required:
       - actual_burn_usdc
       title: TopOffCompleteBody
+    BucketBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: BucketBody
+    PullBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+          description: DID or address of the caller
+      type: object
+      required:
+      - caller_did
+      title: PullBody
+    SnipBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: SnipBody
+    HookBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+        n_triggers:
+          type: integer
+          minimum: 1.0
+          title: N Triggers
+          default: 1
+        prepay_usdc:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Prepay Usdc
+      type: object
+      required:
+      - caller_did
+      title: HookBody
+    PhoneHomeRespondBody:
+      properties:
+        decision:
+          type: string
+          title: Decision
+        skip_paid:
+          type: boolean
+          title: Skip Paid
+          default: false
+        caller_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Caller Did
+      type: object
+      required:
+      - decision
+      title: PhoneHomeRespondBody
+    SosFulfillBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: SosFulfillBody
+    TipJarBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+        amount_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount Usdc
+        parent_receipt_hash:
+          type: string
+          title: Parent Receipt Hash
+      type: object
+      required:
+      - caller_did
+      - amount_usdc
+      - parent_receipt_hash
+      title: TipJarBody
+    TopOffFulfillBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+        amount_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount Usdc
+      type: object
+      required:
+      - caller_did
+      - amount_usdc
+      title: TopOffFulfillBody
+    SosRequestBody:
+      properties:
+        needed_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Needed Usdc
+        deadline_sec:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: Deadline Sec
+        reward_share_bps:
+          type: integer
+          maximum: 10000.0
+          minimum: 0.0
+          title: Reward Share Bps
+        parent_receipt_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Parent Receipt Hash
+      type: object
+      required:
+      - needed_usdc
+      - deadline_sec
+      - reward_share_bps
+      title: SosRequestBody
+    TripBody:
+      properties:
+        caller_did:
+          type: string
+          title: Caller Did
+      type: object
+      required:
+      - caller_did
+      title: TripBody

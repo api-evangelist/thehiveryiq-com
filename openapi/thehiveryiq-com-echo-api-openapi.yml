@@ -50,36 +50,6 @@ paths:
                 title: Response Health V1 Xcalibur Echo V2 Health Get
 components:
   schemas:
-    CompressV2Request:
-      properties:
-        prompt:
-          type: string
-          minLength: 1
-          title: Prompt
-        task_query:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Task Query
-          description: Output-conditioned hint, e.g. 'Summarize this report.' Defaults to a generic summarize prompt if omitted.
-        target_ratio:
-          type: number
-          exclusiveMaximum: 1.0
-          exclusiveMinimum: 0.0
-          title: Target Ratio
-          description: Compressed length ≤ target_ratio × original (0.5 = 2x compression).
-          default: 0.5
-        min_preservation:
-          type: number
-          maximum: 1.0
-          minimum: 0.0
-          title: Min Preservation
-          description: Reject candidates scoring below this oracle threshold; the selector picks best regardless and flags if below.
-          default: 0.0
-      type: object
-      required:
-      - prompt
-      title: CompressV2Request
     HTTPValidationError:
       properties:
         detail:
@@ -115,3 +85,33 @@ components:
       - msg
       - type
       title: ValidationError
+    CompressV2Request:
+      properties:
+        prompt:
+          type: string
+          minLength: 1
+          title: Prompt
+        task_query:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Task Query
+          description: Output-conditioned hint, e.g. 'Summarize this report.' Defaults to a generic summarize prompt if omitted.
+        target_ratio:
+          type: number
+          exclusiveMaximum: 1.0
+          exclusiveMinimum: 0.0
+          title: Target Ratio
+          description: Compressed length ≤ target_ratio × original (0.5 = 2x compression).
+          default: 0.5
+        min_preservation:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Min Preservation
+          description: Reject candidates scoring below this oracle threshold; the selector picks best regardless and flags if below.
+          default: 0.0
+      type: object
+      required:
+      - prompt
+      title: CompressV2Request

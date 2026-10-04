@@ -123,21 +123,6 @@ paths:
                 title: Response Get Health V1 Dispute Health Get
 components:
   schemas:
-    CheckBody:
-      properties:
-        address:
-          type: string
-          title: Address
-          description: 0x-prefixed counterparty address
-        chain:
-          type: string
-          title: Chain
-          description: ethereum | base | arbitrum
-      type: object
-      required:
-      - address
-      - chain
-      title: CheckBody
     HTTPValidationError:
       properties:
         detail:
@@ -173,6 +158,21 @@ components:
       - msg
       - type
       title: ValidationError
+    CheckBody:
+      properties:
+        address:
+          type: string
+          title: Address
+          description: 0x-prefixed counterparty address
+        chain:
+          type: string
+          title: Chain
+          description: ethereum | base | arbitrum
+      type: object
+      required:
+      - address
+      - chain
+      title: CheckBody
     RouteBody:
       properties:
         description:

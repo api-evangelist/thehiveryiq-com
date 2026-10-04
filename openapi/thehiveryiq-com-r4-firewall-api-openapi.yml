@@ -236,6 +236,68 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ApprovalDecideReq:
+      properties:
+        decision:
+          type: string
+          title: Decision
+          description: '''approved'' or ''denied'''
+        decided_by:
+          type: string
+          title: Decided By
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - decision
+      - decided_by
+      title: ApprovalDecideReq
+    SandboxRunReq:
+      properties:
+        jti:
+          type: string
+          title: Jti
+        request:
+          additionalProperties: true
+          type: object
+          title: Request
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - jti
+      title: SandboxRunReq
     ApprovalRequestReq:
       properties:
         jti:
@@ -259,25 +321,6 @@ components:
       required:
       - jti
       title: ApprovalRequestReq
-    ApprovalDecideReq:
-      properties:
-        decision:
-          type: string
-          title: Decision
-          description: '''approved'' or ''denied'''
-        decided_by:
-          type: string
-          title: Decided By
-        note:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Note
-      type: object
-      required:
-      - decision
-      - decided_by
-      title: ApprovalDecideReq
     CosignSignReq:
       properties:
         signer_did:
@@ -292,23 +335,6 @@ components:
       - signer_did
       - signature
       title: CosignSignReq
-    SandboxRunReq:
-      properties:
-        jti:
-          type: string
-          title: Jti
-        request:
-          additionalProperties: true
-          type: object
-          title: Request
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-      type: object
-      required:
-      - jti
-      title: SandboxRunReq
     EnforcePreviewReq:
       properties:
         jti:
@@ -372,29 +398,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError

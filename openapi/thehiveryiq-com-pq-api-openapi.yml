@@ -104,31 +104,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SignResponse:
-      properties:
-        signature_b64:
-          type: string
-          title: Signature B64
-        alg:
-          type: string
-          title: Alg
-        fips:
-          type: string
-          title: Fips
-        backend:
-          type: string
-          title: Backend
-        sig_bytes:
-          type: integer
-          title: Sig Bytes
-      type: object
-      required:
-      - signature_b64
-      - alg
-      - fips
-      - backend
-      - sig_bytes
-      title: SignResponse
     SignRequest:
       properties:
         message_b64:
@@ -144,36 +119,6 @@ components:
       - message_b64
       - sk_b64
       title: SignRequest
-    hivemorph__hive_smsh___pq_routes_patch__VerifyResponse:
-      properties:
-        valid:
-          type: boolean
-          title: Valid
-        alg:
-          type: string
-          title: Alg
-        fips:
-          type: string
-          title: Fips
-        backend:
-          type: string
-          title: Backend
-      type: object
-      required:
-      - valid
-      - alg
-      - fips
-      - backend
-      title: VerifyResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -220,3 +165,58 @@ components:
       - sig_b64
       - pk_b64
       title: VerifyRequest
+    hivemorph__hive_smsh___pq_routes_patch__VerifyResponse:
+      properties:
+        valid:
+          type: boolean
+          title: Valid
+        alg:
+          type: string
+          title: Alg
+        fips:
+          type: string
+          title: Fips
+        backend:
+          type: string
+          title: Backend
+      type: object
+      required:
+      - valid
+      - alg
+      - fips
+      - backend
+      title: VerifyResponse
+    SignResponse:
+      properties:
+        signature_b64:
+          type: string
+          title: Signature B64
+        alg:
+          type: string
+          title: Alg
+        fips:
+          type: string
+          title: Fips
+        backend:
+          type: string
+          title: Backend
+        sig_bytes:
+          type: integer
+          title: Sig Bytes
+      type: object
+      required:
+      - signature_b64
+      - alg
+      - fips
+      - backend
+      - sig_bytes
+      title: SignResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError

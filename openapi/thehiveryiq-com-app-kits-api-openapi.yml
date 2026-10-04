@@ -191,85 +191,6 @@ components:
       - chain_from
       - chain_to
       title: QuoteBody
-    SwapBody:
-      properties:
-        amount:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Amount
-        token_in:
-          type: string
-          title: Token In
-        token_out:
-          type: string
-          title: Token Out
-        chain:
-          type: string
-          title: Chain
-      type: object
-      required:
-      - amount
-      - token_in
-      - token_out
-      - chain
-      title: SwapBody
-    SendBody:
-      properties:
-        amount:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Amount
-        token:
-          type: string
-          title: Token
-        chain:
-          type: string
-          title: Chain
-        to:
-          type: string
-          title: To
-      type: object
-      required:
-      - amount
-      - token
-      - chain
-      - to
-      title: SendBody
-    BridgeBody:
-      properties:
-        amount:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Amount
-        token:
-          type: string
-          title: Token
-        from_chain:
-          type: string
-          title: From Chain
-        to_chain:
-          type: string
-          title: To Chain
-        to_address:
-          type: string
-          title: To Address
-      type: object
-      required:
-      - amount
-      - token
-      - from_chain
-      - to_chain
-      - to_address
-      title: BridgeBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -296,3 +217,82 @@ components:
       - msg
       - type
       title: ValidationError
+    BridgeBody:
+      properties:
+        amount:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount
+        token:
+          type: string
+          title: Token
+        from_chain:
+          type: string
+          title: From Chain
+        to_chain:
+          type: string
+          title: To Chain
+        to_address:
+          type: string
+          title: To Address
+      type: object
+      required:
+      - amount
+      - token
+      - from_chain
+      - to_chain
+      - to_address
+      title: BridgeBody
+    SendBody:
+      properties:
+        amount:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount
+        token:
+          type: string
+          title: Token
+        chain:
+          type: string
+          title: Chain
+        to:
+          type: string
+          title: To
+      type: object
+      required:
+      - amount
+      - token
+      - chain
+      - to
+      title: SendBody
+    SwapBody:
+      properties:
+        amount:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount
+        token_in:
+          type: string
+          title: Token In
+        token_out:
+          type: string
+          title: Token Out
+        chain:
+          type: string
+          title: Chain
+      type: object
+      required:
+      - amount
+      - token_in
+      - token_out
+      - chain
+      title: SwapBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError

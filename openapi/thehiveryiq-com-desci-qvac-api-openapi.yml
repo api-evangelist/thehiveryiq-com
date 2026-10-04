@@ -237,21 +237,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ScanRequest:
-      properties:
-        analyst_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Analyst Id
-          description: Specific analyst_id; otherwise the default analyst runs.
-        seed_if_empty:
-          type: boolean
-          title: Seed If Empty
-          description: If true and no findings yet, seed 5 mock findings before scanning.
-          default: true
-      type: object
-      title: ScanRequest
     ValidationError:
       properties:
         loc:
@@ -296,3 +281,18 @@ components:
       required:
       - buyer_wallet
       title: PurchaseRequest
+    ScanRequest:
+      properties:
+        analyst_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Analyst Id
+          description: Specific analyst_id; otherwise the default analyst runs.
+        seed_if_empty:
+          type: boolean
+          title: Seed If Empty
+          description: If true and no findings yet, seed 5 mock findings before scanning.
+          default: true
+      type: object
+      title: ScanRequest
