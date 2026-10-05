@@ -1,0 +1,150 @@
+slug: thehiveryiq-com
+provider: Hive Civilization
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 12
+edges:
+- tag: lex-contract
+  spec_file: thehiveryiq-com-lex-contract-api-openapi.yml
+  capability_id: BC-150.10
+  capability_id_l1: BC-150
+  capability_name: Contract Management
+  confidence: 0.85
+  evidence: draft_attest, redline_attest, signature_attest, execute_attest, amendment_attest, notice_attest,
+    termination_attest; schemas ContractParty, ClauseHash
+  reason: The endpoints attest each stage of the contract lifecycle from drafting and redlining through
+    signature, execution, amendment and termination — contract lifecycle management, implemented via signed
+    receipts.
+- tag: Subscription
+  spec_file: thehiveryiq-com-subscription-api-openapi.yml
+  capability_id: BC-4240
+  capability_id_l1: BC-4240
+  capability_name: Subscription Lifecycle Management
+  confidence: 0.8
+  evidence: GET /v1/subscription/plans  List Plans; POST /v1/subscription/claim  Claim Subscription; GET
+    /v1/subscription/status/{sub_id}  Subscription Status
+  reason: Operations list plans, create a purchase intent, claim/activate a subscription and read its
+    status — the commercial subscription lifecycle. L1 is clear; the split between plan design and provisioning
+    is ambiguous so no L2 asserted.
+- tag: law
+  spec_file: thehiveryiq-com-law-api-openapi.yml
+  capability_id: BC-150
+  capability_id_l1: BC-150
+  capability_name: Legal Management
+  confidence: 0.8
+  evidence: POST /v1/law/freight/contract  Post Freight Contract; POST /v1/law/freight/dispute  Post Freight
+    Dispute; list_freight_arbitration; schemas ContractBody, DisputeBody
+  reason: Operations create and retrieve contracts from templates and file/track disputes with arbitration
+    listings — plainly legal management. Evidence spans both contract lifecycle and dispute handling,
+    so only the L1 is asserted.
+- tag: hipaa-hive
+  spec_file: thehiveryiq-com-hipaa-hive-api-openapi.yml
+  capability_id: BC-130.50
+  capability_id_l1: BC-130
+  capability_name: Privacy & Data Protection Management
+  confidence: 0.78
+  evidence: POST /v1/hipaa-hive/phi_disclose_attest; POST /v1/hipaa-hive/minimum_necessary_check; POST
+    /v1/hipaa-hive/breach_notice_attest; schemas 'PatientAccessAttestRequest', 'BaaAttestRequest', 'PurposeOfUse'
+  reason: The operations attest to HIPAA privacy obligations — business associate agreements, PHI access
+    and disclosure, minimum-necessary determination, patient access rights and breach assessment/notification.
+    That is privacy and data-protection compliance management; some ambiguity versus general regulatory
+    compliance keeps confidence below 0.8.
+- tag: Procurelock
+  spec_file: thehiveryiq-com-procurelock-api-openapi.yml
+  capability_id: BC-500.30
+  capability_id_l1: BC-500
+  capability_name: Purchase Order Management
+  confidence: 0.72
+  evidence: POST /v1/procurelock/po_attest; POST /v1/procurelock/delivery_attest; POST /v1/procurelock/match_verify;
+    GET /v1/procurelock/by-po/{po_number}; schemas POLineItem, POAttestRequest, DeliveryStatus
+  reason: Operations and schemas are unambiguously about purchase orders, their line items, delivery events
+    and PO-to-delivery matching, so this realises procurement — purchase order management; some ambiguity
+    remains between PO Management and broader Procure-to-Pay operations since matching is included.
+- tag: billing-meter
+  spec_file: thehiveryiq-com-billing-meter-api-openapi.yml
+  capability_id: BC-4250.10
+  capability_id_l1: BC-4250
+  capability_name: Usage Metering
+  confidence: 0.72
+  evidence: GET /v1/billing/usage/{account_id} 'Meter Usage'; POST /v1/billing/activate 'Meter Activate';
+    POST /v1/billing/topup/intent 'Meter Topup Intent'
+  reason: Per-account usage metering with prepaid top-up intents for the vendor's per-call pricing model
+    — this is usage metering feeding charging for a consumption-based service. L2 set to Usage Metering,
+    though the top-up endpoints also touch payment collection, hence confidence below 0.8.
+- tag: Billing
+  spec_file: thehiveryiq-com-billing-api-openapi.yml
+  capability_id: BC-4250.40
+  capability_id_l1: BC-4250
+  capability_name: Payment Collection & Dunning
+  confidence: 0.7
+  evidence: POST /v1/billing/checkout ... POST /v1/billing/usdc/intent  Billing Usdc Intent ... POST /v1/billing/square/webhook
+    ... GET /v1/billing/tenant/{tenant_id}
+  reason: Operations create checkout sessions, raise USDC payment intents, receive Square payment webhooks
+    and report per-tenant billing — i.e. collecting payment for the metered receipt service. Payment-method/authorisation
+    collection is the closest sub-capability; some chance the intended sub is invoicing/rating, hence
+    0.7.
+- tag: Compute
+  spec_file: thehiveryiq-com-compute-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.7
+  evidence: '"Stream A inference API: OpenAI-compatible"; POST /v1/compute/chat/completions, POST /v1/compute/embeddings,
+    GET /v1/compute/models  List available models'
+  reason: An OpenAI-compatible inference router serving completions, embeddings and a model catalogue
+    — AI/ML model serving. Artificial Intelligence Management is the nearest honest capability; it is
+    a serving/runtime surface rather than full model lifecycle, hence 0.7.
+- tag: Discovery
+  spec_file: thehiveryiq-com-discovery-api-openapi.yml
+  capability_id: BC-4270
+  capability_id_l1: BC-4270
+  capability_name: Developer Platform & API Ecosystem Management
+  confidence: 0.7
+  evidence: GET /v1/catalog  "Machine-readable catalog of paid endpoints + rails"; GET /v1/agent/tools  "Curated
+    tool index — the 10 tools every agent needs"; GET /.well-known/machine.json
+  reason: The surface publishes a machine-readable catalogue of the platform's paid API endpoints and
+    tool index for consuming agents/developers — developer platform and API ecosystem exposure. Ambiguous
+    between portal management and public API lifecycle, so L1 only.
+- tag: X402
+  spec_file: thehiveryiq-com-x402-api-openapi.yml
+  capability_id: BC-4250
+  capability_id_l1: BC-4250
+  capability_name: Subscription Billing & Revenue Management
+  confidence: 0.7
+  evidence: POST /v1/x402/proof/submit  Submit a payment proof; GET /v1/x402/pricing  Current x402 pricing
+    table; GET /v1/x402/rails  Available settlement rails; GET /v1/x402/stats/by-payer  aggregated x402
+    stats per payer (revenue forensics)
+  reason: Per-call pricing tables, payment proof submission, settlement rail selection and per-payer revenue
+    aggregation constitute metered charging and payment collection for API consumption. Straddles billing
+    and API consumption governance, so L1 only.
+- tag: hivecomply
+  spec_file: thehiveryiq-com-hivecomply-api-openapi.yml
+  capability_id: BC-130.10
+  capability_id_l1: BC-130
+  capability_name: Regulatory Compliance Management
+  confidence: 0.7
+  evidence: GET /v1/hivecomply/framework/map — 'Framework Map'; GET /v1/hivecomply/control/status; schemas
+    'ComplianceEventIngestRequest', 'EvidenceBundleExportRequest'
+  reason: Framework-to-control mapping, control status, compliance event ingestion and exportable/verifiable
+    evidence bundles are the core of continuous compliance monitoring and audit evidence. Ambiguity remains
+    between general regulatory compliance management and SaaS service attestation (SOC 2/ISO) coordination,
+    so confidence is 0.7.
+- tag: qvac
+  spec_file: thehiveryiq-com-qvac-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.7
+  evidence: POST /v1/qvac/inference/request "Inference Request"; GET /v1/qvac/models "Models Catalog";
+    "Register Provider"
+  reason: A registry of inference providers, a model catalogue and inference request routing with usage
+    stats — AI/ML model serving and operations, which is Artificial Intelligence Management.
