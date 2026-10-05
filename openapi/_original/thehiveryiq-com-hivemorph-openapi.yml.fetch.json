@@ -1,0 +1,12 @@
+{
+ "url": "https://receipts.thehiveryiq.com/openapi.json",
+ "requested_url": "https://receipts.thehiveryiq.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 859114,
+ "sha256": "1bf991033ff6c72cd67dee7070590ccbc2615c6ca4934f12d874066d070a62c5",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 1.0), but the bytes differ, so the archive is an earlier or reformatted copy."
+}

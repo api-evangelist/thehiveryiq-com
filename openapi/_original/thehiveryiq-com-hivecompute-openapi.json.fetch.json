@@ -1,0 +1,12 @@
+{
+ "url": "https://api.thehiveryiq.com/openapi.json",
+ "requested_url": "https://api.thehiveryiq.com/openapi.json",
+ "status": 200,
+ "content_type": "application/json; charset=utf-8",
+ "bytes": 1742,
+ "sha256": "514d5de14a63268e1aef91e6bca3b88f355cb12be042dfc639e2b17bfb79b9f1",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
