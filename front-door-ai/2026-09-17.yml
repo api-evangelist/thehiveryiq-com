@@ -1,0 +1,31 @@
+# Front Door AI Index — thehiveryiq-com — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: thehiveryiq-com
+  lexicon_version: '1.0'
+  probed_at: '2026-09-25'
+  host: thehiveryiq.com
+  final_host: thehiveryiq.com
+  ownership: own
+  owner: thehiveryiq-com
+  shares_host_with: null
+  inherited_from: null
+  alias_of: null
+  verdict: scored
+  score: 11
+  band: 5
+  band_label: prominent
+  host_score: 11
+  density: 12.09
+  words: 910
+  tiers:
+    agentic: 8
+    core: 3
+    model: 0
+  ambiguous: 3
+  top_terms:
+    prompts: 6
+    AI: 3
+    agent: 3
+    inference: 2
