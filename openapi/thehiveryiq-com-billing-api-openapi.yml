@@ -123,6 +123,23 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    CheckoutRequest:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+        tier:
+          type: string
+          title: Tier
+        email:
+          type: string
+          title: Email
+      type: object
+      required:
+      - tenant_id
+      - tier
+      - email
+      title: CheckoutRequest
     HTTPValidationError:
       properties:
         detail:
@@ -132,6 +149,19 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    USDCIntentRequest:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+        tier:
+          type: string
+          title: Tier
+      type: object
+      required:
+      - tenant_id
+      - tier
+      title: USDCIntentRequest
     ValidationError:
       properties:
         loc:
@@ -158,33 +188,3 @@ components:
       - msg
       - type
       title: ValidationError
-    USDCIntentRequest:
-      properties:
-        tenant_id:
-          type: string
-          title: Tenant Id
-        tier:
-          type: string
-          title: Tier
-      type: object
-      required:
-      - tenant_id
-      - tier
-      title: USDCIntentRequest
-    CheckoutRequest:
-      properties:
-        tenant_id:
-          type: string
-          title: Tenant Id
-        tier:
-          type: string
-          title: Tier
-        email:
-          type: string
-          title: Email
-      type: object
-      required:
-      - tenant_id
-      - tier
-      - email
-      title: CheckoutRequest

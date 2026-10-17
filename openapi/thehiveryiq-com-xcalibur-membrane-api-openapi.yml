@@ -167,30 +167,57 @@ components:
       - msg
       - type
       title: ValidationError
-    EnforceRequest:
+    PolicyModel:
       properties:
-        spans:
+        tau_block:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Tau Block
+          default: 0.18
+        tau_warn:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Tau Warn
+          default: 0.06
+      type: object
+      title: PolicyModel
+    HTTPValidationError:
+      properties:
+        detail:
           items:
-            $ref: '#/components/schemas/SpanModel'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          minItems: 1
-          title: Spans
-        output:
-          type: string
-          maxLength: 128000
-          minLength: 1
-          title: Output
-        embedding_model_id:
-          type: string
-          title: Embedding Model Id
-          default: tfidf-deterministic-v1
-        policy:
-          $ref: '#/components/schemas/PolicyModel'
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    hivemorph__xcalibur__membrane_routes__VerifyRequest:
+      properties:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
       type: object
       required:
-      - spans
-      - output
-      title: EnforceRequest
+      - receipt
+      title: VerifyRequest
+    SpanModel:
+      properties:
+        text:
+          type: string
+          maxLength: 32000
+          minLength: 1
+          title: Text
+        label:
+          type: string
+          maxLength: 64
+          title: Label
+          default: PUBLIC
+      type: object
+      required:
+      - text
+      title: SpanModel
     ScoreRequest:
       properties:
         spans:
@@ -215,54 +242,27 @@ components:
       - spans
       - output
       title: ScoreRequest
-    PolicyModel:
+    EnforceRequest:
       properties:
-        tau_block:
-          type: number
-          maximum: 1.0
-          minimum: 0.0
-          title: Tau Block
-          default: 0.18
-        tau_warn:
-          type: number
-          maximum: 1.0
-          minimum: 0.0
-          title: Tau Warn
-          default: 0.06
-      type: object
-      title: PolicyModel
-    hivemorph__xcalibur__membrane_routes__VerifyRequest:
-      properties:
-        receipt:
-          additionalProperties: true
-          type: object
-          title: Receipt
-      type: object
-      required:
-      - receipt
-      title: VerifyRequest
-    HTTPValidationError:
-      properties:
-        detail:
+        spans:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            $ref: '#/components/schemas/SpanModel'
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    SpanModel:
-      properties:
-        text:
+          minItems: 1
+          title: Spans
+        output:
           type: string
-          maxLength: 32000
+          maxLength: 128000
           minLength: 1
-          title: Text
-        label:
+          title: Output
+        embedding_model_id:
           type: string
-          maxLength: 64
-          title: Label
-          default: PUBLIC
+          title: Embedding Model Id
+          default: tfidf-deterministic-v1
+        policy:
+          $ref: '#/components/schemas/PolicyModel'
       type: object
       required:
-      - text
-      title: SpanModel
+      - spans
+      - output
+      title: EnforceRequest

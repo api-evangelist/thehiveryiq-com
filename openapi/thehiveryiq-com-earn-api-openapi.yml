@@ -266,6 +266,35 @@ components:
       - surfaces
       - payout_address
       title: RegisterBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SweepBody:
+      properties:
+        dry_run:
+          type: boolean
+          title: Dry Run
+          description: Plan only — do not record
+          default: true
+        broadcast:
+          type: boolean
+          title: Broadcast
+          description: Broadcast on-chain (requires EARN_SWEEP_AUTODISPATCH=true)
+          default: false
+        threshold_usd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Threshold Usd
+          description: Override default $1.00 threshold
+      type: object
+      title: SweepBody
     ValidationError:
       properties:
         loc:
@@ -292,32 +321,3 @@ components:
       - msg
       - type
       title: ValidationError
-    SweepBody:
-      properties:
-        dry_run:
-          type: boolean
-          title: Dry Run
-          description: Plan only — do not record
-          default: true
-        broadcast:
-          type: boolean
-          title: Broadcast
-          description: Broadcast on-chain (requires EARN_SWEEP_AUTODISPATCH=true)
-          default: false
-        threshold_usd:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Threshold Usd
-          description: Override default $1.00 threshold
-      type: object
-      title: SweepBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError

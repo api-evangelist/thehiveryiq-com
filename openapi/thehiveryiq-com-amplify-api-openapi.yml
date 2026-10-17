@@ -311,6 +311,36 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    VerifyBody:
+      properties:
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+        signature_b64:
+          type: string
+          minLength: 8
+          title: Signature B64
+        pubkey_b64:
+          type: string
+          minLength: 8
+          title: Pubkey B64
+        prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Prompt
+        response:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response
+      type: object
+      required:
+      - payload
+      - signature_b64
+      - pubkey_b64
+      title: VerifyBody
     ValidationError:
       properties:
         loc:
@@ -481,6 +511,15 @@ components:
       - prompt
       - response
       title: SignBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     CallBody:
       properties:
         prompt:
@@ -518,42 +557,3 @@ components:
       - prompt
       - tenant_did
       title: CallBody
-    VerifyBody:
-      properties:
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-        signature_b64:
-          type: string
-          minLength: 8
-          title: Signature B64
-        pubkey_b64:
-          type: string
-          minLength: 8
-          title: Pubkey B64
-        prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Prompt
-        response:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Response
-      type: object
-      required:
-      - payload
-      - signature_b64
-      - pubkey_b64
-      title: VerifyBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError

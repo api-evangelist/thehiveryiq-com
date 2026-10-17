@@ -296,70 +296,12 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ExecuteAttestRequest:
+    TerminationAttestRequest:
       properties:
         contract_id:
           type: string
           title: Contract Id
-          description: Contract ID being executed
-        parties:
-          items:
-            $ref: '#/components/schemas/ContractParty'
-          type: array
-          title: Parties
-          description: All executing parties
-        clause_hashes:
-          items:
-            $ref: '#/components/schemas/ClauseHash'
-          type: array
-          title: Clause Hashes
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: 'Execution metadata: effective_date, governing_law, signature_page_hash, etc.'
-      type: object
-      required:
-      - contract_id
-      - parties
-      title: ExecuteAttestRequest
-      description: Record full execution (all parties signed).
-    NoticeAttestRequest:
-      properties:
-        contract_id:
-          type: string
-          title: Contract Id
-          description: Contract ID notice is issued against
-        notice_type:
-          type: string
-          title: Notice Type
-          description: 'Type of notice: breach, termination_intent, renewal_opt_in, renewal_opt_out, cure, other'
+          description: Contract ID being terminated
         parties:
           items:
             $ref: '#/components/schemas/ContractParty'
@@ -374,31 +316,12 @@ components:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: 'Notice metadata: notice_hash, delivery_method, cure_deadline, etc.'
+          description: 'Termination metadata: termination_reason, effective_date, for_cause, etc.'
       type: object
       required:
       - contract_id
-      - notice_type
-      title: NoticeAttestRequest
-      description: Record a formal notice (breach, termination intent, renewal opt-in/out).
-    ClauseHash:
-      properties:
-        clause_id:
-          type: string
-          title: Clause Id
-          description: Clause identifier (e.g. '3.1', 'indemnity', 'ip_ownership')
-        hash:
-          type: string
-          maxLength: 64
-          minLength: 64
-          title: Hash
-          description: sha256 hex of the canonical clause text
-      type: object
-      required:
-      - clause_id
-      - hash
-      title: ClauseHash
-      description: sha256 hash of a contract clause for tamper-evidence.
+      title: TerminationAttestRequest
+      description: Record contract termination.
     SignatureAttestRequest:
       properties:
         contract_id:
@@ -430,33 +353,55 @@ components:
       - signer_did
       title: SignatureAttestRequest
       description: Record a single-party signature event.
-    RedlineAttestRequest:
+    ValidationError:
       properties:
-        contract_id:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Contract Id
-          description: Contract ID being redlined
-        parties:
-          items:
-            $ref: '#/components/schemas/ContractParty'
-          type: array
-          title: Parties
-        clause_hashes:
-          items:
-            $ref: '#/components/schemas/ClauseHash'
-          type: array
-          title: Clause Hashes
-          description: Updated clause hashes after redline
-        event_payload:
-          additionalProperties: true
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
-          title: Event Payload
-          description: 'Redline metadata: redliner_did, change_summary, version_label, etc.'
+          title: Context
       type: object
       required:
-      - contract_id
-      title: RedlineAttestRequest
-      description: Record a redline/markup event on a contract.
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ContractParty:
+      properties:
+        did:
+          type: string
+          title: Did
+          description: DID of the party (e.g. did:hive:org:acme)
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Human-readable name of the party
+        role:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Role
+          description: 'Party role: buyer, seller, licensor, licensee, service_provider, client, other'
+      type: object
+      required:
+      - did
+      title: ContractParty
+      description: A party to the contract with a DID.
     AmendmentAttestRequest:
       properties:
         contract_id:
@@ -484,29 +429,74 @@ components:
       - contract_id
       title: AmendmentAttestRequest
       description: Record a contract amendment.
-    ContractParty:
+    NoticeAttestRequest:
       properties:
-        did:
+        contract_id:
           type: string
-          title: Did
-          description: DID of the party (e.g. did:hive:org:acme)
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Human-readable name of the party
-        role:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Role
-          description: 'Party role: buyer, seller, licensor, licensee, service_provider, client, other'
+          title: Contract Id
+          description: Contract ID notice is issued against
+        notice_type:
+          type: string
+          title: Notice Type
+          description: 'Type of notice: breach, termination_intent, renewal_opt_in, renewal_opt_out, cure, other'
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Notice metadata: notice_hash, delivery_method, cure_deadline, etc.'
       type: object
       required:
-      - did
-      title: ContractParty
-      description: A party to the contract with a DID.
+      - contract_id
+      - notice_type
+      title: NoticeAttestRequest
+      description: Record a formal notice (breach, termination intent, renewal opt-in/out).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ExecuteAttestRequest:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+          description: Contract ID being executed
+        parties:
+          items:
+            $ref: '#/components/schemas/ContractParty'
+          type: array
+          title: Parties
+          description: All executing parties
+        clause_hashes:
+          items:
+            $ref: '#/components/schemas/ClauseHash'
+          type: array
+          title: Clause Hashes
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: 'Execution metadata: effective_date, governing_law, signature_page_hash, etc.'
+      type: object
+      required:
+      - contract_id
+      - parties
+      title: ExecuteAttestRequest
+      description: Record full execution (all parties signed).
     DraftAttestRequest:
       properties:
         contract_id:
@@ -536,12 +526,30 @@ components:
       - parties
       title: DraftAttestRequest
       description: Record a contract draft creation event.
-    TerminationAttestRequest:
+    ClauseHash:
+      properties:
+        clause_id:
+          type: string
+          title: Clause Id
+          description: Clause identifier (e.g. '3.1', 'indemnity', 'ip_ownership')
+        hash:
+          type: string
+          maxLength: 64
+          minLength: 64
+          title: Hash
+          description: sha256 hex of the canonical clause text
+      type: object
+      required:
+      - clause_id
+      - hash
+      title: ClauseHash
+      description: sha256 hash of a contract clause for tamper-evidence.
+    RedlineAttestRequest:
       properties:
         contract_id:
           type: string
           title: Contract Id
-          description: Contract ID being terminated
+          description: Contract ID being redlined
         parties:
           items:
             $ref: '#/components/schemas/ContractParty'
@@ -552,22 +560,14 @@ components:
             $ref: '#/components/schemas/ClauseHash'
           type: array
           title: Clause Hashes
+          description: Updated clause hashes after redline
         event_payload:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: 'Termination metadata: termination_reason, effective_date, for_cause, etc.'
+          description: 'Redline metadata: redliner_did, change_summary, version_label, etc.'
       type: object
       required:
       - contract_id
-      title: TerminationAttestRequest
-      description: Record contract termination.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      title: RedlineAttestRequest
+      description: Record a redline/markup event on a contract.

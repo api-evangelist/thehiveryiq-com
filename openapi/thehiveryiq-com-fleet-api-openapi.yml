@@ -433,26 +433,6 @@ components:
       - msg
       - type
       title: ValidationError
-    TrawlerLaunchBody:
-      properties:
-        operator_did:
-          type: string
-          title: Operator Did
-          description: DID or 0x address of the operator launching this trawler
-        label:
-          type: string
-          title: Label
-          description: Human-readable label for this trawler
-          default: ''
-        config:
-          additionalProperties: true
-          type: object
-          title: Config
-          description: 'Trawler config: net_regions[], pot_locations[], net_ttl_sec, pot_ttl_sec, net_budget, pot_budget, attractant, bait, economic_payload_usdc'
-      type: object
-      required:
-      - operator_did
-      title: TrawlerLaunchBody
     NetCastBody:
       properties:
         trawler_id:
@@ -553,6 +533,15 @@ components:
       - agent_did
       - need
       title: MothershipIntakeBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     PotDropBody:
       properties:
         trawler_id:
@@ -590,12 +579,23 @@ components:
       - location
       - bait_description
       title: PotDropBody
-    HTTPValidationError:
+    TrawlerLaunchBody:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        operator_did:
+          type: string
+          title: Operator Did
+          description: DID or 0x address of the operator launching this trawler
+        label:
+          type: string
+          title: Label
+          description: Human-readable label for this trawler
+          default: ''
+        config:
+          additionalProperties: true
+          type: object
+          title: Config
+          description: 'Trawler config: net_regions[], pot_locations[], net_ttl_sec, pot_ttl_sec, net_budget, pot_budget, attractant, bait, economic_payload_usdc'
       type: object
-      title: HTTPValidationError
+      required:
+      - operator_did
+      title: TrawlerLaunchBody

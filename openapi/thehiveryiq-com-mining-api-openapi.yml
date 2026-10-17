@@ -152,6 +152,35 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    hivemorph__hive_mining__routes__BookRequest:
+      properties:
+        worker_id:
+          type: string
+          minLength: 1
+          title: Worker Id
+        hashrate_th_s:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Hashrate Th S
+        duration_minutes:
+          type: integer
+          maximum: 43200.0
+          exclusiveMinimum: 0.0
+          title: Duration Minutes
+        payer_address:
+          type: string
+          title: Payer Address
+        settle_asset:
+          type: string
+          title: Settle Asset
+          default: USDC
+      type: object
+      required:
+      - worker_id
+      - hashrate_th_s
+      - duration_minutes
+      - payer_address
+      title: BookRequest
     ValidationError:
       properties:
         loc:
@@ -193,44 +222,6 @@ components:
       - btc_amount_sats
       - recipient_usdc_address
       title: PayoutRequest
-    hivemorph__hive_mining__routes__BookRequest:
-      properties:
-        worker_id:
-          type: string
-          minLength: 1
-          title: Worker Id
-        hashrate_th_s:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Hashrate Th S
-        duration_minutes:
-          type: integer
-          maximum: 43200.0
-          exclusiveMinimum: 0.0
-          title: Duration Minutes
-        payer_address:
-          type: string
-          title: Payer Address
-        settle_asset:
-          type: string
-          title: Settle Asset
-          default: USDC
-      type: object
-      required:
-      - worker_id
-      - hashrate_th_s
-      - duration_minutes
-      - payer_address
-      title: BookRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     hivemorph__hive_mining__routes__RouteRequest:
       properties:
         energy_cost_usdc_per_kwh:
@@ -252,3 +243,12 @@ components:
       - energy_cost_usdc_per_kwh
       - fleet_size_th_s
       title: RouteRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError

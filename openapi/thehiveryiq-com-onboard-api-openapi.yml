@@ -71,38 +71,6 @@ components:
       - msg
       - type
       title: ValidationError
-    Vote:
-      properties:
-        model:
-          type: string
-          title: Model
-        stakes_tier:
-          anyOf:
-          - type: string
-            enum:
-            - volume
-            - mid
-            - premium
-          - type: 'null'
-          title: Stakes Tier
-        confidence:
-          type: number
-          title: Confidence
-          default: 0.0
-        reasoning:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reasoning
-        error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error
-      type: object
-      required:
-      - model
-      title: Vote
     StakesClassifyRequest:
       properties:
         prompt:
@@ -131,6 +99,15 @@ components:
       required:
       - prompt
       title: StakesClassifyRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     StakesClassifyResponse:
       properties:
         stakes_tier:
@@ -199,12 +176,35 @@ components:
       - effective_stakes_tier
       - generated_at
       title: StakesClassifyResponse
-    HTTPValidationError:
+    Vote:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        model:
+          type: string
+          title: Model
+        stakes_tier:
+          anyOf:
+          - type: string
+            enum:
+            - volume
+            - mid
+            - premium
+          - type: 'null'
+          title: Stakes Tier
+        confidence:
+          type: number
+          title: Confidence
+          default: 0.0
+        reasoning:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reasoning
+        error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
       type: object
-      title: HTTPValidationError
+      required:
+      - model
+      title: Vote

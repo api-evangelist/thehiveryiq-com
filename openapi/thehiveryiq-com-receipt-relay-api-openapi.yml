@@ -167,15 +167,6 @@ components:
       - chain
       - tx
       title: ChainRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     EventRequest:
       properties:
         action:
@@ -223,6 +214,15 @@ components:
       required:
       - action
       title: EventRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     HttpRequest:
       properties:
         url:

@@ -205,123 +205,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    BundleVerifyRequest:
-      properties:
-        bundle_id:
-          type: string
-          title: Bundle Id
-        bundle_hash:
-          type: string
-          title: Bundle Hash
-        event_count:
-          type: integer
-          title: Event Count
-        events:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Events
-        created_at:
-          type: string
-          title: Created At
-        ed25519_signature:
-          type: string
-          title: Ed25519 Signature
-        mldsa65_signature:
-          type: string
-          title: Mldsa65 Signature
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-        framework:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Framework
-        control:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Control
-        period_start:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Period Start
-        period_end:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Period End
-      type: object
-      required:
-      - bundle_id
-      - bundle_hash
-      - event_count
-      - events
-      - created_at
-      - ed25519_signature
-      - mldsa65_signature
-      - receipt_envelope
-      title: BundleVerifyRequest
-      description: Request to verify a canonical evidence bundle offline.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    EvidenceBundleExportRequest:
-      properties:
-        framework:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Framework
-          description: Framework code filter
-        control:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Control
-          description: Control code filter
-        period_start:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Period Start
-          description: ISO 8601 UTC start timestamp
-        period_end:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Period End
-          description: ISO 8601 UTC end timestamp
-      type: object
-      title: EvidenceBundleExportRequest
-      description: Request to export a canonical evidence bundle.
     EvidenceQueryRequest:
       properties:
         framework:
@@ -413,6 +296,94 @@ components:
       - evidence_hash
       title: ComplianceEventIngestRequest
       description: Request to ingest a compliance event.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    BundleVerifyRequest:
+      properties:
+        bundle_id:
+          type: string
+          title: Bundle Id
+        bundle_hash:
+          type: string
+          title: Bundle Hash
+        event_count:
+          type: integer
+          title: Event Count
+        events:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Events
+        created_at:
+          type: string
+          title: Created At
+        ed25519_signature:
+          type: string
+          title: Ed25519 Signature
+        mldsa65_signature:
+          type: string
+          title: Mldsa65 Signature
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        framework:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Framework
+        control:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Control
+        period_start:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period Start
+        period_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period End
+      type: object
+      required:
+      - bundle_id
+      - bundle_hash
+      - event_count
+      - events
+      - created_at
+      - ed25519_signature
+      - mldsa65_signature
+      - receipt_envelope
+      title: BundleVerifyRequest
+      description: Request to verify a canonical evidence bundle offline.
     HTTPValidationError:
       properties:
         detail:
@@ -422,3 +393,32 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    EvidenceBundleExportRequest:
+      properties:
+        framework:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Framework
+          description: Framework code filter
+        control:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Control
+          description: Control code filter
+        period_start:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period Start
+          description: ISO 8601 UTC start timestamp
+        period_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period End
+          description: ISO 8601 UTC end timestamp
+      type: object
+      title: EvidenceBundleExportRequest
+      description: Request to export a canonical evidence bundle.

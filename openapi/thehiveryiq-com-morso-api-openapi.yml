@@ -147,26 +147,21 @@ paths:
                 title: Response Morso Examples V1 Morso Examples Get
 components:
   schemas:
-    FragmentIn:
+    ExcerptIn:
       properties:
-        start:
-          type: number
-          title: Start
-          description: Fragment start on the parent timeline
-        end:
-          type: number
-          title: End
-          description: Fragment end on the parent timeline
-        order:
-          type: integer
-          title: Order
-          description: Presentation order of this fragment in the excerpt
-          default: 0
+        fragments:
+          items:
+            $ref: '#/components/schemas/FragmentIn'
+          type: array
+          title: Fragments
+          description: Excerpt fragments cut from the parent
+        enclosing:
+          anyOf:
+          - $ref: '#/components/schemas/EnclosingIn'
+          - type: 'null'
+          description: Optional enclosing-container context
       type: object
-      required:
-      - start
-      - end
-      title: FragmentIn
+      title: ExcerptIn
     ValidationError:
       properties:
         loc:
@@ -193,17 +188,17 @@ components:
       - msg
       - type
       title: ValidationError
-    hivemorph__hive_morso__routes__ClassifyRequest:
+    hivemorph__hive_morso__routes__VerifyRequest:
       properties:
-        sealed_parent:
-          $ref: '#/components/schemas/SealedParentIn'
-        excerpt:
-          $ref: '#/components/schemas/ExcerptIn'
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: A full MoRSo receipt object
       type: object
       required:
-      - sealed_parent
-      - excerpt
-      title: ClassifyRequest
+      - receipt
+      title: VerifyRequest
     EnclosingIn:
       properties:
         units:
@@ -233,80 +228,6 @@ components:
           title: Contiguous
       type: object
       title: EnclosingIn
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    BoundaryIn:
-      properties:
-        kind:
-          type: string
-          title: Kind
-          description: Boundary kind, e.g. answer_start, answer_end, question_start
-        pos:
-          type: number
-          title: Pos
-          description: Boundary position on the sealed source timeline
-      type: object
-      required:
-      - kind
-      - pos
-      title: BoundaryIn
-    hivemorph__hive_morso__routes__VerifyRequest:
-      properties:
-        receipt:
-          additionalProperties: true
-          type: object
-          title: Receipt
-          description: A full MoRSo receipt object
-      type: object
-      required:
-      - receipt
-      title: VerifyRequest
-    ExcerptIn:
-      properties:
-        fragments:
-          items:
-            $ref: '#/components/schemas/FragmentIn'
-          type: array
-          title: Fragments
-          description: Excerpt fragments cut from the parent
-        enclosing:
-          anyOf:
-          - $ref: '#/components/schemas/EnclosingIn'
-          - type: 'null'
-          description: Optional enclosing-container context
-      type: object
-      title: ExcerptIn
-    IssueRequest:
-      properties:
-        parent_mor:
-          additionalProperties: true
-          type: object
-          title: Parent Mor
-          description: A full, valid parent Media Origin Receipt object
-        sealed_parent:
-          $ref: '#/components/schemas/SealedParentIn'
-          description: The parent boundary map sealed at capture
-        excerpt:
-          $ref: '#/components/schemas/ExcerptIn'
-          description: The excerpt to classify against the sealed boundaries
-        excerpt_commitment:
-          type: string
-          title: Excerpt Commitment
-          description: Optional fingerprint of the excerpt
-          default: ''
-      type: object
-      required:
-      - parent_mor
-      - sealed_parent
-      - excerpt
-      title: IssueRequest
     SealedParentIn:
       properties:
         content_commitment:
@@ -337,3 +258,82 @@ components:
           default: 0
       type: object
       title: SealedParentIn
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    BoundaryIn:
+      properties:
+        kind:
+          type: string
+          title: Kind
+          description: Boundary kind, e.g. answer_start, answer_end, question_start
+        pos:
+          type: number
+          title: Pos
+          description: Boundary position on the sealed source timeline
+      type: object
+      required:
+      - kind
+      - pos
+      title: BoundaryIn
+    IssueRequest:
+      properties:
+        parent_mor:
+          additionalProperties: true
+          type: object
+          title: Parent Mor
+          description: A full, valid parent Media Origin Receipt object
+        sealed_parent:
+          $ref: '#/components/schemas/SealedParentIn'
+          description: The parent boundary map sealed at capture
+        excerpt:
+          $ref: '#/components/schemas/ExcerptIn'
+          description: The excerpt to classify against the sealed boundaries
+        excerpt_commitment:
+          type: string
+          title: Excerpt Commitment
+          description: Optional fingerprint of the excerpt
+          default: ''
+      type: object
+      required:
+      - parent_mor
+      - sealed_parent
+      - excerpt
+      title: IssueRequest
+    hivemorph__hive_morso__routes__ClassifyRequest:
+      properties:
+        sealed_parent:
+          $ref: '#/components/schemas/SealedParentIn'
+        excerpt:
+          $ref: '#/components/schemas/ExcerptIn'
+      type: object
+      required:
+      - sealed_parent
+      - excerpt
+      title: ClassifyRequest
+    FragmentIn:
+      properties:
+        start:
+          type: number
+          title: Start
+          description: Fragment start on the parent timeline
+        end:
+          type: number
+          title: End
+          description: Fragment end on the parent timeline
+        order:
+          type: integer
+          title: Order
+          description: Presentation order of this fragment in the excerpt
+          default: 0
+      type: object
+      required:
+      - start
+      - end
+      title: FragmentIn

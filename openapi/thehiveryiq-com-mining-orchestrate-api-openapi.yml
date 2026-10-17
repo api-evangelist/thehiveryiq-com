@@ -169,6 +169,23 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    WithdrawRequest:
+      properties:
+        operator_did:
+          type: string
+          maxLength: 256
+          minLength: 3
+          title: Operator Did
+        amount_usdc:
+          type: number
+          maximum: 100000.0
+          exclusiveMinimum: 0.0
+          title: Amount Usdc
+      type: object
+      required:
+      - operator_did
+      - amount_usdc
+      title: WithdrawRequest
     ValidationError:
       properties:
         loc:
@@ -220,23 +237,6 @@ components:
       - mos_endpoint
       - wallet_addr
       title: RegisterRequest
-    WithdrawRequest:
-      properties:
-        operator_did:
-          type: string
-          maxLength: 256
-          minLength: 3
-          title: Operator Did
-        amount_usdc:
-          type: number
-          maximum: 100000.0
-          exclusiveMinimum: 0.0
-          title: Amount Usdc
-      type: object
-      required:
-      - operator_did
-      - amount_usdc
-      title: WithdrawRequest
     SiteSyncRequest:
       properties:
         operator_did:

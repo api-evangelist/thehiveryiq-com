@@ -338,32 +338,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     PayoutBody:
       properties:
         referrer_code:
@@ -386,15 +360,6 @@ components:
       - amount_usdc
       - tx_hash
       title: PayoutBody
-    LookupBody:
-      properties:
-        repo_url:
-          type: string
-          title: Repo Url
-      type: object
-      required:
-      - repo_url
-      title: LookupBody
     hivemorph__hive_bounty__routes__RegisterBody:
       properties:
         handle:
@@ -428,6 +393,46 @@ components:
       - verify_url
       - framework
       title: RegisterBody
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ConfirmBody:
+      properties:
+        referrer_code:
+          type: string
+          title: Referrer Code
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+      type: object
+      required:
+      - referrer_code
+      title: ConfirmBody
     AttributeBody:
       properties:
         referrer_code:
@@ -455,17 +460,12 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ConfirmBody:
+    LookupBody:
       properties:
-        referrer_code:
+        repo_url:
           type: string
-          title: Referrer Code
-        note:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Note
+          title: Repo Url
       type: object
       required:
-      - referrer_code
-      title: ConfirmBody
+      - repo_url
+      title: LookupBody

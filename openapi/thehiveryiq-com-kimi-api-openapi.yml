@@ -166,27 +166,36 @@ components:
       - msg
       - type
       title: ValidationError
-    WisdomResponse:
+    OrchestrateRequest:
       properties:
-        recommendations:
-          title: Recommendations
-        source:
+        goal:
           type: string
-          title: Source
-        configured:
-          type: boolean
-          title: Configured
-        model:
+          title: Goal
+          description: High-level goal to accomplish
+        tools:
+          items:
+            type: string
+          type: array
+          title: Tools
+          description: Available tool names
+        context:
           anyOf:
           - type: string
           - type: 'null'
-          title: Model
+          title: Context
+          description: Additional context
+        max_steps:
+          type: integer
+          maximum: 200.0
+          minimum: 1.0
+          title: Max Steps
+          description: Maximum orchestration steps
+          default: 50
       type: object
       required:
-      - recommendations
-      - source
-      - configured
-      title: WisdomResponse
+      - goal
+      title: OrchestrateRequest
+      description: Multi-agent orchestration request.
     LongHorizonResponse:
       properties:
         result:
@@ -223,114 +232,6 @@ components:
       - source
       - configured
       title: LongHorizonResponse
-    OrchestrateResponse:
-      properties:
-        plan:
-          title: Plan
-        source:
-          type: string
-          title: Source
-        configured:
-          type: boolean
-          title: Configured
-        model:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Model
-        steps_planned:
-          type: integer
-          title: Steps Planned
-          default: 0
-      type: object
-      required:
-      - plan
-      - source
-      - configured
-      title: OrchestrateResponse
-    LongHorizonRequest:
-      properties:
-        objective:
-          type: string
-          title: Objective
-          description: High-level objective
-        context:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Context
-          description: Additional context
-        max_tokens:
-          type: integer
-          maximum: 32768.0
-          minimum: 256.0
-          title: Max Tokens
-          description: Max output tokens
-          default: 8192
-      type: object
-      required:
-      - objective
-      title: LongHorizonRequest
-      description: 200+ step deep-reasoning task request.
-    CodeResponse:
-      properties:
-        code:
-          type: string
-          title: Code
-        language:
-          type: string
-          title: Language
-        explanation:
-          type: string
-          title: Explanation
-        source:
-          type: string
-          title: Source
-        configured:
-          type: boolean
-          title: Configured
-        model:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Model
-      type: object
-      required:
-      - code
-      - language
-      - explanation
-      - source
-      - configured
-      title: CodeResponse
-    CodeRequest:
-      properties:
-        task:
-          type: string
-          title: Task
-          description: What code to generate
-        language:
-          type: string
-          title: Language
-          description: Target language (python/typescript/bash)
-          default: python
-        context:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Context
-          description: Additional codebase context
-        max_tokens:
-          type: integer
-          maximum: 16384.0
-          minimum: 256.0
-          title: Max Tokens
-          description: Max output tokens
-          default: 4096
-      type: object
-      required:
-      - task
-      title: CodeRequest
-      description: Code generation request.
     WisdomRequest:
       properties:
         tenant_id:
@@ -418,36 +319,55 @@ components:
       - spend_day
       - total_calls
       title: HealthResponse
-    OrchestrateRequest:
+    OrchestrateResponse:
       properties:
-        goal:
+        plan:
+          title: Plan
+        source:
           type: string
-          title: Goal
-          description: High-level goal to accomplish
-        tools:
-          items:
-            type: string
-          type: array
-          title: Tools
-          description: Available tool names
+          title: Source
+        configured:
+          type: boolean
+          title: Configured
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+        steps_planned:
+          type: integer
+          title: Steps Planned
+          default: 0
+      type: object
+      required:
+      - plan
+      - source
+      - configured
+      title: OrchestrateResponse
+    LongHorizonRequest:
+      properties:
+        objective:
+          type: string
+          title: Objective
+          description: High-level objective
         context:
           anyOf:
           - type: string
           - type: 'null'
           title: Context
           description: Additional context
-        max_steps:
+        max_tokens:
           type: integer
-          maximum: 200.0
-          minimum: 1.0
-          title: Max Steps
-          description: Maximum orchestration steps
-          default: 50
+          maximum: 32768.0
+          minimum: 256.0
+          title: Max Tokens
+          description: Max output tokens
+          default: 8192
       type: object
       required:
-      - goal
-      title: OrchestrateRequest
-      description: Multi-agent orchestration request.
+      - objective
+      title: LongHorizonRequest
+      description: 200+ step deep-reasoning task request.
     HTTPValidationError:
       properties:
         detail:
@@ -457,3 +377,83 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    CodeResponse:
+      properties:
+        code:
+          type: string
+          title: Code
+        language:
+          type: string
+          title: Language
+        explanation:
+          type: string
+          title: Explanation
+        source:
+          type: string
+          title: Source
+        configured:
+          type: boolean
+          title: Configured
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+      type: object
+      required:
+      - code
+      - language
+      - explanation
+      - source
+      - configured
+      title: CodeResponse
+    WisdomResponse:
+      properties:
+        recommendations:
+          title: Recommendations
+        source:
+          type: string
+          title: Source
+        configured:
+          type: boolean
+          title: Configured
+        model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Model
+      type: object
+      required:
+      - recommendations
+      - source
+      - configured
+      title: WisdomResponse
+    CodeRequest:
+      properties:
+        task:
+          type: string
+          title: Task
+          description: What code to generate
+        language:
+          type: string
+          title: Language
+          description: Target language (python/typescript/bash)
+          default: python
+        context:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Context
+          description: Additional codebase context
+        max_tokens:
+          type: integer
+          maximum: 16384.0
+          minimum: 256.0
+          title: Max Tokens
+          description: Max output tokens
+          default: 4096
+      type: object
+      required:
+      - task
+      title: CodeRequest
+      description: Code generation request.

@@ -62,15 +62,6 @@ paths:
                 title: Response Health V1 Xcalibur Verify V2 Health Get
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     hivemorph__xcalibur__verify_v2_routes__AttestRequest:
       properties:
         chunk:
@@ -115,6 +106,15 @@ components:
       - signature_hex
       - signer_pubkey_hex
       title: AttestRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:

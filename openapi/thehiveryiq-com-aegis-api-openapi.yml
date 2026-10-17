@@ -129,6 +129,16 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    ControlAuditRequest:
+      properties:
+        control_id:
+          type: string
+          title: Control Id
+          description: Control ID, e.g. 'CC6.1' or 'A.8.24'
+      type: object
+      required:
+      - control_id
+      title: ControlAuditRequest
     ValidationError:
       properties:
         loc:
@@ -155,13 +165,3 @@ components:
       - msg
       - type
       title: ValidationError
-    ControlAuditRequest:
-      properties:
-        control_id:
-          type: string
-          title: Control Id
-          description: Control ID, e.g. 'CC6.1' or 'A.8.24'
-      type: object
-      required:
-      - control_id
-      title: ControlAuditRequest

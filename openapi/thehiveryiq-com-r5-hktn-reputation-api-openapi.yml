@@ -156,44 +156,6 @@ components:
       - msg
       - type
       title: ValidationError
-    RepPreviewReq:
-      properties:
-        agent_did:
-          type: string
-          maxLength: 200
-          minLength: 3
-          title: Agent Did
-        hypothetical_events:
-          items:
-            $ref: '#/components/schemas/HypotheticalEvent'
-          type: array
-          maxItems: 200
-          title: Hypothetical Events
-      type: object
-      required:
-      - agent_did
-      title: RepPreviewReq
-    RepEventReq:
-      properties:
-        agent_did:
-          type: string
-          maxLength: 200
-          minLength: 3
-          title: Agent Did
-        event_type:
-          type: string
-          maxLength: 80
-          minLength: 1
-          title: Event Type
-        context:
-          additionalProperties: true
-          type: object
-          title: Context
-      type: object
-      required:
-      - agent_did
-      - event_type
-      title: RepEventReq
     HypotheticalEvent:
       properties:
         event_type:
@@ -222,3 +184,41 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    RepEventReq:
+      properties:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        event_type:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Event Type
+        context:
+          additionalProperties: true
+          type: object
+          title: Context
+      type: object
+      required:
+      - agent_did
+      - event_type
+      title: RepEventReq
+    RepPreviewReq:
+      properties:
+        agent_did:
+          type: string
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        hypothetical_events:
+          items:
+            $ref: '#/components/schemas/HypotheticalEvent'
+          type: array
+          maxItems: 200
+          title: Hypothetical Events
+      type: object
+      required:
+      - agent_did
+      title: RepPreviewReq

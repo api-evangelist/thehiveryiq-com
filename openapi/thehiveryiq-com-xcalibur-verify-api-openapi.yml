@@ -191,6 +191,24 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    DemoRunRequest:
+      properties:
+        caller_content:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Caller Content
+        entry_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entry Id
+        proof_mode:
+          type: string
+          title: Proof Mode
+          default: standard
+      type: object
+      title: DemoRunRequest
     ValidationError:
       properties:
         loc:
@@ -217,23 +235,6 @@ components:
       - msg
       - type
       title: ValidationError
-    DisputeRequest:
-      properties:
-        certificate_id:
-          type: string
-          title: Certificate Id
-        claim:
-          type: string
-          title: Claim
-        tenant_id:
-          type: string
-          title: Tenant Id
-      type: object
-      required:
-      - certificate_id
-      - claim
-      - tenant_id
-      title: DisputeRequest
     ProofGenerateRequest:
       properties:
         tenant_id:
@@ -256,6 +257,32 @@ components:
       - tenant_id
       - entry_id
       title: ProofGenerateRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DisputeRequest:
+      properties:
+        certificate_id:
+          type: string
+          title: Certificate Id
+        claim:
+          type: string
+          title: Claim
+        tenant_id:
+          type: string
+          title: Tenant Id
+      type: object
+      required:
+      - certificate_id
+      - claim
+      - tenant_id
+      title: DisputeRequest
     ProofVerifyRequest:
       properties:
         proof:
@@ -277,33 +304,6 @@ components:
       - proof
       - commitment
       title: ProofVerifyRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    DemoRunRequest:
-      properties:
-        caller_content:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Caller Content
-        entry_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Entry Id
-        proof_mode:
-          type: string
-          title: Proof Mode
-          default: standard
-      type: object
-      title: DemoRunRequest
     CommitmentBuildRequest:
       properties:
         tenant_id:

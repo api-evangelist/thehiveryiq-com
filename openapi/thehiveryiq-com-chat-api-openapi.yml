@@ -44,6 +44,17 @@ paths:
               schema: {}
 components:
   schemas:
+    ChatPublicReq:
+      properties:
+        prompt:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Prompt
+      type: object
+      required:
+      - prompt
+      title: ChatPublicReq
     HTTPValidationError:
       properties:
         detail:
@@ -79,14 +90,3 @@ components:
       - msg
       - type
       title: ValidationError
-    ChatPublicReq:
-      properties:
-        prompt:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Prompt
-      type: object
-      required:
-      - prompt
-      title: ChatPublicReq

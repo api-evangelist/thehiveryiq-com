@@ -339,6 +339,19 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ReleaseRequest:
+      properties:
+        provider:
+          type: string
+          title: Provider
+        booking_id:
+          type: string
+          title: Booking Id
+      type: object
+      required:
+      - provider
+      - booking_id
+      title: ReleaseRequest
     ValidationError:
       properties:
         loc:
@@ -365,32 +378,6 @@ components:
       - msg
       - type
       title: ValidationError
-    hivemorph__hive_compute_grid__routes__BookRequest:
-      properties:
-        auction_id:
-          type: string
-          title: Auction Id
-          description: Auction id from /solve response
-        provider:
-          type: string
-          title: Provider
-          description: Chosen provider id (must match auction winner)
-        quote:
-          additionalProperties: true
-          type: object
-          title: Quote
-          description: The chosen Quote dict from /solve
-        deadline_unix:
-          type: integer
-          exclusiveMinimum: 0.0
-          title: Deadline Unix
-      type: object
-      required:
-      - auction_id
-      - provider
-      - quote
-      - deadline_unix
-      title: BookRequest
     WorkloadRequest:
       properties:
         gpu_type:
@@ -437,30 +424,6 @@ components:
           title: Submitter Did
       type: object
       title: WorkloadRequest
-    VerifySelectionRequest:
-      properties:
-        proof:
-          title: Proof
-          description: Groth16 envelope from /solve.proof_envelope
-        public_inputs:
-          items: {}
-          type: array
-          title: Public Inputs
-          description: From /solve.proof_public_inputs
-      type: object
-      required:
-      - proof
-      - public_inputs
-      title: VerifySelectionRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     hivemorph__hive_compute_grid__routes__VerifyRequest:
       properties:
         proof:
@@ -488,16 +451,53 @@ components:
       - proof
       - public_inputs
       title: VerifyRequest
-    ReleaseRequest:
+    VerifySelectionRequest:
       properties:
+        proof:
+          title: Proof
+          description: Groth16 envelope from /solve.proof_envelope
+        public_inputs:
+          items: {}
+          type: array
+          title: Public Inputs
+          description: From /solve.proof_public_inputs
+      type: object
+      required:
+      - proof
+      - public_inputs
+      title: VerifySelectionRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    hivemorph__hive_compute_grid__routes__BookRequest:
+      properties:
+        auction_id:
+          type: string
+          title: Auction Id
+          description: Auction id from /solve response
         provider:
           type: string
           title: Provider
-        booking_id:
-          type: string
-          title: Booking Id
+          description: Chosen provider id (must match auction winner)
+        quote:
+          additionalProperties: true
+          type: object
+          title: Quote
+          description: The chosen Quote dict from /solve
+        deadline_unix:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: Deadline Unix
       type: object
       required:
+      - auction_id
       - provider
-      - booking_id
-      title: ReleaseRequest
+      - quote
+      - deadline_unix
+      title: BookRequest

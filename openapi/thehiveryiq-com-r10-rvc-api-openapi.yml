@@ -211,6 +211,30 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    hivemorph__hive_r10__routes__VerifyReq:
+      properties:
+        commitment_id:
+          type: string
+          maxLength: 64
+          minLength: 4
+          title: Commitment Id
+        opening:
+          additionalProperties: true
+          type: object
+          title: Opening
+          description: An Opening envelope as returned by /open
+        expected_rubric_root:
+          anyOf:
+          - type: string
+            maxLength: 256
+            minLength: 4
+          - type: 'null'
+          title: Expected Rubric Root
+      type: object
+      required:
+      - commitment_id
+      - opening
+      title: VerifyReq
     ValidationError:
       properties:
         loc:
@@ -237,47 +261,6 @@ components:
       - msg
       - type
       title: ValidationError
-    VectorEntry:
-      properties:
-        k:
-          type: string
-          maxLength: 128
-          minLength: 1
-          title: K
-        s:
-          type: number
-          maximum: 1.0
-          minimum: 0.0
-          title: S
-      type: object
-      required:
-      - k
-      - s
-      title: VectorEntry
-    hivemorph__hive_r10__routes__VerifyReq:
-      properties:
-        commitment_id:
-          type: string
-          maxLength: 64
-          minLength: 4
-          title: Commitment Id
-        opening:
-          additionalProperties: true
-          type: object
-          title: Opening
-          description: An Opening envelope as returned by /open
-        expected_rubric_root:
-          anyOf:
-          - type: string
-            maxLength: 256
-            minLength: 4
-          - type: 'null'
-          title: Expected Rubric Root
-      type: object
-      required:
-      - commitment_id
-      - opening
-      title: VerifyReq
     BatchOpenReq:
       properties:
         commitment_id:
@@ -334,15 +317,6 @@ components:
       - operator
       - scored_at
       title: CommitReq
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     OpenReq:
       properties:
         commitment_id:
@@ -360,3 +334,29 @@ components:
       - commitment_id
       - k
       title: OpenReq
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    VectorEntry:
+      properties:
+        k:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: K
+        s:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: S
+      type: object
+      required:
+      - k
+      - s
+      title: VectorEntry

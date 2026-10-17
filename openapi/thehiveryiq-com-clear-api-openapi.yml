@@ -342,136 +342,12 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AppealOutcomeEnum:
+    UrgencyEnum:
       type: string
       enum:
-      - upheld
-      - overturned
-      - pending
-      title: AppealOutcomeEnum
-    P2PAttestRequest:
-      properties:
-        pa_id:
-          type: string
-          title: Pa Id
-          description: pa_id of the PA under review
-        decision_id:
-          type: string
-          title: Decision Id
-          description: Chain pointer to the denial decision
-        p2p_outcome:
-          $ref: '#/components/schemas/P2POutcomeEnum'
-          description: upheld / overturned / pending
-        prior_attestation_id:
-          type: string
-          title: Prior Attestation Id
-          description: UUID chain pointer to the decision envelope
-      type: object
-      required:
-      - pa_id
-      - decision_id
-      - p2p_outcome
-      - prior_attestation_id
-      title: P2PAttestRequest
-      description: Request to attest a peer-to-peer review.
-    hivemorph__hive_clear__models__ChainVerifyRequest:
-      properties:
-        pa_id:
-          type: string
-          title: Pa Id
-          description: pa_id to trace the full chain for
-      type: object
-      required:
-      - pa_id
-      title: ChainVerifyRequest
-      description: Request to verify the full lifecycle chain for a PA.
-    AppealAttestRequest:
-      properties:
-        pa_id:
-          type: string
-          title: Pa Id
-          description: pa_id of the PA being appealed
-        decision_id:
-          type: string
-          title: Decision Id
-          description: Chain pointer to the denial decision
-        appeal_level:
-          $ref: '#/components/schemas/AppealLevelEnum'
-          description: internal / external_irO / state_doi / federal
-        appeal_outcome:
-          $ref: '#/components/schemas/AppealOutcomeEnum'
-          description: upheld / overturned / pending
-        prior_attestation_id:
-          type: string
-          title: Prior Attestation Id
-          description: UUID chain pointer to the denial decision envelope
-      type: object
-      required:
-      - pa_id
-      - decision_id
-      - appeal_level
-      - appeal_outcome
-      - prior_attestation_id
-      title: AppealAttestRequest
-      description: Request to attest an appeal.
-    DecisionAttestRequest:
-      properties:
-        pa_id:
-          type: string
-          title: Pa Id
-          description: pa_id of the PA being decided
-        decision:
-          $ref: '#/components/schemas/DecisionEnum'
-          description: approve / deny / pend
-        decision_reason_code:
-          type: string
-          title: Decision Reason Code
-          description: Payer reason code for the decision
-        prior_attestation_id:
-          type: string
-          title: Prior Attestation Id
-          description: UUID chain pointer to the PA submission envelope (pa_id)
-      type: object
-      required:
-      - pa_id
-      - decision
-      - decision_reason_code
-      - prior_attestation_id
-      title: DecisionAttestRequest
-      description: Request to attest a payer decision on a PA.
-    DecisionEnum:
-      type: string
-      enum:
-      - approve
-      - deny
-      - pend
-      title: DecisionEnum
+      - standard
+      - expedited
+      title: UrgencyEnum
     PASubmitRequest:
       properties:
         payer_did:
@@ -516,6 +392,82 @@ components:
       - clinical_doc_hash
       title: PASubmitRequest
       description: Request to submit a Prior Authorization.
+    hivemorph__hive_clear__models__ChainVerifyRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id to trace the full chain for
+      type: object
+      required:
+      - pa_id
+      title: ChainVerifyRequest
+      description: Request to verify the full lifecycle chain for a PA.
+    AppealOutcomeEnum:
+      type: string
+      enum:
+      - upheld
+      - overturned
+      - pending
+      title: AppealOutcomeEnum
+    DecisionEnum:
+      type: string
+      enum:
+      - approve
+      - deny
+      - pend
+      title: DecisionEnum
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    P2PAttestRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id of the PA under review
+        decision_id:
+          type: string
+          title: Decision Id
+          description: Chain pointer to the denial decision
+        p2p_outcome:
+          $ref: '#/components/schemas/P2POutcomeEnum'
+          description: upheld / overturned / pending
+        prior_attestation_id:
+          type: string
+          title: Prior Attestation Id
+          description: UUID chain pointer to the decision envelope
+      type: object
+      required:
+      - pa_id
+      - decision_id
+      - p2p_outcome
+      - prior_attestation_id
+      title: P2PAttestRequest
+      description: Request to attest a peer-to-peer review.
     PAVerifyRequest:
       properties:
         pa_id:
@@ -527,20 +479,13 @@ components:
       - pa_id
       title: PAVerifyRequest
       description: Request to verify a stored PA.
-    UrgencyEnum:
+    P2POutcomeEnum:
       type: string
       enum:
-      - standard
-      - expedited
-      title: UrgencyEnum
-    AppealLevelEnum:
-      type: string
-      enum:
-      - internal
-      - external_irO
-      - state_doi
-      - federal
-      title: AppealLevelEnum
+      - upheld
+      - overturned
+      - pending
+      title: P2POutcomeEnum
     HTTPValidationError:
       properties:
         detail:
@@ -550,10 +495,65 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    P2POutcomeEnum:
+    DecisionAttestRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id of the PA being decided
+        decision:
+          $ref: '#/components/schemas/DecisionEnum'
+          description: approve / deny / pend
+        decision_reason_code:
+          type: string
+          title: Decision Reason Code
+          description: Payer reason code for the decision
+        prior_attestation_id:
+          type: string
+          title: Prior Attestation Id
+          description: UUID chain pointer to the PA submission envelope (pa_id)
+      type: object
+      required:
+      - pa_id
+      - decision
+      - decision_reason_code
+      - prior_attestation_id
+      title: DecisionAttestRequest
+      description: Request to attest a payer decision on a PA.
+    AppealLevelEnum:
       type: string
       enum:
-      - upheld
-      - overturned
-      - pending
-      title: P2POutcomeEnum
+      - internal
+      - external_irO
+      - state_doi
+      - federal
+      title: AppealLevelEnum
+    AppealAttestRequest:
+      properties:
+        pa_id:
+          type: string
+          title: Pa Id
+          description: pa_id of the PA being appealed
+        decision_id:
+          type: string
+          title: Decision Id
+          description: Chain pointer to the denial decision
+        appeal_level:
+          $ref: '#/components/schemas/AppealLevelEnum'
+          description: internal / external_irO / state_doi / federal
+        appeal_outcome:
+          $ref: '#/components/schemas/AppealOutcomeEnum'
+          description: upheld / overturned / pending
+        prior_attestation_id:
+          type: string
+          title: Prior Attestation Id
+          description: UUID chain pointer to the denial decision envelope
+      type: object
+      required:
+      - pa_id
+      - decision_id
+      - appeal_level
+      - appeal_outcome
+      - prior_attestation_id
+      title: AppealAttestRequest
+      description: Request to attest an appeal.

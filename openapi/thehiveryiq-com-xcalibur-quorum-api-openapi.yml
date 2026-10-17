@@ -115,41 +115,17 @@ paths:
                 title: Response Quorum Registry V1 Xcalibur Quorum Registry Get
 components:
   schemas:
-    HTTPValidationError:
+    QuorumVerifyBody:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
+        receipt:
+          additionalProperties: true
           type: object
-          title: Context
+          title: Receipt
+          description: A QUORUM receipt object to verify.
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - receipt
+      title: QuorumVerifyBody
     QuorumCompleteBody:
       properties:
         prompt:
@@ -197,14 +173,38 @@ components:
       required:
       - prompt
       title: QuorumCompleteBody
-    QuorumVerifyBody:
+    HTTPValidationError:
       properties:
-        receipt:
-          additionalProperties: true
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
-          title: Receipt
-          description: A QUORUM receipt object to verify.
+          title: Context
       type: object
       required:
-      - receipt
-      title: QuorumVerifyBody
+      - loc
+      - msg
+      - type
+      title: ValidationError

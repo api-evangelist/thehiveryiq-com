@@ -308,6 +308,33 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    MatchVerifyRequest:
+      properties:
+        po_number:
+          type: string
+          title: Po Number
+        buyer_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Did
+        supplier_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Supplier Did
+        require_two_way:
+          type: boolean
+          title: Require Two Way
+          description: Accept PO+IR alone (skip GR)
+          default: false
+      type: object
+      required:
+      - po_number
+      title: MatchVerifyRequest
+      description: '3-way match: PO + GR + IR. Returns the chain of receipts and whether
+
+        the line-item totals reconcile.'
     ValidationError:
       properties:
         loc:
@@ -334,116 +361,6 @@ components:
       - msg
       - type
       title: ValidationError
-    POVerifyResponse:
-      properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        buyer_did:
-          type: string
-          title: Buyer Did
-        supplier_did:
-          type: string
-          title: Supplier Did
-        po_number:
-          type: string
-          title: Po Number
-        event_type:
-          $ref: '#/components/schemas/POEventType'
-        event_hash:
-          type: string
-          title: Event Hash
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-        verification:
-          additionalProperties: true
-          type: object
-          title: Verification
-      type: object
-      required:
-      - attestation_id
-      - buyer_did
-      - supplier_did
-      - po_number
-      - event_type
-      - event_hash
-      - timestamp_iso
-      - receipt_envelope
-      - verification
-      title: POVerifyResponse
-    POLineItem:
-      properties:
-        line_number:
-          type: integer
-          minimum: 1.0
-          title: Line Number
-        sku:
-          type: string
-          title: Sku
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-        quantity:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Quantity
-        unit_of_measure:
-          type: string
-          title: Unit Of Measure
-          description: UN/ECE Recommendation 20 code (EA, KG, M, etc.)
-          default: EA
-        unit_price_cents:
-          anyOf:
-          - type: integer
-            minimum: 0.0
-          - type: 'null'
-          title: Unit Price Cents
-        erp_part_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Erp Part Number
-        buyer_part_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Buyer Part Number
-        supplier_part_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Supplier Part Number
-        requested_delivery_date:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Requested Delivery Date
-        metadata:
-          additionalProperties: true
-          type: object
-          title: Metadata
-      type: object
-      required:
-      - line_number
-      - sku
-      - quantity
-      title: POLineItem
-    DeliveryStatus:
-      type: string
-      enum:
-      - scheduled
-      - in_transit
-      - delivered
-      - partial
-      - rejected
-      title: DeliveryStatus
     MatchVerifyResponse:
       properties:
         po_number:
@@ -489,97 +406,6 @@ components:
       - matched
       - states_present
       title: MatchVerifyResponse
-    POEventType:
-      type: string
-      enum:
-      - request
-      - quote
-      - po_issued
-      - po_ack
-      - asn
-      - goods_receipt
-      - invoice_receipt
-      - payment
-      - change_order
-      - cancellation
-      title: POEventType
-    DeliveryAttestRequest:
-      properties:
-        buyer_did:
-          type: string
-          title: Buyer Did
-        supplier_did:
-          type: string
-          title: Supplier Did
-        po_number:
-          type: string
-          title: Po Number
-        asn_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Asn Number
-        bol_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Bol Number
-        carrier_scac:
-          anyOf:
-          - type: string
-            maxLength: 4
-          - type: 'null'
-          title: Carrier Scac
-          description: SCAC carrier code
-        delivery_status:
-          $ref: '#/components/schemas/DeliveryStatus'
-        delivered_qty:
-          anyOf:
-          - type: number
-            minimum: 0.0
-          - type: 'null'
-          title: Delivered Qty
-        received_qty:
-          anyOf:
-          - type: number
-            minimum: 0.0
-          - type: 'null'
-          title: Received Qty
-        inspection_passed:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Inspection Passed
-        inspection_notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Inspection Notes
-        delivered_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivered At
-        received_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Received At
-        cosmic_tier:
-          type: boolean
-          title: Cosmic Tier
-          default: false
-        metadata:
-          additionalProperties: true
-          type: object
-          title: Metadata
-      type: object
-      required:
-      - buyer_did
-      - supplier_did
-      - po_number
-      - delivery_status
-      title: DeliveryAttestRequest
     POAttestRequest:
       properties:
         buyer_did:
@@ -705,33 +531,134 @@ components:
         is what proves the buyer/supplier saw exactly the same document at this
 
         state.'
-    MatchVerifyRequest:
+    DeliveryStatus:
+      type: string
+      enum:
+      - scheduled
+      - in_transit
+      - delivered
+      - partial
+      - rejected
+      title: DeliveryStatus
+    DeliveryAttestRequest:
       properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        supplier_did:
+          type: string
+          title: Supplier Did
         po_number:
           type: string
           title: Po Number
-        buyer_did:
+        asn_number:
           anyOf:
           - type: string
           - type: 'null'
-          title: Buyer Did
-        supplier_did:
+          title: Asn Number
+        bol_number:
           anyOf:
           - type: string
           - type: 'null'
-          title: Supplier Did
-        require_two_way:
+          title: Bol Number
+        carrier_scac:
+          anyOf:
+          - type: string
+            maxLength: 4
+          - type: 'null'
+          title: Carrier Scac
+          description: SCAC carrier code
+        delivery_status:
+          $ref: '#/components/schemas/DeliveryStatus'
+        delivered_qty:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Delivered Qty
+        received_qty:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Received Qty
+        inspection_passed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Inspection Passed
+        inspection_notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Inspection Notes
+        delivered_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivered At
+        received_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Received At
+        cosmic_tier:
           type: boolean
-          title: Require Two Way
-          description: Accept PO+IR alone (skip GR)
+          title: Cosmic Tier
           default: false
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
       type: object
       required:
+      - buyer_did
+      - supplier_did
       - po_number
-      title: MatchVerifyRequest
-      description: '3-way match: PO + GR + IR. Returns the chain of receipts and whether
-
-        the line-item totals reconcile.'
+      - delivery_status
+      title: DeliveryAttestRequest
+    POVerifyResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        supplier_did:
+          type: string
+          title: Supplier Did
+        po_number:
+          type: string
+          title: Po Number
+        event_type:
+          $ref: '#/components/schemas/POEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        verification:
+          additionalProperties: true
+          type: object
+          title: Verification
+      type: object
+      required:
+      - attestation_id
+      - buyer_did
+      - supplier_did
+      - po_number
+      - event_type
+      - event_hash
+      - timestamp_iso
+      - receipt_envelope
+      - verification
+      title: POVerifyResponse
     HTTPValidationError:
       properties:
         detail:
@@ -741,6 +668,79 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    POEventType:
+      type: string
+      enum:
+      - request
+      - quote
+      - po_issued
+      - po_ack
+      - asn
+      - goods_receipt
+      - invoice_receipt
+      - payment
+      - change_order
+      - cancellation
+      title: POEventType
+    POLineItem:
+      properties:
+        line_number:
+          type: integer
+          minimum: 1.0
+          title: Line Number
+        sku:
+          type: string
+          title: Sku
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        quantity:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Quantity
+        unit_of_measure:
+          type: string
+          title: Unit Of Measure
+          description: UN/ECE Recommendation 20 code (EA, KG, M, etc.)
+          default: EA
+        unit_price_cents:
+          anyOf:
+          - type: integer
+            minimum: 0.0
+          - type: 'null'
+          title: Unit Price Cents
+        erp_part_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Erp Part Number
+        buyer_part_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Part Number
+        supplier_part_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Supplier Part Number
+        requested_delivery_date:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Requested Delivery Date
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - line_number
+      - sku
+      - quantity
+      title: POLineItem
     POAttestResponse:
       properties:
         attestation_id:

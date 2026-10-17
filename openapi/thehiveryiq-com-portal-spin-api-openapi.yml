@@ -259,53 +259,40 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    EmitReceiptResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PullReportRequest:
-      properties:
-        report_type:
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+        total_receipts:
+          type: integer
+          title: Total Receipts
+        session_id:
           type: string
-          title: Report Type
-          description: summary | full_ledger | compliance | usage
-          default: summary
-        date_from:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Date From
-        date_to:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Date To
-      type: object
-      title: PullReportRequest
-    ReminderRequest:
-      properties:
-        condition:
-          type: string
-          title: Condition
-          description: e.g. volume>1000, error_rate>5, settlement_pending>10
-        notify_email:
-          type: string
-          title: Notify Email
-        label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Label
+          title: Session Id
       type: object
       required:
-      - condition
-      - notify_email
-      title: ReminderRequest
+      - receipt
+      - total_receipts
+      - session_id
+      title: EmitReceiptResponse
+    SpinStartRequest:
+      properties:
+        vertical:
+          type: string
+          title: Vertical
+          description: 'One of: banking, healthcare, construction, agent-payments, real-estate, ai-compliance'
+          default: banking
+        sample_size:
+          type: integer
+          maximum: 20.0
+          minimum: 1.0
+          title: Sample Size
+          description: Number of sample receipts to pre-generate
+          default: 5
+      type: object
+      title: SpinStartRequest
     ValidationError:
       properties:
         loc:
@@ -332,6 +319,122 @@ components:
       - msg
       - type
       title: ValidationError
+    PullReportRequest:
+      properties:
+        report_type:
+          type: string
+          title: Report Type
+          description: summary | full_ledger | compliance | usage
+          default: summary
+        date_from:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Date From
+        date_to:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Date To
+      type: object
+      title: PullReportRequest
+    SpinStartResponse:
+      properties:
+        spin_session_id:
+          type: string
+          title: Spin Session Id
+        vertical:
+          type: string
+          title: Vertical
+        vertical_config:
+          additionalProperties: true
+          type: object
+          title: Vertical Config
+        receipts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Receipts
+        created_at:
+          type: string
+          title: Created At
+      type: object
+      required:
+      - spin_session_id
+      - vertical
+      - vertical_config
+      - receipts
+      - created_at
+      title: SpinStartResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PromoteRequest:
+      properties:
+        spin_session_id:
+          type: string
+          title: Spin Session Id
+        tenant_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tenant Slug
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+      type: object
+      required:
+      - spin_session_id
+      title: PromoteRequest
+    EmitReceiptRequest:
+      properties:
+        spin_session_id:
+          type: string
+          title: Spin Session Id
+        event_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Type
+        amount_usdc:
+          anyOf:
+          - type: number
+            maximum: 10000.0
+            minimum: 0.0001
+          - type: 'null'
+          title: Amount Usdc
+      type: object
+      required:
+      - spin_session_id
+      title: EmitReceiptRequest
+    ReminderRequest:
+      properties:
+        condition:
+          type: string
+          title: Condition
+          description: e.g. volume>1000, error_rate>5, settlement_pending>10
+        notify_email:
+          type: string
+          title: Notify Email
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+      type: object
+      required:
+      - condition
+      - notify_email
+      title: ReminderRequest
     ScheduleRequest:
       properties:
         frequency:
@@ -380,106 +483,3 @@ components:
       - portal_url
       - promoted_at
       title: PromoteResponse
-    EmitReceiptResponse:
-      properties:
-        receipt:
-          additionalProperties: true
-          type: object
-          title: Receipt
-        total_receipts:
-          type: integer
-          title: Total Receipts
-        session_id:
-          type: string
-          title: Session Id
-      type: object
-      required:
-      - receipt
-      - total_receipts
-      - session_id
-      title: EmitReceiptResponse
-    SpinStartResponse:
-      properties:
-        spin_session_id:
-          type: string
-          title: Spin Session Id
-        vertical:
-          type: string
-          title: Vertical
-        vertical_config:
-          additionalProperties: true
-          type: object
-          title: Vertical Config
-        receipts:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Receipts
-        created_at:
-          type: string
-          title: Created At
-      type: object
-      required:
-      - spin_session_id
-      - vertical
-      - vertical_config
-      - receipts
-      - created_at
-      title: SpinStartResponse
-    EmitReceiptRequest:
-      properties:
-        spin_session_id:
-          type: string
-          title: Spin Session Id
-        event_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Event Type
-        amount_usdc:
-          anyOf:
-          - type: number
-            maximum: 10000.0
-            minimum: 0.0001
-          - type: 'null'
-          title: Amount Usdc
-      type: object
-      required:
-      - spin_session_id
-      title: EmitReceiptRequest
-    SpinStartRequest:
-      properties:
-        vertical:
-          type: string
-          title: Vertical
-          description: 'One of: banking, healthcare, construction, agent-payments, real-estate, ai-compliance'
-          default: banking
-        sample_size:
-          type: integer
-          maximum: 20.0
-          minimum: 1.0
-          title: Sample Size
-          description: Number of sample receipts to pre-generate
-          default: 5
-      type: object
-      title: SpinStartRequest
-    PromoteRequest:
-      properties:
-        spin_session_id:
-          type: string
-          title: Spin Session Id
-        tenant_slug:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tenant Slug
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-      type: object
-      required:
-      - spin_session_id
-      title: PromoteRequest

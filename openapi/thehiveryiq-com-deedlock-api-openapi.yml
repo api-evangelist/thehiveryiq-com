@@ -394,6 +394,75 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    RecordingAttestRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        seller_did:
+          type: string
+          title: Seller Did
+        property_id:
+          type: string
+          title: Property Id
+        deed_signed_attestation_id:
+          type: string
+          title: Deed Signed Attestation Id
+          description: Prior DEED_SIGNED attestation_id for chain-of-custody
+        recording_county:
+          type: string
+          title: Recording County
+        recording_state:
+          type: string
+          maxLength: 2
+          minLength: 2
+          title: Recording State
+        recording_status:
+          $ref: '#/components/schemas/RecordingStatus'
+        recording_book:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Book
+        recording_page:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Page
+        recording_document_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Document Number
+        recording_timestamp:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Recording Timestamp
+        pria_xml_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pria Xml Hash
+          description: sha256 of PRIA submission XML
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          default: false
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - buyer_did
+      - seller_did
+      - property_id
+      - deed_signed_attestation_id
+      - recording_county
+      - recording_state
+      - recording_status
+      title: RecordingAttestRequest
     DeedVerifyResponse:
       properties:
         attestation_id:
@@ -436,15 +505,52 @@ components:
       - receipt_envelope
       - verification
       title: DeedVerifyResponse
-    HTTPValidationError:
+    DeedAttestResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        attestation_id:
+          type: string
+          title: Attestation Id
+        buyer_did:
+          type: string
+          title: Buyer Did
+        seller_did:
+          type: string
+          title: Seller Did
+        notary_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notary Did
+        property_id:
+          type: string
+          title: Property Id
+        event_type:
+          $ref: '#/components/schemas/DeedEventType'
+        event_hash:
+          type: string
+          title: Event Hash
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
       type: object
-      title: HTTPValidationError
+      required:
+      - attestation_id
+      - buyer_did
+      - seller_did
+      - property_id
+      - event_type
+      - event_hash
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: DeedAttestResponse
     DeedAttestRequest:
       properties:
         buyer_did:
@@ -644,32 +750,14 @@ components:
         receipt (typically sha256 of the canonical JSON of the document snapshot).
 
         This proves all parties saw exactly the same document at this state.'
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+    NotarizationType:
+      type: string
+      enum:
+      - ron
+      - ipen
+      - traditional
+      - remote_ink
+      title: NotarizationType
     RecordingAttestResponse:
       properties:
         attestation_id:
@@ -707,6 +795,32 @@ components:
       - price_usd
       - receipt_envelope
       title: RecordingAttestResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     NotarySessionResponse:
       properties:
         attestation_id:
@@ -748,14 +862,76 @@ components:
       - price_usd
       - receipt_envelope
       title: NotarySessionResponse
-    NotarizationType:
-      type: string
-      enum:
-      - ron
-      - ipen
-      - traditional
-      - remote_ink
-      title: NotarizationType
+    NotarySessionRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        seller_did:
+          type: string
+          title: Seller Did
+        notary_did:
+          type: string
+          title: Notary Did
+        property_id:
+          type: string
+          title: Property Id
+        notarization_type:
+          $ref: '#/components/schemas/NotarizationType'
+        document_hashes:
+          items:
+            type: string
+          type: array
+          title: Document Hashes
+          description: sha256 of each document signed in the session
+        ron_session_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ron Session Id
+        ron_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ron Platform
+          description: notarize / stewart / first_american / old_republic / proof
+        session_started_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Started At
+        session_completed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Session Completed At
+        kbai_passed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Kbai Passed
+        credential_analysis_passed:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Credential Analysis Passed
+        notary_journal_entry:
+          type: string
+          title: Notary Journal Entry
+        cosmic_tier:
+          type: boolean
+          title: Cosmic Tier
+          default: false
+      type: object
+      required:
+      - buyer_did
+      - seller_did
+      - notary_did
+      - property_id
+      - notarization_type
+      - document_hashes
+      - notary_journal_entry
+      title: NotarySessionRequest
     DeedEventType:
       type: string
       enum:
@@ -773,130 +949,6 @@ components:
       - amendment
       - cancellation
       title: DeedEventType
-    RecordingStatus:
-      type: string
-      enum:
-      - pending
-      - submitted
-      - recorded
-      - rejected
-      - indexed
-      title: RecordingStatus
-    RecordingAttestRequest:
-      properties:
-        buyer_did:
-          type: string
-          title: Buyer Did
-        seller_did:
-          type: string
-          title: Seller Did
-        property_id:
-          type: string
-          title: Property Id
-        deed_signed_attestation_id:
-          type: string
-          title: Deed Signed Attestation Id
-          description: Prior DEED_SIGNED attestation_id for chain-of-custody
-        recording_county:
-          type: string
-          title: Recording County
-        recording_state:
-          type: string
-          maxLength: 2
-          minLength: 2
-          title: Recording State
-        recording_status:
-          $ref: '#/components/schemas/RecordingStatus'
-        recording_book:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Recording Book
-        recording_page:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Recording Page
-        recording_document_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Recording Document Number
-        recording_timestamp:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Recording Timestamp
-        pria_xml_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Pria Xml Hash
-          description: sha256 of PRIA submission XML
-        cosmic_tier:
-          type: boolean
-          title: Cosmic Tier
-          default: false
-        metadata:
-          additionalProperties: true
-          type: object
-          title: Metadata
-      type: object
-      required:
-      - buyer_did
-      - seller_did
-      - property_id
-      - deed_signed_attestation_id
-      - recording_county
-      - recording_state
-      - recording_status
-      title: RecordingAttestRequest
-    DeedAttestResponse:
-      properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        buyer_did:
-          type: string
-          title: Buyer Did
-        seller_did:
-          type: string
-          title: Seller Did
-        notary_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notary Did
-        property_id:
-          type: string
-          title: Property Id
-        event_type:
-          $ref: '#/components/schemas/DeedEventType'
-        event_hash:
-          type: string
-          title: Event Hash
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        price_usd:
-          type: number
-          title: Price Usd
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-      type: object
-      required:
-      - attestation_id
-      - buyer_did
-      - seller_did
-      - property_id
-      - event_type
-      - event_hash
-      - timestamp_iso
-      - price_usd
-      - receipt_envelope
-      title: DeedAttestResponse
     hivemorph__hive_deedlock__models__ChainVerifyRequest:
       properties:
         property_id:
@@ -964,6 +1016,24 @@ components:
       - chain_valid
       - states_present
       title: ChainVerifyResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RecordingStatus:
+      type: string
+      enum:
+      - pending
+      - submitted
+      - recorded
+      - rejected
+      - indexed
+      title: RecordingStatus
     PropertyDescriptor:
       properties:
         apn:
@@ -1036,73 +1106,3 @@ components:
       - postal_code
       title: PropertyDescriptor
       description: ALTA / MISMO-compatible property descriptor.
-    NotarySessionRequest:
-      properties:
-        buyer_did:
-          type: string
-          title: Buyer Did
-        seller_did:
-          type: string
-          title: Seller Did
-        notary_did:
-          type: string
-          title: Notary Did
-        property_id:
-          type: string
-          title: Property Id
-        notarization_type:
-          $ref: '#/components/schemas/NotarizationType'
-        document_hashes:
-          items:
-            type: string
-          type: array
-          title: Document Hashes
-          description: sha256 of each document signed in the session
-        ron_session_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ron Session Id
-        ron_platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ron Platform
-          description: notarize / stewart / first_american / old_republic / proof
-        session_started_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Started At
-        session_completed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Session Completed At
-        kbai_passed:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Kbai Passed
-        credential_analysis_passed:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Credential Analysis Passed
-        notary_journal_entry:
-          type: string
-          title: Notary Journal Entry
-        cosmic_tier:
-          type: boolean
-          title: Cosmic Tier
-          default: false
-      type: object
-      required:
-      - buyer_did
-      - seller_did
-      - notary_did
-      - property_id
-      - notarization_type
-      - document_hashes
-      - notary_journal_entry
-      title: NotarySessionRequest

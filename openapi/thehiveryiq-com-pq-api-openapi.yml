@@ -104,21 +104,26 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SignRequest:
+    hivemorph__hive_smsh___pq_routes_patch__VerifyRequest:
       properties:
         message_b64:
           type: string
           title: Message B64
-          description: Base64-encoded message to sign
-        sk_b64:
+          description: Base64-encoded message
+        sig_b64:
           type: string
-          title: Sk B64
-          description: Base64-encoded ML-DSA-65 secret key
+          title: Sig B64
+          description: Base64-encoded ML-DSA-65 signature
+        pk_b64:
+          type: string
+          title: Pk B64
+          description: Base64-encoded ML-DSA-65 public key
       type: object
       required:
       - message_b64
-      - sk_b64
-      title: SignRequest
+      - sig_b64
+      - pk_b64
+      title: VerifyRequest
     ValidationError:
       properties:
         loc:
@@ -145,26 +150,6 @@ components:
       - msg
       - type
       title: ValidationError
-    hivemorph__hive_smsh___pq_routes_patch__VerifyRequest:
-      properties:
-        message_b64:
-          type: string
-          title: Message B64
-          description: Base64-encoded message
-        sig_b64:
-          type: string
-          title: Sig B64
-          description: Base64-encoded ML-DSA-65 signature
-        pk_b64:
-          type: string
-          title: Pk B64
-          description: Base64-encoded ML-DSA-65 public key
-      type: object
-      required:
-      - message_b64
-      - sig_b64
-      - pk_b64
-      title: VerifyRequest
     hivemorph__hive_smsh___pq_routes_patch__VerifyResponse:
       properties:
         valid:
@@ -186,6 +171,21 @@ components:
       - fips
       - backend
       title: VerifyResponse
+    SignRequest:
+      properties:
+        message_b64:
+          type: string
+          title: Message B64
+          description: Base64-encoded message to sign
+        sk_b64:
+          type: string
+          title: Sk B64
+          description: Base64-encoded ML-DSA-65 secret key
+      type: object
+      required:
+      - message_b64
+      - sk_b64
+      title: SignRequest
     SignResponse:
       properties:
         signature_b64:

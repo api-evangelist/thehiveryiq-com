@@ -634,6 +634,35 @@ components:
       - claim_id
       - outcome
       title: ComplianceReviewBody
+    SelfTuneTickBody:
+      properties:
+        claims_resolved_last_hour:
+          type: integer
+          minimum: 0.0
+          title: Claims Resolved Last Hour
+          default: 0
+        arb_queue_depth:
+          type: integer
+          minimum: 0.0
+          title: Arb Queue Depth
+          default: 0
+        arb_queue_normal:
+          type: integer
+          minimum: 1.0
+          title: Arb Queue Normal
+          default: 2
+        false_positive_count:
+          type: integer
+          minimum: 0.0
+          title: False Positive Count
+          default: 0
+        total_signals:
+          type: integer
+          minimum: 0.0
+          title: Total Signals
+          default: 0
+      type: object
+      title: SelfTuneTickBody
     SignalBody:
       properties:
         tx_id:
@@ -683,6 +712,47 @@ components:
       - source_type
       - proof_type
       title: SignalBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SlashBody:
+      properties:
+        agent_id:
+          type: string
+          title: Agent Id
+        reason:
+          type: string
+          title: Reason
+      type: object
+      required:
+      - agent_id
+      - reason
+      title: SlashBody
+    AutoProcessBody:
+      properties:
+        n:
+          type: integer
+          maximum: 50.0
+          minimum: 1.0
+          title: N
+          description: Max verified failures to process
+          default: 5
+        claimant_did:
+          type: string
+          title: Claimant Did
+          default: did:hive:agent-alpha
+        agent_id:
+          type: string
+          title: Agent Id
+          default: dna-001
+      type: object
+      title: AutoProcessBody
     BridgeObserveBody:
       properties:
         tx_id:
@@ -708,73 +778,3 @@ components:
       - source_confirmed
       - dest_arrived
       title: BridgeObserveBody
-    AutoProcessBody:
-      properties:
-        n:
-          type: integer
-          maximum: 50.0
-          minimum: 1.0
-          title: N
-          description: Max verified failures to process
-          default: 5
-        claimant_did:
-          type: string
-          title: Claimant Did
-          default: did:hive:agent-alpha
-        agent_id:
-          type: string
-          title: Agent Id
-          default: dna-001
-      type: object
-      title: AutoProcessBody
-    SlashBody:
-      properties:
-        agent_id:
-          type: string
-          title: Agent Id
-        reason:
-          type: string
-          title: Reason
-      type: object
-      required:
-      - agent_id
-      - reason
-      title: SlashBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    SelfTuneTickBody:
-      properties:
-        claims_resolved_last_hour:
-          type: integer
-          minimum: 0.0
-          title: Claims Resolved Last Hour
-          default: 0
-        arb_queue_depth:
-          type: integer
-          minimum: 0.0
-          title: Arb Queue Depth
-          default: 0
-        arb_queue_normal:
-          type: integer
-          minimum: 1.0
-          title: Arb Queue Normal
-          default: 2
-        false_positive_count:
-          type: integer
-          minimum: 0.0
-          title: False Positive Count
-          default: 0
-        total_signals:
-          type: integer
-          minimum: 0.0
-          title: Total Signals
-          default: 0
-      type: object
-      title: SelfTuneTickBody

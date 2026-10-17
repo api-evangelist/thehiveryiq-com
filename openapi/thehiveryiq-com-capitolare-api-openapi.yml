@@ -286,6 +286,15 @@ paths:
                 type: string
 components:
   schemas:
+    LeaveRequest:
+      properties:
+        passport_id:
+          type: string
+          title: Passport Id
+      type: object
+      required:
+      - passport_id
+      title: LeaveRequest
     ValidationError:
       properties:
         loc:
@@ -312,6 +321,121 @@ components:
       - msg
       - type
       title: ValidationError
+    EnterRequest:
+      properties:
+        agent_did:
+          type: string
+          title: Agent Did
+          description: DID the agent claims (any string).
+          default: ''
+        framework:
+          type: string
+          title: Framework
+          description: openclaw|hermes|kimi|manus|custom
+          default: custom
+        ttl_seconds:
+          type: integer
+          maximum: 86400.0
+          minimum: 60.0
+          title: Ttl Seconds
+          default: 3600
+      type: object
+      title: EnterRequest
+    hivemorph__hive_capitolare__routes__VerifyRequest:
+      properties:
+        public_view:
+          additionalProperties: true
+          type: object
+          title: Public View
+        expected_venue:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expected Venue
+        sealed_view:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Sealed View
+      type: object
+      required:
+      - public_view
+      title: VerifyRequest
+    hivemorph__hive_capitolare__routes__SettleRequest:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        sealed:
+          type: boolean
+          title: Sealed
+          default: false
+        tx_hash:
+          type: string
+          title: Tx Hash
+          default: ''
+      type: object
+      required:
+      - session_id
+      title: SettleRequest
+    AcceptRequest:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        accepter_passport_id:
+          type: string
+          title: Accepter Passport Id
+      type: object
+      required:
+      - session_id
+      - accepter_passport_id
+      title: AcceptRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    UnsealRequest:
+      properties:
+        sealed_view:
+          additionalProperties: true
+          type: object
+          title: Sealed View
+        mlkem_secret_b64:
+          type: string
+          title: Mlkem Secret B64
+        x25519_secret_b64:
+          type: string
+          title: X25519 Secret B64
+      type: object
+      required:
+      - sealed_view
+      - mlkem_secret_b64
+      - x25519_secret_b64
+      title: UnsealRequest
+    DemoWatchRequest:
+      properties:
+        job_kind:
+          type: string
+          title: Job Kind
+          default: summarize
+        amount_micro_usdc:
+          type: integer
+          minimum: 1.0
+          title: Amount Micro Usdc
+          default: 500000
+        sealed:
+          type: boolean
+          title: Sealed
+          default: false
+      type: object
+      title: DemoWatchRequest
     ProposeRequest:
       properties:
         proposer_passport_id:
@@ -334,127 +458,3 @@ components:
       - proposer_passport_id
       - counterparty_passport_id
       title: ProposeRequest
-    DemoWatchRequest:
-      properties:
-        job_kind:
-          type: string
-          title: Job Kind
-          default: summarize
-        amount_micro_usdc:
-          type: integer
-          minimum: 1.0
-          title: Amount Micro Usdc
-          default: 500000
-        sealed:
-          type: boolean
-          title: Sealed
-          default: false
-      type: object
-      title: DemoWatchRequest
-    AcceptRequest:
-      properties:
-        session_id:
-          type: string
-          title: Session Id
-        accepter_passport_id:
-          type: string
-          title: Accepter Passport Id
-      type: object
-      required:
-      - session_id
-      - accepter_passport_id
-      title: AcceptRequest
-    hivemorph__hive_capitolare__routes__SettleRequest:
-      properties:
-        session_id:
-          type: string
-          title: Session Id
-        sealed:
-          type: boolean
-          title: Sealed
-          default: false
-        tx_hash:
-          type: string
-          title: Tx Hash
-          default: ''
-      type: object
-      required:
-      - session_id
-      title: SettleRequest
-    EnterRequest:
-      properties:
-        agent_did:
-          type: string
-          title: Agent Did
-          description: DID the agent claims (any string).
-          default: ''
-        framework:
-          type: string
-          title: Framework
-          description: openclaw|hermes|kimi|manus|custom
-          default: custom
-        ttl_seconds:
-          type: integer
-          maximum: 86400.0
-          minimum: 60.0
-          title: Ttl Seconds
-          default: 3600
-      type: object
-      title: EnterRequest
-    UnsealRequest:
-      properties:
-        sealed_view:
-          additionalProperties: true
-          type: object
-          title: Sealed View
-        mlkem_secret_b64:
-          type: string
-          title: Mlkem Secret B64
-        x25519_secret_b64:
-          type: string
-          title: X25519 Secret B64
-      type: object
-      required:
-      - sealed_view
-      - mlkem_secret_b64
-      - x25519_secret_b64
-      title: UnsealRequest
-    hivemorph__hive_capitolare__routes__VerifyRequest:
-      properties:
-        public_view:
-          additionalProperties: true
-          type: object
-          title: Public View
-        expected_venue:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expected Venue
-        sealed_view:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Sealed View
-      type: object
-      required:
-      - public_view
-      title: VerifyRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    LeaveRequest:
-      properties:
-        passport_id:
-          type: string
-          title: Passport Id
-      type: object
-      required:
-      - passport_id
-      title: LeaveRequest

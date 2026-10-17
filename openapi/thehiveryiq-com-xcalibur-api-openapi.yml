@@ -159,50 +159,6 @@ paths:
                 title: Response Health V1 Xcalibur Verify V2 Health Get
 components:
   schemas:
-    hivemorph__xcalibur__verify_v2_routes__AttestRequest:
-      properties:
-        chunk:
-          type: string
-          minLength: 1
-          title: Chunk
-          description: The data chunk to attest, as a UTF-8 string (hex-encode binary).
-        corpus_root:
-          type: string
-          title: Corpus Root
-          description: Expected Merkle root (hex) of the corpus.
-        expected_path:
-          items:
-            additionalProperties:
-              type: string
-            type: object
-          type: array
-          title: Expected Path
-          description: 'Merkle inclusion path. Each element: {"sibling": "<hex>", "position": "left"|"right"}. Empty list means leaf IS the root (single-element corpus).'
-        signature_hex:
-          type: string
-          title: Signature Hex
-          description: Signer's PQ signature over chunk (hex).
-        signer_pubkey_hex:
-          type: string
-          title: Signer Pubkey Hex
-          description: Signer's PQ public key (hex).
-        alg:
-          type: string
-          title: Alg
-          description: 'PQ signature algorithm used by signer. Default: ML-DSA-65.'
-          default: ML-DSA-65
-        run_slhdsa:
-          type: boolean
-          title: Run Slhdsa
-          description: Include SLH-DSA cross-family witness in ensemble (slower but stronger).
-          default: true
-      type: object
-      required:
-      - chunk
-      - corpus_root
-      - signature_hex
-      - signer_pubkey_hex
-      title: AttestRequest
     ValidationError:
       properties:
         loc:
@@ -255,6 +211,50 @@ components:
       required:
       - text
       title: ClassifyRequest
+    hivemorph__xcalibur__verify_v2_routes__AttestRequest:
+      properties:
+        chunk:
+          type: string
+          minLength: 1
+          title: Chunk
+          description: The data chunk to attest, as a UTF-8 string (hex-encode binary).
+        corpus_root:
+          type: string
+          title: Corpus Root
+          description: Expected Merkle root (hex) of the corpus.
+        expected_path:
+          items:
+            additionalProperties:
+              type: string
+            type: object
+          type: array
+          title: Expected Path
+          description: 'Merkle inclusion path. Each element: {"sibling": "<hex>", "position": "left"|"right"}. Empty list means leaf IS the root (single-element corpus).'
+        signature_hex:
+          type: string
+          title: Signature Hex
+          description: Signer's PQ signature over chunk (hex).
+        signer_pubkey_hex:
+          type: string
+          title: Signer Pubkey Hex
+          description: Signer's PQ public key (hex).
+        alg:
+          type: string
+          title: Alg
+          description: 'PQ signature algorithm used by signer. Default: ML-DSA-65.'
+          default: ML-DSA-65
+        run_slhdsa:
+          type: boolean
+          title: Run Slhdsa
+          description: Include SLH-DSA cross-family witness in ensemble (slower but stronger).
+          default: true
+      type: object
+      required:
+      - chunk
+      - corpus_root
+      - signature_hex
+      - signer_pubkey_hex
+      title: AttestRequest
     CompressV2Request:
       properties:
         prompt:

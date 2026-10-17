@@ -205,56 +205,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    hivemorph__hive_r3__routes__VerifyReq:
-      properties:
-        envelope:
-          additionalProperties: true
-          type: object
-          title: Envelope
-      type: object
-      required:
-      - envelope
-      title: VerifyReq
-    FirewallEvalReq:
-      properties:
-        envelope:
-          additionalProperties: true
-          type: object
-          title: Envelope
-        request:
-          additionalProperties: true
-          type: object
-          title: Request
-      type: object
-      required:
-      - envelope
-      title: FirewallEvalReq
     IssueReq:
       properties:
         agent_id:
@@ -311,36 +261,32 @@ components:
       required:
       - agent_id
       title: IssueReq
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    OperatorSignReq:
-      properties:
-        envelope:
-          additionalProperties: true
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
           type: object
-          title: Envelope
-          description: Unsigned or partially-signed envelope
-        operator_signature:
-          type: string
-          title: Operator Signature
-          description: base64url Ed25519 signature over canonical envelope
-        operator_pubkey:
-          type: string
-          title: Operator Pubkey
-          description: base64url Ed25519 public key
+          title: Context
       type: object
       required:
-      - envelope
-      - operator_signature
-      - operator_pubkey
-      title: OperatorSignReq
+      - loc
+      - msg
+      - type
+      title: ValidationError
     DelegationCheckReq:
       properties:
         jti:
@@ -372,3 +318,57 @@ components:
         Supplying both is rejected by the validator (no silent precedence). The
 
         `request` field uses the same shape as /v1/firewall/evaluate''s `request`.'
+    OperatorSignReq:
+      properties:
+        envelope:
+          additionalProperties: true
+          type: object
+          title: Envelope
+          description: Unsigned or partially-signed envelope
+        operator_signature:
+          type: string
+          title: Operator Signature
+          description: base64url Ed25519 signature over canonical envelope
+        operator_pubkey:
+          type: string
+          title: Operator Pubkey
+          description: base64url Ed25519 public key
+      type: object
+      required:
+      - envelope
+      - operator_signature
+      - operator_pubkey
+      title: OperatorSignReq
+    hivemorph__hive_r3__routes__VerifyReq:
+      properties:
+        envelope:
+          additionalProperties: true
+          type: object
+          title: Envelope
+      type: object
+      required:
+      - envelope
+      title: VerifyReq
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    FirewallEvalReq:
+      properties:
+        envelope:
+          additionalProperties: true
+          type: object
+          title: Envelope
+        request:
+          additionalProperties: true
+          type: object
+          title: Request
+      type: object
+      required:
+      - envelope
+      title: FirewallEvalReq

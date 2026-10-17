@@ -96,6 +96,43 @@ paths:
                 $ref: '#/components/schemas/CatalogResponse'
 components:
   schemas:
+    ModelCatalogEntry:
+      properties:
+        model_id:
+          type: string
+          title: Model Id
+        display_name:
+          type: string
+          title: Display Name
+        quality_tier:
+          type: string
+          title: Quality Tier
+        cost_per_1k_input:
+          type: number
+          title: Cost Per 1K Input
+        cost_per_1k_output:
+          type: number
+          title: Cost Per 1K Output
+        blended_cost_per_1k:
+          type: number
+          title: Blended Cost Per 1K
+        provider:
+          type: string
+          title: Provider
+        notes:
+          type: string
+          title: Notes
+      type: object
+      required:
+      - model_id
+      - display_name
+      - quality_tier
+      - cost_per_1k_input
+      - cost_per_1k_output
+      - blended_cost_per_1k
+      - provider
+      - notes
+      title: ModelCatalogEntry
     ValidationError:
       properties:
         loc:
@@ -122,46 +159,35 @@ components:
       - msg
       - type
       title: ValidationError
-    hivemorph__hive_arb__compute_routes__RouteRequest:
+    SavingsResponse:
       properties:
-        shape:
+        calls_routed:
+          type: integer
+          title: Calls Routed
+        calls_failed:
+          type: integer
+          title: Calls Failed
+        total_cost_usd:
+          type: number
+          title: Total Cost Usd
+        total_savings_usd:
+          type: number
+          title: Total Savings Usd
+        avg_cost_reduction_pct:
+          type: number
+          title: Avg Cost Reduction Pct
+        baseline_model:
           type: string
-          title: Shape
-          description: HiveMorph shape name (e.g. 'merchant', 'attestor', 'guardian')
-          examples:
-          - merchant
-        prompt:
-          type: string
-          title: Prompt
-          description: User prompt to send to the LLM
-          examples:
-          - Classify this transaction as legitimate or suspicious.
-        quality_tier:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Quality Tier
-          description: 'Override quality tier: T0_CHEAP | T1_STANDARD | T2_HIGH. If omitted, inferred from shape.'
-          examples:
-          - T1_STANDARD
-        system_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: System Prompt
-          description: Optional system message prepended to the conversation
-        extra_params:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Extra Params
-          description: Additional gateway parameters (temperature, max_tokens, etc.)
+          title: Baseline Model
       type: object
       required:
-      - shape
-      - prompt
-      title: RouteRequest
+      - calls_routed
+      - calls_failed
+      - total_cost_usd
+      - total_savings_usd
+      - avg_cost_reduction_pct
+      - baseline_model
+      title: SavingsResponse
     RouteResponse:
       properties:
         chosen_model:
@@ -210,35 +236,6 @@ components:
       - output_tokens
       - shape
       title: RouteResponse
-    SavingsResponse:
-      properties:
-        calls_routed:
-          type: integer
-          title: Calls Routed
-        calls_failed:
-          type: integer
-          title: Calls Failed
-        total_cost_usd:
-          type: number
-          title: Total Cost Usd
-        total_savings_usd:
-          type: number
-          title: Total Savings Usd
-        avg_cost_reduction_pct:
-          type: number
-          title: Avg Cost Reduction Pct
-        baseline_model:
-          type: string
-          title: Baseline Model
-      type: object
-      required:
-      - calls_routed
-      - calls_failed
-      - total_cost_usd
-      - total_savings_usd
-      - avg_cost_reduction_pct
-      - baseline_model
-      title: SavingsResponse
     CatalogResponse:
       properties:
         count:
@@ -262,6 +259,46 @@ components:
       - models
       - tiers
       title: CatalogResponse
+    hivemorph__hive_arb__compute_routes__RouteRequest:
+      properties:
+        shape:
+          type: string
+          title: Shape
+          description: HiveMorph shape name (e.g. 'merchant', 'attestor', 'guardian')
+          examples:
+          - merchant
+        prompt:
+          type: string
+          title: Prompt
+          description: User prompt to send to the LLM
+          examples:
+          - Classify this transaction as legitimate or suspicious.
+        quality_tier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Quality Tier
+          description: 'Override quality tier: T0_CHEAP | T1_STANDARD | T2_HIGH. If omitted, inferred from shape.'
+          examples:
+          - T1_STANDARD
+        system_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: System Prompt
+          description: Optional system message prepended to the conversation
+        extra_params:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Extra Params
+          description: Additional gateway parameters (temperature, max_tokens, etc.)
+      type: object
+      required:
+      - shape
+      - prompt
+      title: RouteRequest
     HTTPValidationError:
       properties:
         detail:
@@ -271,40 +308,3 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ModelCatalogEntry:
-      properties:
-        model_id:
-          type: string
-          title: Model Id
-        display_name:
-          type: string
-          title: Display Name
-        quality_tier:
-          type: string
-          title: Quality Tier
-        cost_per_1k_input:
-          type: number
-          title: Cost Per 1K Input
-        cost_per_1k_output:
-          type: number
-          title: Cost Per 1K Output
-        blended_cost_per_1k:
-          type: number
-          title: Blended Cost Per 1K
-        provider:
-          type: string
-          title: Provider
-        notes:
-          type: string
-          title: Notes
-      type: object
-      required:
-      - model_id
-      - display_name
-      - quality_tier
-      - cost_per_1k_input
-      - cost_per_1k_output
-      - blended_cost_per_1k
-      - provider
-      - notes
-      title: ModelCatalogEntry

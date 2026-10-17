@@ -200,6 +200,25 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    FreeIssueRequestBody:
+      properties:
+        payload:
+          type: string
+          maxLength: 8192
+          minLength: 1
+          title: Payload
+          description: Any string to sign (PR diff, contract clause, API log, tx hash, etc).
+        label:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Label
+          description: Optional human-readable label shown on the verify page.
+      type: object
+      required:
+      - payload
+      title: FreeIssueRequestBody
     ValidationError:
       properties:
         loc:
@@ -226,16 +245,6 @@ components:
       - msg
       - type
       title: ValidationError
-    VerifyRequestBody:
-      properties:
-        envelope:
-          additionalProperties: true
-          type: object
-          title: Envelope
-      type: object
-      required:
-      - envelope
-      title: VerifyRequestBody
     IssueRequestBody:
       properties:
         tx_hash:
@@ -275,25 +284,16 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    FreeIssueRequestBody:
+    VerifyRequestBody:
       properties:
-        payload:
-          type: string
-          maxLength: 8192
-          minLength: 1
-          title: Payload
-          description: Any string to sign (PR diff, contract clause, API log, tx hash, etc).
-        label:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Label
-          description: Optional human-readable label shown on the verify page.
+        envelope:
+          additionalProperties: true
+          type: object
+          title: Envelope
       type: object
       required:
-      - payload
-      title: FreeIssueRequestBody
+      - envelope
+      title: VerifyRequestBody
     SettleRequestBody:
       properties:
         receipt_id:

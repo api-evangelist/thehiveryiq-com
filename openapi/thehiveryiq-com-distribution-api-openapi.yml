@@ -249,85 +249,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MarketplaceListRequest:
-      properties:
-        shim:
-          type: string
-          minLength: 1
-          title: Shim
-        tools:
-          items:
-            $ref: '#/components/schemas/MarketplaceTool'
-          type: array
-          title: Tools
-      type: object
-      required:
-      - shim
-      title: MarketplaceListRequest
-    MarketplaceTool:
-      properties:
-        name:
-          type: string
-          title: Name
-        description:
-          type: string
-          title: Description
-          default: ''
-        pricing_usd:
-          type: number
-          title: Pricing Usd
-          default: 0.0
-        sample_request:
-          additionalProperties: true
-          type: object
-          title: Sample Request
-      type: object
-      required:
-      - name
-      title: MarketplaceTool
-    PulseEventRequest:
-      properties:
-        event:
-          type: string
-          title: Event
-        shim:
-          type: string
-          title: Shim
-          default: ''
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
-      type: object
-      required:
-      - event
-      title: PulseEventRequest
     DiscoveryRegisterRequest:
       properties:
         shim:
@@ -355,15 +276,49 @@ components:
       required:
       - shim
       title: DiscoveryRegisterRequest
-    HTTPValidationError:
+    ValidationError:
       properties:
-        detail:
+        loc:
           items:
-            $ref: '#/components/schemas/ValidationError'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Detail
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
-      title: HTTPValidationError
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PulseEventRequest:
+      properties:
+        event:
+          type: string
+          title: Event
+        shim:
+          type: string
+          title: Shim
+          default: ''
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - event
+      title: PulseEventRequest
     GateRegisterRequest:
       properties:
         shim:
@@ -387,6 +342,30 @@ components:
       - shim
       - ecosystem
       title: GateRegisterRequest
+    MarketplaceListRequest:
+      properties:
+        shim:
+          type: string
+          minLength: 1
+          title: Shim
+        tools:
+          items:
+            $ref: '#/components/schemas/MarketplaceTool'
+          type: array
+          title: Tools
+      type: object
+      required:
+      - shim
+      title: MarketplaceListRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ToolSpec:
       properties:
         name:
@@ -414,3 +393,24 @@ components:
       required:
       - name
       title: ToolSpec
+    MarketplaceTool:
+      properties:
+        name:
+          type: string
+          title: Name
+        description:
+          type: string
+          title: Description
+          default: ''
+        pricing_usd:
+          type: number
+          title: Pricing Usd
+          default: 0.0
+        sample_request:
+          additionalProperties: true
+          type: object
+          title: Sample Request
+      type: object
+      required:
+      - name
+      title: MarketplaceTool

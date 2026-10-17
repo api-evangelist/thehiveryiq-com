@@ -585,6 +585,17 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    RailSelectRequest:
+      properties:
+        asset:
+          type: string
+          title: Asset
+          description: Default settlement asset to advertise. 'USDC' or 'USDT'.
+      type: object
+      required:
+      - asset
+      title: RailSelectRequest
+      description: Body for POST /v1/x402/rails/select.
     ValidationError:
       properties:
         loc:
@@ -611,77 +622,6 @@ components:
       - msg
       - type
       title: ValidationError
-    RailSelectRequest:
-      properties:
-        asset:
-          type: string
-          title: Asset
-          description: Default settlement asset to advertise. 'USDC' or 'USDT'.
-      type: object
-      required:
-      - asset
-      title: RailSelectRequest
-      description: Body for POST /v1/x402/rails/select.
-    PricingSetRequest:
-      properties:
-        path:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Path
-          description: URL path to set price for.
-        amount:
-          anyOf:
-          - type: number
-            minimum: 0.0
-          - type: 'null'
-          title: Amount
-          description: New price in USD.
-        tier:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tier
-          description: Tier label (optional; inferred from amount if omitted).
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-          description: Human-readable note.
-        asset:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Asset
-          description: Optional asset filter. If provided ('USDC' or 'USDT'), updates the per-asset price for this path only — the cross-asset base price is unchanged. Useful when Tether/Circle peg spreads diverge.
-      type: object
-      title: PricingSetRequest
-      description: Body for POST /v1/x402/pricing/set (also accepts query params).
-    ClientIntentRequest:
-      properties:
-        profile:
-          type: string
-          maxLength: 16
-          title: Profile
-          description: nano | standard.
-          default: nano
-        amount_usdc:
-          anyOf:
-          - type: number
-            maximum: 10000000.0
-            minimum: 0.0001
-          - type: 'null'
-          title: Amount Usdc
-        endpoint_path:
-          anyOf:
-          - type: string
-            maxLength: 512
-          - type: 'null'
-          title: Endpoint Path
-      type: object
-      title: ClientIntentRequest
-      description: Optional body for POST /v1/x402/client-intent (and wallet-intent alias).
     RecoverRequest:
       properties:
         nonce:
@@ -758,6 +698,42 @@ components:
       - tx_hash
       title: ProofSubmitRequest
       description: Body for POST /v1/x402/proof/submit.
+    PricingSetRequest:
+      properties:
+        path:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Path
+          description: URL path to set price for.
+        amount:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Amount
+          description: New price in USD.
+        tier:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tier
+          description: Tier label (optional; inferred from amount if omitted).
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+          description: Human-readable note.
+        asset:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Asset
+          description: Optional asset filter. If provided ('USDC' or 'USDT'), updates the per-asset price for this path only — the cross-asset base price is unchanged. Useful when Tether/Circle peg spreads diverge.
+      type: object
+      title: PricingSetRequest
+      description: Body for POST /v1/x402/pricing/set (also accepts query params).
     QuoteRequest:
       properties:
         endpoint_path:
@@ -825,3 +801,27 @@ components:
         quote tied to a specific HiveMorph endpoint, or a quote for a specific
 
         USDC amount. Receipt profile defaults to ''standard''.'
+    ClientIntentRequest:
+      properties:
+        profile:
+          type: string
+          maxLength: 16
+          title: Profile
+          description: nano | standard.
+          default: nano
+        amount_usdc:
+          anyOf:
+          - type: number
+            maximum: 10000000.0
+            minimum: 0.0001
+          - type: 'null'
+          title: Amount Usdc
+        endpoint_path:
+          anyOf:
+          - type: string
+            maxLength: 512
+          - type: 'null'
+          title: Endpoint Path
+      type: object
+      title: ClientIntentRequest
+      description: Optional body for POST /v1/x402/client-intent (and wallet-intent alias).

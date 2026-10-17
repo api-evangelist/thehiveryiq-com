@@ -136,20 +136,6 @@ components:
       - msg
       - type
       title: ValidationError
-    hivemorph__xcalibur__echo_routes__VerifyResponse:
-      properties:
-        valid:
-          type: boolean
-          title: Valid
-        checks:
-          additionalProperties: true
-          type: object
-          title: Checks
-      type: object
-      required:
-      - valid
-      - checks
-      title: VerifyResponse
     CompressResponse:
       properties:
         compressed_prompt:
@@ -164,23 +150,29 @@ components:
       - compressed_prompt
       - receipt
       title: CompressResponse
-    hivemorph__xcalibur__echo_routes__VerifyRequest:
+    HTTPValidationError:
       properties:
-        receipt:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    hivemorph__xcalibur__echo_routes__VerifyResponse:
+      properties:
+        valid:
+          type: boolean
+          title: Valid
+        checks:
           additionalProperties: true
           type: object
-          title: Receipt
-          description: The receipt object returned by /compress.
-        compressed_prompt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Compressed Prompt
-          description: If provided, verifies that sha3_256(compressed_prompt) matches receipt.compressed_hash. Also enables tamper detection.
+          title: Checks
       type: object
       required:
-      - receipt
-      title: VerifyRequest
+      - valid
+      - checks
+      title: VerifyResponse
     hivemorph__xcalibur__echo_routes__CompressRequest:
       properties:
         prompt:
@@ -201,12 +193,20 @@ components:
       required:
       - prompt
       title: CompressRequest
-    HTTPValidationError:
+    hivemorph__xcalibur__echo_routes__VerifyRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: The receipt object returned by /compress.
+        compressed_prompt:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Compressed Prompt
+          description: If provided, verifies that sha3_256(compressed_prompt) matches receipt.compressed_hash. Also enables tamper detection.
       type: object
-      title: HTTPValidationError
+      required:
+      - receipt
+      title: VerifyRequest

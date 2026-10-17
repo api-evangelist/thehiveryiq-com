@@ -215,6 +215,70 @@ components:
       - msg
       - type
       title: ValidationError
+    FundingTickBody:
+      properties:
+        underlying_key:
+          type: string
+          title: Underlying Key
+      type: object
+      required:
+      - underlying_key
+      title: FundingTickBody
+    AgentAssetListBody:
+      properties:
+        agent_id:
+          type: string
+          title: Agent Id
+          description: External agent id from source protocol
+        source_protocol:
+          type: string
+          title: Source Protocol
+          description: One of ('CROO', 'Virtuals', 'NEAR-AI', 'x402-AgentMarket', 'HiveForge')
+        monthly_revenue_usdc:
+          type: number
+          minimum: 0.0
+          title: Monthly Revenue Usdc
+        days_live:
+          type: integer
+          minimum: 0.0
+          title: Days Live
+        hivetrust_score:
+          anyOf:
+          - type: number
+            maximum: 1.0
+            minimum: 0.0
+          - type: 'null'
+          title: Hivetrust Score
+          description: If omitted, a HiveTrust score is seeded (see HiveTrust seeding pattern).
+        monthly_revenue_proof:
+          anyOf:
+          - $ref: '#/components/schemas/RevenueProof'
+          - type: 'null'
+        asking_price_usdc:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Asking Price Usdc
+        fractional_shares:
+          type: boolean
+          title: Fractional Shares
+          default: false
+        seller_did:
+          type: string
+          title: Seller Did
+          default: did:hive:caller
+        metadata:
+          additionalProperties: true
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - agent_id
+      - source_protocol
+      - monthly_revenue_usdc
+      - days_live
+      title: AgentAssetListBody
     RevenueProof:
       properties:
         period:
@@ -278,24 +342,6 @@ components:
       - size_usdc
       - collateral_asset
       title: PerpOpenBody
-    FundingTickBody:
-      properties:
-        underlying_key:
-          type: string
-          title: Underlying Key
-      type: object
-      required:
-      - underlying_key
-      title: FundingTickBody
-    PerpCloseBody:
-      properties:
-        position_id:
-          type: string
-          title: Position Id
-      type: object
-      required:
-      - position_id
-      title: PerpCloseBody
     HTTPValidationError:
       properties:
         detail:
@@ -305,58 +351,12 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    AgentAssetListBody:
+    PerpCloseBody:
       properties:
-        agent_id:
+        position_id:
           type: string
-          title: Agent Id
-          description: External agent id from source protocol
-        source_protocol:
-          type: string
-          title: Source Protocol
-          description: One of ('CROO', 'Virtuals', 'NEAR-AI', 'x402-AgentMarket', 'HiveForge')
-        monthly_revenue_usdc:
-          type: number
-          minimum: 0.0
-          title: Monthly Revenue Usdc
-        days_live:
-          type: integer
-          minimum: 0.0
-          title: Days Live
-        hivetrust_score:
-          anyOf:
-          - type: number
-            maximum: 1.0
-            minimum: 0.0
-          - type: 'null'
-          title: Hivetrust Score
-          description: If omitted, a HiveTrust score is seeded (see HiveTrust seeding pattern).
-        monthly_revenue_proof:
-          anyOf:
-          - $ref: '#/components/schemas/RevenueProof'
-          - type: 'null'
-        asking_price_usdc:
-          anyOf:
-          - type: number
-            minimum: 0.0
-          - type: 'null'
-          title: Asking Price Usdc
-        fractional_shares:
-          type: boolean
-          title: Fractional Shares
-          default: false
-        seller_did:
-          type: string
-          title: Seller Did
-          default: did:hive:caller
-        metadata:
-          additionalProperties: true
-          type: object
-          title: Metadata
+          title: Position Id
       type: object
       required:
-      - agent_id
-      - source_protocol
-      - monthly_revenue_usdc
-      - days_live
-      title: AgentAssetListBody
+      - position_id
+      title: PerpCloseBody

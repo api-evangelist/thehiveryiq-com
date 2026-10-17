@@ -583,6 +583,25 @@ components:
       - msg
       - type
       title: ValidationError
+    PayBody:
+      properties:
+        finder_did:
+          type: string
+          title: Finder Did
+        amount_usdc:
+          type: number
+          title: Amount Usdc
+        metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Metadata
+      type: object
+      required:
+      - finder_did
+      - amount_usdc
+      title: PayBody
     DropBody:
       properties:
         dropper_did:
@@ -635,6 +654,15 @@ components:
       - disputer_did
       - reason
       title: DisputeBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     LocationBody:
       properties:
         vertical:
@@ -657,34 +685,6 @@ components:
       - vertical
       - corridor
       title: LocationBody
-    PayBody:
-      properties:
-        finder_did:
-          type: string
-          title: Finder Did
-        amount_usdc:
-          type: number
-          title: Amount Usdc
-        metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Metadata
-      type: object
-      required:
-      - finder_did
-      - amount_usdc
-      title: PayBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     PhysicsOverrides:
       properties:
         distribution:

@@ -219,6 +219,16 @@ components:
       - billed_on_next_renewal
       - monthly_addon
       title: ActivateFeatureResponse
+    ActivateFeatureRequest:
+      properties:
+        feature_id:
+          type: string
+          title: Feature Id
+          description: Feature identifier to activate
+      type: object
+      required:
+      - feature_id
+      title: ActivateFeatureRequest
     TilePrefRequest:
       properties:
         tile_key:
@@ -239,6 +249,35 @@ components:
       - exposed
       - public
       title: TilePrefRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SignupRequest:
+      properties:
+        tenant_id:
+          type: string
+          title: Tenant Id
+          description: Unique tenant identifier
+        company_domain:
+          type: string
+          title: Company Domain
+          description: Primary domain, e.g. netskope.com
+        email:
+          type: string
+          title: Email
+          description: Admin contact email
+      type: object
+      required:
+      - tenant_id
+      - company_domain
+      - email
+      title: SignupRequest
     SignupResponse:
       properties:
         tenant_id:
@@ -316,42 +355,3 @@ components:
       - ai_wisdom_summary
       - wisdom_generated_at
       title: ProfileResponse
-    ActivateFeatureRequest:
-      properties:
-        feature_id:
-          type: string
-          title: Feature Id
-          description: Feature identifier to activate
-      type: object
-      required:
-      - feature_id
-      title: ActivateFeatureRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    SignupRequest:
-      properties:
-        tenant_id:
-          type: string
-          title: Tenant Id
-          description: Unique tenant identifier
-        company_domain:
-          type: string
-          title: Company Domain
-          description: Primary domain, e.g. netskope.com
-        email:
-          type: string
-          title: Email
-          description: Admin contact email
-      type: object
-      required:
-      - tenant_id
-      - company_domain
-      - email
-      title: SignupRequest

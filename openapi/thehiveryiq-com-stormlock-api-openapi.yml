@@ -293,6 +293,40 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    TriggerEvalAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        oracle_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Oracle Did
+          description: DID of the oracle
+        oracle_reading_payload:
+          additionalProperties: true
+          type: object
+          title: Oracle Reading Payload
+          description: Oracle reading payload to evaluate
+        threshold_spec:
+          additionalProperties: true
+          type: object
+          title: Threshold Spec
+          description: Threshold specification to evaluate against
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Additional evaluation metadata
+      type: object
+      required:
+      - policy_did
+      - oracle_reading_payload
+      - threshold_spec
+      title: TriggerEvalAttestRequest
+      description: Evaluate threshold against oracle reading and record result.
     ValidationError:
       properties:
         loc:
@@ -371,41 +405,35 @@ components:
       - threshold_spec
       title: BindAttestRequest
       description: Record a policy bind event.
-    TriggerEvalAttestRequest:
+    DisputeAttestRequest:
       properties:
         policy_did:
           type: string
           title: Policy Did
-          description: DID of the policy
-        oracle_did:
+          description: DID of the policy under dispute
+        disputing_party_did:
           anyOf:
           - type: string
           - type: 'null'
-          title: Oracle Did
-          description: DID of the oracle
-        oracle_reading_payload:
-          additionalProperties: true
-          type: object
-          title: Oracle Reading Payload
-          description: Oracle reading payload to evaluate
-        threshold_spec:
-          additionalProperties: true
-          type: object
-          title: Threshold Spec
-          description: Threshold specification to evaluate against
+          title: Disputing Party Did
+          description: DID of the disputing party
+        dispute_grounds:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dispute Grounds
+          description: Grounds for dispute
         event_payload:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: Additional evaluation metadata
+          description: Dispute metadata
       type: object
       required:
       - policy_did
-      - oracle_reading_payload
-      - threshold_spec
-      title: TriggerEvalAttestRequest
-      description: Evaluate threshold against oracle reading and record result.
-    OracleReadingAttestRequest:
+      title: DisputeAttestRequest
+      description: Record a dispute opened.
+    OracleSubscribeRequest:
       properties:
         policy_did:
           type: string
@@ -414,24 +442,31 @@ components:
         oracle_did:
           type: string
           title: Oracle Did
-          description: DID of the oracle
-        oracle_reading_payload:
-          additionalProperties: true
-          type: object
-          title: Oracle Reading Payload
-          description: 'Raw oracle reading payload: {windspeed_kmh:185, ts:''...'', station_id:''WMO_722023''}'
+          description: DID of the oracle being registered
         event_payload:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: Additional reading metadata
+          description: Oracle subscription metadata
       type: object
       required:
       - policy_did
       - oracle_did
-      - oracle_reading_payload
-      title: OracleReadingAttestRequest
-      description: Record a single oracle reading.
+      title: OracleSubscribeRequest
+      description: Register an oracle for a policy.
+    PerilClass:
+      type: string
+      enum:
+      - hurricane
+      - earthquake
+      - wildfire
+      - flood
+      - hailstorm
+      - tornado
+      - extratropical_cyclone
+      - drought
+      - freeze
+      title: PerilClass
     ReinsuranceSettleAttestRequest:
       properties:
         policy_did:
@@ -468,85 +503,6 @@ components:
       - policy_did
       title: ReinsuranceSettleAttestRequest
       description: Record reinsurance settle leg.
-    PerilClass:
-      type: string
-      enum:
-      - hurricane
-      - earthquake
-      - wildfire
-      - flood
-      - hailstorm
-      - tornado
-      - extratropical_cyclone
-      - drought
-      - freeze
-      title: PerilClass
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    PayoutAuthAttestRequest:
-      properties:
-        policy_did:
-          type: string
-          title: Policy Did
-          description: DID of the policy
-        cedent_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cedent Did
-          description: DID of the cedent receiving payout
-        payout_amount_usdc:
-          anyOf:
-          - type: number
-          - type: string
-            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-          title: Payout Amount Usdc
-          description: Authorized payout amount in USDC
-        treasury_sub_account:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Treasury Sub Account
-          description: Treasury sub-account address
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: Authorization metadata
-      type: object
-      required:
-      - policy_did
-      - payout_amount_usdc
-      title: PayoutAuthAttestRequest
-      description: Record payout authorization (treasury sub-account).
-    OracleSubscribeRequest:
-      properties:
-        policy_did:
-          type: string
-          title: Policy Did
-          description: DID of the policy
-        oracle_did:
-          type: string
-          title: Oracle Did
-          description: DID of the oracle being registered
-        event_payload:
-          additionalProperties: true
-          type: object
-          title: Event Payload
-          description: Oracle subscription metadata
-      type: object
-      required:
-      - policy_did
-      - oracle_did
-      title: OracleSubscribeRequest
-      description: Register an oracle for a policy.
     LossCalcAttestRequest:
       properties:
         policy_did:
@@ -596,31 +552,75 @@ components:
       - loss_calc_result
       title: LossCalcAttestRequest
       description: Record loss calculation and payout amount.
-    DisputeAttestRequest:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    OracleReadingAttestRequest:
       properties:
         policy_did:
           type: string
           title: Policy Did
-          description: DID of the policy under dispute
-        disputing_party_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Disputing Party Did
-          description: DID of the disputing party
-        dispute_grounds:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Dispute Grounds
-          description: Grounds for dispute
+          description: DID of the policy
+        oracle_did:
+          type: string
+          title: Oracle Did
+          description: DID of the oracle
+        oracle_reading_payload:
+          additionalProperties: true
+          type: object
+          title: Oracle Reading Payload
+          description: 'Raw oracle reading payload: {windspeed_kmh:185, ts:''...'', station_id:''WMO_722023''}'
         event_payload:
           additionalProperties: true
           type: object
           title: Event Payload
-          description: Dispute metadata
+          description: Additional reading metadata
       type: object
       required:
       - policy_did
-      title: DisputeAttestRequest
-      description: Record a dispute opened.
+      - oracle_did
+      - oracle_reading_payload
+      title: OracleReadingAttestRequest
+      description: Record a single oracle reading.
+    PayoutAuthAttestRequest:
+      properties:
+        policy_did:
+          type: string
+          title: Policy Did
+          description: DID of the policy
+        cedent_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cedent Did
+          description: DID of the cedent receiving payout
+        payout_amount_usdc:
+          anyOf:
+          - type: number
+          - type: string
+            pattern: ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+          title: Payout Amount Usdc
+          description: Authorized payout amount in USDC
+        treasury_sub_account:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Treasury Sub Account
+          description: Treasury sub-account address
+        event_payload:
+          additionalProperties: true
+          type: object
+          title: Event Payload
+          description: Authorization metadata
+      type: object
+      required:
+      - policy_did
+      - payout_amount_usdc
+      title: PayoutAuthAttestRequest
+      description: Record payout authorization (treasury sub-account).

@@ -95,6 +95,23 @@ paths:
                 title: Response Get Tax Health V1 Tax Health Get
 components:
   schemas:
+    TaxBulkBody:
+      properties:
+        tx_hashes:
+          items:
+            type: string
+          type: array
+          title: Tx Hashes
+          description: Array of transaction hashes/signatures
+        chain:
+          type: string
+          title: Chain
+          description: base | ethereum | solana
+      type: object
+      required:
+      - tx_hashes
+      - chain
+      title: TaxBulkBody
     HTTPValidationError:
       properties:
         detail:
@@ -130,23 +147,6 @@ components:
       - msg
       - type
       title: ValidationError
-    TaxBulkBody:
-      properties:
-        tx_hashes:
-          items:
-            type: string
-          type: array
-          title: Tx Hashes
-          description: Array of transaction hashes/signatures
-        chain:
-          type: string
-          title: Chain
-          description: base | ethereum | solana
-      type: object
-      required:
-      - tx_hashes
-      - chain
-      title: TaxBulkBody
     TaxEventBody:
       properties:
         tx_hash:

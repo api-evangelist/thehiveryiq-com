@@ -319,15 +319,6 @@ paths:
                 title: Response Economics V1 Tradefinance Economics Get
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -401,19 +392,6 @@ components:
       - dispute_condition
       - filer_did
       title: DisputeBody
-    FundBody:
-      properties:
-        contract_id:
-          type: string
-          title: Contract Id
-        funder_did:
-          type: string
-          title: Funder Did
-      type: object
-      required:
-      - contract_id
-      - funder_did
-      title: FundBody
     hivemorph__hive_tradefinance__routes__ContractBody:
       properties:
         importer_did:
@@ -533,6 +511,28 @@ components:
       - delivery_window_start
       - delivery_window_end
       title: ContractBody
+    FundBody:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+        funder_did:
+          type: string
+          title: Funder Did
+      type: object
+      required:
+      - contract_id
+      - funder_did
+      title: FundBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ListBody:
       properties:
         metadata:

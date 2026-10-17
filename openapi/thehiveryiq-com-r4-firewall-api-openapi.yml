@@ -236,6 +236,37 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    CosignSignReq:
+      properties:
+        signer_did:
+          type: string
+          title: Signer Did
+        signature:
+          type: string
+          title: Signature
+          description: base64url Ed25519 signature over (challenge_id || nonce). R11 ships full Threshold SHOD-PQ verification; today the signature is recorded but not cryptographically validated since R11 binds the multi-party signing protocol.
+      type: object
+      required:
+      - signer_did
+      - signature
+      title: CosignSignReq
+    SandboxRunReq:
+      properties:
+        jti:
+          type: string
+          title: Jti
+        request:
+          additionalProperties: true
+          type: object
+          title: Request
+        payload:
+          additionalProperties: true
+          type: object
+          title: Payload
+      type: object
+      required:
+      - jti
+      title: SandboxRunReq
     ValidationError:
       properties:
         loc:
@@ -281,23 +312,35 @@ components:
       - decision
       - decided_by
       title: ApprovalDecideReq
-    SandboxRunReq:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    EnforcePreviewReq:
       properties:
         jti:
-          type: string
+          anyOf:
+          - type: string
+          - type: 'null'
           title: Jti
+          description: If set, fetch the stored envelope by jti and evaluate against it. Otherwise pass `envelope` inline.
+        envelope:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Envelope
         request:
           additionalProperties: true
           type: object
           title: Request
-        payload:
-          additionalProperties: true
-          type: object
-          title: Payload
       type: object
-      required:
-      - jti
-      title: SandboxRunReq
+      title: EnforcePreviewReq
     ApprovalRequestReq:
       properties:
         jti:
@@ -321,40 +364,6 @@ components:
       required:
       - jti
       title: ApprovalRequestReq
-    CosignSignReq:
-      properties:
-        signer_did:
-          type: string
-          title: Signer Did
-        signature:
-          type: string
-          title: Signature
-          description: base64url Ed25519 signature over (challenge_id || nonce). R11 ships full Threshold SHOD-PQ verification; today the signature is recorded but not cryptographically validated since R11 binds the multi-party signing protocol.
-      type: object
-      required:
-      - signer_did
-      - signature
-      title: CosignSignReq
-    EnforcePreviewReq:
-      properties:
-        jti:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Jti
-          description: If set, fetch the stored envelope by jti and evaluate against it. Otherwise pass `envelope` inline.
-        envelope:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Envelope
-        request:
-          additionalProperties: true
-          type: object
-          title: Request
-      type: object
-      title: EnforcePreviewReq
     CosignChallengeReq:
       properties:
         jti:
@@ -389,12 +398,3 @@ components:
       required:
       - jti
       title: CosignChallengeReq
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError

@@ -309,6 +309,42 @@ components:
       - role
       - content_hash
       title: SegmentRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SealRequest:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+          default: ''
+        segment_receipts:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+          title: Segment Receipts
+          description: ordered list of segment receipts to seal
+        declared_budget_us:
+          type: number
+          title: Declared Budget Us
+          default: 100.0
+        session_metadata:
+          anyOf:
+          - additionalProperties: true
+            type: object
+          - type: 'null'
+          title: Session Metadata
+      type: object
+      required:
+      - segment_receipts
+      title: SealRequest
     hivemorph__hive_afir_stream__routes__VerifyRequest:
       properties:
         receipt:
@@ -339,39 +375,3 @@ components:
       required:
       - event
       title: ContinuityIn
-    SealRequest:
-      properties:
-        session_id:
-          type: string
-          title: Session Id
-          default: ''
-        segment_receipts:
-          items:
-            additionalProperties: true
-            type: object
-          type: array
-          title: Segment Receipts
-          description: ordered list of segment receipts to seal
-        declared_budget_us:
-          type: number
-          title: Declared Budget Us
-          default: 100.0
-        session_metadata:
-          anyOf:
-          - additionalProperties: true
-            type: object
-          - type: 'null'
-          title: Session Metadata
-      type: object
-      required:
-      - segment_receipts
-      title: SealRequest
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError

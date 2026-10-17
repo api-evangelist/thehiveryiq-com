@@ -165,7 +165,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    hivemorph__appkits_routes__QuoteBody:
+    SwapBody:
       properties:
         amount:
           type: number
@@ -177,20 +177,16 @@ components:
         token_out:
           type: string
           title: Token Out
-        chain_from:
+        chain:
           type: string
-          title: Chain From
-        chain_to:
-          type: string
-          title: Chain To
+          title: Chain
       type: object
       required:
       - amount
       - token_in
       - token_out
-      - chain_from
-      - chain_to
-      title: QuoteBody
+      - chain
+      title: SwapBody
     ValidationError:
       properties:
         loc:
@@ -217,6 +213,41 @@ components:
       - msg
       - type
       title: ValidationError
+    hivemorph__appkits_routes__QuoteBody:
+      properties:
+        amount:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Amount
+        token_in:
+          type: string
+          title: Token In
+        token_out:
+          type: string
+          title: Token Out
+        chain_from:
+          type: string
+          title: Chain From
+        chain_to:
+          type: string
+          title: Chain To
+      type: object
+      required:
+      - amount
+      - token_in
+      - token_out
+      - chain_from
+      - chain_to
+      title: QuoteBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     BridgeBody:
       properties:
         amount:
@@ -265,34 +296,3 @@ components:
       - chain
       - to
       title: SendBody
-    SwapBody:
-      properties:
-        amount:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Amount
-        token_in:
-          type: string
-          title: Token In
-        token_out:
-          type: string
-          title: Token Out
-        chain:
-          type: string
-          title: Chain
-      type: object
-      required:
-      - amount
-      - token_in
-      - token_out
-      - chain
-      title: SwapBody
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError

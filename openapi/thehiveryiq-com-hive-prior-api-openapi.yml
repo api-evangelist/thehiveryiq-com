@@ -185,79 +185,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    PriorIssueResponse:
-      properties:
-        prior_id:
-          type: string
-          title: Prior Id
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-        content_hash:
-          type: string
-          title: Content Hash
-        inventor_did:
-          type: string
-          title: Inventor Did
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        entropy_axes:
-          type: integer
-          title: Entropy Axes
-        tier:
-          type: string
-          title: Tier
-        price_usd_cents:
-          type: integer
-          title: Price Usd Cents
-      type: object
-      required:
-      - prior_id
-      - receipt_envelope
-      - content_hash
-      - inventor_did
-      - timestamp_iso
-      - entropy_axes
-      - tier
-      - price_usd_cents
-      title: PriorIssueResponse
     PriorIssueRequest:
       properties:
         content_hash:
@@ -307,3 +234,76 @@ components:
       - content_hash
       - inventor_did
       title: PriorIssueRequest
+    PriorIssueResponse:
+      properties:
+        prior_id:
+          type: string
+          title: Prior Id
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+        content_hash:
+          type: string
+          title: Content Hash
+        inventor_did:
+          type: string
+          title: Inventor Did
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        entropy_axes:
+          type: integer
+          title: Entropy Axes
+        tier:
+          type: string
+          title: Tier
+        price_usd_cents:
+          type: integer
+          title: Price Usd Cents
+      type: object
+      required:
+      - prior_id
+      - receipt_envelope
+      - content_hash
+      - inventor_did
+      - timestamp_iso
+      - entropy_axes
+      - tier
+      - price_usd_cents
+      title: PriorIssueResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

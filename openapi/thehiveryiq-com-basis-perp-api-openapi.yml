@@ -340,6 +340,20 @@ paths:
                 title: Response Health Endpoint V1 Perp Basis Health Get
 components:
   schemas:
+    DecreaseBody:
+      properties:
+        position_id:
+          type: string
+          title: Position Id
+        reduce_size_usdc:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Reduce Size Usdc
+      type: object
+      required:
+      - position_id
+      - reduce_size_usdc
+      title: DecreaseBody
     ValidationError:
       properties:
         loc:
@@ -406,38 +420,6 @@ components:
       - size_usdc
       - collateral_asset
       title: OpenBody
-    CloseBody:
-      properties:
-        position_id:
-          type: string
-          title: Position Id
-      type: object
-      required:
-      - position_id
-      title: CloseBody
-    LiquidateBody:
-      properties:
-        position_id:
-          type: string
-          title: Position Id
-      type: object
-      required:
-      - position_id
-      title: LiquidateBody
-    DecreaseBody:
-      properties:
-        position_id:
-          type: string
-          title: Position Id
-        reduce_size_usdc:
-          type: number
-          exclusiveMinimum: 0.0
-          title: Reduce Size Usdc
-      type: object
-      required:
-      - position_id
-      - reduce_size_usdc
-      title: DecreaseBody
     IncreaseBody:
       properties:
         position_id:
@@ -466,3 +448,21 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    CloseBody:
+      properties:
+        position_id:
+          type: string
+          title: Position Id
+      type: object
+      required:
+      - position_id
+      title: CloseBody
+    LiquidateBody:
+      properties:
+        position_id:
+          type: string
+          title: Position Id
+      type: object
+      required:
+      - position_id
+      title: LiquidateBody

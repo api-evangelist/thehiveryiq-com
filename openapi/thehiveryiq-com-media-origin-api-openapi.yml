@@ -202,17 +202,30 @@ components:
       - msg
       - type
       title: ValidationError
-    hivemorph__hive_media_origin__routes__VerifyRequest:
+    RightsStateIn:
       properties:
-        receipt:
-          additionalProperties: true
-          type: object
-          title: Receipt
-          description: A full M.O.R. receipt object
+        asserted_scope:
+          items: {}
+          type: array
+          title: Asserted Scope
+        verified_scope:
+          items: {}
+          type: array
+          title: Verified Scope
+        excluded_scope:
+          items: {}
+          type: array
+          title: Excluded Scope
+        revocation_refs:
+          items: {}
+          type: array
+          title: Revocation Refs
+        license_commitments:
+          items: {}
+          type: array
+          title: License Commitments
       type: object
-      required:
-      - receipt
-      title: VerifyRequest
+      title: RightsStateIn
     ReceiptRequest:
       properties:
         cryptographic_hash:
@@ -250,30 +263,26 @@ components:
       required:
       - cryptographic_hash
       title: ReceiptRequest
-    RightsStateIn:
+    hivemorph__hive_media_origin__routes__VerifyRequest:
       properties:
-        asserted_scope:
-          items: {}
-          type: array
-          title: Asserted Scope
-        verified_scope:
-          items: {}
-          type: array
-          title: Verified Scope
-        excluded_scope:
-          items: {}
-          type: array
-          title: Excluded Scope
-        revocation_refs:
-          items: {}
-          type: array
-          title: Revocation Refs
-        license_commitments:
-          items: {}
-          type: array
-          title: License Commitments
+        receipt:
+          additionalProperties: true
+          type: object
+          title: Receipt
+          description: A full M.O.R. receipt object
       type: object
-      title: RightsStateIn
+      required:
+      - receipt
+      title: VerifyRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ChallengeStateIn:
       properties:
         status:
@@ -318,12 +327,3 @@ components:
           title: Human Attestations
       type: object
       title: EvidenceIn
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError

@@ -111,6 +111,20 @@ paths:
               schema: {}
 components:
   schemas:
+    ClaimRequest:
+      properties:
+        sub_id:
+          type: string
+          title: Sub Id
+        tx_hash:
+          type: string
+          minLength: 10
+          title: Tx Hash
+      type: object
+      required:
+      - sub_id
+      - tx_hash
+      title: ClaimRequest
     HTTPValidationError:
       properties:
         detail:
@@ -120,6 +134,22 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    IntentRequest:
+      properties:
+        plan:
+          type: string
+          title: Plan
+          description: dev-pack or saas-pro
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+          description: for receipt + provisioning notification
+      type: object
+      required:
+      - plan
+      title: IntentRequest
     ValidationError:
       properties:
         loc:
@@ -146,33 +176,3 @@ components:
       - msg
       - type
       title: ValidationError
-    IntentRequest:
-      properties:
-        plan:
-          type: string
-          title: Plan
-          description: dev-pack or saas-pro
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-          description: for receipt + provisioning notification
-      type: object
-      required:
-      - plan
-      title: IntentRequest
-    ClaimRequest:
-      properties:
-        sub_id:
-          type: string
-          title: Sub Id
-        tx_hash:
-          type: string
-          minLength: 10
-          title: Tx Hash
-      type: object
-      required:
-      - sub_id
-      - tx_hash
-      title: ClaimRequest

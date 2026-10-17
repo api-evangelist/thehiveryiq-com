@@ -271,17 +271,6 @@ components:
       - msg
       - type
       title: ValidationError
-    hivemorph__hive_r9__routes__VerifyReq:
-      properties:
-        witness:
-          additionalProperties: true
-          type: object
-          title: Witness
-          description: An inclusion witness as returned by /inclusion
-      type: object
-      required:
-      - witness
-      title: VerifyReq
     AnchorReq:
       properties:
         domain:
@@ -315,3 +304,14 @@ components:
       - key
       - anchored_by
       title: AnchorReq
+    hivemorph__hive_r9__routes__VerifyReq:
+      properties:
+        witness:
+          additionalProperties: true
+          type: object
+          title: Witness
+          description: An inclusion witness as returned by /inclusion
+      type: object
+      required:
+      - witness
+      title: VerifyReq

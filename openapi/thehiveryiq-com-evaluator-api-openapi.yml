@@ -282,6 +282,26 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    hivemorph__hive_evaluator__routes__AttestRequest:
+      properties:
+        provider:
+          type: string
+          title: Provider
+          description: Provider address posting the attestation.
+        deliverable:
+          type: string
+          title: Deliverable
+          description: bytes32 deliverable commitment from the provider.
+        extra:
+          additionalProperties: true
+          type: object
+          title: Extra
+          description: 'Optional payload merged into the verdict job_payload (e.g. {''red_flag'': true}).'
+      type: object
+      required:
+      - provider
+      - deliverable
+      title: AttestRequest
     ValidationError:
       properties:
         loc:
@@ -350,26 +370,6 @@ components:
       - tier
       - job_value_usdc_atomic
       title: JobSubmitRequest
-    hivemorph__hive_evaluator__routes__AttestRequest:
-      properties:
-        provider:
-          type: string
-          title: Provider
-          description: Provider address posting the attestation.
-        deliverable:
-          type: string
-          title: Deliverable
-          description: bytes32 deliverable commitment from the provider.
-        extra:
-          additionalProperties: true
-          type: object
-          title: Extra
-          description: 'Optional payload merged into the verdict job_payload (e.g. {''red_flag'': true}).'
-      type: object
-      required:
-      - provider
-      - deliverable
-      title: AttestRequest
     ManualEvaluateRequest:
       properties:
         job_id:

@@ -321,6 +321,52 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    TradeAttestResponse:
+      properties:
+        attestation_id:
+          type: string
+          title: Attestation Id
+        trader_did:
+          type: string
+          title: Trader Did
+        firm_did:
+          type: string
+          title: Firm Did
+        algo_id:
+          type: string
+          title: Algo Id
+        order_event_hash:
+          type: string
+          title: Order Event Hash
+        event_type:
+          type: string
+          title: Event Type
+        venue:
+          type: string
+          title: Venue
+        timestamp_iso:
+          type: string
+          title: Timestamp Iso
+        price_usd:
+          type: number
+          title: Price Usd
+        receipt_envelope:
+          additionalProperties: true
+          type: object
+          title: Receipt Envelope
+      type: object
+      required:
+      - attestation_id
+      - trader_did
+      - firm_did
+      - algo_id
+      - order_event_hash
+      - event_type
+      - venue
+      - timestamp_iso
+      - price_usd
+      - receipt_envelope
+      title: TradeAttestResponse
     ValidationError:
       properties:
         loc:
@@ -347,6 +393,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     hivemorph__hive_tradeguard__models__VerifyResponse:
       properties:
         attestation_id:
@@ -505,58 +560,3 @@ components:
       - event_type
       - venue
       title: TradeAttestRequest
-    TradeAttestResponse:
-      properties:
-        attestation_id:
-          type: string
-          title: Attestation Id
-        trader_did:
-          type: string
-          title: Trader Did
-        firm_did:
-          type: string
-          title: Firm Did
-        algo_id:
-          type: string
-          title: Algo Id
-        order_event_hash:
-          type: string
-          title: Order Event Hash
-        event_type:
-          type: string
-          title: Event Type
-        venue:
-          type: string
-          title: Venue
-        timestamp_iso:
-          type: string
-          title: Timestamp Iso
-        price_usd:
-          type: number
-          title: Price Usd
-        receipt_envelope:
-          additionalProperties: true
-          type: object
-          title: Receipt Envelope
-      type: object
-      required:
-      - attestation_id
-      - trader_did
-      - firm_did
-      - algo_id
-      - order_event_hash
-      - event_type
-      - venue
-      - timestamp_iso
-      - price_usd
-      - receipt_envelope
-      title: TradeAttestResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError

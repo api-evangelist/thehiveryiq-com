@@ -228,56 +228,6 @@ paths:
                 title: Response Bus Stats V1 Bus Stats Get
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    PickupBody:
-      properties:
-        buyer_id:
-          type: string
-          title: Buyer Id
-          description: Supermodel ID (W2..W8) or external agent identifier
-        buyer_did:
-          type: string
-          title: Buyer Did
-          description: DID or wallet address of the buyer
-      type: object
-      required:
-      - buyer_id
-      - buyer_did
-      title: PickupBody
     PostOfferBody:
       properties:
         seller_id:
@@ -328,3 +278,53 @@ components:
       - description
       - price_usdc
       title: PostOfferBody
+    PickupBody:
+      properties:
+        buyer_id:
+          type: string
+          title: Buyer Id
+          description: Supermodel ID (W2..W8) or external agent identifier
+        buyer_did:
+          type: string
+          title: Buyer Did
+          description: DID or wallet address of the buyer
+      type: object
+      required:
+      - buyer_id
+      - buyer_did
+      title: PickupBody
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

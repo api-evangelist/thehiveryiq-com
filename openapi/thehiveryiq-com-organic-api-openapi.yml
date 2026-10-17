@@ -358,32 +358,6 @@ paths:
                 title: Response Pricing V1 Pricing Get
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     HKTNRegisterReq:
       properties:
         agent_did:
@@ -426,53 +400,53 @@ components:
       required:
       - agent_did
       title: HKTNRegisterReq
-    ProspectorReq:
+    RosettaReq:
       properties:
-        agent_did:
+        input:
           type: string
-          maxLength: 200
-          minLength: 3
-          title: Agent Did
-        intent:
-          type: string
-          maxLength: 2048
+          maxLength: 4096
           minLength: 1
-          title: Intent
-        context:
-          additionalProperties: true
-          type: object
-          title: Context
+          title: Input
+        locale:
+          type: string
+          maxLength: 16
+          title: Locale
+          default: en-US
+        target:
+          type: string
+          title: Target
+          description: 'canonical schema target: intent | quote | route'
+          default: intent
       type: object
       required:
-      - agent_did
-      - intent
-      title: ProspectorReq
-    RubricReq:
+      - input
+      title: RosettaReq
+    ValidationError:
       properties:
-        intent:
-          type: string
-          maxLength: 2048
-          minLength: 1
-          title: Intent
-        amount_usd:
-          anyOf:
-          - type: number
-            minimum: 0.0
-          - type: 'null'
-          title: Amount Usd
-        context:
-          additionalProperties: true
-          type: object
-          title: Context
-        constraints:
+        loc:
           items:
-            type: string
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Constraints
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - intent
-      title: RubricReq
+      - loc
+      - msg
+      - type
+      title: ValidationError
     ReceiptEmitReq:
       properties:
         agent_did:
@@ -507,6 +481,32 @@ components:
       - agent_did
       - artifact
       title: ReceiptEmitReq
+    RubricReq:
+      properties:
+        intent:
+          type: string
+          maxLength: 2048
+          minLength: 1
+          title: Intent
+        amount_usd:
+          anyOf:
+          - type: number
+            minimum: 0.0
+          - type: 'null'
+          title: Amount Usd
+        context:
+          additionalProperties: true
+          type: object
+          title: Context
+        constraints:
+          items:
+            type: string
+          type: array
+          title: Constraints
+      type: object
+      required:
+      - intent
+      title: RubricReq
     HTTPValidationError:
       properties:
         detail:
@@ -516,24 +516,24 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    RosettaReq:
+    ProspectorReq:
       properties:
-        input:
+        agent_did:
           type: string
-          maxLength: 4096
+          maxLength: 200
+          minLength: 3
+          title: Agent Did
+        intent:
+          type: string
+          maxLength: 2048
           minLength: 1
-          title: Input
-        locale:
-          type: string
-          maxLength: 16
-          title: Locale
-          default: en-US
-        target:
-          type: string
-          title: Target
-          description: 'canonical schema target: intent | quote | route'
-          default: intent
+          title: Intent
+        context:
+          additionalProperties: true
+          type: object
+          title: Context
       type: object
       required:
-      - input
-      title: RosettaReq
+      - agent_did
+      - intent
+      title: ProspectorReq
