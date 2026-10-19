@@ -42,9 +42,6 @@ tags:
 - A2A
 - MCP
 - x402
-- Receipts
-- Digital Signature
-- Post-Quantum Cryptography
 - Attestation
 - Decentralized Identity
 - Stablecoins
@@ -59,9 +56,6 @@ tags_raw:
 - A2A
 - MCP
 - x402
-- Receipts
-- Digital signatures
-- Post-quantum cryptography
 - Attestation
 - Decentralized identity
 - Stablecoins
@@ -71,7 +65,6 @@ tags_raw:
 - Agent-native
 - United States
 - Agent Commerce
-- Digital Signatures
 - agent-native
 apis:
 - aid: thehiveryiq-com:hive-mcp-gateway
@@ -7272,3 +7265,7 @@ x-a2a:
   grade: "conformant"
   protocol_version: "0.3.0"
   control: 404
+x-tags-removed:
+- Post-Quantum Cryptography
+- Digital Signature
+- Receipts
