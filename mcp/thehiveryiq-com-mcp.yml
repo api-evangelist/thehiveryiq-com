@@ -1040,3 +1040,20 @@ tool_quality:
   scored: false
   note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
     from Glimind's agent-readiness audit.
+tools:
+- name: compute.chat
+  description: Run inference via HiveCompute. Automatic context compression reduces your token bill 30-70%.
+    Model routing selects the cheapest adequate model. Pay per token in USDC on Base L2. OpenAI-compatible.
+- name: compute.estimate_cost
+  description: Estimate USDC cost for a prompt before running inference. Shows compression savings and
+    routing selection.
+- name: compute.list_models
+  description: Browse all models available on HiveCompute with USDC pricing, context window, latency tier,
+    and provider.
+- name: compute.get_usage
+  description: Get inference usage history for an agent DID — total tokens, spend, compression savings,
+    call log.
+- name: compute.compression_stats
+  description: Global compression performance stats — total tokens saved, USDC saved, average compression
+    ratio across all agents.
+tools_count: 5
