@@ -5,32 +5,32 @@ source: https://api.thehiveryiq.com/mcp
 docs: https://thehiveryiq.com/agents
 summary: 'Hive Civilization operates remote MCP servers on at least three surfaces. (1) https://api.thehiveryiq.com/mcp,
   the HiveCompute inference router on the provider''s own domain: initialize and tools/list answered anonymously
-  (MCP 2024-11-05, serverInfo hivecompute 2.0.0) with 5 tools carrying real inputSchemas and annotations, plus 2
-  prompts; resources/list returns -32601. (2) https://hive-mcp-gateway.onrender.com/mcp, the provider''s MCP gateway/registry
-  (named as the transport by receipts.thehiveryiq.com/.well-known/mcp.json): initialize + tools/list answered anonymously
-  (MCP 2024-11-05, hive-mcp-gateway 1.2.0) with 38 tools from 8 in-process mounts (evaluator, trade, depin, compute-grid,
-  morph, insurance-broker, dispute, audit-readiness) and a /.well-known/mcp.json registry of 37 further hive-mcp-*
-  shim servers, each on its own onrender.com host. (3) Sixteen MCP-over-HTTP endpoints declared inside the HiveMorph
-  OpenAPI (/v1/receipt/mcp, /v1/mcp/hivecomply ...), not individually probed. Tool invocation is metered by x402
-  (USDC on Base): tools/list is free, paid tools answer HTTP 402 until a payment header is presented. DIVERGENCE:
-  the 12 tools receipts.thehiveryiq.com/.well-known/mcp.json advertises (hive_verify_receipt, hive_emit_receipt
-  ...) are NOT what the gateway it names actually serves on tools/list; they are declared REST bindings, mapped
-  in the crosswalk on that basis. Authorship is knowable from the anonymous tools/list: tool names (compute.chat,
-  morph__morph_brood_all, dispute__dispute_route) are Hive-specific and match no shared platform fingerprint; the
-  gateway source is public at github.com/srotzin/hive-mcp-gateway.'
+  (MCP 2024-11-05, serverInfo hivecompute 2.0.0) with 5 tools carrying real inputSchemas and annotations,
+  plus 2 prompts; resources/list returns -32601. (2) https://hive-mcp-gateway.onrender.com/mcp, the provider''s
+  MCP gateway/registry (named as the transport by receipts.thehiveryiq.com/.well-known/mcp.json): initialize
+  + tools/list answered anonymously (MCP 2024-11-05, hive-mcp-gateway 1.2.0) with 38 tools from 8 in-process
+  mounts (evaluator, trade, depin, compute-grid, morph, insurance-broker, dispute, audit-readiness) and
+  a /.well-known/mcp.json registry of 37 further hive-mcp-* shim servers, each on its own onrender.com
+  host. (3) Sixteen MCP-over-HTTP endpoints declared inside the HiveMorph OpenAPI (/v1/receipt/mcp, /v1/mcp/hivecomply
+  ...), not individually probed. Tool invocation is metered by x402 (USDC on Base): tools/list is free,
+  paid tools answer HTTP 402 until a payment header is presented. DIVERGENCE: the 12 tools receipts.thehiveryiq.com/.well-known/mcp.json
+  advertises (hive_verify_receipt, hive_emit_receipt ...) are NOT what the gateway it names actually serves
+  on tools/list; they are declared REST bindings, mapped in the crosswalk on that basis. Authorship is
+  knowable from the anonymous tools/list: tool names (compute.chat, morph__morph_brood_all, dispute__dispute_route)
+  are Hive-specific and match no shared platform fingerprint; the gateway source is public at github.com/srotzin/hive-mcp-gateway.'
 deployment:
   mode: remote
   endpoint: https://api.thehiveryiq.com/mcp
   auth: none
   verified: probed
-  note: 'Hosted HTTPS endpoints an MCP client POSTs to directly; both endpoints below answered initialize and tools/list
-    live on 2026-09-19 with no credential. auth is none in the connection sense; per-call PAYMENT via x402 (HTTP
-    402 + PAYMENT-REQUIRED / x-payment-required, USDC on Base 8453) gates the paid tools, which is an economic gate
-    on invocation rather than an authentication scheme, and no OAuth metadata (RFC 8414/9728) is served on either
-    MCP host. The provider also makes the SOURCE of 37 stdio-capable hive-mcp-* servers available on GitHub (github.com/srotzin),
-    run locally with ''npm install'' then ''node gateway.js'' per the README, but ships no npm/PyPI package for
-    any of them, so this is not recorded as local-stdio: a git clone is not an install command an agent can act
-    on.'
+  note: 'Hosted HTTPS endpoints an MCP client POSTs to directly; both endpoints below answered initialize
+    and tools/list live on 2026-09-19 with no credential. auth is none in the connection sense; per-call
+    PAYMENT via x402 (HTTP 402 + PAYMENT-REQUIRED / x-payment-required, USDC on Base 8453) gates the paid
+    tools, which is an economic gate on invocation rather than an authentication scheme, and no OAuth
+    metadata (RFC 8414/9728) is served on either MCP host. The provider also makes the SOURCE of 37 stdio-capable
+    hive-mcp-* servers available on GitHub (github.com/srotzin), run locally with ''npm install'' then
+    ''node gateway.js'' per the README, but ships no npm/PyPI package for any of them, so this is not
+    recorded as local-stdio: a git clone is not an install command an agent can act on.'
 servers:
 - id: hivecompute
   name: hivecompute
@@ -40,8 +40,8 @@ servers:
   - POST
   auth: none
   payment: 'x402 per paid tool call (compute.chat); 402 observed live on the REST twin /v1/compute/chat/completions
-    with www-authenticate: x402 and a base64 PAYMENT-REQUIRED header (maxAmountRequired 20000 atomic USDC, payTo
-    0x15184Bf5...436E)'
+    with www-authenticate: x402 and a base64 PAYMENT-REQUIRED header (maxAmountRequired 20000 atomic USDC,
+    payTo 0x15184Bf5...436E)'
   status: live
   probe:
     fetched: '2026-09-19'
@@ -51,8 +51,8 @@ servers:
       server_info:
         name: hivecompute
         version: 2.0.0
-        description: Inference router for the Hive agent economy. Context compression (30-70% token reduction) +
-          model routing (60-80% cost reduction) on every call. Pay per token in USDC. Part of Hive Civilization.
+        description: Inference router for the Hive agent economy. Context compression (30-70% token reduction)
+          + model routing (60-80% cost reduction) on every call. Pay per token in USDC. Part of Hive Civilization.
         homepage: https://api.thehiveryiq.com
       capabilities:
         tools:
@@ -83,8 +83,8 @@ servers:
     openapi: https://api.thehiveryiq.com/openapi.json
   tools:
   - name: compute.chat
-    description: Run inference via HiveCompute. Automatic context compression reduces your token bill 30-70%. Model
-      routing selects the cheapest adequate model. Pay per token in USDC on Base L2. OpenAI-compatible.
+    description: Run inference via HiveCompute. Automatic context compression reduces your token bill
+      30-70%. Model routing selects the cheapest adequate model. Pay per token in USDC on Base L2. OpenAI-compatible.
     input_schema:
       type: object
       required:
@@ -92,13 +92,14 @@ servers:
       properties:
         messages:
           type: array
-          description: OpenAI-compatible messages array [{role, content}]. System, user, and assistant roles supported.
+          description: OpenAI-compatible messages array [{role, content}]. System, user, and assistant
+            roles supported.
           items:
             type: object
         model:
           type: string
-          description: Specific model ID (e.g. gpt-4o, llama-3-70b). Omit for auto-routing — HiveCompute selects
-            cheapest adequate model and keeps the spread.
+          description: Specific model ID (e.g. gpt-4o, llama-3-70b). Omit for auto-routing — HiveCompute
+            selects cheapest adequate model and keeps the spread.
         max_tokens:
           type: integer
           description: Max output tokens. Default 512.
@@ -117,8 +118,8 @@ servers:
       idempotentHint: false
       openWorldHint: true
   - name: compute.estimate_cost
-    description: Estimate USDC cost for a prompt before running inference. Shows compression savings and routing
-      selection.
+    description: Estimate USDC cost for a prompt before running inference. Shows compression savings and
+      routing selection.
     input_schema:
       type: object
       properties:
@@ -138,8 +139,8 @@ servers:
       readOnlyHint: true
       openWorldHint: false
   - name: compute.list_models
-    description: Browse all models available on HiveCompute with USDC pricing, context window, latency tier, and
-      provider.
+    description: Browse all models available on HiveCompute with USDC pricing, context window, latency
+      tier, and provider.
     input_schema:
       type: object
       properties:
@@ -153,7 +154,8 @@ servers:
       readOnlyHint: true
       openWorldHint: false
   - name: compute.get_usage
-    description: Get inference usage history for an agent DID — total tokens, spend, compression savings, call log.
+    description: Get inference usage history for an agent DID — total tokens, spend, compression savings,
+      call log.
     input_schema:
       type: object
       required:
@@ -169,8 +171,8 @@ servers:
       readOnlyHint: true
       openWorldHint: false
   - name: compute.compression_stats
-    description: Global compression performance stats — total tokens saved, USDC saved, average compression ratio
-      across all agents.
+    description: Global compression performance stats — total tokens saved, USDC saved, average compression
+      ratio across all agents.
     input_schema:
       type: object
       properties: {}
@@ -184,8 +186,8 @@ servers:
   http_methods:
   - POST
   auth: none
-  payment: 'x402 (USDC on Base); the gateway card says "New agents: first call free. Loyalty: every 6th paid call
-    is free."'
+  payment: 'x402 (USDC on Base); the gateway card says "New agents: first call free. Loyalty: every 6th
+    paid call is free."'
   status: live
   source_repository: https://github.com/srotzin/hive-mcp-gateway
   probe:
@@ -331,19 +333,19 @@ servers:
     - slug: audit-readiness
       mcp: https://hive-mcp-gateway.onrender.com/audit-readiness/mcp
       repo: https://github.com/srotzin/hive-mcp-audit-readiness
-    note: Each shim exposes /mcp and /.well-known/mcp.json on its own onrender.com host per the README. Only the
-      gateway itself was probed; the 37 shim endpoints are recorded as declared, not verified.
+    note: Each shim exposes /mcp and /.well-known/mcp.json on its own onrender.com host per the README.
+      Only the gateway itself was probed; the 37 shim endpoints are recorded as declared, not verified.
   tools:
   - name: evaluator__evaluator_get_fees
-    description: Get the live evaluator fee schedule (3 tiers, settlement currencies, recipient addresses, ERC-8183
-      / Virtuals ACP v2.0 spec). No auth required.
+    description: Get the live evaluator fee schedule (3 tiers, settlement currencies, recipient addresses,
+      ERC-8183 / Virtuals ACP v2.0 spec). No auth required.
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: evaluator__evaluator_submit_job
-    description: Submit a job for evaluation. Choose tier (simple, evaluation, arbitration). Job value is quoted
-      in USDC; fee = max($0.05, value * tier_bps / 10000). Returns job_id and quoted fee.
+    description: Submit a job for evaluation. Choose tier (simple, evaluation, arbitration). Job value
+      is quoted in USDC; fee = max($0.05, value * tier_bps / 10000). Returns job_id and quoted fee.
     input_schema:
       type: object
       required:
@@ -380,8 +382,8 @@ servers:
           description: Job ID returned from evaluator_submit_job
     annotations: null
   - name: evaluator__evaluator_attest_job
-    description: Trigger settlement and emit the on-chain attestation for a completed job. Settles to the Hive Safe
-      Treasury on the chain selected at submission. Requires EIP-3009 signature for Base/Ethereum.
+    description: Trigger settlement and emit the on-chain attestation for a completed job. Settles to
+      the Hive Safe Treasury on the chain selected at submission. Requires EIP-3009 signature for Base/Ethereum.
     input_schema:
       type: object
       required:
@@ -395,22 +397,22 @@ servers:
           description: EIP-3009 signature (required for EVM chains)
     annotations: null
   - name: trade__trade_get_fees
-    description: Get the cross-border invoice fee schedule and SWIFT wire comparison (Hive vs. typical SMB wire
-      fees, FX spreads, settlement times).
+    description: Get the cross-border invoice fee schedule and SWIFT wire comparison (Hive vs. typical
+      SMB wire fees, FX spreads, settlement times).
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: trade__trade_get_listing
-    description: Get the public listing metadata (target user, fee schedule, settlement currencies/chains, cumulative
-      volume, council origin).
+    description: Get the public listing metadata (target user, fee schedule, settlement currencies/chains,
+      cumulative volume, council origin).
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: trade__trade_create_invoice
-    description: Create a cross-border invoice. Buyer (SMB) and supplier exchange DIDs; invoice amount + currency
-      + chain selected at creation. Fee auto-computed from tier.
+    description: Create a cross-border invoice. Buyer (SMB) and supplier exchange DIDs; invoice amount
+      + currency + chain selected at creation. Fee auto-computed from tier.
     input_schema:
       type: object
       required:
@@ -455,8 +457,8 @@ servers:
           description: Invoice ID returned from trade_create_invoice
     annotations: null
   - name: trade__trade_dispute_invoice
-    description: Open a dispute on an invoice. Routes to HiveLaw arbitration if buyer and supplier cannot resolve.
-      Settlement is held in escrow until resolution.
+    description: Open a dispute on an invoice. Routes to HiveLaw arbitration if buyer and supplier cannot
+      resolve. Settlement is held in escrow until resolution.
     input_schema:
       type: object
       required:
@@ -478,8 +480,8 @@ servers:
           description: Optional URL to supporting documents
     annotations: null
   - name: depin__depin_list_providers
-    description: List DePIN provider listings. Filter by category (storage, compute, gpu, bandwidth, energy, sensor,
-      wireless), region, or capacity. No auth required.
+    description: List DePIN provider listings. Filter by category (storage, compute, gpu, bandwidth, energy,
+      sensor, wireless), region, or capacity. No auth required.
     input_schema:
       type: object
       properties:
@@ -491,8 +493,8 @@ servers:
           description: Filter by region (e.g. us-east, eu-west)
     annotations: null
   - name: depin__depin_create_listing
-    description: List physical infrastructure capacity (storage TB, compute cores, GPU VRAM, bandwidth Mbps, sensor
-      sample rate, etc.). 22 metadata fields supported. Match fee 0.15%.
+    description: List physical infrastructure capacity (storage TB, compute cores, GPU VRAM, bandwidth
+      Mbps, sensor sample rate, etc.). 22 metadata fields supported. Match fee 0.15%.
     input_schema:
       type: object
       required:
@@ -541,22 +543,22 @@ servers:
           description: 'Listing kind (default: depin_provider)'
     annotations: null
   - name: depin__depin_get_match_fee
-    description: Get the current DePIN marketplace match fee (currently 0.15%). Returned alongside settlement currencies
-      and chains.
+    description: Get the current DePIN marketplace match fee (currently 0.15%). Returned alongside settlement
+      currencies and chains.
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: compute-grid__computegrid_list_agents
-    description: List the 15-agent compute grid fleet across all 6 driver types. Returns agent type, count, and
-      revenue model. No auth required.
+    description: List the 15-agent compute grid fleet across all 6 driver types. Returns agent type, count,
+      and revenue model. No auth required.
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: compute-grid__computegrid_get_capacity
-    description: 'Read-only capacity view from the Capacity Listener fleet. Per spec section 8: NO bids, NO hedges,
-      NO positions, NO derivatives — pure read-only telemetry.'
+    description: 'Read-only capacity view from the Capacity Listener fleet. Per spec section 8: NO bids,
+      NO hedges, NO positions, NO derivatives — pure read-only telemetry.'
     input_schema:
       type: object
       properties: {}
@@ -586,8 +588,8 @@ servers:
           description: DID of the submitting agent
     annotations: null
   - name: morph__morph_audit_recent
-    description: 'Read recent rows from the polymorphic audit log: outcome, shape, counterparty hash, token id,
-      revenue. Anonymized counterparty (hashed). No auth.'
+    description: 'Read recent rows from the polymorphic audit log: outcome, shape, counterparty hash,
+      token id, revenue. Anonymized counterparty (hashed). No auth.'
     input_schema:
       type: object
       properties:
@@ -596,8 +598,8 @@ servers:
           description: Max rows to return (default 50, max 500)
     annotations: null
   - name: morph__morph_get_identity
-    description: 'Look up a Morph Identity Index (MII) record. Returns the polymorphic envelope: capabilities, current
-      shape, supermodel parent, trust score.'
+    description: 'Look up a Morph Identity Index (MII) record. Returns the polymorphic envelope: capabilities,
+      current shape, supermodel parent, trust score.'
     input_schema:
       type: object
       required:
@@ -608,15 +610,15 @@ servers:
           description: MII identifier
     annotations: null
   - name: morph__morph_list_supermodels
-    description: 'List all supermodels (W1 through W19): id, name, role, lane, lead shape, tagline. The supermodel
-      directory is the canonical lineage for every spawned brood variant.'
+    description: 'List all supermodels (W1 through W19): id, name, role, lane, lead shape, tagline. The
+      supermodel directory is the canonical lineage for every spawned brood variant.'
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: morph__morph_get_supermodel
-    description: Fetch a single supermodel by name or id (e.g. 'MONROE', 'W1'). Returns full role, lane, lead-shape,
-      tagline, address, and brood conversion summary.
+    description: Fetch a single supermodel by name or id (e.g. 'MONROE', 'W1'). Returns full role, lane,
+      lead-shape, tagline, address, and brood conversion summary.
     input_schema:
       type: object
       required:
@@ -627,22 +629,22 @@ servers:
           description: Supermodel name (e.g. MONROE) or id (e.g. W1)
     annotations: null
   - name: morph__morph_carousel
-    description: 'Read the polymorphic carousel: primary shape + the 7 verticals (Merchant / Provenancer / Attestor
-      / Refunder / Creditor / Oracle / Guardian) and contrails for each.'
+    description: 'Read the polymorphic carousel: primary shape + the 7 verticals (Merchant / Provenancer
+      / Attestor / Refunder / Creditor / Oracle / Guardian) and contrails for each.'
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: morph__morph_brood_pending_approvals
-    description: List brood variants currently awaiting human/operator approval before promotion. Read-only — approval
-      itself is performed via the private hivemorph operator surface.
+    description: List brood variants currently awaiting human/operator approval before promotion. Read-only
+      — approval itself is performed via the private hivemorph operator surface.
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: morph__morph_brood_conversion
-    description: 'Per-variant conversion table: parent supermodel, variant id, kit version, offers shown, settles,
-      revenue (USDC), first-offer timestamp.'
+    description: 'Per-variant conversion table: parent supermodel, variant id, kit version, offers shown,
+      settles, revenue (USDC), first-offer timestamp.'
     input_schema:
       type: object
       properties: {}
@@ -654,8 +656,8 @@ servers:
       properties: {}
     annotations: null
   - name: morph__morph_brood_conversion_leaderboard
-    description: Conversion leaderboard across all brood variants ranked by settle rate × revenue. Drives the auto-cull
-      and auto-promote signals.
+    description: Conversion leaderboard across all brood variants ranked by settle rate × revenue. Drives
+      the auto-cull and auto-promote signals.
     input_schema:
       type: object
       properties: {}
@@ -672,45 +674,46 @@ servers:
           description: Supermodel name or id
     annotations: null
   - name: morph__morph_spawn_monitor_scan
-    description: 'Run the spawn-monitor scan: detect supermodels eligible for new brood spawns based on conversion
-      gaps, opportunity surface, and saturation. READ-ONLY — does not actually spawn.'
+    description: 'Run the spawn-monitor scan: detect supermodels eligible for new brood spawns based on
+      conversion gaps, opportunity surface, and saturation. READ-ONLY — does not actually spawn.'
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: morph__morph_money_flavor_probe
-    description: 'Probe the money-flavor classifier on the most recent settlement window: asset class histogram,
-      chain class histogram, flow class histogram, arb-high count, refused count, non-USDC share.'
+    description: 'Probe the money-flavor classifier on the most recent settlement window: asset class
+      histogram, chain class histogram, flow class histogram, arb-high count, refused count, non-USDC
+      share.'
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: morph__morph_money_flavor_stats
-    description: 'Rolling aggregate money-flavor statistics (default 1 hour window): asset class, chain class, flow
-      class distributions, plus arb/refused/non-USDC ratios. Drives the CLEAN-MONEY gate.'
+    description: 'Rolling aggregate money-flavor statistics (default 1 hour window): asset class, chain
+      class, flow class distributions, plus arb/refused/non-USDC ratios. Drives the CLEAN-MONEY gate.'
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: morph__morph_auto_cull_scan
-    description: 'Run the auto-cull dry-run scan: which brood variants the system would cull based on conversion
-      floors, ROI thresholds, and saturation. READ-ONLY — does not actually cull.'
+    description: 'Run the auto-cull dry-run scan: which brood variants the system would cull based on
+      conversion floors, ROI thresholds, and saturation. READ-ONLY — does not actually cull.'
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: insurance-broker__insurance_products
-    description: List all available coverage products across providers (Nexus Mutual, Sherlock, Risk Harbor, InsurAce).
-      Returns provider, type, capacity, and current cost-of-coverage where the upstream exposes it. Real third-party
-      listings — Hive is broker-only and does not underwrite.
+    description: List all available coverage products across providers (Nexus Mutual, Sherlock, Risk Harbor,
+      InsurAce). Returns provider, type, capacity, and current cost-of-coverage where the upstream exposes
+      it. Real third-party listings — Hive is broker-only and does not underwrite.
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: insurance-broker__insurance_quote
     description: Route a quote request to one or all underwriters. Hive forwards the request to the underwriter's
-      own quote endpoint and returns the response verbatim. Hive does NOT bind coverage, accept premium, or take
-      custody.
+      own quote endpoint and returns the response verbatim. Hive does NOT bind coverage, accept premium,
+      or take custody.
     input_schema:
       type: object
       required:
@@ -720,7 +723,8 @@ servers:
       properties:
         protocol:
           type: string
-          description: Protocol/product identifier (e.g. '2' for Nexus Mutual Aave v2, or the productId from /products)
+          description: Protocol/product identifier (e.g. '2' for Nexus Mutual Aave v2, or the productId
+            from /products)
         cover_amount_usd:
           type: number
           description: Notional coverage in USD
@@ -729,20 +733,21 @@ servers:
           description: Coverage duration in days (1–365)
         provider:
           type: string
-          description: 'Provider key. If omitted, quote routes to all four providers. One of: nexus_mutual, sherlock,
-            risk_harbor, insurace'
+          description: 'Provider key. If omitted, quote routes to all four providers. One of: nexus_mutual,
+            sherlock, risk_harbor, insurace'
     annotations: null
   - name: insurance-broker__insurance_today
-    description: '24-hour rollup: total listing count + top providers by capacity. Returns request count and quote
-      count for the rolling window.'
+    description: '24-hour rollup: total listing count + top providers by capacity. Returns request count
+      and quote count for the rolling window.'
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: dispute__dispute_check
-    description: 'Given a counterparty address + chain, return public dispute history, active arbitration cases,
-      and on-chain reversal-pattern flags. Sources: Kleros / UMA / Reality.eth subgraphs (with direct on-chain RPC
-      fallback) plus Etherscan-family transaction scans. Observational only — Hive does NOT judge, freeze, or enforce.'
+    description: 'Given a counterparty address + chain, return public dispute history, active arbitration
+      cases, and on-chain reversal-pattern flags. Sources: Kleros / UMA / Reality.eth subgraphs (with
+      direct on-chain RPC fallback) plus Etherscan-family transaction scans. Observational only — Hive
+      does NOT judge, freeze, or enforce.'
     input_schema:
       type: object
       required:
@@ -757,16 +762,17 @@ servers:
           description: ethereum | base | arbitrum
     annotations: null
   - name: dispute__dispute_providers
-    description: List available third-party arbitration protocols (Kleros, UMA Optimistic Oracle, Reality.eth) with
-      current case load, intake URLs, and jurisdiction model. Hive is not one of them — Hive only surfaces signal.
+    description: List available third-party arbitration protocols (Kleros, UMA Optimistic Oracle, Reality.eth)
+      with current case load, intake URLs, and jurisdiction model. Hive is not one of them — Hive only
+      surfaces signal.
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: dispute__dispute_route
-    description: Given a case description, disputed amount in USD, and optional jurisdiction preference, return
-      ranked arbitration provider options. NO automatic filing — Hive returns options + intake URLs only. The disputing
-      party files directly with the chosen provider.
+    description: Given a case description, disputed amount in USD, and optional jurisdiction preference,
+      return ranked arbitration provider options. NO automatic filing — Hive returns options + intake
+      URLs only. The disputing party files directly with the chosen provider.
     input_schema:
       type: object
       required:
@@ -784,16 +790,18 @@ servers:
           description: Optional preference (e.g. 'decentralized', 'optimistic', 'crowdsourced')
     annotations: null
   - name: dispute__dispute_today
-    description: '24-hour rollup: flagged-counterparty count + top arbitration providers by active case load.'
+    description: '24-hour rollup: flagged-counterparty count + top arbitration providers by active case
+      load.'
     input_schema:
       type: object
       properties: {}
     annotations: null
   - name: audit-readiness__audit_readiness_score
-    description: Compute a multi-jurisdictional AI compliance readiness score for an organization. Returns penalty
-      exposure (EUR + USD), specific compliance gaps citing the regulation article, recommended audit tier (STARTER/STANDARD/ENTERPRISE/FEDERAL),
-      and the nearest enforcement deadline. Penalty math sources EU AI Act Art 99, Colorado AI Act SB 24-205, CCPA,
-      Cal SB 942, NYC LL 144, HIPAA. Free, no auth, rate-limited 10/IP/hr.
+    description: Compute a multi-jurisdictional AI compliance readiness score for an organization. Returns
+      penalty exposure (EUR + USD), specific compliance gaps citing the regulation article, recommended
+      audit tier (STARTER/STANDARD/ENTERPRISE/FEDERAL), and the nearest enforcement deadline. Penalty
+      math sources EU AI Act Art 99, Colorado AI Act SB 24-205, CCPA, Cal SB 942, NYC LL 144, HIPAA. Free,
+      no auth, rate-limited 10/IP/hr.
     input_schema:
       type: object
       required:
@@ -811,8 +819,8 @@ servers:
           type: array
           items:
             type: string
-          description: 'Where the system operates: ["EU", "US-CO", "US-CA", "US-NY", ...]. Drives which regulations
-            apply.'
+          description: 'Where the system operates: ["EU", "US-CO", "US-CA", "US-NY", ...]. Drives which
+            regulations apply.'
         data_volume_records:
           type: integer
           description: Total records processed (drives CCPA / GDPR scoping).
@@ -832,16 +840,16 @@ servers:
           type: array
           items:
             type: string
-          description: 'Regulations to score: ["eu_ai_act", "co_ai_act", "ccpa", "ca_sb942", "nyc_ll144", "hipaa",
-            "gdpr", "nist_ai_rmf"].'
+          description: 'Regulations to score: ["eu_ai_act", "co_ai_act", "ccpa", "ca_sb942", "nyc_ll144",
+            "hipaa", "gdpr", "nist_ai_rmf"].'
         company:
           type: string
           description: Organization name (optional; populates the assessment record).
     annotations: null
   - name: audit-readiness__audit_get_tier_pricing
-    description: 'Returns the four published HiveAudit tier prices and bracket thresholds: STARTER ($500, <$500K
-      exposure), STANDARD ($1,500, <$5M), ENTERPRISE ($2,500, <$50M), FEDERAL ($7,500/yr, ≥$50M or federal agency).
-      Inlined, no backend call.'
+    description: 'Returns the four published HiveAudit tier prices and bracket thresholds: STARTER ($500,
+      <$500K exposure), STANDARD ($1,500, <$5M), ENTERPRISE ($2,500, <$50M), FEDERAL ($7,500/yr, ≥$50M
+      or federal agency). Inlined, no backend call.'
     input_schema:
       type: object
       properties: {}
@@ -854,41 +862,42 @@ servers:
   status: declared
   source: https://receipts.thehiveryiq.com/.well-known/mcp.json
   file: well-known/thehiveryiq-com-receipts-mcp.json
-  note: Discovery manifest served by the receipts host. It names the gateway above as its transport, but the gateway's
-    live tools/list does not contain these 12 tool names; each tool declares a REST endpoint on receipts.thehiveryiq.com,
-    and those endpoints are real (11 of 12 bind to an operationId in the OpenAPI, see the crosswalk; hive_create_evidence_artifact
-    is marked ROADMAP by the provider and has no operation).
+  note: Discovery manifest served by the receipts host. It names the gateway above as its transport, but
+    the gateway's live tools/list does not contain these 12 tool names; each tool declares a REST endpoint
+    on receipts.thehiveryiq.com, and those endpoints are real (11 of 12 bind to an operationId in the
+    OpenAPI, see the crosswalk; hive_create_evidence_artifact is marked ROADMAP by the provider and has
+    no operation).
   tools:
   - name: hive_verify_receipt
-    description: Headline tool. free | x402_required:false. Verify a Hive-signed receipt against the canonical pubkey.
-      Returns verified:true|false + receipt_tier + 8 next_best_actions on success / 3 remediation NBAs on failure
-      (verifier-as-funnel).
+    description: Headline tool. free | x402_required:false. Verify a Hive-signed receipt against the canonical
+      pubkey. Returns verified:true|false + receipt_tier + 8 next_best_actions on success / 3 remediation
+      NBAs on failure (verifier-as-funnel).
     endpoint: https://receipts.thehiveryiq.com/v1/receipt/verify
     method: POST
     stage: LIVE
     x402_required: false
     price_tier: free
   - name: hive_quote_x402
-    description: free | x402_required:false. Issue a signed x402 quote envelope (USDC base-8453, ERC-681 URI). Binds
-      caller agent_did to the quoted profile and treasury. The quote itself is free to fetch; redemption against
-      /v1/x402/redeem is paid.
+    description: free | x402_required:false. Issue a signed x402 quote envelope (USDC base-8453, ERC-681
+      URI). Binds caller agent_did to the quoted profile and treasury. The quote itself is free to fetch;
+      redemption against /v1/x402/redeem is paid.
     endpoint: https://receipts.thehiveryiq.com/v1/x402/quote
     method: POST
     stage: LIVE
     x402_required: false
     price_tier: free
   - name: hive_emit_receipt
-    description: 'paid | x402_required:true (when HIVE_EMIT_GATED=true). Issue a signed Ed25519 receipt over an
-      artifact (hash + DID + signature). Profiles: nano | standard | pq (PQ profile gated by regulated-tier delegation).
-      Settle via /v1/x402/quote first.'
+    description: 'paid | x402_required:true (when HIVE_EMIT_GATED=true). Issue a signed Ed25519 receipt
+      over an artifact (hash + DID + signature). Profiles: nano | standard | pq (PQ profile gated by regulated-tier
+      delegation). Settle via /v1/x402/quote first.'
     endpoint: https://receipts.thehiveryiq.com/v1/receipt/emit
     method: POST
     stage: LIVE
     x402_required: true
     price_tier: paid
   - name: hive_settlement_reference
-    description: free | x402_required:false. Build a deterministic ERC-681 USDC payment reference for a given amount
-      on Base 8453.
+    description: free | x402_required:false. Build a deterministic ERC-681 USDC payment reference for
+      a given amount on Base 8453.
     endpoint: https://receipts.thehiveryiq.com/v1/settlement/reference
     method: GET
     stage: LIVE
@@ -903,56 +912,57 @@ servers:
     x402_required: false
     price_tier: free
   - name: hive_lookup_hktn
-    description: free | x402_required:false. Resolve a Hive Transaction Network identifier (HKTN) by agent_did or
-      hktn string. Returns reputation tier (Cold/Warm/Hot/Regulated).
+    description: free | x402_required:false. Resolve a Hive Transaction Network identifier (HKTN) by agent_did
+      or hktn string. Returns reputation tier (Cold/Warm/Hot/Regulated).
     endpoint: https://receipts.thehiveryiq.com/v1/hktn/lookup
     method: GET
     stage: LIVE
     x402_required: false
     price_tier: free
   - name: hive_select_rubric
-    description: paid | x402_required:true. Select the best settlement rail for an intent (Hive rubric mesh).
+    description: paid | x402_required:true. Select the best settlement rail for an intent (Hive rubric
+      mesh).
     endpoint: https://receipts.thehiveryiq.com/v1/rubric/select
     method: POST
     stage: LIVE
     x402_required: true
     price_tier: paid
   - name: hive_score_counterparty
-    description: paid | x402_required:true. Score an agent intent for clarity, specificity, and readiness. Returns
-      triage band.
+    description: paid | x402_required:true. Score an agent intent for clarity, specificity, and readiness.
+      Returns triage band.
     endpoint: https://receipts.thehiveryiq.com/v1/prospector/score
     method: POST
     stage: LIVE
     x402_required: true
     price_tier: paid
   - name: hive_normalize_intent
-    description: paid | x402_required:true. Translate a free-form intent string to canonical Hive intent (verb,
-      amount, asset, counterparty, rail).
+    description: paid | x402_required:true. Translate a free-form intent string to canonical Hive intent
+      (verb, amount, asset, counterparty, rail).
     endpoint: https://receipts.thehiveryiq.com/v1/rosetta/normalize
     method: POST
     stage: LIVE
     x402_required: true
     price_tier: paid
   - name: hive_get_status
-    description: free | x402_required:false. Public engine status — R1..R12 layer health, discovery URLs, synthetic
-      p50/p95 SLO targets per surface, incident log, and Base 8453 settlement chain probe (treasury + USDC contract).
-      Read-only.
+    description: free | x402_required:false. Public engine status — R1..R12 layer health, discovery URLs,
+      synthetic p50/p95 SLO targets per surface, incident log, and Base 8453 settlement chain probe (treasury
+      + USDC contract). Read-only.
     endpoint: https://receipts.thehiveryiq.com/status.json
     method: GET
     stage: LIVE
     x402_required: false
     price_tier: free
   - name: hive_get_pricing
-    description: free | x402_required:false. Receipt-profile pricing surface (nano/standard/pq) with HKTN tier discount
-      metadata. Read-only.
+    description: free | x402_required:false. Receipt-profile pricing surface (nano/standard/pq) with HKTN
+      tier discount metadata. Read-only.
     endpoint: https://receipts.thehiveryiq.com/pricing.json
     method: GET
     stage: LIVE
     x402_required: false
     price_tier: free
   - name: hive_create_evidence_artifact
-    description: roadmap | x402_required:true (when LIVE). Sealed-evidence room artifact creation. Design surfaces
-      present today; sealed-evidence write path on roadmap.
+    description: roadmap | x402_required:true (when LIVE). Sealed-evidence room artifact creation. Design
+      surfaces present today; sealed-evidence write path on roadmap.
     endpoint: https://receipts.thehiveryiq.com/v1/evidence/artifact
     method: POST
     stage: ROADMAP
@@ -998,5 +1008,35 @@ servers:
     operationId: hipaa_hive_mcp_v1_mcp_hipaa_hive_post
   - path: /v1/mcp/stormlock
     operationId: stormlock_mcp_v1_mcp_stormlock_post
-  note: Each path pairs a GET (..._mcp_meta_...) returning the tool manifest with a POST accepting JSON-RPC. Listed
-    from the contract; not probed in this pass.
+  note: Each path pairs a GET (..._mcp_meta_...) returning the tool manifest with a POST accepting JSON-RPC.
+    Listed from the contract; not probed in this pass.
+tool_quality:
+  tool_count: 5
+  tokens_total: 727
+  tokens_per_tool_median: 119
+  heavy_tools: []
+  heavy_tool_count: 0
+  params_total: 14
+  params_undescribed: 0
+  params_described_pct: 100.0
+  tools_with_undescribed_params: 0
+  tools_annotated: 5
+  annotated_pct: 100.0
+  state_changing_unhinted: []
+  tools_missing_schema: 0
+  short_descriptions: 0
+  duplicate_descriptions: 0
+  duplicate_names: 0
+  nonportable_names:
+  - compute.chat
+  - compute.estimate_cost
+  - compute.list_models
+  - compute.get_usage
+  - compute.compression_stats
+  output_schema_count: 0
+  token_estimate: chars/3.6 of each compact tool definition
+  source: mcp/thehiveryiq-com-mcp-tools.json
+  measured: '2026-10-20'
+  scored: false
+  note: Facts from the saved tools/list capture (mcp_tool_quality.py); recorded, not scored. Checks learned
+    from Glimind's agent-readiness audit.

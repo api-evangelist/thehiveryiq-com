@@ -1,0 +1,147 @@
+{
+  "endpoint": "https://api.thehiveryiq.com/mcp",
+  "captured": "2026-10-20",
+  "method": "initialize + tools/list (anonymous, no tool called; roadmap#992)",
+  "protocol_version": "2024-11-05",
+  "server_info": {
+    "name": "hivecompute",
+    "version": "2.0.0",
+    "description": "Inference router for the Hive agent economy. Context compression (30-70% token reduction) + model routing (60-80% cost reduction) on every call. Pay per token in USDC. Part of Hive Civilization.",
+    "homepage": "https://api.thehiveryiq.com"
+  },
+  "result": {
+    "tools": [
+      {
+        "name": "compute.chat",
+        "description": "Run inference via HiveCompute. Automatic context compression reduces your token bill 30-70%. Model routing selects the cheapest adequate model. Pay per token in USDC on Base L2. OpenAI-compatible.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": false,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "messages"
+          ],
+          "properties": {
+            "messages": {
+              "type": "array",
+              "description": "OpenAI-compatible messages array [{role, content}]. System, user, and assistant roles supported.",
+              "items": {
+                "type": "object"
+              }
+            },
+            "model": {
+              "type": "string",
+              "description": "Specific model ID (e.g. gpt-4o, llama-3-70b). Omit for auto-routing — HiveCompute selects cheapest adequate model and keeps the spread."
+            },
+            "max_tokens": {
+              "type": "integer",
+              "description": "Max output tokens. Default 512."
+            },
+            "temperature": {
+              "type": "number",
+              "description": "Sampling temperature 0.0-2.0. Default 0.7."
+            },
+            "max_cost_usdc": {
+              "type": "number",
+              "description": "Hard USDC cap. Request rejected if estimated cost exceeds this. Default 0.10."
+            },
+            "did": {
+              "type": "string",
+              "description": "Agent DID. Usage and billing tracked per DID."
+            }
+          }
+        }
+      },
+      {
+        "name": "compute.estimate_cost",
+        "description": "Estimate USDC cost for a prompt before running inference. Shows compression savings and routing selection.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "prompt": {
+              "type": "string",
+              "description": "Prompt text to estimate cost for."
+            },
+            "messages": {
+              "type": "array",
+              "description": "Messages array (alternative to prompt)."
+            },
+            "model": {
+              "type": "string",
+              "description": "Model to estimate against. Omit for auto-routing estimate."
+            },
+            "max_output_tokens": {
+              "type": "integer",
+              "description": "Assumed max output tokens. Default 512."
+            }
+          }
+        }
+      },
+      {
+        "name": "compute.list_models",
+        "description": "Browse all models available on HiveCompute with USDC pricing, context window, latency tier, and provider.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "family": {
+              "type": "string",
+              "description": "Filter by model family: gpt-4, claude-3, llama-3, mistral, gemini, qwen."
+            },
+            "max_price_per_1m": {
+              "type": "number",
+              "description": "Filter to models below this input price per 1M tokens (USDC)."
+            }
+          }
+        }
+      },
+      {
+        "name": "compute.get_usage",
+        "description": "Get inference usage history for an agent DID — total tokens, spend, compression savings, call log.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "required": [
+            "did"
+          ],
+          "properties": {
+            "did": {
+              "type": "string",
+              "description": "Agent DID to fetch usage for."
+            },
+            "limit": {
+              "type": "integer",
+              "description": "Number of recent calls to return. Default 20, max 200."
+            }
+          }
+        }
+      },
+      {
+        "name": "compute.compression_stats",
+        "description": "Global compression performance stats — total tokens saved, USDC saved, average compression ratio across all agents.",
+        "annotations": {
+          "readOnlyHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {}
+        }
+      }
+    ]
+  }
+}
