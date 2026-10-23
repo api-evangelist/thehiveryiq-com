@@ -571,3 +571,9 @@ components:
       - contract_id
       title: RedlineAttestRequest
       description: Record a redline/markup event on a contract.
+x-provenance:
+  method: harvested
+  publisher: Hive Civilization
+  source: https://receipts.thehiveryiq.com/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)

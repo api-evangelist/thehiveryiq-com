@@ -598,3 +598,9 @@ components:
       - original_payload_hash
       title: ProtocolAttestRequest
       description: Record a protocol or amendment event.
+x-provenance:
+  method: harvested
+  publisher: Hive Civilization
+  source: https://receipts.thehiveryiq.com/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
