@@ -27,6 +27,9 @@ artifacts:
   authentication/thehiveryiq-com-authentication.yml:
     method: searched
     evidence: declared in the artifact
+  capabilities/thehiveryiq-com-capability-edges.yml:
+    method: unknown
+    evidence: no authorship recorded
   changelog/thehiveryiq-com-changelog.yml:
     method: searched
     evidence: declared in the artifact
@@ -45,7 +48,13 @@ artifacts:
   front-door-ai/2026-09-17.yml:
     method: unknown
     evidence: no authorship recorded
-  kin/checks-2026-09-24T161608.yml:
+  integrations/_index.yml:
+    method: generated
+    evidence: carries an API Evangelist house phrase
+  integrations/thehiveryiq-com-integration-edges.yml:
+    method: searched
+    evidence: declared in the artifact
+  kin/checks-2026-10-11T110117.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-19T193153.yml:
@@ -78,6 +87,21 @@ artifacts:
   kin/score-2026-09-24T161608.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T210408.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-09-25T232841.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T000835.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-03T024842.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-10-11T110117.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
   lifecycle/thehiveryiq-com-lifecycle.yml:
     method: searched
     evidence: declared in the artifact
@@ -93,6 +117,9 @@ artifacts:
   llms/thehiveryiq-com-receipts-llms.txt:
     method: searched
     evidence: 'derive-llms-provenance.py: harvested'
+  mcp/thehiveryiq-com-mcp-tools.json:
+    method: unknown
+    evidence: no authorship recorded
   mcp/thehiveryiq-com-mcp.yml:
     method: unknown
     evidence: no authorship recorded
@@ -101,23 +128,925 @@ artifacts:
     evidence: declared in the artifact
   openapi/_original/thehiveryiq-com-hivecompute-openapi.json:
     method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
+    evidence: byte-identical to https://api.thehiveryiq.com/openapi.json (sha256 514d5de14a63, fetched
+      2026-10-04)
+  openapi/_original/thehiveryiq-com-hivecompute-openapi.yml:
+    method: harvested
+    evidence: the same operations as https://api.thehiveryiq.com/openapi.json (sha256 514d5de14a63, fetched
+      2026-10-04)
   openapi/_original/thehiveryiq-com-hivemorph-openapi.json:
     method: harvested
-    evidence: found in openapi/_original/; the fetch URL and bytes were not recorded, so byte-identity
-      to the provider's source is unverified
-  openapi/thehiveryiq-com-hivecompute-openapi.yml:
+    evidence: the same operations as https://receipts.thehiveryiq.com/openapi.json (sha256 1bf991033ff6,
+      fetched 2026-10-04)
+  openapi/_original/thehiveryiq-com-hivemorph-openapi.yml:
+    method: harvested
+    evidence: the same operations as https://receipts.thehiveryiq.com/openapi.json (sha256 1bf991033ff6,
+      fetched 2026-10-04)
+  openapi/thehiveryiq-com-a2a-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
-  openapi/thehiveryiq-com-hivemorph-openapi.yml:
+  openapi/thehiveryiq-com-activation-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-aegis-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-affordances-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-afir-stream-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-agent-receipts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-alcoa-agentguard-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-amplify-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-app-kits-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-arb-alloc-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-arb-compute-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-arb-spread-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-aris-agent-asset-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-attest-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-audit-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-basis-perp-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-billing-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-billing-meter-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-bounty-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-capitolare-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-chat-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-clear-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-clear-mcp-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-cns-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-compliance-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-compound-chains-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-compute-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-compute-grid-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-cre-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-dashboard-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-deedlock-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-desci-qvac-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-designer-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-discovery-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-dispute-observer-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-distribution-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-earn-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-echo-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-edi-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-entropy-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-evaluator-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-evidence-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-favicon-ico-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-fleet-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-forge-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-github-app-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-governance-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-guardian-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-health-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-health-badge-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-hipaa-hive-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-hive-agent-listings-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-hive-mark-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-hive-origin-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-hive-prior-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-hive-wallet-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-hivecomply-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-hivecomply-mcp-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-hivemorph-v0-1-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-insights-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-insurance-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-insurance-broker-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-kimi-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-law-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-lex-contract-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-llms-txt-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-mark-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-marketplace-bus-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-mcp-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-media-origin-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-membrane-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-mining-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-mining-orchestrate-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-model-receipts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-morph-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-morso-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-mos-energy-arb-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-mos-intel-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-mpp-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-nanopay-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-nanoverse-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-newsshield-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-newsshield-mcp-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-og-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-onboard-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-ops-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-organic-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-origin-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-pilot-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-portal-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-portal-spin-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-portal-v2-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-pq-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-pricing-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-pricing-json-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-prior-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-procurelock-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-protected-flow-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-prov-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-provebirth-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-purity-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-qvac-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-r10-rvc-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-r2-discovery-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-r3-delegation-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-r3pv-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-r4-firewall-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-r5-hktn-reputation-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-r6-hivememory-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-r7-spectral-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-r8-checkpoints-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-r9-accumulators-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-receipt-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-receipt-ledger-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-receipt-relay-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-robots-txt-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-runrate-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-salvage-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-site-traffic-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-sitemap-xml-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-smsh-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-smsh-learned-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-spawn-garage-v2-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-sphere-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-status-json-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-storefront-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-stormlock-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-subscription-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-swarm-receipts-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-tax-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-topoff-router-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-trade-finance-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-tradefinance-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-tradeguard-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-traffic-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-trail-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-trust-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-trust-json-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-vault-visits-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-verify-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-well-known-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-x402-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-xcalibur-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-xcalibur-echo-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-xcalibur-membrane-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-xcalibur-quorum-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-xcalibur-quorum-v2-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-xcalibur-verify-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-yield-optimizer-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  openapi/thehiveryiq-com-zozo-identity-api-openapi.yml:
+    method: derived
+    evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  overlays/thehiveryiq-com-a2a-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-activation-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-aegis-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-affordances-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-afir-stream-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-agent-receipts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-alcoa-agentguard-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-amplify-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-app-kits-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-arb-alloc-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-arb-compute-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-arb-spread-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-aris-agent-asset-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-attest-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-audit-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-basis-perp-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-billing-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-billing-meter-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-bounty-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-capitolare-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-chat-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-clear-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-clear-mcp-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-cns-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-compliance-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-compound-chains-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-compute-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-compute-grid-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-cre-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-dashboard-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-deedlock-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-desci-qvac-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-designer-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-discovery-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-dispute-observer-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-distribution-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-earn-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-echo-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-edi-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-entropy-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-evaluator-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-evidence-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-favicon-ico-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-fleet-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-forge-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-github-app-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-governance-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-guardian-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-health-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-health-badge-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-hipaa-hive-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-hive-agent-listings-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-hive-mark-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-hive-origin-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-hive-prior-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-hive-wallet-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-hivecomply-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-hivecomply-mcp-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/thehiveryiq-com-hivecompute-overlay.yaml:
     method: derived
-    evidence: declared in the artifact
+    evidence: an API Evangelist overlay (title) over the provider's contract
   overlays/thehiveryiq-com-hivemorph-overlay.yaml:
     method: derived
+    evidence: an API Evangelist overlay (title) over the provider's contract
+  overlays/thehiveryiq-com-hivemorph-v0-1-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-insights-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-insurance-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-insurance-broker-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-kimi-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-law-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-lex-contract-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-llms-txt-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-mark-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-marketplace-bus-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-mcp-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-media-origin-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-membrane-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-mining-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-mining-orchestrate-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-model-receipts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-morph-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-morso-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-mos-energy-arb-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-mos-intel-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-mpp-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-nanopay-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-nanoverse-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-newsshield-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-newsshield-mcp-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-og-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-onboard-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-ops-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-organic-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-origin-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-pilot-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-portal-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-portal-spin-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-portal-v2-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-pq-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-pricing-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-pricing-json-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-prior-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-procurelock-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-protected-flow-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-prov-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-provebirth-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-purity-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-qvac-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-r10-rvc-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-r2-discovery-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-r3-delegation-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-r3pv-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-r4-firewall-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-r5-hktn-reputation-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-r6-hivememory-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-r7-spectral-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-r8-checkpoints-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-r9-accumulators-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-receipt-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-receipt-ledger-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-receipt-relay-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-robots-txt-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-runrate-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-salvage-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-site-traffic-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-sitemap-xml-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-smsh-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-smsh-learned-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-spawn-garage-v2-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-sphere-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-status-json-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-storefront-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-stormlock-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-subscription-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-swarm-receipts-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-tax-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-topoff-router-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-trade-finance-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-tradefinance-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-tradeguard-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-traffic-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-trail-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-trust-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-trust-json-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-vault-visits-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-verify-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-well-known-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-x402-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-xcalibur-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-xcalibur-echo-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-xcalibur-membrane-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-xcalibur-quorum-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-xcalibur-quorum-v2-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-xcalibur-verify-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-yield-optimizer-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/thehiveryiq-com-zozo-identity-api-phrasing-overlay.yaml:
+    method: generated
     evidence: declared in the artifact
   packages/thehiveryiq-com-packages.yml:
     method: searched
